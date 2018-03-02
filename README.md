@@ -11,9 +11,13 @@ Therefore, this library provides algorithms that treat space as a scarce resourc
 This libray is currently under construction.
 We will provide a roadmap as soon as possible.
 
-# Working with Gradle
-- Build Library `./gradlew build`
+# Building the Library from Source
+1. Install java JDK 1.7+
+2. Install cpp compiler for your system
+3. Build the library using the provided gradle script `./gradlew build`
 
-## Founded by
-This project (SpaceeffGA (KA 4663/1-1)) is funded by the [DFG](http://www.dfg.de/en/index.jsp) (Deutsche Forschungsgemeinschaft).
-For more details visit [http://gepris.dfg.de/gepris/projekt/379157101](http://gepris.dfg.de/gepris/projekt/379157101).
+# License
+Licensed under the GNU General Public License version 3. For detailed license information look inside the [LICENSE](LICENSE) file.
+
+# Acknowledgments
+We thank the [DFG](http://www.dfg.de/en/index.jsp) (Deutsche Forschungsgemeinschaft) for funding this project. For more details visit [http://gepris.dfg.de/gepris/projekt/379157101](http://gepris.dfg.de/gepris/projekt/379157101).
