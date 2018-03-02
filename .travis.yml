@@ -1,0 +1,6 @@
+language: cpp
+
+script:
+  - ./gradlew build
+
+
