@@ -1,4 +1,4 @@
-Library for Space efficient (graph) algorithms [![Build Status](https://travis-ci.org/thm-mni-ii/sea.svg?branch=master)](https://travis-ci.org/thm-mni-ii/sea)
+Library for Space efficient (graph) algorithms [![Build Status](https://travis-ci.org/thm-mni-ii/sea.svg?branch=master)](https://travis-ci.org/thm-mni-ii/sea) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ===
 Because of the rapid growth of the data sizes in nowadays applications, algorithms
 that are designed to efficiently utilize space are becoming more and more
