@@ -1,3 +1,11 @@
+# Downloaded Dependencies
+/3rdparty
+# Files for Build System
+/.gradle
+
+# Visual Studio Code
+.project
+
 # Created by .ignore support plugin (hsz.mobi)
 ### C template
 # Prerequisites
