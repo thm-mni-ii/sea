@@ -1,5 +1,5 @@
 #include <iostream>
-#include "sealib.h"
+#include "sealib/math.h"
 
 int math::SimpleMath::add(int a, int b) {
     return a + b;
