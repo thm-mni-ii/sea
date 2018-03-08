@@ -11,7 +11,8 @@ sealib_main
 tests
 Makefile
 CMakeCache.txt
-
+DartConfiguration.tcl
+*.cbp
 # Visual Studio Code
 .project
 
