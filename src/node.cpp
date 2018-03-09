@@ -31,6 +31,6 @@ TrailStructure *Node::get_d() {
  * getter for the adjacency vector of this node
  * @return vector of adjacent nodes
  */
-std::vector<int> Node::getAdj() {
-    return adj;
+std::vector<int> *Node::getAdj() {
+    return &adj;
 }

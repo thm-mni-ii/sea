@@ -16,7 +16,7 @@ private:
     std::vector<int> adj;
     TrailStructure d;
 public:
-    std::vector<int> getAdj();
+    std::vector<int> *getAdj();
     TrailStructure *get_d();
 
     Node(std::vector<int> adj);
