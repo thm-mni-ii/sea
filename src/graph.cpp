@@ -36,9 +36,9 @@ std::vector<Node*> *Graph::get_nodes() {
  * Equals the size of the vector containing the nodes.
  * @return order of the graph as int
  */
-int Graph::order() {
-    return nodes.size();
-}
+//int Graph::order() {
+//    return nodes.size();
+//}
 
 /**
  * Grabs the degree of the node u, u is the index of the node in the nodes vector.
@@ -46,9 +46,9 @@ int Graph::order() {
  * @param u index in the nodes vector
  * @return degree of u
  */
-int Graph::deg(int u) {
-    return nodes.at(u)->getAdj()->size();
-}
+//int Graph::deg(int u) {
+//    return nodes.at(u)->getAdj()->size();
+//}
 
 /**
  * Returns the index of the head of u in the nodes vector.
@@ -79,8 +79,5 @@ void Graph::hierholzer() {
      */
 }
 
-void Graph::extend(Node *e, std::vector<int> *_t) {
-
-}
 
 
