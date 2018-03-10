@@ -13,13 +13,15 @@
 class Node {
 
 private:
-    std::vector<int> adj;
     TrailStructure d;
-public:
-    std::vector<int> *getAdj();
-    TrailStructure *get_d();
+    int deg;
+    std::vector<CrossLinkedInt> adj;
 
-    Node(std::vector<int> adj);
+public:
+    std::vector<CrossLinkedInt>* getAdj();
+    TrailStructure *get_d();
+    int get_deg();
+    Node(const int *_adj, int len);
 };
 
 

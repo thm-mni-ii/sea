@@ -9,18 +9,18 @@
  * Helper Class for TrailStructure.
  * Contains a value and a crosspointer to a matched MatchedInt object.
  */
-class MatchedInt{
+class CrossLinkedInt{
 private:
     int v;
-    MatchedInt *m;
-    void set_match(MatchedInt *m);
+    CrossLinkedInt *m;
+    void set_match(CrossLinkedInt *m);
 
 public:
-    MatchedInt(int v);
-    void match(MatchedInt *m);
+    CrossLinkedInt(int v);
+    void match(CrossLinkedInt *m);
     void unmatch();
     int get_value();
-    MatchedInt* get_match();
+    CrossLinkedInt* get_match();
     bool has_match();
 };
 #endif //SEA_MATCHEDINT_H

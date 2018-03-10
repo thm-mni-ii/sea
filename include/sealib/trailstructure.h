@@ -6,7 +6,7 @@
 #define SEA_TRAILSTRUCTURE_H
 
 #include <unordered_set>
-#include "matchedint.h"
+#include "crosslinkedint.h"
 #include <stdexcept>
 
 /**
@@ -15,23 +15,23 @@
  */
 class TrailStructure{
 private:
-    std::unordered_set<MatchedInt*> i;
-    std::unordered_set<MatchedInt*> o;
-    std::unordered_set<MatchedInt*> u;
+    std::unordered_set<CrossLinkedInt*> i;
+    std::unordered_set<CrossLinkedInt*> o;
+    std::unordered_set<CrossLinkedInt*> u;
 
 public:
     TrailStructure();
-    std::unordered_set<MatchedInt*> *get_u();
-    void add_to_u(MatchedInt* d);
+    std::unordered_set<CrossLinkedInt*> *get_u();
+    void add_to_u(CrossLinkedInt* d);
     bool is_u_empty();
-    bool is_matched(MatchedInt *d);
-    bool is_in_i(MatchedInt *d);
-    bool is_in_o(MatchedInt *d);
-    bool is_in_u(MatchedInt *d);
-    MatchedInt* leave();
-    MatchedInt* enter(MatchedInt *d);
-    MatchedInt* get_matched(MatchedInt *d);
-    void marry(MatchedInt *mi, MatchedInt *mo);
+    bool is_matched(CrossLinkedInt *d);
+    bool is_in_i(CrossLinkedInt *d);
+    bool is_in_o(CrossLinkedInt *d);
+    bool is_in_u(CrossLinkedInt *d);
+    CrossLinkedInt* leave();
+    CrossLinkedInt* enter(CrossLinkedInt *d);
+    CrossLinkedInt* get_matched(CrossLinkedInt *d);
+    void marry(CrossLinkedInt *mi, CrossLinkedInt *mo);
 };
 
 class PhaseException : public std::exception {

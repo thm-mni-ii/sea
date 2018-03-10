@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include "sealib/matchedint.h"
+#include "sealib/crosslinkedint.h"
 
 TEST(MatchedIntTest, constructor) {
-    MatchedInt *i = new MatchedInt(1);
+    CrossLinkedInt *i = new CrossLinkedInt(1);
 
     ASSERT_EQ(i->get_value(), 1);
     ASSERT_EQ(i->get_match(), nullptr);
@@ -12,22 +12,22 @@ TEST(MatchedIntTest, getvalue) {
     int imin = std::numeric_limits<int>::min(); // minimum value
     int imax = std::numeric_limits<int>::max();
 
-    MatchedInt *i = new MatchedInt(0);
+    CrossLinkedInt *i = new CrossLinkedInt(0);
     ASSERT_EQ(i->get_value(),0);
 
-    i = new MatchedInt(1231230);
+    i = new CrossLinkedInt(1231230);
     ASSERT_EQ(i->get_value(),1231230);
 
-    i = new MatchedInt(imin);
+    i = new CrossLinkedInt(imin);
     ASSERT_EQ(i->get_value(), imin);
 
-    i = new MatchedInt(imax);
+    i = new CrossLinkedInt(imax);
     ASSERT_EQ(i->get_value(), imax);
 }
 
 TEST(MatchedIntTest, match) {
-    MatchedInt *i = new MatchedInt(1);
-    MatchedInt *j = new MatchedInt(2);
+    CrossLinkedInt *i = new CrossLinkedInt(1);
+    CrossLinkedInt *j = new CrossLinkedInt(2);
 
     ASSERT_EQ(i->get_match() == nullptr, j->get_match() == nullptr);
     ASSERT_EQ(i->has_match(), false);
@@ -45,8 +45,8 @@ TEST(MatchedIntTest, match) {
     ASSERT_EQ(i->has_match(), false);
     ASSERT_EQ(j->has_match(), false);
 
-    i = new MatchedInt(12);
-    j = new MatchedInt(500);
+    i = new CrossLinkedInt(12);
+    j = new CrossLinkedInt(500);
     j->match(i);
     ASSERT_EQ(i, j->get_match());
     ASSERT_EQ(j, i->get_match());

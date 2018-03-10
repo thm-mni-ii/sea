@@ -13,18 +13,15 @@
 class Graph {
 private:
     std::vector<Node*> nodes;
-    std::vector<int> t;
+    int order;
 
     //void Graph::extend(Node *e, std::vector<int> *_t);
 
 public:
-    Graph();
-    Graph(std::vector<std::vector<int>> adj_matrix);
-    std::vector<Node*> *get_nodes();
-    //int order();
-    //int deg(int u);
+    Graph(int** adj_matrix, int _order);
+    Node* get_node(int u);
     int head(int u, int k);
-
+    int get_order();
     void hierholzer();
 
 };

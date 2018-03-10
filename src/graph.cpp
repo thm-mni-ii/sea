@@ -2,43 +2,64 @@
 // Created by jmeintrup on 06.03.18.
 //
 
+#include <iostream>
 #include "sealib/graph.h"
 
 /**
- * Constructor
+ * Constructor for the graph, takes an adj_matrix as value in the following format:
+ * node x node matrix, entry in matrix is number of edges to that node.
+ *
+ * example:
+ *
+ * n         1       2       3
+ *      **************************
+ *  1   *    0   *   1   *   1   *
+ *      **************************
+ *  2   *    1   *   0   *   2   *
+ *      **************************
+ *  3   *    0   *   2   *   1   *
+ *      **************************
  */
-Graph::Graph(std::vector<std::vector<int>> adj_matrix) {
+Graph::Graph(int** adj_matrix, int _order) {
+
+    order = _order;
     nodes = std::vector<Node*>();
-    for(std::vector<int> v : adj_matrix) {
-        nodes.push_back(new Node(v));
+
+    for(int i = 0; i < order; i ++) {
+        auto * n = new Node(adj_matrix[i], order);
+        nodes.push_back(n);
+    }
+
+    for(int i = 0; i < order ; i ++) {
+        int deg = nodes.at(i)->get_deg();
+        std::vector<CrossLinkedInt> *adj_arr = nodes.at(i)->getAdj();
+        for(int j = 0; j < deg; j++) {
+            if(!adj_arr->at(j).has_match()) {
+                int v = adj_arr->at(j).get_value();
+
+                std::vector<CrossLinkedInt> *_adj_arr = nodes.at(v)->getAdj();
+                int _deg = nodes.at(v)->get_deg();
+                for(int _j = 0; _j < _deg;_j++) {
+                    if(!_adj_arr->at(_j).has_match() && _adj_arr->at(_j).get_value() == i) {
+                        _adj_arr->at(_j).match(&adj_arr->at(j));
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
 
-/**
- * Default constructor constructs an empty node vector.
- * Use get_nodes to retrieve a pointer to the vector and then add the nodes of a graph.
- */
-Graph::Graph() {
-    nodes = std::vector<Node*>();
-}
 
-/**
- * getter function for the vector containing all nodes.
- * index in the vector corresponds to the node number.
- * @return pointer to the node vector
- */
-std::vector<Node*> *Graph::get_nodes() {
-    return &nodes;
-}
+
 
 /**
  * Order is the number of nodes in the graph.
- * Equals the size of the vector containing the nodes.
  * @return order of the graph as int
  */
-//int Graph::order() {
-//    return nodes.size();
-//}
+int Graph::get_order() {
+    return order;
+}
 
 /**
  * Grabs the degree of the node u, u is the index of the node in the nodes vector.
@@ -57,7 +78,7 @@ std::vector<Node*> *Graph::get_nodes() {
  * @return
  */
 int Graph::head(int u, int k) {
-    return nodes.at(u)->getAdj()->at(k);;
+    return nodes.at(u)->getAdj()->at(u).get_value();
 }
 
 void Graph::hierholzer() {
@@ -77,6 +98,10 @@ void Graph::hierholzer() {
      *
      *
      */
+}
+
+Node *Graph::get_node(int u) {
+    return nodes.at(u);
 }
 
 

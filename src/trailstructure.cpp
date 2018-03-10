@@ -18,11 +18,11 @@ bool TrailStructure::is_u_empty() {
  * @param MatchedInt *d, which has to be in I U or O.
  * @return true if the MatchedInt d has a match, otherwise false.
  */
-bool TrailStructure::is_matched(MatchedInt *d) {
+bool TrailStructure::is_matched(CrossLinkedInt *d) {
     if(!(is_in_i(d) || is_in_o(d))) {
         throw std::invalid_argument("Matched int d is not in I or O!");
     }
-    MatchedInt *m = d->get_match();
+    CrossLinkedInt *m = d->get_match();
     if(m == nullptr) return false;
 
     if(!(is_in_i(m) || is_in_o(m))) {
@@ -37,7 +37,7 @@ bool TrailStructure::is_matched(MatchedInt *d) {
  * @param MatchedInt *d
  * @return true if the MatchedInt d is in I, otherwise false.
  */
-bool TrailStructure::is_in_i(MatchedInt *d) {
+bool TrailStructure::is_in_i(CrossLinkedInt *d) {
     return i.count(d) == 1;
 }
 
@@ -46,7 +46,7 @@ bool TrailStructure::is_in_i(MatchedInt *d) {
  * @param MatchedInt *d
  * @return true if the MatchedInt d is in O, otherwise false.
  */
-bool TrailStructure::is_in_o(MatchedInt *d) {
+bool TrailStructure::is_in_o(CrossLinkedInt *d) {
     return o.count(d) == 1;;
 }
 
@@ -55,7 +55,7 @@ bool TrailStructure::is_in_o(MatchedInt *d) {
  * @param MatchedInt *d
  * @return true if the MatchedInt d is in O, otherwise false.
  */
-bool TrailStructure::is_in_u(MatchedInt *d) {
+bool TrailStructure::is_in_u(CrossLinkedInt *d) {
     return u.count(d) == 1;;
 }
 
@@ -64,9 +64,9 @@ bool TrailStructure::is_in_u(MatchedInt *d) {
  * @param MatchedInt *d
  * @return arbitrary element .
  */
-MatchedInt* TrailStructure::leave() {
+CrossLinkedInt* TrailStructure::leave() {
     if(is_u_empty()) throw PhaseException();
-    MatchedInt* d = *std::next(u.begin());
+    CrossLinkedInt* d = *std::next(u.begin());
     u.erase(d);
     o.insert(d);
     return  d;
@@ -80,13 +80,13 @@ MatchedInt* TrailStructure::leave() {
  * @param MatchedInt *d
  * @return Linked MatchedInt *mi or nulltptr.
  */
-MatchedInt* TrailStructure::enter(MatchedInt *d) {
-    if(!is_in_u(d)) throw std::invalid_argument("MatchedInt d is not in U!");
+CrossLinkedInt* TrailStructure::enter(CrossLinkedInt *d) {
+    if(!is_in_u(d)) throw std::invalid_argument("CrossLinkedInt d is not in U!");
     u.erase(d);
     i.insert(d);
 
     if(!is_u_empty()) {
-        MatchedInt* mi = *std::next(u.begin());
+        CrossLinkedInt* mi = *std::next(u.begin());
         u.erase(mi);
         o.insert(mi);
         d->match(mi);
@@ -102,11 +102,11 @@ MatchedInt* TrailStructure::enter(MatchedInt *d) {
  * @param d MatchedInt* in I or O.
  * @return The match of d.
  */
-MatchedInt* TrailStructure::get_matched(MatchedInt *d) {
+CrossLinkedInt* TrailStructure::get_matched(CrossLinkedInt *d) {
     if(!is_u_empty()) throw PhaseException();
-    if(!(is_in_i(d) || is_in_o(d))) throw std::invalid_argument("MatchedInt d is not in I or O!");
+    if(!(is_in_i(d) || is_in_o(d))) throw std::invalid_argument("CrossLinkedInt d is not in I or O!");
 
-    if(d->get_match() == nullptr) throw std::invalid_argument("MatchedInt d has no match!");
+    if(d->get_match() == nullptr) throw std::invalid_argument("CrossLinkedInt d has no match!");
 
     return d->get_match();
 }
@@ -119,10 +119,10 @@ MatchedInt* TrailStructure::get_matched(MatchedInt *d) {
  * @param mi element of I
  * @param mo element of O
  */
-void TrailStructure::marry(MatchedInt *mi, MatchedInt *mo) {
+void TrailStructure::marry(CrossLinkedInt *mi, CrossLinkedInt *mo) {
     if(!is_u_empty()) throw PhaseException();
-    if(!is_in_i(mi)) throw std::invalid_argument("MatchedInt mi not in I!");
-    if(!is_in_i(mo)) throw std::invalid_argument("MatchedInt mo not in O!");
+    if(!is_in_i(mi)) throw std::invalid_argument("CrossLinkedInt mi not in I!");
+    if(!is_in_i(mo)) throw std::invalid_argument("CrossLinkedInt mo not in O!");
 
     mi->unmatch();
     mo->unmatch();
@@ -135,7 +135,7 @@ void TrailStructure::marry(MatchedInt *mi, MatchedInt *mo) {
  * @param d MatchedInt to be added to U
  */
 
-void TrailStructure::add_to_u(MatchedInt *d) {
+void TrailStructure::add_to_u(CrossLinkedInt *d) {
     u.insert(d);
 }
 
@@ -145,6 +145,6 @@ void TrailStructure::add_to_u(MatchedInt *d) {
 TrailStructure::TrailStructure() {
 }
 
-std::unordered_set<MatchedInt *> *TrailStructure::get_u() {
+std::unordered_set<CrossLinkedInt *> *TrailStructure::get_u() {
     return &u;
 }
