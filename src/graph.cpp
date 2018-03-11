@@ -88,7 +88,7 @@ void Graph::hierholzer() {
      *      if(gray AND even)
      *          a_old = marked arc from u;
      *
-     *      e = unmaked edge out of u; mark a_e out of u;
+     *      e = unmaked edge out of u; mark k_a_e out of u;
      *      std::vector _t = std::vector<int>();
      *      _t.push(a_e)
      *  
@@ -98,11 +98,15 @@ void Graph::hierholzer() {
      */
     while(true) {
         Node *u = nullptr;
+        int k_old = -1;
         for(auto n: nodes) {
             int deg = n->get_deg();
             int curr_deg = n->get_d()->curr_deg();
-            if(curr_deg > 0 && curr_deg % 2 != 0) { //uneven non-black node
+            if(curr_deg % 2 != 0) { //uneven non-black node
                 u = n;
+                if(curr_deg != deg) { //uneven and grey
+                    k_old = n->get_d()->get_from_o()->get_value(); //has to have an element in o if it's grey
+                }
                 break;
             } else if(curr_deg > 0 && curr_deg != deg) { //grey node
                 u = n;
@@ -110,15 +114,21 @@ void Graph::hierholzer() {
             } else if(curr_deg == deg) { //white node
                 u = n;
             }
+
             //else: black node, we don't do anything
         }
         //all nodes left are black, loop ends
         if(u== nullptr) break;
+        extend(u);
     }
 }
 
 Node *Graph::get_node(int u) {
     return nodes.at(u);
+}
+
+void Graph::extend(Node *e) {
+
 }
 
 

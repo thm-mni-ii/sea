@@ -29,6 +29,7 @@ public:
     bool is_in_i(CrossLinkedInt *d);
     bool is_in_o(CrossLinkedInt *d);
     bool is_in_u(CrossLinkedInt *d);
+    CrossLinkedInt* get_from_o();
     CrossLinkedInt* leave();
     CrossLinkedInt* enter(CrossLinkedInt *d);
     CrossLinkedInt* get_matched(CrossLinkedInt *d);

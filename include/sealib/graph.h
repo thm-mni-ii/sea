@@ -14,8 +14,7 @@ class Graph {
 private:
     std::vector<Node*> nodes;
     int order;
-
-    //void Graph::extend(Node *e, std::vector<int> *_t);
+    void extend(Node *e);
 
 public:
     Graph(int** adj_matrix, int _order);

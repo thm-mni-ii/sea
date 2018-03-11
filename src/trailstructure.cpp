@@ -152,3 +152,11 @@ std::unordered_set<CrossLinkedInt *> *TrailStructure::get_u() {
 int TrailStructure::curr_deg() {
     return u.size();
 }
+
+CrossLinkedInt *TrailStructure::get_from_o() {
+    if(!o.empty()) {
+        return *std::next(o.begin());
+    } else {
+        return nullptr;
+    }
+}
