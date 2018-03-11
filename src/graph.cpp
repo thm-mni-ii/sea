@@ -78,7 +78,7 @@ int Graph::get_order() {
  * @return
  */
 int Graph::head(int u, int k) {
-    return nodes.at(u)->getAdj()->at(u).get_value();
+    return nodes.at(u)->getAdj()->at(k).get_value();
 }
 
 void Graph::hierholzer() {
@@ -95,9 +95,26 @@ void Graph::hierholzer() {
      *      extend(e);
      *
      *      if(a_old) insert T_old into T;
-     *
-     *
      */
+    while(true) {
+        Node *u = nullptr;
+        for(auto n: nodes) {
+            int deg = n->get_deg();
+            int curr_deg = n->get_d()->curr_deg();
+            if(curr_deg > 0 && curr_deg % 2 != 0) { //uneven non-black node
+                u = n;
+                break;
+            } else if(curr_deg > 0 && curr_deg != deg) { //grey node
+                u = n;
+                break;
+            } else if(curr_deg == deg) { //white node
+                u = n;
+            }
+            //else: black node, we don't do anything
+        }
+        //all nodes left are black, loop ends
+        if(u== nullptr) break;
+    }
 }
 
 Node *Graph::get_node(int u) {

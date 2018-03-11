@@ -21,8 +21,6 @@ Node::Node(const int _adj[], int len) {
         deg += _adj[i];
     }
 
-    std::cout << "deg: " << deg << std::endl;
-
     //adj = (CrossLinkedInt**) malloc(sizeof(CrossLinkedInt*) * deg);
     adj = std::vector<CrossLinkedInt>();
     //adj.resize(deg);
@@ -31,6 +29,10 @@ Node::Node(const int _adj[], int len) {
         for(int j = 0; j < _adj[i]; j++ ) {
             adj.push_back(CrossLinkedInt(i));
         }
+    }
+
+    for(int i = 0; i < deg; i++) {
+        d.add_to_u(new CrossLinkedInt(i));
     }
 }
 

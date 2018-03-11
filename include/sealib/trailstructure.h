@@ -22,6 +22,7 @@ private:
 public:
     TrailStructure();
     std::unordered_set<CrossLinkedInt*> *get_u();
+    int curr_deg();
     void add_to_u(CrossLinkedInt* d);
     bool is_u_empty();
     bool is_matched(CrossLinkedInt *d);
