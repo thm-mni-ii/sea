@@ -1,28 +1,36 @@
-//
-// Created by jmeintrup on 06.03.18.
-//
-
 #ifndef SEA_NODE_H
 #define SEA_NODE_H
 
-
 #include <vector>
-#include <ostream>
-#include "trailstructure.h"
+#include "adjacency.h"
 
+/**
+ * A Node object containing the nodes adjacencies and its degree.
+ * @author Johannes Meintrup
+ */
 class Node {
 
 private:
-    TrailStructure d;
-    int deg;
-    std::vector<CrossLinkedInt> adj;
+    Adjacency *adj;
+    unsigned int deg;
 
 public:
-    std::vector<CrossLinkedInt>* getAdj();
-    TrailStructure *get_d();
-    int get_deg();
-    Node(const int *_adj, int len);
-};
+    /**
+     * Creates a node out of its adjacencies.
+     * @param _adj array of adjacencies.
+     * @param _deg degree of this node.
+    */
+    Node(Adjacency *_adj, unsigned int _deg);
 
+    /**
+     * @return Returns a pointer to the adjacency array.
+     */
+    Adjacency *getAdj();
+
+    /**
+     * @return Returns the degree of the node.
+     */
+    unsigned int getDegree();
+};
 
 #endif //SEA_NODE_H
