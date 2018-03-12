@@ -22,5 +22,4 @@ public:
     int head(int u, int k);
     int get_order();
     void hierholzer();
-
 };

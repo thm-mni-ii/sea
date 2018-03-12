@@ -98,14 +98,14 @@ void Graph::hierholzer() {
      */
     while(true) {
         Node *u = nullptr;
-        int k_old = -1;
+        CrossLinkedInt* k_old = nullptr;
         for(auto n: nodes) {
             int deg = n->get_deg();
             int curr_deg = n->get_d()->curr_deg();
             if(curr_deg % 2 != 0) { //uneven non-black node
                 u = n;
                 if(curr_deg != deg) { //uneven and grey
-                    k_old = n->get_d()->get_from_o()->get_value(); //has to have an element in o if it's grey
+                    k_old = u->get_d()->get_from_o(); //get index of a_old in incidence arr
                 }
                 break;
             } else if(curr_deg > 0 && curr_deg != deg) { //grey node
@@ -118,7 +118,11 @@ void Graph::hierholzer() {
             //else: black node, we don't do anything
         }
         //all nodes left are black, loop ends
-        if(u== nullptr) break;
+        if(u == nullptr) break;
+
+        /**
+         * CrossLinkedInt* k_first = leave(u);
+         */
         extend(u);
     }
 }
