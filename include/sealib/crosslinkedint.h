@@ -11,15 +11,15 @@
  */
 class CrossLinkedInt{
 private:
-    int v;
+    unsigned int v;
     CrossLinkedInt *m;
     void set_match(CrossLinkedInt *m);
 
 public:
-    CrossLinkedInt(int v);
+    CrossLinkedInt(unsigned int v);
     void match(CrossLinkedInt *m);
     void unmatch();
-    int get_value();
+    unsigned int get_value();
     CrossLinkedInt* get_match();
     bool has_match();
 };

@@ -9,8 +9,8 @@ TEST(MatchedIntTest, constructor) {
 }
 
 TEST(MatchedIntTest, getvalue) {
-    int imin = std::numeric_limits<int>::min(); // minimum value
-    int imax = std::numeric_limits<int>::max();
+    unsigned int imin = std::numeric_limits<unsigned int>::min(); // minimum value
+    unsigned int imax = std::numeric_limits<unsigned int>::max();
 
     CrossLinkedInt *i = new CrossLinkedInt(0);
     ASSERT_EQ(i->get_value(),0);

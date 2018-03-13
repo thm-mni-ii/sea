@@ -149,8 +149,8 @@ std::unordered_set<CrossLinkedInt *> *TrailStructure::get_u() {
     return &u;
 }
 
-int TrailStructure::curr_deg() {
-    return u.size();
+unsigned int TrailStructure::curr_deg() {
+    return (unsigned int) u.size();
 }
 
 CrossLinkedInt *TrailStructure::get_from_o() {

@@ -6,16 +6,17 @@
 #define SEA_ADJACENCY_H
 class Adjacency {
 public:
-    int vertex;
-    int index;
+    unsigned int vertex;
+    unsigned int index;
     /**
      * Adjacency constructor.
      * Vertex is the number of the vertex
      * Index has to be set after the other vertex to be crosslinked with has been created
      * @param vertex
      */
-    Adjacency(int vertex):vertex(vertex){
-        index = -1;
-    };
+    Adjacency(unsigned int _vertex);
 };
+
+
+
 #endif //SEA_ADJACENCY_H

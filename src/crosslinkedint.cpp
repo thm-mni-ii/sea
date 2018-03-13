@@ -9,7 +9,7 @@
  * Constructs it with a nullptr as it's match.
  * @param _v value of the matched int.
  */
-CrossLinkedInt::CrossLinkedInt(int _v)  {
+CrossLinkedInt::CrossLinkedInt(unsigned int _v)  {
     v = _v;
     m = nullptr;
 }
@@ -31,7 +31,7 @@ void CrossLinkedInt::set_match(CrossLinkedInt *_m) {
  * Getter for the value.
  * @return v
  */
-int CrossLinkedInt::get_value() {
+unsigned int CrossLinkedInt::get_value() {
     return v;
 }
 

@@ -7,8 +7,8 @@
 #include "sealib/graph.h"
 
 TEST(GraphTest, graph_integrity) {
-    int order = 4;
-    int **adj_mtrx = (int**) std::malloc(sizeof(int) * 4 * 4);
+    unsigned int order = 4;
+    unsigned int **adj_mtrx = (unsigned int**) std::malloc(sizeof(unsigned int) * 4 * 4);
     /**
      * (n)       0       1       2       3
      *      **********************************
@@ -21,10 +21,10 @@ TEST(GraphTest, graph_integrity) {
      *  3   *    1   *   0   *   1   *   0   *
      *      **********************************
      */
-    adj_mtrx[0] = new int[order]{0,2,0,1};
-    adj_mtrx[1] = new int[order]{2,0,1,0};
-    adj_mtrx[2] = new int[order]{0,1,0,1};
-    adj_mtrx[3] = new int[order]{1,0,1,0};
+    adj_mtrx[0] = new unsigned int[order]{0,2,0,1};
+    adj_mtrx[1] = new unsigned int[order]{2,0,1,0};
+    adj_mtrx[2] = new unsigned int[order]{0,1,0,1};
+    adj_mtrx[3] = new unsigned int[order]{1,0,1,0};
 
     Graph *g = new Graph(adj_mtrx, order);
 
@@ -36,29 +36,17 @@ TEST(GraphTest, graph_integrity) {
     ASSERT_EQ(g->get_node(3)->get_deg(), 2);
 
     //verify the adj vector contents of each node
-    ASSERT_EQ(g->get_node(0)->getAdj()->at(0).get_value(), 1);
-    ASSERT_EQ(g->get_node(0)->getAdj()->at(1).get_value(), 1);
-    ASSERT_EQ(g->get_node(0)->getAdj()->at(2).get_value(), 3);
+    ASSERT_EQ(g->get_node(0)->get_adj()->at(0).vertex, 1);
+    ASSERT_EQ(g->get_node(0)->get_adj()->at(1).vertex, 1);
+    ASSERT_EQ(g->get_node(0)->get_adj()->at(2).vertex, 3);
 
-    ASSERT_EQ(g->get_node(1)->getAdj()->at(0).get_value(), 0);
-    ASSERT_EQ(g->get_node(1)->getAdj()->at(1).get_value(), 0);
-    ASSERT_EQ(g->get_node(1)->getAdj()->at(2).get_value(), 2);
+    ASSERT_EQ(g->get_node(1)->get_adj()->at(0).vertex, 0);
+    ASSERT_EQ(g->get_node(1)->get_adj()->at(1).vertex, 0);
+    ASSERT_EQ(g->get_node(1)->get_adj()->at(2).vertex, 2);
 
-    ASSERT_EQ(g->get_node(2)->getAdj()->at(0).get_value(), 1);
-    ASSERT_EQ(g->get_node(2)->getAdj()->at(1).get_value(), 3);
+    ASSERT_EQ(g->get_node(2)->get_adj()->at(0).vertex, 1);
+    ASSERT_EQ(g->get_node(2)->get_adj()->at(1).vertex, 3);
 
-    ASSERT_EQ(g->get_node(3)->getAdj()->at(0).get_value(), 0);
-    ASSERT_EQ(g->get_node(3)->getAdj()->at(1).get_value(), 2);
-
-    //verify links of node 0
-    Node* n0 = g->get_node(0);
-    ASSERT_EQ(n0->getAdj()->at(0).get_match(), &g->get_node(1)->getAdj()->at(0));
-    ASSERT_EQ(n0->getAdj()->at(1).get_match(), &g->get_node(1)->getAdj()->at(1));
-    ASSERT_EQ(n0->getAdj()->at(1).get_match(), &g->get_node(1)->getAdj()->at(1));
-
-    ASSERT_EQ(&n0->getAdj()->at(0), g->get_node(1)->getAdj()->at(0).get_match());
-    ASSERT_EQ(&n0->getAdj()->at(1), g->get_node(1)->getAdj()->at(1).get_match());
-    ASSERT_EQ(&n0->getAdj()->at(1), g->get_node(1)->getAdj()->at(1).get_match());
-    /*ASSERT_EQ(g->get_node(0)->getAdj()->at(1).get_value(), 1);
-    ASSERT_EQ(g->get_node(0)->getAdj()->at(2).get_value(), 3);*/
+    ASSERT_EQ(g->get_node(3)->get_adj()->at(0).vertex, 0);
+    ASSERT_EQ(g->get_node(3)->get_adj()->at(1).vertex, 2);
 }
