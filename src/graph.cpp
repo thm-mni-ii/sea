@@ -2,7 +2,6 @@
 // Created by jmeintrup on 06.03.18.
 //
 
-#include <sealib/trailstructure.h>
 #include <limits>
 #include "sealib/graph.h"
 
