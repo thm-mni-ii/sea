@@ -69,7 +69,7 @@ CrossLinkedInt* TrailStructure::leave() {
     CrossLinkedInt* d = *std::next(u.begin());
     u.erase(d);
     o.insert(d);
-    return  d;
+    return d;
 }
 
 /**
