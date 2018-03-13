@@ -29,24 +29,24 @@ TEST(GraphTest, graph_integrity) {
     Graph *g = new Graph(adj_mtrx, order);
 
     //verify correct order and degree of nodes
-    ASSERT_EQ(g->get_order(), order);
-    ASSERT_EQ(g->get_node(0)->get_deg(), 3);
-    ASSERT_EQ(g->get_node(1)->get_deg(), 3);
-    ASSERT_EQ(g->get_node(2)->get_deg(), 2);
-    ASSERT_EQ(g->get_node(3)->get_deg(), 2);
+    ASSERT_EQ(g->getOrder(), order);
+    ASSERT_EQ(g->getNode(0)->getDeg(), 3);
+    ASSERT_EQ(g->getNode(1)->getDeg(), 3);
+    ASSERT_EQ(g->getNode(2)->getDeg(), 2);
+    ASSERT_EQ(g->getNode(3)->getDeg(), 2);
 
     //verify the adj vector contents of each node
-    ASSERT_EQ(g->get_node(0)->get_adj()->at(0).vertex, 1);
-    ASSERT_EQ(g->get_node(0)->get_adj()->at(1).vertex, 1);
-    ASSERT_EQ(g->get_node(0)->get_adj()->at(2).vertex, 3);
+    ASSERT_EQ(g->getNode(0)->getAdj()->at(0).vertex, 1);
+    ASSERT_EQ(g->getNode(0)->getAdj()->at(1).vertex, 1);
+    ASSERT_EQ(g->getNode(0)->getAdj()->at(2).vertex, 3);
 
-    ASSERT_EQ(g->get_node(1)->get_adj()->at(0).vertex, 0);
-    ASSERT_EQ(g->get_node(1)->get_adj()->at(1).vertex, 0);
-    ASSERT_EQ(g->get_node(1)->get_adj()->at(2).vertex, 2);
+    ASSERT_EQ(g->getNode(1)->getAdj()->at(0).vertex, 0);
+    ASSERT_EQ(g->getNode(1)->getAdj()->at(1).vertex, 0);
+    ASSERT_EQ(g->getNode(1)->getAdj()->at(2).vertex, 2);
 
-    ASSERT_EQ(g->get_node(2)->get_adj()->at(0).vertex, 1);
-    ASSERT_EQ(g->get_node(2)->get_adj()->at(1).vertex, 3);
+    ASSERT_EQ(g->getNode(2)->getAdj()->at(0).vertex, 1);
+    ASSERT_EQ(g->getNode(2)->getAdj()->at(1).vertex, 3);
 
-    ASSERT_EQ(g->get_node(3)->get_adj()->at(0).vertex, 0);
-    ASSERT_EQ(g->get_node(3)->get_adj()->at(1).vertex, 2);
+    ASSERT_EQ(g->getNode(3)->getAdj()->at(0).vertex, 0);
+    ASSERT_EQ(g->getNode(3)->getAdj()->at(1).vertex, 2);
 }

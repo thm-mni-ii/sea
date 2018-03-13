@@ -9,13 +9,15 @@
 #define SEA_GRAPH_H
 
 #endif //SEA_GRAPH_Hs
-
+/**
+ * Graph class.
+ * A Graph object represents a vector of node objects and it's order.
+ * It is just a container to be used by different functions.
+ */
 class Graph {
 private:
     std::vector<Node*> nodes;
     unsigned int order;
-
-    void hierholzer_extend(Node *e);
 
 public:
     /**
@@ -24,7 +26,7 @@ public:
      *
      * example:
      *
-     *  n        1       2       3
+     * n         1       2       3
      *      **************************
      *  1   *    0   *   1   *   1   *
      *      **************************
@@ -32,6 +34,8 @@ public:
      *      **************************
      *  3   *    0   *   2   *   1   *
      *      **************************
+     * @param adj_matrix NxN adjcacency matrix representation of the graph.
+     * @param _order Order of the graph, order equals the number of nodes.
      */
     Graph(unsigned int** adj_matrix, unsigned int _order);
 
@@ -40,7 +44,7 @@ public:
      * @param u index in the nodes vector
      * @return Pointer to the Node in the nodes vector
      */
-    Node* get_node(unsigned int u);
+    Node* getNode(unsigned int u);
 
     /**
     * Returns the index of the head of u in the nodes vector.
@@ -54,7 +58,5 @@ public:
     * Order is the number of nodes in the graph.
     * @return order of the graph as int
     */
-    unsigned int get_order();
-
-    void hierholzer();
+    unsigned int getOrder();
 };

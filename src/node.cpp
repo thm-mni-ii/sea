@@ -7,13 +7,13 @@
  * Getter for the adjacency vector. Returns a pointer to the vector
  * @return pointer to adj
  */
-std::vector<Adjacency> *Node::get_adj() { return &adj; }
+std::vector<Adjacency> *Node::getAdj() { return &adj; }
 
 /**
  * Getter for the degree of the node.
  * @return value of deg
  */
-unsigned int Node::get_deg() { return deg; }
+unsigned int Node::getDeg() { return deg; }
 
 /**
      * Constructor for the Node class.
@@ -21,15 +21,15 @@ unsigned int Node::get_deg() { return deg; }
      * and fills d.u with new MatchedInt objects with values corresponding to adj.
      * @param _adj adjacency vector of this node.
     */
-Node::Node(const unsigned int *_adj, unsigned int len) {
+Node::Node(const unsigned int *adjArr, unsigned int len) {
     deg = 0;
     for(unsigned int i = 0; i < len; i ++) {
-        deg += _adj[i];
+        deg += adjArr[i];
     }
     adj = std::vector<Adjacency>();
 
     for(unsigned int i = 0; i < len; i ++) {
-        for(unsigned int j = 0; j < _adj[i]; j++ ) {
+        for(unsigned int j = 0; j < adjArr[i]; j++ ) {
             adj.push_back(Adjacency(i));
         }
     }

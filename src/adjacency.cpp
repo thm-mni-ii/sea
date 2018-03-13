@@ -12,5 +12,5 @@
      */
 
 Adjacency::Adjacency(unsigned int _vertex) :vertex(_vertex){
-    index = std::numeric_limits<unsigned int>::max();
+    crossIndex = std::numeric_limits<unsigned int>::max();
 }

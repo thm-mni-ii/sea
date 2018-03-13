@@ -8,7 +8,11 @@
 
 #include <vector>
 #include "adjacency.h"
-
+/**
+ * Node class.
+ * A Node object represents a node's edges and it's degree.
+ * It is used by the graph class.
+ */
 class Node {
 
 private:
@@ -29,12 +33,12 @@ public:
      * Getter for the adjacency vector. Returns a pointer to the vector
      * @return pointer to adj
      */
-    std::vector<Adjacency> *get_adj();
+    std::vector<Adjacency> *getAdj();
 
     /**
      * Getter for the degree of the node.
      * @return value of deg
      */
-    unsigned int get_deg();
+    unsigned int getDeg();
 };
 #endif //SEA_NODE_H
