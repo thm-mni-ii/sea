@@ -14,10 +14,13 @@ class Adjacency {
 public:
     unsigned int vertex;
     unsigned int crossIndex;
+
     /**
      * Adjacency constructor.
      * Vertex is the number of the vertex
-     * Index has to be set after the other vertex to be crosslinked with has been created
+     * Index has to be set after the other vertex to be crosslinked with has been created.
+     * It is initialized with unsigned int max value, which serves as a check for unlinked.
+     * This means that it is only possible to create max(unsigned int) - 1 edges for a node.
      * @param vertex
      */
     Adjacency(unsigned int _vertex);
