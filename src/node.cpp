@@ -4,10 +4,10 @@
 #include "sealib/node.h"
 
 /**
- * Getter for the adjacency vector. Returns a pointer to the vector
+ * Getter for the adjacency array. Returns a pointer to the first element of the array.
  * @return pointer to adj
  */
-std::vector<Adjacency> *Node::getAdj() { return &adj; }
+Adjacency* Node::getAdj() { return adj; }
 
 /**
  * Getter for the degree of the node.
@@ -16,21 +16,8 @@ std::vector<Adjacency> *Node::getAdj() { return &adj; }
 unsigned int Node::getDeg() { return deg; }
 
 /**
-     * Constructor for the Node class.
-     * Takes the adjacency vector and creates a new TrailStructure d
-     * and fills d.u with new MatchedInt objects with values corresponding to adj.
-     * @param _adj adjacency vector of this node.
-    */
-Node::Node(const unsigned int *adjArr, unsigned int len) {
-    deg = 0;
-    for(unsigned int i = 0; i < len; i ++) {
-        deg += adjArr[i];
-    }
-    adj = std::vector<Adjacency>();
-
-    for(unsigned int i = 0; i < len; i ++) {
-        for(unsigned int j = 0; j < adjArr[i]; j++ ) {
-            adj.push_back(Adjacency(i));
-        }
-    }
-}
+ * Constructor for the Node class.
+ * @param _adj array of adjacencys of this node.
+ * @param _deg degree of this node.
+*/
+Node::Node(Adjacency *_adj, unsigned int _deg) : adj(_adj),deg(_deg) {}

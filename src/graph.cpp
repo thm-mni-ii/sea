@@ -8,44 +8,50 @@
 
 
 /**
- * Constructor for the graph, takes an adj_matrix as value in the following format:
- * node x node matrix, entry in matrix is number of edges to that node.
- *
- * example:
- *
- * n         1       2       3
- *      **************************
- *  1   *    0   *   1   *   1   *
- *      **************************
- *  2   *    1   *   0   *   2   *
- *      **************************
- *  3   *    0   *   2   *   1   *
- *      **************************
- * @param adj_matrix NxN adjcacency matrix representation of the graph.
- * @param _order Order of the graph, order equals the number of nodes.
+ * Getter for a specific node in the nodes array.
+ * @param u index in the nodes array
+ * @return Pointer to the Node in the nodes array
  */
-Graph::Graph(unsigned int** adj_matrix, unsigned int _order):order(_order) {
-    nodes = std::vector<Node*>();
+Node *Graph::getNode(unsigned int u) { return &nodes[u]; }
 
-    for(unsigned int i = 0; i < order; i ++) {
-        auto * n = new Node(adj_matrix[i], order);
-        nodes.push_back(n);
-    }
+/**
+* Returns the index of the head of u in the nodes vector.
+* @param u index in the nodes vector
+* @param k index in the adjacency vector of node u
+* @return index of the head vertex in the nodes vector
+*/
+unsigned int Graph::head(unsigned int u, unsigned int k) { return nodes[u].getAdj()[k].vertex; }
 
+/**
+* Order is the number of nodes in the graph.
+* @return order of the graph as int
+*/
+unsigned int Graph::getOrder() { return order; }
+
+
+/**
+ * Constructor for the Graph class.
+ * Initiliazes the crossIndexes of the adjacencies of the nodes.
+ * @param _nodes Array of nodes, to be initialized by the caller.
+ * @param _order Order of the graph, equals the length of the nodes array.
+ */
+Graph::Graph(Node *_nodes, unsigned int _order) : nodes(_nodes), order(_order) {
     for(unsigned int i = 0; i < order ; i ++) {
-        unsigned int deg = nodes.at(i)->getDeg();
-        std::vector<Adjacency> *adj_arr = nodes.at(i)->getAdj();
+
+        const unsigned int deg = nodes[i].getDeg();
+        Adjacency *adj_arr = nodes[i].getAdj();
 
         for(unsigned int j = 0; j < deg; j++) {
-            if(adj_arr->at(j).crossIndex == std::numeric_limits<unsigned int>::max()) {
-                unsigned int v = adj_arr->at(j).vertex;
+            if(adj_arr[j].crossIndex == std::numeric_limits<unsigned int>::max()) {
 
-                std::vector<Adjacency> *_adj_arr = nodes.at(v)->getAdj();
-                unsigned int _deg = nodes.at(v)->getDeg();
+                unsigned int v = adj_arr[j].vertex;
+                Adjacency *_adj_arr = nodes[v].getAdj();
+                const unsigned int _deg = nodes[v].getDeg();
+
                 for(unsigned int _j = 0; _j < _deg;_j++) {
-                    if(_adj_arr->at(_j).crossIndex == std::numeric_limits<unsigned int>::max() && _adj_arr->at(_j).vertex == i) {
-                        _adj_arr->at(_j).crossIndex = j;
-                        adj_arr->at(j).crossIndex = _j;
+                    if(_adj_arr[_j].crossIndex == std::numeric_limits<unsigned int>::max() && _adj_arr[_j].vertex == i) {
+                        _adj_arr[_j].crossIndex = j;
+                        adj_arr[j].crossIndex = _j;
                         break;
                     }
                 }
@@ -53,24 +59,3 @@ Graph::Graph(unsigned int** adj_matrix, unsigned int _order):order(_order) {
         }
     }
 }
-
-/**
-     * Getter for a specific node in the nodes vector.
-     * @param u index in the nodes vector
-     * @return Pointer to the Node in the nodes vector
-     */
-Node *Graph::getNode(unsigned int u) { return nodes.at(u); }
-
-/**
-    * Returns the index of the head of u in the nodes vector.
-    * @param u index in the nodes vector
-    * @param k index in the adjacency vector of node u
-    * @return index of the head vertex in the nodes vector
-    */
-unsigned int Graph::head(unsigned int u, unsigned int k) { return nodes.at(u)->getAdj()->at(k).vertex; }
-
-/**
-    * Order is the number of nodes in the graph.
-    * @return order of the graph as int
-    */
-unsigned int Graph::getOrder() { return order; }

@@ -16,24 +16,24 @@
 class Node {
 
 private:
+    Adjacency* adj;
     unsigned int deg;
-    std::vector<Adjacency> adj;
+
 
 public:
 
     /**
      * Constructor for the Node class.
-     * Takes the adjacency vector and creates a new TrailStructure d
-     * and fills d.u with new MatchedInt objects with values corresponding to adj.
-     * @param _adj adjacency vector of this node.
+     * @param _adj array of adjacencys of this node.
+     * @param _deg degree of this node.
     */
-    Node(const unsigned int _adj[], unsigned int len);
+    Node(Adjacency *_adj, unsigned int _deg);
 
     /**
-     * Getter for the adjacency vector. Returns a pointer to the vector
+     * Getter for the adjacency array. Returns a pointer to the first element of the array.
      * @return pointer to adj
      */
-    std::vector<Adjacency> *getAdj();
+    Adjacency *getAdj();
 
     /**
      * Getter for the degree of the node.

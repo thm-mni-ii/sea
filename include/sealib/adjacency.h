@@ -4,10 +4,11 @@
 
 #ifndef SEA_ADJACENCY_H
 #define SEA_ADJACENCY_H
+
 /**
  * Adjacency class.
- * An Adjacency object is used in the nodes class as a representation of an edges endpoint and a crossIndex which serves
- * as a crosslink to it's matched edge.
+ * An Adjacency object is used in the nodes class as a representation of an edges endpoint
+ * and a crossIndex which serves as a crosslink to it's matched edge.
  */
 class Adjacency {
 public:

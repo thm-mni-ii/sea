@@ -2,47 +2,35 @@
 // Created by jmeintrup on 06.03.18.
 //
 
-#include <ostream>
-#include "sealib/node.h"
+
 
 #ifndef SEA_GRAPH_H
 #define SEA_GRAPH_H
 
-#endif //SEA_GRAPH_Hs
+#include "sealib/node.h"
+
 /**
  * Graph class.
- * A Graph object represents a vector of node objects and it's order.
- * It is just a container to be used by different functions.
+ * A Graph object represents a array of node objects and it's order.
+ * It's a container to be used by different functions.
  */
 class Graph {
 private:
-    std::vector<Node*> nodes;
+    Node* nodes;
     unsigned int order;
 
 public:
     /**
-     * Constructor for the graph, takes an adj_matrix as value in the following format:
-     * node x node matrix, entry in matrix is number of edges to that node.
-     *
-     * example:
-     *
-     * n         1       2       3
-     *      **************************
-     *  1   *    0   *   1   *   1   *
-     *      **************************
-     *  2   *    1   *   0   *   2   *
-     *      **************************
-     *  3   *    0   *   2   *   1   *
-     *      **************************
-     * @param adj_matrix NxN adjcacency matrix representation of the graph.
-     * @param _order Order of the graph, order equals the number of nodes.
+     * Constructor for the Graph class.
+     * @param _nodes Array of nodes, to be initialized by the caller.
+     * @param _order Order of the graph, equals the length of the nodes array.
      */
-    Graph(unsigned int** adj_matrix, unsigned int _order);
+    Graph(Node* _nodes, unsigned int _order);
 
     /**
-     * Getter for a specific node in the nodes vector.
-     * @param u index in the nodes vector
-     * @return Pointer to the Node in the nodes vector
+     * Getter for a specific node in the nodes array.
+     * @param u index in the nodes array
+     * @return Pointer to the Node in the nodes array
      */
     Node* getNode(unsigned int u);
 
@@ -60,3 +48,4 @@ public:
     */
     unsigned int getOrder();
 };
+#endif //SEA_GRAPH_Hs
