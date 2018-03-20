@@ -12,6 +12,6 @@
  * This means that it is only possible to create max(unsigned int) - 1 edges for a node.
  * @param vertex
  */
-Adjacency::Adjacency(unsigned int _vertex) :vertex(_vertex){
-    crossIndex = std::numeric_limits<unsigned int>::max();
+Adjacency::Adjacency(size_t _vertex) :vertex(_vertex){
+    crossIndex = std::numeric_limits<size_t>::max();
 }

@@ -11,7 +11,7 @@
  * @param u index in the nodes array
  * @return Pointer to the Node in the nodes array
  */
-Node *Graph::getNode(unsigned int u) { return &nodes[u]; }
+Node *Graph::getNode(size_t u) { return &nodes[u]; }
 
 /**
 * Returns the index of the head of u in the nodes vector.
@@ -19,13 +19,13 @@ Node *Graph::getNode(unsigned int u) { return &nodes[u]; }
 * @param k index in the adjacency vector of node u
 * @return index of the head vertex in the nodes vector
 */
-unsigned int Graph::head(unsigned int u, unsigned int k) { return nodes[u].getAdj()[k].vertex; }
+size_t Graph::head(size_t u, size_t k) { return nodes[u].getAdj()[k].vertex; }
 
 /**
 * Order is the number of nodes in the graph.
 * @return order of the graph as int
 */
-unsigned int Graph::getOrder() { return order; }
+size_t Graph::getOrder() { return order; }
 
 
 /**
@@ -33,4 +33,4 @@ unsigned int Graph::getOrder() { return order; }
  * @param _nodes Array of nodes, to be initialized and crosslinked by the caller.
  * @param _order Order of the graph, equals the length of the nodes array.
  */
-Graph::Graph(Node *_nodes, unsigned int _order) : nodes(_nodes), order(_order) {}
+Graph::Graph(Node *_nodes, size_t _order) : nodes(_nodes), order(_order) {}

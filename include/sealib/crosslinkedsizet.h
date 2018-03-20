@@ -5,22 +5,24 @@
 #ifndef SEA_MATCHEDINT_H
 #define SEA_MATCHEDINT_H
 
+#include <cstddef>
+
 /**
  * Helper Class for TrailStructure.
  * Contains a value and a crosspointer to a matched MatchedInt object.
  */
-class CrossLinkedInt{
+class CrossLinkedSizeT{
 private:
-    unsigned int v;
-    CrossLinkedInt *m;
-    void set_match(CrossLinkedInt *m);
+    size_t v;
+    CrossLinkedSizeT *m;
+    void set_match(CrossLinkedSizeT *m);
 
 public:
-    CrossLinkedInt(unsigned int v);
-    void match(CrossLinkedInt *m);
+    CrossLinkedSizeT(size_t v);
+    void match(CrossLinkedSizeT *m);
     void unmatch();
-    unsigned int get_value();
-    CrossLinkedInt* get_match();
+    size_t get_value();
+    CrossLinkedSizeT* get_match();
     bool has_match();
 };
 #endif //SEA_MATCHEDINT_H

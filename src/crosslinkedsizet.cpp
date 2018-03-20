@@ -2,14 +2,14 @@
 // Created by jmeintrup on 06.03.18.
 //
 
-#include "sealib/crosslinkedint.h"
+#include "sealib/crosslinkedsizet.h"
 
 /**
  * Constructor of MatchedInt.
  * Constructs it with a nullptr as it's match.
  * @param _v value of the matched int.
  */
-CrossLinkedInt::CrossLinkedInt(unsigned int _v)  {
+CrossLinkedSizeT::CrossLinkedSizeT(size_t _v)  {
     v = _v;
     m = nullptr;
 }
@@ -18,12 +18,12 @@ CrossLinkedInt::CrossLinkedInt(unsigned int _v)  {
  * Sets the match as a crosspointer to _m, and from _m to this.
  * @param _m MatchedInt object to be matched with.
  */
-void CrossLinkedInt::match(CrossLinkedInt *_m) {
+void CrossLinkedSizeT::match(CrossLinkedSizeT *_m) {
     m = _m;
     m->set_match(this);
 }
 
-void CrossLinkedInt::set_match(CrossLinkedInt *_m) {
+void CrossLinkedSizeT::set_match(CrossLinkedSizeT *_m) {
     m = _m;
 }
 
@@ -31,7 +31,7 @@ void CrossLinkedInt::set_match(CrossLinkedInt *_m) {
  * Getter for the value.
  * @return v
  */
-unsigned int CrossLinkedInt::get_value() {
+size_t CrossLinkedSizeT::get_value() {
     return v;
 }
 
@@ -39,7 +39,7 @@ unsigned int CrossLinkedInt::get_value() {
  * Getter for the match.
  * @return m
  */
-CrossLinkedInt* CrossLinkedInt::get_match() {
+CrossLinkedSizeT* CrossLinkedSizeT::get_match() {
     return m;
 }
 
@@ -47,7 +47,7 @@ CrossLinkedInt* CrossLinkedInt::get_match() {
  * Checks whether or not this has a match.
  * @return true if m is not equal to nullptr
  */
-bool CrossLinkedInt::has_match() {
+bool CrossLinkedSizeT::has_match() {
     return m != nullptr;
 }
 
@@ -55,7 +55,7 @@ bool CrossLinkedInt::has_match() {
  * Unmatches this.
  * Sets m->m to nullptr, and m to nullptr.
  */
-void CrossLinkedInt::unmatch() {
+void CrossLinkedSizeT::unmatch() {
     m->set_match(nullptr);
     m = nullptr;
 }

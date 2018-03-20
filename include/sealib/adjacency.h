@@ -5,6 +5,8 @@
 #ifndef SEA_ADJACENCY_H
 #define SEA_ADJACENCY_H
 
+#include <cstddef>
+
 /**
  * Adjacency class.
  * An Adjacency object is used in the nodes class as a representation of an edges endpoint
@@ -12,8 +14,8 @@
  */
 class Adjacency {
 public:
-    unsigned int vertex;
-    unsigned int crossIndex;
+    size_t vertex;
+    size_t crossIndex;
 
     /**
      * Adjacency constructor.
@@ -23,7 +25,7 @@ public:
      * This means that it is only possible to create max(unsigned int) - 1 edges for a node.
      * @param vertex
      */
-    Adjacency(unsigned int _vertex);
+    Adjacency(size_t _vertex);
 };
 
 

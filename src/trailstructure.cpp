@@ -2,161 +2,114 @@
 // Created by jmeintrup on 06.03.18.
 //
 
+#include <cstdlib>
 #include "sealib/trailstructure.h"
+using namespace std;
 
-/**
- * Function to check wheter U is an empty set.
- * Serves the double purpose of checking if the trailstructure is in phase two.
- * @return true if the set U is empty, otherwise false
- */
-bool TrailStructure::is_u_empty() {
-    return false;
-}
+TrailStructure::TrailStructure(size_t _degree) : currDeg(_degree),degree(degree){
+    nextUnused = 1;
 
-/**
- * Checks whether or not a MatchedInt *d in I U or O is matched.
- * @param MatchedInt *d, which has to be in I U or O.
- * @return true if the MatchedInt d has a match, otherwise false.
- */
-bool TrailStructure::is_matched(CrossLinkedInt *d) {
-    if(!(is_in_i(d) || is_in_o(d))) {
-        throw std::invalid_argument("Matched int d is not in I or O!");
+    inAndOut = vector<bool>(degree);
+    matched = vector<bool>(degree);
+    unused = static_cast<size_t *>(malloc(sizeof(size_t) * degree * 3));
+
+
+    //[1][0][1] [1][1][1] [1][2][1] ... [1][_degree-1][1]
+    for(size_t i = 0; i < degree; i+=3) {
+        unused[i] = 1;
+        unused[i + 1] = i/3;
+        unused[i + 2] = 1;
     }
-    CrossLinkedInt *m = d->get_match();
-    if(m == nullptr) return false;
+}
 
-    if(!(is_in_i(m) || is_in_o(m))) {
-        throw std::invalid_argument("Matched int m is not in I or O!");
-    }
+size_t TrailStructure::getCurrDeg() {
+    return currDeg;
+}
 
-    return true;
+
+/**
+ * If unused is empty, nextUnused is set to 0;
+ * @return true if unused is not empty, false otherwise.
+ */
+bool TrailStructure::isUnusedEmpty() {
+    return (nextUnused == 0);
 }
 
 /**
- * Checks whether or not a MatchedInt *d in I.
- * @param MatchedInt *d
- * @return true if the MatchedInt d is in I, otherwise false.
+ * Checks if the arc at index idx is matched.
+ * Internally, checks if the bit at index idx is set in the bool vector
+ * of matches.
+ * @param idx to be checked at
+ * @return true if matches, false otherwise
  */
-bool TrailStructure::is_in_i(CrossLinkedInt *d) {
-    return i.count(d) == 1;
+bool TrailStructure::isMatched(size_t idx) {
+    return matched.at(idx);
 }
 
 /**
- * Checks whether or not a MatchedInt *d in O.
- * @param MatchedInt *d
- * @return true if the MatchedInt d is in O, otherwise false.
+ * Returns the next unused element
+ * @return
  */
-bool TrailStructure::is_in_o(CrossLinkedInt *d) {
-    return o.count(d) == 1;;
-}
+size_t TrailStructure::getNextUnused(size_t degree) {
+    if(nextUnused == 0) return 0;
+    size_t prevLink = unused[nextUnused-1];
+    size_t nextLink = unused[nextUnused+1];
 
-/**
- * Checks whether or not a MatchedInt *d in O.
- * @param MatchedInt *d
- * @return true if the MatchedInt d is in O, otherwise false.
- */
-bool TrailStructure::is_in_u(CrossLinkedInt *d) {
-    return u.count(d) == 1;;
-}
+    size_t temp;
 
-/**
- * Selects an arbitrary element of U, moves it from U to O, leaves it unmatched and returns it.
- * @param MatchedInt *d
- * @return arbitrary element .
- */
-CrossLinkedInt* TrailStructure::leave() {
-    if(is_u_empty()) throw PhaseException();
-    CrossLinkedInt* d = *std::next(u.begin());
-    u.erase(d);
-    o.insert(d);
-    return d;
-}
-
-/**
- * Takes as argument MatchedInt *d wich has to be in U. Moves it from U to O.
- * Afterwards, if U is not empty, takes an arbitrary element mi from U, moves it to I.
- * Links that element with *d and returns it.
- * If U is empty, returns nullptr.
- * @param MatchedInt *d
- * @return Linked MatchedInt *mi or nulltptr.
- */
-CrossLinkedInt* TrailStructure::enter(CrossLinkedInt *d) {
-    if(!is_in_u(d)) throw std::invalid_argument("CrossLinkedInt d is not in U!");
-    u.erase(d);
-    i.insert(d);
-
-    if(!is_u_empty()) {
-        CrossLinkedInt* mi = *std::next(u.begin());
-        u.erase(mi);
-        o.insert(mi);
-        d->match(mi);
-        return mi;
+    if(prevLink*3 > nextUnused) { //circle around
+        temp = (degree * 3) - (prevLink * 3) + nextUnused;
     } else {
-        return nullptr;
+        temp = nextUnused - prevLink * 3;
     }
-}
+    if(temp == nextUnused) { //no other element, this is last
+        size_t retVal = nextUnused;
+        nextUnused = 0;
+        currDeg--; //should be 0 now
+        return retVal;
+    }
+    unused[temp+1] += nextLink;
 
-/**
- * Function to get the match of an element in I or O.
- * Can only be called in phase two. (when u is empty).
- * @param d MatchedInt* in I or O.
- * @return The match of d.
- */
-CrossLinkedInt* TrailStructure::get_matched(CrossLinkedInt *d) {
-    if(!is_u_empty()) throw PhaseException();
-    if(!(is_in_i(d) || is_in_o(d))) throw std::invalid_argument("CrossLinkedInt d is not in I or O!");
-
-    if(d->get_match() == nullptr) throw std::invalid_argument("CrossLinkedInt d has no match!");
-
-    return d->get_match();
-}
-
-/**
- * Matched an element of I with an element of O.
- * Unmatches them first.
- * Can only be called in phase two.
- * mi has to be an element of I, and mo has to be an element of O.
- * @param mi element of I
- * @param mo element of O
- */
-void TrailStructure::marry(CrossLinkedInt *mi, CrossLinkedInt *mo) {
-    if(!is_u_empty()) throw PhaseException();
-    if(!is_in_i(mi)) throw std::invalid_argument("CrossLinkedInt mi not in I!");
-    if(!is_in_i(mo)) throw std::invalid_argument("CrossLinkedInt mo not in O!");
-
-    mi->unmatch();
-    mo->unmatch();
-    mi->match(mo);
-}
-/**
- * Adds a new MatchedInt to U.
- * This function is to be used during the creation of the graph.
- * You should not add extra elements to U during a run of the algorithm.
- * @param d MatchedInt to be added to U
- */
-
-void TrailStructure::add_to_u(CrossLinkedInt *d) {
-    u.insert(d);
-}
-
-/**
- * Constructor.
- */
-TrailStructure::TrailStructure() {
-}
-
-std::unordered_set<CrossLinkedInt *> *TrailStructure::get_u() {
-    return &u;
-}
-
-unsigned int TrailStructure::curr_deg() {
-    return (unsigned int) u.size();
-}
-
-CrossLinkedInt *TrailStructure::get_from_o() {
-    if(!o.empty()) {
-        return *std::next(o.begin());
+    if(nextLink*3 + nextUnused > degree) { //circle around
+        temp = (nextLink * 3) - (degree * 3)   + nextUnused;
     } else {
-        return nullptr;
+        temp = nextUnused - nextLink * 3;
     }
+    unused[temp-1] += prevLink;
+    size_t retVal = nextUnused;
+    nextUnused = temp;
+    currDeg--;
+
+    return retVal;
 }
+
+size_t TrailStructure::getMatched(size_t start, size_t idx) {
+    if(!matched[idx]) return idx; //has no match
+
+    //get start idx for the dyck word
+    size_t j = start;
+    size_t p = 0;
+    size_t stack[(degree - currDeg)/2];
+    do {
+        if(matched[j]) { //only push matched index
+            if(inAndOut[j]) { // '('
+                stack[p++] = j;
+            } else {
+                size_t i = stack[--p];
+                if(idx == i) return j;
+                if(idx == j) return i;
+            }
+        }
+
+        //increment circular
+        if(j = degree - 1) {
+            j = 0;
+        } else {
+            j++;
+        }
+    } while(j != start);
+
+    return idx;
+}
+
+

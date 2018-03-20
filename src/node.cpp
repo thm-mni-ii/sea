@@ -13,11 +13,11 @@ Adjacency* Node::getAdj() { return adj; }
  * Getter for the degree of the node.
  * @return value of deg
  */
-unsigned int Node::getDeg() { return deg; }
+size_t Node::getDeg() { return deg; }
 
 /**
  * Constructor for the Node class.
  * @param _adj array of adjacencys of this node.
  * @param _deg degree of this node.
 */
-Node::Node(Adjacency *_adj, unsigned int _deg) : adj(_adj),deg(_deg) {}
+Node::Node(Adjacency *_adj, size_t _deg) : adj(_adj),deg(_deg) {}
