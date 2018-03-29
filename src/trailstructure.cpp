@@ -6,11 +6,16 @@
 #include "sealib/trailstructure.h"
 using namespace std;
 
-TrailStructure::TrailStructure(size_t _degree) : currDeg(_degree),degree(degree){
+TrailStructure::TrailStructure(size_t _degree) : degree(degree){
     nextUnused = 1;
+    lastMatchedLeaver = (size_t) - 1;
 
     inAndOut = vector<bool>(degree);
     matched = vector<bool>(degree);
+    flags = std::vector<bool>(2);
+    if(degree % 2 != 0) flags.at(0).flip(); //set it to grey if uneven
+    if(degree == 0) flags.at(1).flip(); //node with no edges is possible, set black
+
     unused = static_cast<size_t *>(malloc(sizeof(size_t) * degree * 3));
 
 
@@ -22,36 +27,12 @@ TrailStructure::TrailStructure(size_t _degree) : currDeg(_degree),degree(degree)
     }
 }
 
-size_t TrailStructure::getCurrDeg() {
-    return currDeg;
-}
-
-
-/**
- * If unused is empty, nextUnused is set to 0;
- * @return true if unused is not empty, false otherwise.
- */
-bool TrailStructure::isUnusedEmpty() {
-    return (nextUnused == 0);
-}
-
-/**
- * Checks if the arc at index idx is matched.
- * Internally, checks if the bit at index idx is set in the bool vector
- * of matches.
- * @param idx to be checked at
- * @return true if matches, false otherwise
- */
-bool TrailStructure::isMatched(size_t idx) {
-    return matched.at(idx);
-}
-
 /**
  * Returns the next unused element
  * @return
  */
-size_t TrailStructure::getNextUnused(size_t degree) {
-    if(nextUnused == 0) return 0;
+inline size_t TrailStructure::getNextUnused() {
+    if(flags.at(1)) return 0; //black node
     size_t prevLink = unused[nextUnused-1];
     size_t nextLink = unused[nextUnused+1];
 
@@ -65,7 +46,7 @@ size_t TrailStructure::getNextUnused(size_t degree) {
     if(temp == nextUnused) { //no other element, this is last
         size_t retVal = nextUnused;
         nextUnused = 0;
-        currDeg--; //should be 0 now
+        flags.at(1).flip();
         return retVal;
     }
     unused[temp+1] += nextLink;
@@ -78,7 +59,7 @@ size_t TrailStructure::getNextUnused(size_t degree) {
     unused[temp-1] += prevLink;
     size_t retVal = nextUnused;
     nextUnused = temp;
-    currDeg--;
+    flags.at(0).flip(); //taking an arc flips the parity
 
     return retVal;
 }
@@ -89,7 +70,7 @@ size_t TrailStructure::getMatched(size_t start, size_t idx) {
     //get start idx for the dyck word
     size_t j = start;
     size_t p = 0;
-    size_t stack[(degree - currDeg)/2];
+    size_t stack[degree/2];
     do {
         if(matched[j]) { //only push matched index
             if(inAndOut[j]) { // '('
@@ -102,7 +83,7 @@ size_t TrailStructure::getMatched(size_t start, size_t idx) {
         }
 
         //increment circular
-        if(j = degree - 1) {
+        if(j == degree - 1) {
             j = 0;
         } else {
             j++;
@@ -110,6 +91,80 @@ size_t TrailStructure::getMatched(size_t start, size_t idx) {
     } while(j != start);
 
     return idx;
+}
+
+size_t TrailStructure::leave() {
+    size_t u = getNextUnused();
+    return u == 0 ? (size_t) - 1 : unused[u];
+}
+
+size_t TrailStructure::enter(size_t i) {
+    i = i*3+1; //multiple index so it works with the actual array.
+
+    if(flags.at(1)) return (size_t) - 1;
+
+    size_t prevLink = unused[i-1];
+    size_t nextLink = unused[i+1];
+
+    size_t temp;
+
+    if(prevLink*3 > i) { //circle around
+        temp = (degree * 3) - (prevLink * 3) + i;
+    } else {
+        temp = i - prevLink * 3;
+    }
+    if(temp == i) { //no other element, this is last
+        flags.at(1).flip(); //should be 0 now
+        return (size_t) - 1; //returns non-value
+    }
+    unused[temp+1] += nextLink;
+
+    if(nextLink*3 + i > degree) { //circle around
+        temp = (nextLink * 3) - (degree * 3)   + i;
+    } else {
+        temp = i - nextLink * 3;
+    }
+    unused[temp-1] += prevLink;
+
+    //not needed, we flip twice since we take another edge out now
+    //flags.at(0).flip(); //taking an arc flips the parity
+
+    //not empty yet, continue
+    matched.at(i).flip();
+    matched.at(unused[temp]).flip();
+
+    i = temp;
+
+    prevLink = unused[i-1];
+    nextLink = unused[i+1];
+
+    if(prevLink*3 > i) { //circle around
+        temp = (degree * 3) - (prevLink * 3) + i;
+    } else {
+        temp = i - prevLink * 3;
+    }
+    if(temp == i) { //no other element, this is last
+        flags.at(1).flip(); //should be 0 now
+        return i; //returns the leaver element
+    }
+    unused[temp+1] += nextLink;
+
+    if(nextLink*3 + i > degree) { //circle around
+        temp = (nextLink * 3) - (degree * 3)   + i;
+    } else {
+        temp = i - nextLink * 3;
+    }
+    unused[temp-1] += prevLink;
+
+    return i; //returns the leaver element.
+}
+
+inline bool TrailStructure::isBlack() {
+    return flags.at(1);
+}
+
+inline bool TrailStructure::isGrey() {
+    return flags.at(0);
 }
 
 
