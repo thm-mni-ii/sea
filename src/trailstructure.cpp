@@ -6,37 +6,38 @@
 #include "sealib/trailstructure.h"
 using namespace std;
 
-TrailStructure::TrailStructure(size_t _degree) : degree(degree){
+
+TrailStructure::TrailStructure(unsigned int _degree) : degree(degree){
     nextUnused = 1;
-    lastMatchedLeaver = (size_t) - 1;
+    lastMatchedLeaver = (unsigned int) - 1;
 
     inAndOut = vector<bool>(degree);
     matched = vector<bool>(degree);
-    flags = std::vector<bool>(2);
-    if(degree % 2 != 0) flags.at(0).flip(); //set it to grey if uneven
+
+    flags = std::vector<bool>(3);
+    if(degree % 2 != 0) flags.at(2).flip(); //set it to grey if uneven
     if(degree == 0) flags.at(1).flip(); //node with no edges is possible, set black
 
-    unused = static_cast<size_t *>(malloc(sizeof(size_t) * degree * 3));
+    married = static_cast<unsigned int  *>(malloc(sizeof(unsigned int) * 4));
+    for(unsigned int i = 0; i < 4; i++) married[i] = (unsigned int) - 1;
 
-
+    unused = static_cast<unsigned int *>(malloc(sizeof(unsigned int) * degree * 3));
     //[1][0][1] [1][1][1] [1][2][1] ... [1][_degree-1][1]
-    for(size_t i = 0; i < degree; i+=3) {
+    for(unsigned int i = 0; i < degree; i+=3) {
         unused[i] = 1;
         unused[i + 1] = i/3;
         unused[i + 2] = 1;
     }
 }
 
-/**
- * Returns the next unused element
- * @return
- */
-inline size_t TrailStructure::getNextUnused() {
-    if(flags.at(1)) return 0; //black node
-    size_t prevLink = unused[nextUnused-1];
-    size_t nextLink = unused[nextUnused+1];
 
-    size_t temp;
+inline unsigned int TrailStructure::getNextUnused() {
+    if(flags.at(1)) return 0; //black node
+    if(!flags.at(0)) flags.at(0).flip(); //set to grey
+    unsigned int prevLink = unused[nextUnused-1];
+    unsigned int nextLink = unused[nextUnused+1];
+
+    unsigned int temp;
 
     if(prevLink*3 > nextUnused) { //circle around
         temp = (degree * 3) - (prevLink * 3) + nextUnused;
@@ -44,7 +45,7 @@ inline size_t TrailStructure::getNextUnused() {
         temp = nextUnused - prevLink * 3;
     }
     if(temp == nextUnused) { //no other element, this is last
-        size_t retVal = nextUnused;
+        unsigned int retVal = nextUnused;
         nextUnused = 0;
         flags.at(1).flip();
         return retVal;
@@ -57,26 +58,34 @@ inline size_t TrailStructure::getNextUnused() {
         temp = nextUnused - nextLink * 3;
     }
     unused[temp-1] += prevLink;
-    size_t retVal = nextUnused;
+    unsigned int retVal = nextUnused;
     nextUnused = temp;
-    flags.at(0).flip(); //taking an arc flips the parity
+    flags.at(2).flip(); //taking an arc flips the parity
 
     return retVal;
 }
 
-size_t TrailStructure::getMatched(size_t start, size_t idx) {
+
+unsigned int TrailStructure::getMatched(unsigned int start, unsigned int idx) {
+    
+    //check if the idx is present in the married structure
+    if(married[0] == idx) return married[1];
+    if(married[1] == idx) return married[0];
+    if(married[2] == idx) return married[3];
+    if(married[3] == idx) return married[2];
+    
     if(!matched[idx]) return idx; //has no match
 
     //get start idx for the dyck word
-    size_t j = start;
-    size_t p = 0;
-    size_t stack[degree/2];
+    unsigned int j = start;
+    unsigned int p = 0;
+    unsigned int stack[degree/2];
     do {
         if(matched[j]) { //only push matched index
             if(inAndOut[j]) { // '('
                 stack[p++] = j;
             } else {
-                size_t i = stack[--p];
+                unsigned int i = stack[--p];
                 if(idx == i) return j;
                 if(idx == j) return i;
             }
@@ -93,20 +102,21 @@ size_t TrailStructure::getMatched(size_t start, size_t idx) {
     return idx;
 }
 
-size_t TrailStructure::leave() {
-    size_t u = getNextUnused();
-    return u == 0 ? (size_t) - 1 : unused[u];
+unsigned int TrailStructure::leave() {
+    unsigned int u = getNextUnused();
+    return u == 0 ? (unsigned int) - 1 : unused[u];
 }
 
-size_t TrailStructure::enter(size_t i) {
+unsigned int TrailStructure::enter(unsigned int i) {
     i = i*3+1; //multiple index so it works with the actual array.
 
-    if(flags.at(1)) return (size_t) - 1;
+    if(flags.at(1)) return (unsigned int) - 1;
+    if(!flags.at(0)) flags.at(0).flip(); //set to grey
 
-    size_t prevLink = unused[i-1];
-    size_t nextLink = unused[i+1];
+    unsigned int prevLink = unused[i-1];
+    unsigned int nextLink = unused[i+1];
 
-    size_t temp;
+    unsigned int temp;
 
     if(prevLink*3 > i) { //circle around
         temp = (degree * 3) - (prevLink * 3) + i;
@@ -115,7 +125,7 @@ size_t TrailStructure::enter(size_t i) {
     }
     if(temp == i) { //no other element, this is last
         flags.at(1).flip(); //should be 0 now
-        return (size_t) - 1; //returns non-value
+        return (unsigned int) - 1; //returns non-value
     }
     unused[temp+1] += nextLink;
 
@@ -127,7 +137,7 @@ size_t TrailStructure::enter(size_t i) {
     unused[temp-1] += prevLink;
 
     //not needed, we flip twice since we take another edge out now
-    //flags.at(0).flip(); //taking an arc flips the parity
+    //flags.at(2).flip(); //taking an arc flips the parity
 
     //not empty yet, continue
     matched.at(i).flip();
@@ -165,6 +175,14 @@ inline bool TrailStructure::isBlack() {
 
 inline bool TrailStructure::isGrey() {
     return flags.at(0);
+}
+
+bool TrailStructure::isEven() {
+    return flags.at(2);
+}
+
+void TrailStructure::marry(unsigned int i, unsigned int o) {
+    unsigned int iMatch = getMatched(i);
 }
 
 

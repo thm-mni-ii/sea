@@ -14,8 +14,8 @@
  */
 class Adjacency {
 public:
-    size_t vertex;
-    size_t crossIndex;
+    unsigned int vertex;
+    unsigned int crossIndex;
 
     /**
      * Adjacency constructor.
@@ -25,7 +25,7 @@ public:
      * This means that it is only possible to create max(unsigned int) - 1 edges for a node.
      * @param vertex
      */
-    Adjacency(size_t _vertex);
+    Adjacency(unsigned int _vertex);
 };
 
 

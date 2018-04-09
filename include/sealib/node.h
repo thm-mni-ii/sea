@@ -17,7 +17,7 @@ class Node {
 
 private:
     Adjacency* adj;
-    size_t deg;
+    unsigned int deg;
 
 
 public:
@@ -27,7 +27,7 @@ public:
      * @param _adj array of adjacencys of this node.
      * @param _deg degree of this node.
     */
-    Node(Adjacency *_adj, size_t _deg);
+    Node(Adjacency *_adj, unsigned int _deg);
 
     /**
      * Getter for the adjacency array. Returns a pointer to the first element of the array.
@@ -39,6 +39,6 @@ public:
      * Getter for the degree of the node.
      * @return value of deg
      */
-    size_t getDeg();
+    unsigned int getDeg();
 };
 #endif //SEA_NODE_H
