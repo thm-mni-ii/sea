@@ -3,11 +3,12 @@
 //
 
 #include <cstdlib>
+#include <iostream>
 #include "sealib/trailstructure.h"
 using namespace std;
 
 
-TrailStructure::TrailStructure(unsigned int _degree) : degree(degree){
+TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree){
     nextUnused = 1;
     lastClosed = (unsigned int) - 1;
 
@@ -38,7 +39,12 @@ inline unsigned int TrailStructure::getNextUnused() {
         flags.at(3).flip();
         return (unsigned int) - 1;
     }
-    if(!flags.at(0)) flags.at(0).flip(); //set to grey
+
+
+    if(!flags.at(0)) {
+        //cout << "Set to grey\n";
+        flags.at(0).flip();
+    } //set to grey
     unsigned int prevLink = unused[nextUnused-1];
     unsigned int nextLink = unused[nextUnused+1];
 
@@ -58,9 +64,9 @@ inline unsigned int TrailStructure::getNextUnused() {
     unused[temp+1] += nextLink;
 
     if(nextLink*3 + nextUnused > degree) { //circle around
-        temp = (nextLink * 3) - (degree * 3)   + nextUnused;
+        temp = (nextLink * 3) - (degree * 3)  + nextUnused;
     } else {
-        temp = nextUnused - nextLink * 3;
+        temp = nextUnused + nextLink * 3;
     }
     unused[temp-1] += prevLink;
     unsigned int retVal = nextUnused;
@@ -110,6 +116,7 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
 }
 
 unsigned int TrailStructure::leave() {
+    cout << "Leaving\n";
     unsigned int u = getNextUnused();
     return u == 0 ? (unsigned int) - 1 : unused[u];
 }
@@ -118,7 +125,7 @@ unsigned int TrailStructure::enter(unsigned int i) {
 
     if(flags.at(3)) flags.at(3).flip(); //reset error
 
-    i = i*3+1; //multiple index so it works with the actual array.
+    i = i*3+1; //multiply index so it works with the actual array.
 
     if(flags.at(1)) {//black node, should not be called here. something went wrong
         flags.at(3).flip(); //set error
@@ -148,7 +155,7 @@ unsigned int TrailStructure::enter(unsigned int i) {
     if(nextLink*3 + i > degree) { //circle around
         temp = (nextLink * 3) - (degree * 3)   + i;
     } else {
-        temp = i - nextLink * 3;
+        temp = i + nextLink * 3;
     }
     unused[temp-1] += prevLink;
 
@@ -185,7 +192,7 @@ unsigned int TrailStructure::enter(unsigned int i) {
     if(nextLink*3 + i > degree) {//circle around
         temp = (nextLink * 3) - (degree * 3)   + i;
     } else {
-        temp = i - nextLink * 3;
+        temp = i + nextLink * 3;
     }
     unused[temp-1] += prevLink;
 
