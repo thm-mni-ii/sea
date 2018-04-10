@@ -15,12 +15,12 @@ class TrailStructure{
 private:
     unsigned int degree;
     unsigned int nextUnused;
-    unsigned int lastMatchedLeaver;
+    unsigned int lastClosed;
 
     std::vector<bool> inAndOut;
     std::vector<bool> matched;
 
-    std::vector<bool> flags; //at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven
+    std::vector<bool> flags; //at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven, at(3) reserved for errors during function call
 
     unsigned int *married;
 
@@ -94,6 +94,14 @@ public:
      * @param o second element to be matched
      */
     void marry(unsigned int i, unsigned int o);
+
+    /**
+     * Checks if the error flag was set in the last function call.
+     * @return true if there was an error, false otherwise
+     */
+    bool checkError() {
+        return flags.at(3);
+    }
 };
 
 #endif //SEA_TRAILSTRUCTURE_H
