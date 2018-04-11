@@ -7,9 +7,21 @@ using namespace std;
 
 int main() {
     TrailStructure ts = TrailStructure(5);
-    unsigned int l = ts.leave();
 
-    l = ts.leave();
+    cout << ts.enter(2) << endl;
+    cout << ts.enter(4)<< endl;
+    cout << ts.enter(1) << endl << endl;
 
-    cout << "blabla";
+    cout << ts.getMatched(0) << endl;
+    cout << ts.getMatched(1) << endl;
+    cout << ts.getMatched(2) << endl;
+    cout << ts.getMatched(3) << endl;
+    cout << ts.getMatched(0) << endl << endl;
+
+    ts.marry(0,1);
+    cout << ts.getMatched(0) << endl;
+    cout << ts.getMatched(1) << endl << endl;
+
+    cout << endl;
+    cout << ts.getMatched(4) << endl;
 }

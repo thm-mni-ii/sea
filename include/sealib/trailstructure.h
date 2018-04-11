@@ -44,21 +44,21 @@ public:
      * Grey meaning atleast one arc has been used so far.
      * @return true when grey, false otherwise
      */
-    inline bool isGrey();
+    bool isGrey();
     
     /**
      * Inline function to check whether a TrailStructure is black.
      * Black meaning all arcs have been traversed.
      * @return true when black, false otherwise
      */
-    inline bool isBlack();
+    bool isBlack();
 
     /**
      * Inline function to check whether a TrailStructure is even.
      * Even meaning the number of unused arcs is even..
      * @return true when even, false otherwise
      */
-    inline bool isEven();
+    bool isEven();
 
     
     /**
