@@ -37,4 +37,4 @@ Therefore, this library provides algorithms that treat space as a scarce resourc
 Licensed under the GNU General Public License version 3. For detailed license information look inside the [LICENSE](LICENSE) file.
 
 # Acknowledgments
-We thank the [DFG](http://www.dfg.de/en/index.jsp) (Deutsche Forschungsgemeinschaft) for funding this project. For more details visit [http://gepris.dfg.de/gepris/projekt/379157101](http://gepris.dfg.de/gepris/projekt/379157101).
+We thank the [DFG](http://www.dfg.de/en/crossIndex.jsp) (Deutsche Forschungsgemeinschaft) for funding this project. For more details visit [http://gepris.dfg.de/gepris/projekt/379157101](http://gepris.dfg.de/gepris/projekt/379157101).
