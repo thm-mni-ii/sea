@@ -18,4 +18,4 @@ script:
   - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 . && make && ./bin/tests
 
 after_success:
-  - coveralls --root . --gcov-options '\-lp'
+  - coveralls --root .  -E ".*CMakeFiles.*" -e test -e gtest -e include --gcov-options '\-lp'

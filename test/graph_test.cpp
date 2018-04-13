@@ -1,14 +1,10 @@
-//
-// Created by jmeintrup on 11.03.18.
-//
-
 #include <gtest/gtest.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <sealib/graphcreator.h>
 
 TEST(GraphTest, graph_integrity) {
     unsigned int order = 4;
-    unsigned int **adj_mtrx = (unsigned int**) std::malloc(sizeof(unsigned int) * 4 * 4);
+    unsigned int **adj_mtrx = new unsigned int *[order];
     /**
      * (n)       0       1       2       3
      *      **********************************
@@ -21,19 +17,19 @@ TEST(GraphTest, graph_integrity) {
      *  3   *    1   *   0   *   1   *   0   *
      *      **********************************
      */
-    adj_mtrx[0] = new unsigned int[order]{0,2,0,1};
-    adj_mtrx[1] = new unsigned int[order]{2,0,1,0};
-    adj_mtrx[2] = new unsigned int[order]{0,1,0,1};
-    adj_mtrx[3] = new unsigned int[order]{1,0,1,0};
+    adj_mtrx[0] = new unsigned int[order]{0, 2, 0, 1};
+    adj_mtrx[1] = new unsigned int[order]{2, 0, 1, 0};
+    adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
+    adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
 
     Graph *g = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
 
     //verify correct order and degree of nodes
     ASSERT_EQ(g->getOrder(), order);
-    ASSERT_EQ(g->getNode(0)->getDeg(), 3);
-    ASSERT_EQ(g->getNode(1)->getDeg(), 3);
-    ASSERT_EQ(g->getNode(2)->getDeg(), 2);
-    ASSERT_EQ(g->getNode(3)->getDeg(), 2);
+    ASSERT_EQ(g->getNode(0)->getDegree(), 3);
+    ASSERT_EQ(g->getNode(1)->getDegree(), 3);
+    ASSERT_EQ(g->getNode(2)->getDegree(), 2);
+    ASSERT_EQ(g->getNode(3)->getDegree(), 2);
 
     //verify the adj vector contents of each node
     ASSERT_EQ(g->getNode(0)->getAdj()[0].vertex, 1);

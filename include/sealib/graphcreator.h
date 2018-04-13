@@ -1,16 +1,13 @@
-//
-// Created by jmeintrup on 14.03.18.
-//
-
 #ifndef SEA_GRAPHCREATOR_H
 #define SEA_GRAPHCREATOR_H
 
 #include "graph.h"
 
 /**
- * Static class which serves as a collection of functions to create graph objects from different inputs.
+ * Static class that serves as a collection of functions to create graph objects from different inputs.
+ * @author Johannes Meintrup
  */
-class GraphCreator{
+class GraphCreator {
 public:
     /**
      * Static function to create a a graph object from an adjacency matrix.
@@ -25,12 +22,10 @@ public:
      *      **************************
      *  2   *    0   *   2   *   1   *
      *      **************************
-     * @param adj_matrix NxN adjcacency matrix representation of the graph.
+     * @param adj_matrix NxN adjacency matrix representation of the graph.
      * @param _order Order of the graph, order equals the number of nodes.
      */
-    static Graph* createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
+    static Graph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
 };
-
-
 
 #endif //SEA_GRAPHCREATOR_H
