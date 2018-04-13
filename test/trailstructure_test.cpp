@@ -56,3 +56,11 @@ TEST(TrailStructureTest, marry) {
     ASSERT_EQ(ts.getMatched(3), 2);
     ASSERT_EQ(ts.getMatched(4), 4); //unmatched now
 }
+
+TEST(TrailStructureTest, enterLeaveCombination) {
+    TrailStructure ts = TrailStructure(5);
+
+    ASSERT_EQ(ts.enter(0), 1);
+    ASSERT_EQ(ts.enter(4), 2);
+    ASSERT_EQ(ts.leave(), 3);
+}

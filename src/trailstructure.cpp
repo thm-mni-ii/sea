@@ -151,6 +151,7 @@ unsigned int TrailStructure::enter(unsigned int i) {
     if(temp == i) { //no other element, this is last
         flags.at(1).flip(); //blacken it
         //black now, unused is not needed anymore
+        nextUnused = 0;
         free(unused);
         return (unsigned int) - 1; //returns non-value
     }
@@ -182,12 +183,13 @@ unsigned int TrailStructure::enter(unsigned int i) {
 
     if(temp == i) { //no other element, this is last
         flags.at(1).flip(); //should be 0 now
-
+        nextUnused = 0;
 
         //unused is not needed anymore
         free(unused);
         return lastClosed; //returns the leaver element, lastClosed
     }
+
     unused[temp+1] += nextLink;
 
     if(nextLink*3 + i > degree * 3) {//circle around
@@ -197,6 +199,20 @@ unsigned int TrailStructure::enter(unsigned int i) {
     }
 
     unused[temp-1] += prevLink;
+
+
+
+    //update nextUnused
+    i = temp;
+    prevLink = unused[i-1];
+
+    if(prevLink*3 > i) { //circle around
+        temp = (degree * 3) - (prevLink * 3) + i;
+    } else {
+        temp = i - prevLink * 3;
+    }
+
+    nextUnused = temp;
 
     return lastClosed; //returns the leaver element.
 }

@@ -25,15 +25,13 @@ add_executable(tests ${SOURCES} ${TESTS})
 find_package (Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
 
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
+#find_package(Qt5Core REQUIRED)
+#find_package(Qt5Gui REQUIRED)
+#find_package(Qt5Widgets REQUIRED)
 
-target_link_libraries(sealib_main Qt5::Core)
-target_link_libraries(sealib_main Qt5::Gui)
-target_link_libraries(sealib_main Qt5::Widgets)
-
-
+#target_link_libraries(sealib_main Qt5::Core)
+#target_link_libraries(sealib_main Qt5::Gui)
+#target_link_libraries(sealib_main Qt5::Widgets)
 
 if (MSVC)
     target_compile_options(tests PRIVATE /std:c++17 /W4 /WX)
