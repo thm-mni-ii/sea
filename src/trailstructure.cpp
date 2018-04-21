@@ -8,7 +8,12 @@
 using namespace std;
 
 TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree){
-    nextUnused = 1;
+
+    if(degree > 0) {
+        nextUnused = 1;
+    } else {
+        nextUnused = 0;
+    }
     lastClosed = (unsigned int) - 1;
 
     inAndOut = vector<bool>(degree);
@@ -68,6 +73,7 @@ inline unsigned int TrailStructure::getNextUnused() {
     unused[temp-1] += prevLink;
     unsigned int retVal = nextUnused;
     nextUnused = temp;
+
     flags.at(2).flip(); //taking an arc flips the parity
 
     return retVal;
@@ -120,7 +126,12 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
 
 unsigned int TrailStructure::leave() {
     unsigned int u = getNextUnused();
-    return u == 0 ? (unsigned int) - 1 : unused[u];
+    if(u == 0) {
+        return (unsigned int) -1;
+    } else {
+        lastClosed = u;
+        return unused[u];
+    }
 }
 
 unsigned int TrailStructure::enter(unsigned int i) {
@@ -152,7 +163,6 @@ unsigned int TrailStructure::enter(unsigned int i) {
         flags.at(1).flip(); //blacken it
         //black now, unused is not needed anymore
         nextUnused = 0;
-        free(unused);
         return (unsigned int) - 1; //returns non-value
     }
     unused[temp+1] += nextLink;
@@ -186,7 +196,6 @@ unsigned int TrailStructure::enter(unsigned int i) {
         nextUnused = 0;
 
         //unused is not needed anymore
-        free(unused);
         return lastClosed; //returns the leaver element, lastClosed
     }
 
@@ -237,10 +246,9 @@ void TrailStructure::marry(unsigned int i, unsigned int o) {
         //unmatch previous matches
         unsigned int iMatch = getMatched(i);
         unsigned int oMatch = getMatched(o);
+
         matched[iMatch].flip();
-        matched[i].flip();
         matched[oMatch].flip();
-        matched[o].flip();
 
         married[0] = i;
         married[1] = o;
@@ -249,10 +257,9 @@ void TrailStructure::marry(unsigned int i, unsigned int o) {
         //unmatch previous matches
         unsigned int iMatch = getMatched(i);
         unsigned int oMatch = getMatched(o);
+
         matched[iMatch].flip();
-        matched[i].flip();
         matched[oMatch].flip();
-        matched[o].flip();
 
         married[2] = i;
         married[3] = o;
@@ -260,3 +267,18 @@ void TrailStructure::marry(unsigned int i, unsigned int o) {
         flags.at(3).flip(); //something went wrong
     }
 }
+
+unsigned int TrailStructure::getStartingArc() {
+    for(unsigned int i =0; i < degree; i++) {
+        if(!matched[i] && !inAndOut[i]) {
+            return i;
+        }
+    }
+}
+
+bool TrailStructure::isEndingArc(unsigned int i) {
+    return (!matched[i] && inAndOut[i]);
+}
+
+
+
