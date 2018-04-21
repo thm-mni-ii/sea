@@ -10,7 +10,6 @@
 /**
  * Space efficient TrailStructure.
  * Each vertex in a graph has an object of this type to store trail information.
- * @author Johannes Meintrup
  */
 class TrailStructure{
 private:
@@ -35,31 +34,32 @@ private:
 
 public:
     /**
-     * Creates a trailsture object.
+     * Constructor for the TrailStructure object.
      * @param _degree Degree of the node, equals the number of outgoing arcs.
      */
     explicit TrailStructure(unsigned int _degree);
     
     /**
-     * Checks if the TrailStructure is currently grey.
+     * Inline function to check if the TrailStructure is currently grey.
      * Grey meaning atleast one arc has been used so far.
      * @return true when grey, false otherwise
      */
     bool isGrey();
     
     /**
-     * Checks whether a TrailStructure is black.
+     * Inline function to check whether a TrailStructure is black.
      * Black meaning all arcs have been traversed.
      * @return true when black, false otherwise
      */
     bool isBlack();
 
     /**
-     * Checks whether a TrailStructure is even.
+     * Inline function to check whether a TrailStructure is even.
      * Even meaning the number of unused arcs is even..
      * @return true when even, false otherwise
      */
     bool isEven();
+
     
     /**
      * Leaves the node, gets arbitrary element from unused,
@@ -102,6 +102,30 @@ public:
     bool checkError() {
         return flags.at(3);
     }
+
+    /**
+     * Getter for lastClosed.
+     * @return value of lastClosed variable.
+     */
+    unsigned int getLastClosed(){
+        return lastClosed;
+    }
+
+    /**
+     * Returns the index of the starting arc of a Trail.
+     * If the TrailStructure has no starting arc, returns (unsigned int) - 1.
+     * @return Starting index of a Trail, or (unsigned int) - 1
+     */
+
+    unsigned int getStartingArc();
+
+    /**
+     * Checks if the arc at idx i is the end of a trail.
+     * The arc is the end of a trail if it's unmatched and is an entering edge.
+     * @param i index to check
+     * @return true if ending, false otherwise
+     */
+    bool isEndingArc(unsigned int i);
 };
 
 #endif //SEA_TRAILSTRUCTURE_H
