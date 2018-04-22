@@ -16,7 +16,11 @@ class GraphAlgorithms {
 public:
     static TrailStructure ** hierholzer(Graph *g);
 
-    std::string stringFromTrail(Graph *g, TrailStructure **trail, unsigned int order);
+    static std::string stringFromTrail(Graph *g, TrailStructure **trail);
+
+    static void dotFileFromTrail(Graph *g, TrailStructure **trail, std::string fileName);
+
+    static void dotFileFromGraph(Graph *g, std::string fileName);
 };
 
 

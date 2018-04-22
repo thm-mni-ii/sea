@@ -2,6 +2,7 @@
 #define SEA_GRAPHCREATOR_H
 
 #include "graph.h"
+#include <string>
 
 /**
  * Static class that serves as a collection of functions to create graph objects from different inputs.
@@ -9,6 +10,24 @@
  */
 class GraphCreator {
 public:
+    /**
+     * Creates a graph from a dotfile defined by the fileName string.
+     *
+     * The file should be in the following format:
+     * Graph G {
+     *  0 -- 1
+     *  ...
+     *  0 -- n
+     *  ...
+     *  n -- 0
+     *  ...
+     *  n -- k
+     *  ...
+     * }
+     * @param fileName fileName of the .dot file
+     */
+    static Graph *createGraphFromDotFile(std::string fileName);
+
     /**
      * Static function to create a a graph object from an adjacency matrix.
      *

@@ -16,6 +16,8 @@ private:
     unsigned int degree;
     unsigned int nextUnused;
     unsigned int lastClosed;
+    unsigned int nodeNumber;
+
 
     std::vector<bool> inAndOut;
     std::vector<bool> matched;
@@ -23,6 +25,7 @@ private:
     std::vector<bool> flags; //at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven, at(3) reserved for errors during function call
 
     unsigned int *married;
+    unsigned int *unmatchedAfterMarry;
 
     unsigned int *unused;
     /**
@@ -37,7 +40,7 @@ public:
      * Constructor for the TrailStructure object.
      * @param _degree Degree of the node, equals the number of outgoing arcs.
      */
-    explicit TrailStructure(unsigned int _degree);
+    explicit TrailStructure(unsigned int _degree, unsigned int _nodeNumber);
     
     /**
      * Inline function to check if the TrailStructure is currently grey.
@@ -126,6 +129,10 @@ public:
      * @return true if ending, false otherwise
      */
     bool isEndingArc(unsigned int i);
+
+    unsigned int getNodeNumber();
+
+
 };
 
 #endif //SEA_TRAILSTRUCTURE_H
