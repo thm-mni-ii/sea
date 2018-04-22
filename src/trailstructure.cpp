@@ -7,7 +7,7 @@
 #include "sealib/trailstructure.h"
 using namespace std;
 
-TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree){
+TrailStructure::TrailStructure(unsigned int _degree, unsigned int _nodeNumber) : degree(_degree), nodeNumber(_nodeNumber){
 
     if(degree > 0) {
         nextUnused = 1;
@@ -20,10 +20,12 @@ TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree){
     matched = vector<bool>(degree);
 
     flags = std::vector<bool>(4);
-    if(degree % 2 != 0) flags.at(2).flip(); //set it to grey if uneven
+    if(degree % 2 == 0) flags.at(2).flip(); //set parity
     if(degree == 0) flags.at(1).flip(); //node with no edges is possible, set black
 
     married = static_cast<unsigned int  *>(malloc(sizeof(unsigned int) * 4));
+    unmatchedAfterMarry = static_cast<unsigned int  *>(malloc(sizeof(unsigned int) * 4));
+
     for(unsigned int i = 0; i < 4; i++) married[i] = (unsigned int) - 1;
 
     unused = static_cast<unsigned int *>(malloc(sizeof(unsigned int) * degree * 3));
@@ -104,15 +106,25 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
 
     unsigned int j = start;
     unsigned int p = 0;
-    unsigned int *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * degree / 2)));
+    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * degree / 2)));
     do {
         if(matched[j]) { //only push matched index
             if(inAndOut[j]) { // '('
                 stack[p++] = j;
             } else {
                 unsigned int i = stack[--p];
-                if(idx == i) return j;
-                if(idx == j) return i;
+                if(idx == i) {
+                    if(married[0] == j || married[1] == j || married[2] == j || married[3] == j) {
+                        return idx;
+                    }
+                    return j;
+                }
+                if(idx == j) {
+                    if(married[0] == i || married[1] == i || married[2] == i || married[3] == i) {
+                        return idx;
+                    }
+                    return i;
+                }
             }
         }
 
@@ -129,7 +141,7 @@ unsigned int TrailStructure::leave() {
     if(u == 0) {
         return (unsigned int) -1;
     } else {
-        lastClosed = u;
+        lastClosed = unused[u];
         return unused[u];
     }
 }
@@ -209,8 +221,6 @@ unsigned int TrailStructure::enter(unsigned int i) {
 
     unused[temp-1] += prevLink;
 
-
-
     //update nextUnused
     i = temp;
     prevLink = unused[i-1];
@@ -243,26 +253,14 @@ void TrailStructure::marry(unsigned int i, unsigned int o) {
 
     if(married[0] == (unsigned int) -1) { //first call of marry
 
-        //unmatch previous matches
-        unsigned int iMatch = getMatched(i);
-        unsigned int oMatch = getMatched(o);
-
-        matched[iMatch].flip();
-        matched[oMatch].flip();
-
         married[0] = i;
         married[1] = o;
+
     } else if(married[2] == (unsigned int) - 1) { //second call of marry, should be maximum
-
-        //unmatch previous matches
-        unsigned int iMatch = getMatched(i);
-        unsigned int oMatch = getMatched(o);
-
-        matched[iMatch].flip();
-        matched[oMatch].flip();
 
         married[2] = i;
         married[3] = o;
+
     } else {
         flags.at(3).flip(); //something went wrong
     }
@@ -270,14 +268,19 @@ void TrailStructure::marry(unsigned int i, unsigned int o) {
 
 unsigned int TrailStructure::getStartingArc() {
     for(unsigned int i =0; i < degree; i++) {
-        if(!matched[i] && !inAndOut[i]) {
+        if(getMatched(i) == i && !inAndOut[i]) {
             return i;
         }
     }
+    return (unsigned int) - 1;
 }
 
 bool TrailStructure::isEndingArc(unsigned int i) {
-    return (!matched[i] && inAndOut[i]);
+    return (getMatched(i) == i && inAndOut[i]);
+}
+
+unsigned int TrailStructure::getNodeNumber() {
+    return nodeNumber;
 }
 
 
