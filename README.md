@@ -1,4 +1,4 @@
-Library for Space-Efficient (Graph) Algorithms [![Build Status](https://img.shields.io/travis/thm-mni-ii/sea/master.svg?style=flat&maxAge=60)](https://travis-ci.org/thm-mni-ii/sea) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Coverage Status](https://img.shields.io/coveralls/thm-mni-ii/sea/master.svg?style=flat&maxAge=60)](https://coveralls.io/github/thm-mni-ii/sea?branch=master)
+Library for Space-Efficient (Graph) Algorithms [![Build Status](https://travis-ci.org/thm-mni-ii/sea.svg?branch=master)](https://travis-ci.org/thm-mni-ii/sea) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Coverage Status](https://coveralls.io/repos/github/thm-mni-ii/sea/badge.svg?branch=master)](https://coveralls.io/github/thm-mni-ii/sea?branch=master)
 ===
 Because of the rapid growth of the data sizes in nowadays applications, algorithms
 that are designed to efficiently utilize space are becoming more and more
