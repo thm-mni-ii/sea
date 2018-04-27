@@ -133,6 +133,7 @@ public:
     unsigned int getNodeNumber();
 
 
+    unsigned int getMatchedIgnoreMarried(unsigned int idx);
 };
 
 #endif //SEA_TRAILSTRUCTURE_H
