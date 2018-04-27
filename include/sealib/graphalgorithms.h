@@ -10,17 +10,25 @@
 #include "trailstructure.h"
 #include <string>
 #include <sstream>
+#include <ogdf/basic/Graph.h>
+#include <ogdf/basic/GraphAttributes.h>
 
 class GraphAlgorithms {
 
 public:
-    static TrailStructure ** hierholzer(Graph *g);
+    static TrailStructure ** hierholzer(Sealib::Graph *g);
 
-    static std::string stringFromTrail(Graph *g, TrailStructure **trail);
+    static std::string stringFromTrail(Sealib::Graph *g, TrailStructure **trail);
 
-    static void dotFileFromTrail(Graph *g, TrailStructure **trail, std::string fileName);
+    static void dotFileFromTrail(Sealib::Graph *g, TrailStructure **trail, std::string fileName);
 
-    static void dotFileFromGraph(Graph *g, std::string fileName);
+    static void dotFileFromGraph(Sealib::Graph *g, std::string fileName);
+
+    static ogdf::Graph* ogdfGraphFromSealibGraph(Sealib::Graph *g);
+
+    static void graphAttributesFromTrail(ogdf::GraphAttributes*GA, Sealib::Graph *g, TrailStructure **trail);
+
+    static Sealib::Graph* sealibGraphFromOgdfGraph(ogdf::Graph *g);
 };
 
 

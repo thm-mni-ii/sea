@@ -26,7 +26,7 @@ public:
      * }
      * @param fileName fileName of the .dot file
      */
-    static Graph *createGraphFromDotFile(std::string fileName);
+    static Sealib::Graph *createGraphFromDotFile(std::string fileName);
 
     /**
      * Static function to create a a graph object from an adjacency matrix.
@@ -44,7 +44,7 @@ public:
      * @param adj_matrix NxN adjacency matrix representation of the graph.
      * @param _order Order of the graph, order equals the number of nodes.
      */
-    static Graph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
+    static Sealib::Graph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
 };
 
 #endif //SEA_GRAPHCREATOR_H

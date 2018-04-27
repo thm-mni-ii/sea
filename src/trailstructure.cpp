@@ -81,6 +81,49 @@ inline unsigned int TrailStructure::getNextUnused() {
     return retVal;
 }
 
+unsigned int TrailStructure::getMatchedIgnoreMarried(unsigned int idx) {
+    if(flags.at(3)) flags.at(3).flip(); //reset error
+    //check if the idx is present in the married structure
+
+    if(!matched[idx]) return idx; //has no match
+
+    //get start idx for the dyck word
+    unsigned int start = lastClosed + 1 == degree ? 0 : lastClosed + 1;
+
+    while(!matched.at(start)) { //start is the first opening bracket after the last one closed.
+        if(start == degree - 1) {
+            start = 0;
+        } else {
+            start+=1;
+        }
+    }
+
+    unsigned int j = start;
+    unsigned int p = 0;
+    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * degree / 2)));
+    do {
+        if(matched[j]) { //only push matched index
+            if(inAndOut[j]) { // '('
+                stack[p++] = j;
+            } else {
+                unsigned int i = stack[--p];
+                if(idx == i) {
+                    return j;
+                }
+                if(idx == j) {
+                    return i;
+                }
+            }
+        }
+
+        //increment circular
+        j = j == degree - 1 ? 0 : j + 1;
+
+    } while(j != start);
+
+    return idx;
+}
+
 unsigned int TrailStructure::getMatched(unsigned int idx) {
 
 
