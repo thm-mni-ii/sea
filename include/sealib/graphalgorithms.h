@@ -33,7 +33,7 @@ public:
 
     static ogdf::Graph *randomEulerianOgdfGrah(int nodeMax, int edgeMax);
 
-    Sealib::Graph *randomEulerianSealibGraph(int nodeMax, int edgeMax);
+    static Sealib::Graph *randomEulerianSealibGraph(int nodeMax, int edgeMax);
 };
 
 

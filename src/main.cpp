@@ -20,7 +20,7 @@ using namespace ogdf;
 int main(int argc, char *argv[]) {
 
 
-    unsigned int order = 18;
+    /*unsigned int order = 18;
     auto **adj_mtrx = new unsigned int *[order];
 
     adj_mtrx[0] = new unsigned int[order]   {0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1};
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 
     std::ofstream o = std::ofstream("ogdfConversion.gml");
     GraphIO::writeGML(GA, o);
-    o.close();
+    o.close();*/
 
     //GraphAlgorithms::dotFileFromGraph(g, "sealibConversion.dot");
     /*unsigned int order = 18;
@@ -144,8 +144,44 @@ int main(int argc, char *argv[]) {
     o = std::ofstream("planar.svg");
     GraphIO::drawSVG(GA, o);
     o.close();*/
+    clock_t begin = clock();
+    ogdf::Graph* ogdfGraph = GraphAlgorithms::randomEulerianOgdfGrah(5000,25000);
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout << "Elapsed Time to generate random graph: " << elapsed_secs << endl;
 
+    /*ogdf::Graph* ogdfGraph = new Graph();
+    clock_t begin = clock();
+    std::ifstream i = std::ifstream("randomEulerGraph.dot");
+    GraphIO::readDOT(*ogdfGraph, i);
+    i.close();
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout << "Elapsed Time to read graph from dot: " << elapsed_secs << endl;
+*/
+    begin = clock();
+    Sealib::Graph *g = GraphAlgorithms::sealibGraphFromOgdfGraph(ogdfGraph);
+    end = clock();
+    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout << "Elapsed Time to convert ogdf to sealib: " << elapsed_secs << endl;
 
+    begin = clock();
+
+    TrailStructure **ts =
+            GraphAlgorithms::hierholzer(g);
+    end = clock();
+    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout << "Elapsed Time to calculate tour: " << elapsed_secs << endl;
+
+    begin = clock();
+    //string s =
+            GraphAlgorithms::stringFromTrail(g, ts);
+    end = clock();
+    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    cout << "Elapsed Time to write tour as string: " << elapsed_secs << endl;
+
+    //cout << s << endl;
+    return 0;
 
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);

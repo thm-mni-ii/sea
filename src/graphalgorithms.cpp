@@ -64,7 +64,6 @@ TrailStructure ** GraphAlgorithms::hierholzer(Sealib::Graph *g) {
 
         if(kOld != (unsigned int) - 1) {
             unsigned int kLast = uMate;
-
             unsigned int kOldMatch = ts[u]->getMatched(kOld);
             if(kOldMatch != kOld) { //has match
                 ts[u]->marry(kOldMatch, kFirst);
