@@ -7,6 +7,7 @@
 #include <QGraphicsView>
 #include <QPolygonF>
 #include <QVector>
+#include <QTimer>
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
@@ -22,6 +23,8 @@ class GraphView : public QGraphicsView
 Q_OBJECT
 
 public:
+    bool waiting;
+
     GraphView(QWidget* parent=0);
 
     void drawArrow(const QPointF& start, const QPointF& end, const QColor& color);
@@ -32,8 +35,11 @@ public:
     ogdf::GraphAttributes* getGraphAttributes();
     void drawGraph();
     void layout();
+    void drawGraphDelayed();
 
 public slots:
+
+
     void save();
     void load();
     void stop();
@@ -53,6 +59,7 @@ public slots:
 
 
 private:
+    QTimer * timer;
     ogdf::Graph* graph_;
     ogdf::GraphAttributes* GA_;
 
@@ -60,5 +67,7 @@ private:
     QVector<ogdf::edge> edgeList_;
 
     QGraphicsScene* scene_;
+
+
 };
 #endif //SEA_GRAPHVIEW_H

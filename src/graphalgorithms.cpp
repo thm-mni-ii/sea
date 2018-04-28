@@ -9,6 +9,10 @@
 #include <list>
 #include <ogdf/basic/graphics.h>
 #include <ogdf/basic/GraphAttributes.h>
+#include <thread>
+#include <zconf.h>
+#include <set>
+#include <ogdf/basic/graph_generators.h>
 #include "sealib/graphalgorithms.h"
 
 using namespace std;
@@ -203,6 +207,60 @@ void GraphAlgorithms::dotFileFromGraph(Sealib::Graph *g, std::string fileName) {
     o << "\n}";
 }
 
+Sealib::Graph* GraphAlgorithms::randomEulerianSealibGraph(int nodeMax, int edgeMax) {
+    ogdf::Graph *g = randomEulerianOgdfGrah(nodeMax, edgeMax);
+    return sealibGraphFromOgdfGraph(g);
+}
+
+ogdf::Graph* GraphAlgorithms::randomEulerianOgdfGrah(int nodeMax, int edgeMax) {
+    ogdf::Graph *g = new ogdf::Graph();
+    ogdf::List<std::pair<int,int>> edges;
+
+    std::set<int> uneven = set<int>();
+    uneven.insert(0);
+    uneven.insert(nodeMax-1);
+
+    std::set<int> even = set<int>();
+
+    for(int i = 1; i < nodeMax - 1; i++) {
+        even.insert(i);
+    }
+
+    for(int i = 0; i < nodeMax - 1; i++) {
+        edges.pushBack(pair<int,int>(i,i+1));
+    }
+
+    while(edges.size() < edgeMax) {
+        if(uneven.empty() || even.empty()) {
+            break;
+        }
+
+        int nextEven;
+        int r = (int) (rand() % even.size());
+        auto it = even.begin();
+        for (; r != 0; r--) it++;
+        nextEven = *it;
+
+        int nextUneven;
+        r = (int) (rand() % uneven.size());
+        it = uneven.begin();
+        for (; r != 0; r--) it++;
+        nextUneven = *it;
+
+        even.erase(nextEven);
+        uneven.erase(nextUneven);
+
+        even.insert(nextUneven);
+        uneven.insert(nextEven);
+
+        edges.pushBack(pair<int,int>(nextEven, nextUneven));
+    }
+
+    ogdf::customGraph(*g, nodeMax, edges);
+
+    return g;
+}
+
 ogdf::Graph* GraphAlgorithms::ogdfGraphFromSealibGraph(Sealib::Graph *g) {
 
     ogdf::Graph *G = new ogdf::Graph();
@@ -380,4 +438,3 @@ void GraphAlgorithms::graphAttributesFromTrail(ogdf::GraphAttributes *GA, Sealib
         }
     }
 }
-
