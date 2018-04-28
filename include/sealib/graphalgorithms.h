@@ -12,6 +12,7 @@
 #include <sstream>
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
+#include <src/graphView.h>
 
 class GraphAlgorithms {
 
@@ -29,6 +30,10 @@ public:
     static void graphAttributesFromTrail(ogdf::GraphAttributes*GA, Sealib::Graph *g, TrailStructure **trail);
 
     static Sealib::Graph* sealibGraphFromOgdfGraph(ogdf::Graph *g);
+
+    static ogdf::Graph *randomEulerianOgdfGrah(int nodeMax, int edgeMax);
+
+    Sealib::Graph *randomEulerianSealibGraph(int nodeMax, int edgeMax);
 };
 
 

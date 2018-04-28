@@ -31,6 +31,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QComboBox>
+#include <QtCore/QThread>
 
 #include "graphView.h"
 
@@ -40,9 +41,13 @@ GraphView::GraphView(QWidget* parent) :
         QGraphicsView(parent)
 {
     graph_ = new Graph();
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(generateRandomGraph()));
 
-    ogdf::randomPlanarBiconnectedGraph(*graph_, 5, 15);
+    //ogdf::randomPlanarBiconnectedGraph(*graph_, 5, 15);
+    graph_ = GraphAlgorithms::randomEulerianOgdfGrah(100,250);
 
+    std::cout<<"generated"<<std::endl;
     GA_ = new GraphAttributes(*graph_,
                               GraphAttributes::nodeGraphics |
                               GraphAttributes::edgeGraphics |
@@ -410,8 +415,9 @@ void GraphView::load() {
     }
 }
 
-void GraphView::stop() {
 
+void GraphView::stop() {
+    timer->stop();
 }
 
 void GraphView::start() {
@@ -421,19 +427,9 @@ void GraphView::start() {
 
     GraphAlgorithms::graphAttributesFromTrail(GA_, sealibGraph, ts);
 
-    /*SugiyamaLayout SL;
-    SL.setRanking(new OptimalRanking);
-    SL.setCrossMin(new MedianHeuristic);
-
-    OptimalHierarchyLayout *ohl = new OptimalHierarchyLayout;
-    ohl->layerDistance(5.0);
-    ohl->nodeDistance(5.0);
-    ohl->weightBalancing(0.4);
-    SL.setLayout(ohl);
-    SL.call(*GA_);*/
-
-
-    //layout();
+    /*timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(generateRandomGraph()));
+    timer->start(1000);*/
     drawGraph();
 }
 
