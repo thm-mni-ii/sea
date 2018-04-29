@@ -230,23 +230,21 @@ ogdf::Graph* GraphAlgorithms::randomEulerianOgdfGrah(int nodeMax, int edgeMax) {
         edges.pushBack(pair<int,int>(i,i+1));
     }
 
-    while(edges.size() < edgeMax && uneven.size() > 0) {
+    while(edges.size() < edgeMax) {
         int nextEven;
         int r1 = (int) (rand() % (even.size() - 1));
 
         nextEven = even.at(r1);
-        even.erase(even.begin() + r1);
 
         int nextUneven;
         int r2 = (int) (rand() % (uneven.size() - 1));
 
         nextUneven = uneven.at(r2);
-        uneven.erase(uneven.begin() + r2);
 
         edges.pushBack(pair<int,int>(nextEven, nextUneven));
 
-        even.push_back(nextUneven);
-        uneven.push_back(nextEven);
+        even.at(r1) = nextUneven;
+        uneven.at(r2) = nextEven;
     }
 
     ogdf::customGraph(*g, nodeMax, edges);
