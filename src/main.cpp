@@ -144,13 +144,17 @@ int main(int argc, char *argv[]) {
     o = std::ofstream("planar.svg");
     GraphIO::drawSVG(GA, o);
     o.close();*/
-    clock_t begin = clock();
-    ogdf::Graph* ogdfGraph = GraphAlgorithms::randomEulerianOgdfGrah(5000,25000);
+
+    /*clock_t begin = clock();
+    ogdf::Graph *ogdfGraph;
+    //for(int i = 0; i < 1000; i++) {
+        ogdfGraph = GraphAlgorithms::randomEulerianOgdfGrah(50000, 1000000);
+    //}
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     cout << "Elapsed Time to generate random graph: " << elapsed_secs << endl;
 
-    /*ogdf::Graph* ogdfGraph = new Graph();
+    *//*ogdf::Graph* ogdfGraph = new Graph();
     clock_t begin = clock();
     std::ifstream i = std::ifstream("randomEulerGraph.dot");
     GraphIO::readDOT(*ogdfGraph, i);
@@ -158,7 +162,7 @@ int main(int argc, char *argv[]) {
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     cout << "Elapsed Time to read graph from dot: " << elapsed_secs << endl;
-*/
+*//*
     begin = clock();
     Sealib::Graph *g = GraphAlgorithms::sealibGraphFromOgdfGraph(ogdfGraph);
     end = clock();
@@ -178,10 +182,9 @@ int main(int argc, char *argv[]) {
             GraphAlgorithms::stringFromTrail(g, ts);
     end = clock();
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout << "Elapsed Time to write tour as string: " << elapsed_secs << endl;
+    cout << "Elapsed Time to write tour as string: " << elapsed_secs << endl;*/
 
     //cout << s << endl;
-    return 0;
 
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);

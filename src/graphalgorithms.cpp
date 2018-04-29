@@ -215,44 +215,38 @@ ogdf::Graph* GraphAlgorithms::randomEulerianOgdfGrah(int nodeMax, int edgeMax) {
     ogdf::Graph *g = new ogdf::Graph();
     ogdf::List<std::pair<int,int>> edges;
 
-    std::set<int> uneven = set<int>();
-    uneven.insert(0);
-    uneven.insert(nodeMax-1);
+    vector<int> uneven = vector<int>();
+    //int* even = (int*) malloc(sizeof(int) * nodeMax - 2);
+    vector<int> even = vector<int>();
 
-    std::set<int> even = set<int>();
+    uneven.push_back(0);
+    uneven.push_back(nodeMax - 1);
 
     for(int i = 1; i < nodeMax - 1; i++) {
-        even.insert(i);
+        even.push_back(i);
     }
 
     for(int i = 0; i < nodeMax - 1; i++) {
         edges.pushBack(pair<int,int>(i,i+1));
     }
 
-    while(edges.size() < edgeMax) {
-        if(uneven.empty() || even.empty()) {
-            break;
-        }
-
+    while(edges.size() < edgeMax && uneven.size() > 0) {
         int nextEven;
-        int r = (int) (rand() % even.size());
-        auto it = even.begin();
-        for (; r != 0; r--) it++;
-        nextEven = *it;
+        int r1 = (int) (rand() % (even.size() - 1));
+
+        nextEven = even.at(r1);
+        even.erase(even.begin() + r1);
 
         int nextUneven;
-        r = (int) (rand() % uneven.size());
-        it = uneven.begin();
-        for (; r != 0; r--) it++;
-        nextUneven = *it;
+        int r2 = (int) (rand() % (uneven.size() - 1));
 
-        even.erase(nextEven);
-        uneven.erase(nextUneven);
-
-        even.insert(nextUneven);
-        uneven.insert(nextEven);
+        nextUneven = uneven.at(r2);
+        uneven.erase(uneven.begin() + r2);
 
         edges.pushBack(pair<int,int>(nextEven, nextUneven));
+
+        even.push_back(nextUneven);
+        uneven.push_back(nextEven);
     }
 
     ogdf::customGraph(*g, nodeMax, edges);
