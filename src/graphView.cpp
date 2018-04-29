@@ -45,7 +45,7 @@ GraphView::GraphView(QWidget* parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(generateRandomGraph()));
 
     //ogdf::randomPlanarBiconnectedGraph(*graph_, 5, 15);
-    graph_ = GraphAlgorithms::randomEulerianOgdfGrah(10,15);
+    graph_ = GraphAlgorithms::randomEulerianOgdfGrah(10,25);
 
     std::cout<<"generated"<<std::endl;
     GA_ = new GraphAttributes(*graph_,
