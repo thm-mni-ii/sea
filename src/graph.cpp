@@ -1,6 +1,6 @@
 #include "sealib/graph.h"
 
-Node *Sealib::Graph::getNode(unsigned int u) { return &nodes[u]; }
+Sealib::Node *Sealib::Graph::getNode(unsigned int u) { return &nodes[u]; }
 
 unsigned int Sealib::Graph::head(unsigned int u, unsigned int k) { return nodes[u].getAdj()[k].vertex; }
 

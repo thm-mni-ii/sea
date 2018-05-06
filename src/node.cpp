@@ -1,7 +1,7 @@
 #include "sealib/node.h"
 
-Adjacency *Node::getAdj() { return adj; }
+Sealib::Adjacency *Sealib::Node::getAdj() { return adj; }
 
-unsigned int Node::getDegree() { return deg; }
+unsigned int Sealib::Node::getDegree() { return deg; }
 
-Node::Node(Adjacency *_adj, unsigned int _deg) : adj(_adj), deg(_deg) {}
+Sealib::Node::Node(Sealib::Adjacency *_adj, unsigned int _deg) : adj(_adj), deg(_deg) {}

@@ -15,6 +15,9 @@ file(GLOB SOURCES "src/*.cpp")                                  # all sources in
 list(REMOVE_ITEM SOURCES ${MAIN_FILE})
 file(GLOB TESTS "test/*.cpp") # all test files
 
+find_package(Boost REQUIRED)
+include_directories( ${Boost_INCLUDE_DIRS} )
+
 
 find_package(OGDF CONFIG PATHS "ogdf" REQUIRED)
 if(NOT OGDF_FOUND)
