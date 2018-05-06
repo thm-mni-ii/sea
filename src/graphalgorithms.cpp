@@ -17,14 +17,16 @@
 
 using namespace std;
 
-TrailStructure ** GraphAlgorithms::hierholzer(Sealib::Graph *g) {
+Sealib::TrailStructure ** GraphAlgorithms::hierholzer(Sealib::Graph *g) {
+
+    Sealib::LocalDyckTable ldt = Sealib::LocalDyckTable();
 
     unsigned  int order = g->getOrder();
-    TrailStructure **ts = static_cast<TrailStructure **>(malloc((sizeof(TrailStructure *) * order)));
+    Sealib::TrailStructure **ts = static_cast<Sealib::TrailStructure **>(malloc((sizeof(Sealib::TrailStructure *) * order)));
 
     for(unsigned int i = 0; i < order; i ++) {
         unsigned  int degree = g->getNode(i)->getDegree();
-        ts[i] = new TrailStructure(degree, i);
+        ts[i] = new Sealib::TrailStructure(degree, ldt);
     }
 
     //find first start node
@@ -104,7 +106,7 @@ TrailStructure ** GraphAlgorithms::hierholzer(Sealib::Graph *g) {
     return ts;
 }
 
-std::string GraphAlgorithms::stringFromTrail(Sealib::Graph *g, TrailStructure **trail) {
+std::string GraphAlgorithms::stringFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail) {
     std::string s = "\n";
     unsigned int t = 1;
     for(unsigned int i = 0; i < g->getOrder(); i++) {
@@ -132,7 +134,7 @@ std::string GraphAlgorithms::stringFromTrail(Sealib::Graph *g, TrailStructure **
     return s;
 }
 
-void GraphAlgorithms::dotFileFromTrail(Sealib::Graph *g, TrailStructure **trail, std::string fileName) {
+void GraphAlgorithms::dotFileFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail, std::string fileName) {
     const std::string colors[10] = {
             "red",
             "blue",
@@ -190,7 +192,7 @@ void GraphAlgorithms::dotFileFromGraph(Sealib::Graph *g, std::string fileName) {
     std::ofstream o(fileName);
     o << "Graph G {";
     for(unsigned int i = 0; i < g->getOrder();  i++) {
-        Node *n = g->getNode(i);
+        Sealib::Node *n = g->getNode(i);
         unsigned int degree = g->getNode(i)->getDegree();
         for(unsigned int j = 0; j < degree; j++) {
             if(edgeTaken.at(i).at(j) == 0) {
@@ -273,7 +275,7 @@ ogdf::Graph* GraphAlgorithms::ogdfGraphFromSealibGraph(Sealib::Graph *g) {
     G->allNodes(nodes);
     for(auto ogdfFrom: nodes) {
         unsigned int i = ogdfFrom->index();
-        Node *sealibNode = g->getNode(i);
+        Sealib::Node *sealibNode = g->getNode(i);
         unsigned int degree = g->getNode(i)->getDegree();
 
         for(unsigned int j = 0; j < degree; j++) {
@@ -298,7 +300,7 @@ ogdf::Graph* GraphAlgorithms::ogdfGraphFromSealibGraph(Sealib::Graph *g) {
 Sealib::Graph* GraphAlgorithms::sealibGraphFromOgdfGraph(ogdf::Graph *g) {
     unsigned int order = (unsigned int) g->nodes.size();
 
-    auto *sealibNodesArray = (Node *) malloc(sizeof(Node) * order);
+    auto *sealibNodesArray = (Sealib::Node *) malloc(sizeof(Sealib::Node) * order);
     auto *ogdfNodesArray = (ogdf::node *) malloc(sizeof(ogdf::node) * order);
 
     ogdf::List<ogdf::node> ogdfNodes;
@@ -312,7 +314,7 @@ Sealib::Graph* GraphAlgorithms::sealibGraphFromOgdfGraph(ogdf::Graph *g) {
     for(unsigned int i = 0; i < order; i++) {
         auto deg = (unsigned int) ogdfNodesArray[i]->degree();
 
-        auto *adj = (Adjacency *) malloc(sizeof(Adjacency*) * deg);
+        auto *adj = (Sealib::Adjacency *) malloc(sizeof(Sealib::Adjacency*) * deg);
 
         ogdf::List<ogdf::edge> edges;
         ogdfNodesArray[i]->adjEdges(edges);
@@ -325,20 +327,20 @@ Sealib::Graph* GraphAlgorithms::sealibGraphFromOgdfGraph(ogdf::Graph *g) {
                 adj[idx++] = e->target()->index(); //target is the one to add
             }
         }
-        sealibNodesArray[i] = Node(adj, deg);
+        sealibNodesArray[i] = Sealib::Node(adj, deg);
     }
 
     free(ogdfNodesArray);
 
     for (unsigned int i = 0; i < order; i++) {
         const unsigned int deg = sealibNodesArray[i].getDegree();
-        Adjacency *adj_arr = sealibNodesArray[i].getAdj();
+        Sealib::Adjacency *adj_arr = sealibNodesArray[i].getAdj();
 
         for (unsigned int j = 0; j < deg; j++) {
             if (adj_arr[j].crossIndex == std::numeric_limits<unsigned int>::max()) {
 
                 unsigned int v = adj_arr[j].vertex;
-                Adjacency *_adj_arr = sealibNodesArray[v].getAdj();
+                Sealib::Adjacency *_adj_arr = sealibNodesArray[v].getAdj();
                 const unsigned int _deg = sealibNodesArray[v].getDegree();
 
                 for (unsigned int _j = 0; _j < _deg; _j++) {
@@ -355,7 +357,7 @@ Sealib::Graph* GraphAlgorithms::sealibGraphFromOgdfGraph(ogdf::Graph *g) {
     return new Sealib::Graph(sealibNodesArray, order);
 }
 
-void GraphAlgorithms::graphAttributesFromTrail(ogdf::GraphAttributes *GA, Sealib::Graph *g, TrailStructure **trail) {
+void GraphAlgorithms::graphAttributesFromTrail(ogdf::GraphAttributes *GA, Sealib::Graph *g, Sealib::TrailStructure **trail) {
 
     const std::string colors[10] = {
             "#ff0000",

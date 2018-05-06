@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1421</width>
-    <height>818</height>
+    <width>1204</width>
+    <height>894</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,117 +15,70 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="4" column="6" rowspan="2">
-     <widget class="QPushButton" name="xScaleDownButton">
-      <property name="text">
-       <string>X-Scale down</string>
+    <item row="11" column="1">
+     <widget class="QSpinBox" name="edgeSpinBox">
+      <property name="maximum">
+       <number>1000</number>
       </property>
      </widget>
     </item>
-    <item row="1" column="4" rowspan="3">
-     <widget class="QPushButton" name="moveUpButton">
-      <property name="text">
-       <string>Move up</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="7" rowspan="3">
-     <widget class="QPushButton" name="yScaleUpButton">
-      <property name="text">
-       <string>Y-Scale up</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" rowspan="3" alignment="Qt::AlignLeft">
-     <widget class="QPushButton" name="saveButton">
-      <property name="text">
-       <string>Save</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="0" alignment="Qt::AlignLeft">
-     <widget class="QPushButton" name="loadButton">
-      <property name="text">
-       <string>Load</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="5" rowspan="2">
+    <item row="10" column="5" rowspan="2">
      <widget class="QPushButton" name="moveRightButton">
       <property name="text">
        <string>Move right</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="3" rowspan="2">
-     <widget class="QPushButton" name="moveLeftButton">
-      <property name="text">
-       <string>Move left</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0" rowspan="2" alignment="Qt::AlignLeft">
-     <widget class="QPushButton" name="stopButton">
-      <property name="text">
-       <string>Stop</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="4" rowspan="2">
-     <widget class="QPushButton" name="moveDownButton">
-      <property name="text">
-       <string>Move down</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="9">
-     <widget class="GraphView" name="graphView">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" alignment="Qt::AlignLeft">
-     <widget class="QPushButton" name="startButton">
-      <property name="text">
-       <string>Start</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="8" rowspan="2">
-     <widget class="QPushButton" name="xScaleUpButton">
-      <property name="text">
-       <string>X-Scale up</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="7" rowspan="2">
-     <widget class="QPushButton" name="yScaleDownButton">
-      <property name="text">
-       <string>Y-Scale down</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1" alignment="Qt::AlignLeft">
+    <item row="7" column="1" alignment="Qt::AlignLeft">
      <widget class="QPushButton" name="randomGraphButton">
       <property name="text">
        <string>Random Graph</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
+    <item row="9" column="0" rowspan="2" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="stopButton">
+      <property name="text">
+       <string>Stop</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QLabel" name="typeLabel">
+      <property name="text">
+       <string>Type</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="4" rowspan="2">
+     <widget class="QPushButton" name="moveDownButton">
+      <property name="text">
+       <string>Move down</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QSpinBox" name="nodeSpinBox">
+      <property name="maximum">
+       <number>1000</number>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QLabel" name="edgeLabel">
+      <property name="text">
+       <string>Edges</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QLabel" name="nodeLabel">
+      <property name="text">
+       <string>Nodes</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="1">
      <widget class="QComboBox" name="graphTypeBox">
       <item>
        <property name="text">
@@ -139,38 +92,104 @@
       </item>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLabel" name="nodeLabel">
+    <item row="10" column="8" rowspan="2">
+     <widget class="QPushButton" name="xScaleUpButton">
       <property name="text">
-       <string>Nodes</string>
+       <string>X-Scale up</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
-     <widget class="QLabel" name="edgeLabel">
+    <item row="7" column="7" rowspan="3">
+     <widget class="QPushButton" name="yScaleUpButton">
       <property name="text">
-       <string>Edges</string>
+       <string>Y-Scale up</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
-     <widget class="QLabel" name="typeLabel">
+    <item row="7" column="4" rowspan="3">
+     <widget class="QPushButton" name="moveUpButton">
       <property name="text">
-       <string>Type</string>
+       <string>Move up</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QSpinBox" name="nodeSpinBox">
-      <property name="maximum">
-       <number>1000</number>
+    <item row="11" column="0" rowspan="3" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="saveButton">
+      <property name="text">
+       <string>Save</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QSpinBox" name="edgeSpinBox">
-      <property name="maximum">
-       <number>1000</number>
+    <item row="13" column="7" rowspan="2">
+     <widget class="QPushButton" name="yScaleDownButton">
+      <property name="text">
+       <string>Y-Scale down</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="3" rowspan="2">
+     <widget class="QPushButton" name="moveLeftButton">
+      <property name="text">
+       <string>Move left</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="0" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="loadButton">
+      <property name="text">
+       <string>Load</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="startButton">
+      <property name="text">
+       <string>Start</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="6" rowspan="2">
+     <widget class="QPushButton" name="xScaleDownButton">
+      <property name="text">
+       <string>X-Scale down</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="9">
+     <widget class="DyckView" name="dyckView">
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="9">
+     <widget class="GraphView" name="graphView">
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>300</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
       </property>
      </widget>
     </item>
@@ -181,7 +200,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1421</width>
+     <width>1204</width>
      <height>22</height>
     </rect>
    </property>
@@ -193,6 +212,11 @@
    <class>GraphView</class>
    <extends>QGraphicsView</extends>
    <header>src/graphView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DyckView</class>
+   <extends>QGraphicsView</extends>
+   <header>src/dyckView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

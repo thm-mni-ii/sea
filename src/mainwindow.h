@@ -19,6 +19,7 @@ private:
     Ui_MainWindow ui_;
 
     GraphView* graphView_;
+    DyckView* dyckView_;
 };
 
 #endif

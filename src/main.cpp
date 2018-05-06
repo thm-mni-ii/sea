@@ -13,227 +13,150 @@
 #include <ogdf/planarlayout/PlanarDrawLayout.h>
 #include <ogdf/planarlayout/PlanarStraightLayout.h>
 #include <ogdf/planarlayout/MixedModelLayout.h>
+#include <sealib/dynamicbitsetextension.h>
+#include <bitset>
+#include <include/sealib/localdycktable.h>
 
 using namespace std;
-using namespace ogdf;
-
-int main(int argc, char *argv[]) {
+using namespace Sealib;
 
 
-    /*unsigned int order = 18;
-    auto **adj_mtrx = new unsigned int *[order];
 
-    adj_mtrx[0] = new unsigned int[order]   {0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1};
-    adj_mtrx[1] = new unsigned int[order]   {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[2] = new unsigned int[order]   {0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[3] = new unsigned int[order]   {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[4] = new unsigned int[order]   {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[5] = new unsigned int[order]   {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[6] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[7] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[8] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[9] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[10] = new unsigned int[order]  {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[11] = new unsigned int[order]  {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+int main(/*int argc, char *argv[]*/) {
+    /*QApplication app(argc, argv);
 
-    adj_mtrx[12] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
-    adj_mtrx[13] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 5, 0, 0};
-    adj_mtrx[14] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
-    adj_mtrx[15] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0};
+    MainWindow mw;
+    mw.show();
 
-    adj_mtrx[16] = new unsigned int[order]  {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[17] = new unsigned int[order]  {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    Sealib::Graph *g  = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
 
-    ogdf::Graph *G = GraphAlgorithms::ogdfGraphFromSealibGraph(g);
+    app.exec();*/
 
-    ogdf::GraphAttributes GA(*G, GraphAttributes::nodeGraphics |
-                                 GraphAttributes::edgeGraphics |
-                                 GraphAttributes::nodeLabel |
-                                 GraphAttributes::nodeStyle |
-                                 GraphAttributes::edgeType |
-                                 GraphAttributes::edgeArrow |
-                                 GraphAttributes::edgeStyle );
-    ogdf::List<ogdf::node> nodes;
-    G->allNodes(nodes);
-    for(auto v: nodes) {
-        GA.fillColor(v) = Color( "#FFFF00" ); // set node color to yellow
+    Sealib::LocalDyckTable ldt = Sealib::LocalDyckTable();
+    TrailStructure ts = TrailStructure(13, ldt);
+    /*ts.enter(0);
+    ts.enter(6);
+    //ts.enter(14);
+    ts.enter(12);
+    ts.enter(3);
+    ts.enter(5);
+    ts.enter(10);
+    ts.enter(9);*/
 
-        GA.height(v) = 20.0; // set the height to 20.0
-        GA.width(v) = 20.0; // set the width to 40.0
-        GA.shape(v) = ogdf::Shape::Ellipse;
+    ts.enter(6);
+    ts.enter(5);
+    ts.enter(4);
+    ts.enter(3);
+    ts.enter(2);
+    ts.enter(1);
+    ts.enter(0);
 
-        string s = to_string(v->index());
-        char const *pchar = s.c_str(); //use char const* as target type
-        GA.label(v) = pchar;
+    cout << "MATCHED:" << endl;
+    for(unsigned int i = 0; i < ts.getMatched().size(); i++) {
+        cout << ts.getMatched()[i];
     }
+    cout << endl;
 
-    ogdf::List<ogdf::edge> edges;
-    G->allEdges(edges);
-    for(auto e: edges) {
-        GA.arrowType(e) = ogdf::EdgeArrow::None;
-        GA.bends(e);
-        GA.strokeColor(e) = Color("#0000FF");
-        GA.strokeWidth(e) = 2;
+    cout << "INOUT:" << endl;
+    for(unsigned int i = 0; i < ts.getInAndOut().size(); i++) {
+        cout << ts.getInAndOut()[i];
     }
+    cout << endl;
 
-    SugiyamaLayout SL; //Compute a hierarchical drawing of G (using SugiyamaLayout)
-    SL.setRanking( new OptimalRanking );
-    SL.setCrossMin( new MedianHeuristic );
+    cout << "idx\tmatch" << endl;
+    for(unsigned int i = 0; i < 13; i++) {
+        cout << i << "\t" << ts.getMatched(i) << endl;
+    }
+    cout << endl;
 
-    auto *ohl = new OptimalHierarchyLayout;
+    boost::dynamic_bitset<> dw = ts.getDyckWord();
 
-    SL.setLayout( ohl );
-    SL.call( GA );
+    cout << "idx\tmatch" << endl;
+    for(unsigned int i = 0; i < 13; i++) {
+        cout << i << "\t" << ts.getMatchedNew(i) << endl;
+    }
+    cout << endl;
 
-    std::ofstream o = std::ofstream("ogdfConversion.gml");
-    GraphIO::writeGML(GA, o);
-    o.close();*/
+    ts.getMatchedNew(10);
 
-    //GraphAlgorithms::dotFileFromGraph(g, "sealibConversion.dot");
-    /*unsigned int order = 18;
-    auto **adj_mtrx = new unsigned int *[order];
 
-    adj_mtrx[0] = new unsigned int[order]   {0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1};
-    adj_mtrx[1] = new unsigned int[order]   {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[2] = new unsigned int[order]   {0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[3] = new unsigned int[order]   {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[4] = new unsigned int[order]   {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[5] = new unsigned int[order]   {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[6] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[7] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[8] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[9] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[10] = new unsigned int[order]  {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[11] = new unsigned int[order]  {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+    /*unsigned long segment;
+    unsigned long beg = 0;
+    unsigned long end = 7;
+    boost::to_block_range(dw, make_tuple(beg, end, std::ref(segment)));
+    Sealib::LocalDyckTable ldt = Sealib::LocalDyckTable();
 
-    adj_mtrx[12] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
-    adj_mtrx[13] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0};
-    adj_mtrx[14] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
-    adj_mtrx[15] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
+    cout << "segment 1:" << endl;
 
-    adj_mtrx[16] = new unsigned int[order]  {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[17] = new unsigned int[order]  {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    cout << "Idx\tMatch\tDepth" << endl;
+    for(unsigned long i  = 0; i < 7; i++) {
+        cout << i << "\t" << (unsigned int) ldt[segment]->localMatches[i] <<"\t\t" << (int) ldt[segment]->localDepths[i] << endl;
+    }
+    cout << "Depths:" << endl;
+    for(unsigned long  i = 0; i < 7; i++) {
+        cout << i << " : " << (int) ldt[segment]->localDepths[i] << endl;
+    }
+    cout << "Pioneers: L" << (unsigned int) ldt[segment]->leftPioneer << " R " << (unsigned int) ldt[segment]->rightPioneer << endl << endl;
 
-    Sealib::Graph *g  = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
-    GraphAlgorithms::dotFileFromGraph(g, "graph.dot");
-    TrailStructure **ts = GraphAlgorithms::hierholzer(g);
-    cout << GraphAlgorithms::stringFromTrail(g, ts);
+    cout << "segment 2:" << endl;
 
-    GraphAlgorithms::dotFileFromTrail(g, ts, "trail.dot");
+    beg = 7;
+    end = 14;
+    boost::to_block_range(dw, make_tuple(beg, end, std::ref(segment)));
 
-    ogdf::GraphAttributes GA = GraphAlgorithms::graphAttributesFromTrail(g, ts);
+    cout << "Idx\tMatch\tDepth" << endl;
+    for(unsigned long i  = 0; i < 7; i++) {
+        cout << i << "\t" << (unsigned int) ldt[segment]->localMatches[i] <<"\t\t" << (int) ldt[segment]->localDepths[i] << endl;
+    }
+    cout << "Depths:" << endl;
+    for(unsigned long  i = 0; i < 7; i++) {
+        cout << i << " : " << (int) ldt[segment]->localDepths[i] << endl;
+    }
+    cout << "Pioneers: L" << (unsigned int) ldt[segment]->leftPioneer << " R " << (unsigned int) ldt[segment]->rightPioneer << endl << endl;
 
-    SugiyamaLayout SL; //Compute a hierarchical drawing of G (using SugiyamaLayout)
-    SL.setRanking( new OptimalRanking );
-    SL.setCrossMin( new MedianHeuristic );
 
-    auto *ohl = new OptimalHierarchyLayout;
 
-    SL.setLayout( ohl );
-    SL.call( GA );
+    cout << endl;*/
 
-    std::ofstream o = std::ofstream("sugiyama.svg");
-    GraphIO::drawSVG(GA, o);
-    o.close();
 
-    PlanarizationLayout PL;
-    PL.call(GA);
+    /*boost::dynamic_bitset<> db = boost::dynamic_bitset<>(7);
+    db[0] = 1;
 
-    o = std::ofstream("planar.svg");
-    GraphIO::drawSVG(GA, o);
-    o.close();*/
+    db[5] = 1;
 
-    /*clock_t begin = clock();
-    ogdf::Graph *ogdfGraph;
-    //for(int i = 0; i < 1000; i++) {
-        ogdfGraph = GraphAlgorithms::randomEulerianOgdfGrah(50000, 1000000);
-    //}
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout << "Elapsed Time to generate random graph: " << elapsed_secs << endl;
+    unsigned long res;
+    unsigned long beg = 0;
+    unsigned long end = 7;
+    boost::to_block_range(db, make_tuple(beg, end, std::ref(res)));
 
-    *//*ogdf::Graph* ogdfGraph = new Graph();
-    clock_t begin = clock();
-    std::ifstream i = std::ifstream("randomEulerGraph.dot");
-    GraphIO::readDOT(*ogdfGraph, i);
-    i.close();
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout << "Elapsed Time to read graph from dot: " << elapsed_secs << endl;
-*//*
-    begin = clock();
-    Sealib::Graph *g = GraphAlgorithms::sealibGraphFromOgdfGraph(ogdfGraph);
-    end = clock();
-    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout << "Elapsed Time to convert ogdf to sealib: " << elapsed_secs << endl;
+    Sealib::LocalDyckTable ldt = Sealib::LocalDyckTable();
 
-    begin = clock();
+    for(int j = 0; j < std::pow(2,7); j++) {
+        std::bitset<7> bs(j);
+        cout << bs << endl;
+        cout << "Idx\tMatch\tDepth" << endl;
+        for(unsigned long i  = 0; i < 7; i++) {
+            cout << i << "\t" << (unsigned int) ldt[j]->localMatches[i] <<"\t\t" << (int) ldt[j]->localDepths[i] << endl;
+        }
+        cout << "Depths:" << endl;
+        for(unsigned long  i = 0; i < 7; i++) {
+            cout << i << " : " << (int) ldt[j]->localDepths[i] << endl;
+        }
+        cout << "Pioneers: L" << (unsigned int) ldt[j]->leftPioneer << " R " << (unsigned int) ldt[j]->rightPioneer << endl << endl;
 
-    TrailStructure **ts =
-            GraphAlgorithms::hierholzer(g);
-    end = clock();
-    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout << "Elapsed Time to calculate tour: " << elapsed_secs << endl;
+    }*/
 
-    begin = clock();
-    //string s =
-            GraphAlgorithms::stringFromTrail(g, ts);
-    end = clock();
-    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    cout << "Elapsed Time to write tour as string: " << elapsed_secs << endl;*/
-
-    //cout << s << endl;
-
-    QApplication app(argc, argv);
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-
-    QIcon appIcon;
-    appIcon.addFile(":/Icons/AppIcon32");
-    appIcon.addFile(":/Icons/AppIcon128");
-    app.setWindowIcon(appIcon);
-
-    MainWindow mainWindow;
-    mainWindow.show();
-    return app.exec();
 }
+
 /*
+namespace boost {
+    template <typename Block, typename Allocator, typename BlockOutputIterator>
+    inline void
+    to_block_range(const dynamic_bitset<Block, Allocator>& b,
+                   BlockOutputIterator result)
+    {
+        std::copy(b.m_bits.begin(), b.m_bits.end(), result);
+    }
 
-int hierholzerTest() {
-    unsigned int order = 18;
-    auto **adj_mtrx = new unsigned int *[order];
-
-    adj_mtrx[0] = new unsigned int[order]   {0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1};
-    adj_mtrx[1] = new unsigned int[order]   {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[2] = new unsigned int[order]   {0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[3] = new unsigned int[order]   {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[4] = new unsigned int[order]   {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[5] = new unsigned int[order]   {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[6] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[7] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[8] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[9] = new unsigned int[order]   {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[10] = new unsigned int[order]  {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[11] = new unsigned int[order]  {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
-
-    adj_mtrx[12] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
-    adj_mtrx[13] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 5, 0, 0};
-    adj_mtrx[14] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
-    adj_mtrx[15] = new unsigned int[order]  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0};
-
-    adj_mtrx[16] = new unsigned int[order]  {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[17] = new unsigned int[order]  {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-    Sealib::Graph *g  = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
-    GraphAlgorithms::dotFileFromGraph(g, "graph.dot");
-    TrailStructure **ts = GraphAlgorithms::hierholzer(g);
-    cout << GraphAlgorithms::stringFromTrail(g, ts);
-
-    GraphAlgorithms::dotFileFromTrail(g, ts, "trail.dot");
-
-    ogdf::GraphAttributes *GA = GraphAlgorithms::graphAttributesFromTrail(g, ts);
-    std::ofstream o = std::ofstream("ogdfTraiTest.svg");
-    GraphIO::drawSVG(*GA, o);
-    return 0;
 }*/
+

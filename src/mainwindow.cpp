@@ -14,16 +14,6 @@
 
 using namespace ogdf;
 
-QRectF transformNode(const GraphAttributes& GA, node n)
-{
-    double x = GA.x(n);
-    double y = GA.y(n);
-    double w = GA.width(n);
-    double h = GA.height(n);
-
-    return QRectF(x-w/2, y-h/2, w, h);
-}
-
 MainWindow::
 MainWindow(QWidget* parent) :
         QMainWindow(parent)
@@ -32,4 +22,5 @@ MainWindow(QWidget* parent) :
 
     ui_.graphView->layout();
     ui_.graphView->drawGraph();
+    /*ui_.dyckView->drawDyckWord();*/
 }

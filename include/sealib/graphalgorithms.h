@@ -17,17 +17,17 @@
 class GraphAlgorithms {
 
 public:
-    static TrailStructure ** hierholzer(Sealib::Graph *g);
+    static Sealib::TrailStructure ** hierholzer(Sealib::Graph *g);
 
-    static std::string stringFromTrail(Sealib::Graph *g, TrailStructure **trail);
+    static std::string stringFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail);
 
-    static void dotFileFromTrail(Sealib::Graph *g, TrailStructure **trail, std::string fileName);
+    static void dotFileFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail, std::string fileName);
 
     static void dotFileFromGraph(Sealib::Graph *g, std::string fileName);
 
     static ogdf::Graph* ogdfGraphFromSealibGraph(Sealib::Graph *g);
 
-    static void graphAttributesFromTrail(ogdf::GraphAttributes*GA, Sealib::Graph *g, TrailStructure **trail);
+    static void graphAttributesFromTrail(ogdf::GraphAttributes*GA, Sealib::Graph *g, Sealib::TrailStructure **trail);
 
     static Sealib::Graph* sealibGraphFromOgdfGraph(ogdf::Graph *g);
 
