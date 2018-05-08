@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
+#include <bitset>
 #include "sealib/trailstructure.h"
 using namespace std;
 
@@ -17,18 +18,14 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree, LocalDyckTable& _ta
     }
     lastClosed = (unsigned int) - 1;
 
-    //inAndOut = vector<bool>(degree);
     inAndOut = boost::dynamic_bitset<>(degree);
     matched = boost::dynamic_bitset<>(degree);
-    //matched = vector<bool>(degree);
 
     flags = boost::dynamic_bitset<>(3);
     if(degree % 2 == 0) flags[2].flip(); //set parity
     if(degree == 0) flags[1].flip(); //node with no edges is possible, set black
 
-    married = static_cast<unsigned int  *>(malloc(sizeof(unsigned int) * 4));
-
-    for(unsigned int i = 0; i < 4; i++) married[i] = (unsigned int) - 1;
+    married = nullptr;
 
     unused = static_cast<unsigned int *>(malloc(sizeof(unsigned int) * degree * 3));
     //[1][0][1] [1][1][1] [1][2][1] ... [1][degree-1][1]
@@ -38,6 +35,8 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree, LocalDyckTable& _ta
         unused[i * 3 + 2] = 1;
     }
 }
+
+
 
 inline unsigned int Sealib::TrailStructure::getNextUnused() {
     if(flags[1]) {//black node
@@ -83,10 +82,12 @@ inline unsigned int Sealib::TrailStructure::getNextUnused() {
 
 unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) {
     //check if the idx is present in the married structure
-    if(married[0] == idx) return married[1];
-    if(married[1] == idx) return married[0];
-    if(married[2] == idx) return married[3];
-    if(married[3] == idx) return married[2];
+    if(married!= nullptr) {
+        if(married[0] == idx) return married[1];
+        if(married[1] == idx) return married[0];
+        if(married[2] == idx) return married[3];
+        if(married[3] == idx) return married[2];
+    }
     
     if(!matched[idx]) return idx; //has no match
 
@@ -111,15 +112,19 @@ unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) {
             } else {
                 unsigned int i = stack[--p];
                 if(idx == i) {
-                    if(married[0] == j || married[1] == j || married[2] == j || married[3] == j) {
-                        return idx;
-                    }
+                    /*if(married != nullptr) {
+                        if(married[0] == j || married[1] == j || married[2] == j || married[3] == j) {
+                            return idx;
+                        }
+                    }*/
                     return j;
                 }
                 if(idx == j) {
-                    if(married[0] == i || married[1] == i || married[2] == i || married[3] == i) {
-                        return idx;
-                    }
+                    /*if(married != nullptr) {
+                        if(married[0] == i || married[1] == i || married[2] == i || married[3] == i) {
+                            return idx;
+                        }
+                    }*/
                     return i;
                 }
             }
@@ -258,23 +263,22 @@ bool Sealib::TrailStructure::isEven() {
 }
 
 void Sealib::TrailStructure::marry(unsigned int i, unsigned int o) {
-    if(flags[3]) flags[3].flip(); //reset error
-
-    if(married[0] == (unsigned int) -1) { //first call of marry
+    //initialize married table if it's the first call
+    if(married == nullptr) {
+        married = static_cast<unsigned int  *>(malloc(sizeof(unsigned int) * 4));
         married[0] = i;
         married[1] = o;
-
-    } else if(married[2] == (unsigned int) - 1) { //second call of marry, should be maximum
+        married[2] = (unsigned int) - 1;
+        married[3] = (unsigned int) - 1;
+    } else { //second call of marry, should be maximum
         married[2] = i;
         married[3] = o;
-    } else {
-        flags[3].flip(); //something went wrong
     }
 }
 
 unsigned int Sealib::TrailStructure::getStartingArc() {
     for(unsigned int i =0; i < degree; i++) {
-        if(getMatched(i) == i && !inAndOut[i]) {
+        if(getMatchedNew(i) == i && !inAndOut[i]) {
             return i;
         }
     }
@@ -282,41 +286,32 @@ unsigned int Sealib::TrailStructure::getStartingArc() {
 }
 
 bool Sealib::TrailStructure::isEndingArc(unsigned int i) {
-    return (getMatched(i) == i && inAndOut[i]);
-}
-
-Sealib::TrailStructure::~TrailStructure() {
-    free(married);
-    free(unused);
+    return (getMatchedNew(i) == i && inAndOut[i]);
 }
 
 void Sealib::TrailStructure::initDyckWord() {
-    dyckWord = boost::dynamic_bitset<>(matched.count());
+    dyckWord = boost::dynamic_bitset<>(matched.count()); //only matched are part of dyckword
     dyckStart = lastClosed + 1 == degree ? 0 : lastClosed + 1;
 
-    while(!matched[dyckStart]) { //start is the first opening bracket after the last one closed.
-        if(dyckStart == degree - 1) {
-            dyckStart = 0;
-        } else {
-            dyckStart+=1;
+    if(dyckWord.size() > 0) {
+        while(!matched[dyckStart]) { //start is the first opening bracket after the last one closed.
+            if(dyckStart == degree - 1) {
+                dyckStart = 0;
+            } else {
+                dyckStart+=1;
+            }
         }
-    }
-    unsigned int j = dyckStart;
-    unsigned int dyckIndex = 0;
-    do {
-        if(matched[j]) { //only consider matched index
-            dyckWord[dyckIndex++] = inAndOut[j];
-        }
-        //increment circular
-        j = j == degree - 1 ? 0 : j + 1;
+        unsigned int j = dyckStart;
+        unsigned int dyckIndex = 0;
+        do {
+            if(matched[j]) { //only consider matched index
+                dyckWord[dyckIndex++] = inAndOut[j];
+            }
+            //increment circular
+            j = j == degree - 1 ? 0 : j + 1;
 
-    } while(j != dyckStart);
-
-    cout << "DYCKWORD: " << endl;
-    for(unsigned int i = 0; i < dyckWord.size(); i++) {
-        cout << dyckWord[i];
+        } while(j != dyckStart);
     }
-    cout << endl;
 }
 
 void Sealib::TrailStructure::initPioneerRankSelect() {
@@ -329,8 +324,8 @@ void Sealib::TrailStructure::initPioneerRankSelect() {
     for(unsigned int i = 0; i < segmentCount; i++) {
         unsigned long segment;
         unsigned long beg = segmentLength * i;
-        unsigned long end = beg + segmentLength;
-        boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(segment)));
+        boost::to_block_range(dyckWord, make_tuple(beg, segmentLength, std::ref(segment)));
+
 
         unsigned long leftPioneer = table[segment]->leftPioneer;
         unsigned long rightPioneer = table[segment]->rightPioneer;
@@ -349,7 +344,6 @@ void Sealib::TrailStructure::initPioneerRankSelect() {
         }
         if(rightPioneer != (unsigned char) - 1) {
             if(!pioneerRankSelectBitSet[beg + rightPioneer]) {
-                pioneerRankSelectBitSet[beg + rightPioneer].flip();
 
                 pioneerRankSelectBitSet[beg + rightPioneer].flip();
 
@@ -365,9 +359,7 @@ void Sealib::TrailStructure::initPioneerRankSelect() {
     if(lastSegmentLength % segmentLength != 0) {
         unsigned long segment;
         unsigned long beg = segmentLength * segmentCount;
-        unsigned long end = beg +  lastSegmentLength;
-
-        boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(segment)));
+        boost::to_block_range(dyckWord, make_tuple(beg, lastSegmentLength, std::ref(segment)));
         LocalDyckTable::Data *data = LocalDyckTable::calculateLocalData(segment, static_cast<unsigned char>(lastSegmentLength));
 
         unsigned long leftPioneer = data->leftPioneer;
@@ -403,15 +395,9 @@ void Sealib::TrailStructure::initPioneerRankSelect() {
     }
 
     pioneerRankSelect = RankSelect(pioneerRankSelectBitSet);
-    cout << "PIONEER RANKSELECTBITSET: " << endl;
-    for(unsigned int i = 0; i < pioneerRankSelectBitSet.size(); i++) {
-        cout << pioneerRankSelectBitSet[i];
-    }
-    cout << endl;
 }
 
 void Sealib::TrailStructure::initDyckStructures() {
-
     initDyckWord();
     initPioneerRankSelect();
     initPioneerWord();
@@ -420,22 +406,13 @@ void Sealib::TrailStructure::initDyckStructures() {
 
 void Sealib::TrailStructure::initPioneerWord() {
     pioneerDyckWord = boost::dynamic_bitset<>(pioneerRankSelectBitSet.count());
-
     unsigned long idx = 0;
     unsigned long pioneerIndex = pioneerRankSelectBitSet.find_first();
     while(pioneerIndex != boost::dynamic_bitset<>::npos) {
         pioneerDyckWord[idx++] = dyckWord[pioneerIndex];
         pioneerIndex = pioneerRankSelectBitSet.find_next(pioneerIndex);
     }
-
-    cout << "PIONEER DYCKWORD: " << endl;
-    for(unsigned int i = 0; i < pioneerDyckWord.size(); i++) {
-        cout << pioneerDyckWord[i];
-    }
-    cout << endl;
 }
-
-
 
 void Sealib::TrailStructure::initPioneerTable() {
     pioneerTable = std::vector<unsigned int>(pioneerDyckWord.size(), (unsigned int) - 1);
@@ -446,14 +423,7 @@ void Sealib::TrailStructure::initPioneerTable() {
             pioneerTable[match] = i;
         }
     }
-
-    cout << "PIONEER TABLE: " << endl;
-    for(unsigned int i = 0; i < pioneerTable.size(); i++) {
-        cout << pioneerTable[i];
-    }
-    cout << endl;
 }
-
 
 unsigned long Sealib::TrailStructure::findMatchNaive(boost::dynamic_bitset<> &word, unsigned long idx) {
     unsigned int j = 0;
@@ -471,9 +441,7 @@ unsigned long Sealib::TrailStructure::findMatchNaive(boost::dynamic_bitset<> &wo
                 return i;
             }
         }
-
         j++;
-
     } while(j != word.size());
 
     return idx;
@@ -488,13 +456,14 @@ unsigned int Sealib::TrailStructure::getDyckStart() {
 }
 
 unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
-
     auto segmentLength = static_cast<unsigned long>(std::log2(table.getEntries()));
     //check if the idx is present in the married structure
-    if(married[0] == idx) return married[1];
-    if(married[1] == idx) return married[0];
-    if(married[2] == idx) return married[3];
-    if(married[3] == idx) return married[2];
+    if(married != nullptr) {
+        if(married[0] == idx) return married[1];
+        if(married[1] == idx) return married[0];
+        if(married[2] == idx) return married[3];
+        if(married[3] == idx) return married[2];
+    }
 
     if(!matched[idx]) return idx; //has no match
 
@@ -517,8 +486,7 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
     if(segmentId != lastSegment || lastSegmentLength == 0) { //not last segment or last segment has normal size, it is certain we can get a subword of length segmentLength
         unsigned long segment;
         unsigned long beg = segmentId * segmentLength;
-        unsigned long end = beg + segmentLength;
-        boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(segment)));
+        boost::to_block_range(dyckWord, make_tuple(beg, segmentLength, std::ref(segment)));
 
         unsigned char localMatch = table[segment]->localMatches[bSegmentIdx];
         if(localMatch != bSegmentIdx) {
@@ -542,8 +510,7 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
     } else {
         unsigned long segment;
         unsigned long beg = lastSegment * segmentLength;
-        unsigned long end = beg + lastSegmentLength;
-        boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(segment)));
+        boost::to_block_range(dyckWord, make_tuple(beg, lastSegmentLength, std::ref(segment)));
 
         unsigned char localMatch = table[segment]->localMatches[bSegmentIdx];
         if(localMatch != bSegmentIdx || localMatch >= lastSegmentLength) { //ignore matches outside of range
@@ -564,7 +531,6 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
             return s;
         }
     }
-
     //match is not local
     if(dyckWord[dyckIdx]) { //opening global
         unsigned long p_wp = pioneerRankSelect.rank(dyckIdx);
@@ -578,8 +544,7 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
         unsigned long pSegmentIdx = p % segmentLength;
 
         unsigned long beg = pSegment * segmentLength;
-        unsigned long end = beg + segmentLength;
-        boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(pSeg)));
+        boost::to_block_range(dyckWord, make_tuple(beg, segmentLength, std::ref(pSeg)));
 
         int pDepth = table[pSeg]->localDepths[pSegmentIdx];
         int bDepth = table[pSeg]->localDepths[bSegmentIdx];
@@ -593,8 +558,7 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
 
         if(pMatchSegment != lastSegment || matchSegmentIdx == 0) { //not last segment or last segment has normal size, it is certain we can get a subword of length segmentLength
             beg = pMatchSegment * segmentLength;
-            end = beg + segmentLength;
-            boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(pMatchSeg)));
+            boost::to_block_range(dyckWord, make_tuple(beg, segmentLength, std::ref(pMatchSeg)));
             int pMatchDepth = table[pMatchSeg]->localDepths[matchSegmentIdx];
             for(long i = matchSegmentIdx; i >= 0; i--) {
                 int candidateDepth = table[pMatchSeg]->localDepths[i];
@@ -617,11 +581,9 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
                     return s;
                 }
             }
-            //something went wrong here
         } else {
             beg = lastSegment * segmentLength;
-            end = beg + lastSegmentLength;
-            boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(pMatchSeg)));
+            boost::to_block_range(dyckWord, make_tuple(beg, lastSegmentLength, std::ref(pMatchSeg)));
             LocalDyckTable::Data *data = LocalDyckTable::calculateLocalData(pMatchSeg, static_cast<unsigned char>(lastSegmentLength));
 
             int pMatchDepth = data->localDepths[matchSegmentIdx];
@@ -648,12 +610,11 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
                 }
             }
             delete data;
-            //something went wrong here
         }
     } else { //closing global
         unsigned long p_wp = pioneerRankSelect.rank(dyckIdx);
         unsigned long p = pioneerRankSelect.select(static_cast<unsigned int>(p_wp));
-        if(p < p_wp) {
+        if(p < dyckIdx) {
 
             p_wp++;
             p = pioneerRankSelect.select(static_cast<unsigned int>(p_wp));
@@ -669,7 +630,6 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
 
         unsigned long pSeg;
         unsigned long beg;
-        unsigned long end;
 
         int pDepth;
         int bDepth;
@@ -677,17 +637,15 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
 
         if(pSegment != lastSegment || pSegmentIdx == 0) { //not in last segment
             beg = pSegment * segmentLength;
-            end = beg + segmentLength;
-            boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(pSeg)));
+            boost::to_block_range(dyckWord, make_tuple(beg, segmentLength, std::ref(pSeg)));
 
             pDepth = table[pSeg]->localDepths[pSegmentIdx];
             bDepth = table[pSeg]->localDepths[bSegmentIdx];
 
-            depthDiff = /**/pDepth - bDepth;
+            depthDiff = pDepth - bDepth;
         } else {
             beg = lastSegment * segmentLength;
-            end = beg + lastSegmentLength;
-            boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(pSeg)));
+            boost::to_block_range(dyckWord, make_tuple(beg, lastSegmentLength, std::ref(pSeg)));
             LocalDyckTable::Data *data = LocalDyckTable::calculateLocalData(pSeg, static_cast<unsigned char>(lastSegmentLength));
 
             pDepth = data->localDepths[pSegmentIdx];
@@ -697,14 +655,12 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
             delete data;
         }
 
-
         unsigned long pMatchSeg;
         unsigned long pMatchSegment = pMatch / segmentLength;
         unsigned long matchSegmentIdx = pMatch % segmentLength;
 
         beg = pMatchSegment * segmentLength;
-        end = beg + segmentLength;
-        boost::to_block_range(dyckWord, make_tuple(beg, end, std::ref(pMatchSeg)));
+        boost::to_block_range(dyckWord, make_tuple(beg, segmentLength, std::ref(pMatchSeg)));
         int pMatchDepth = table[pMatchSeg]->localDepths[matchSegmentIdx];
         for(unsigned long i = matchSegmentIdx; i < segmentLength; i++) {
             int candidateDepth = table[pMatchSeg]->localDepths[i];
@@ -728,8 +684,6 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
             }
         }
     }
-
-
     return idx;
 }
 
@@ -741,7 +695,7 @@ const boost::dynamic_bitset<> &Sealib::TrailStructure::getInAndOut() const {
     return inAndOut;
 }
 
-const boost::dynamic_bitset<> &Sealib::TrailStructure::getMatched() const {
+const boost::dynamic_bitset<> &Sealib::TrailStructure::getMatchedBitset() const {
     return matched;
 }
 
