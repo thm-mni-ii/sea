@@ -19,7 +19,7 @@ class GraphAlgorithms {
 public:
     static Sealib::TrailStructure ** hierholzer(Sealib::Graph *g);
 
-    static std::string stringFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail);
+    /*static std::string stringFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail);
 
     static void dotFileFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail, std::string fileName);
 
@@ -33,7 +33,7 @@ public:
 
     static ogdf::Graph *randomEulerianOgdfGrah(int nodeMax, int edgeMax);
 
-    static Sealib::Graph *randomEulerianSealibGraph(int nodeMax, int edgeMax);
+    static Sealib::Graph *randomEulerianSealibGraph(int nodeMax, int edgeMax);*/
 };
 
 

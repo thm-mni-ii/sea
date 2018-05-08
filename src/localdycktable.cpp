@@ -54,12 +54,12 @@ Sealib::LocalDyckTable::Data* Sealib::LocalDyckTable::calculateLocalData(unsigne
     char openingDepth = 0;
     char closingDepth = 0;
     for(unsigned char c = 0; c < len; c++) {
-        if(d->localMatches[c] == c && (g & mask[c]) != 0) { //left most global opening
+        if(d->localMatches[c] == c && (g & mask[c]) != 0) { //global opening
             /*if(openingDepth == 0) {
                 d->leftPioneer = c;;
             }*/
             d->localDepths[c] = ++openingDepth;
-        } else if(d->localMatches[len - c - 1] == len - c - 1 && (g & mask[len - c - 1]) == 0) { //right most global closing
+        } if(d->localMatches[len - c - 1] == len - c - 1 && (g & mask[len - c - 1]) == 0) { //global closing
             /*if(closingDepth == 0) {
                 d->rightPioneer = static_cast<unsigned char>(len - c - 1);;
             }*/

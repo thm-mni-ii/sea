@@ -32,6 +32,7 @@
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QComboBox>
 #include <QtCore/QThread>
+#include <include/sealib/graphio.h>
 
 #include "graphView.h"
 
@@ -45,7 +46,7 @@ GraphView::GraphView(QWidget* parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(generateRandomGraph()));
 
     //ogdf::randomPlanarBiconnectedGraph(*graph_, 5, 15);
-    graph_ = GraphAlgorithms::randomEulerianOgdfGrah(10,25);
+    graph_ = Sealib::GraphIO::randomEulerianOgdfGrah(10,25);
 
     std::cout<<"generated"<<std::endl;
     GA_ = new GraphAttributes(*graph_,
@@ -421,11 +422,11 @@ void GraphView::stop() {
 }
 
 void GraphView::start() {
-    Sealib::Graph *sealibGraph = GraphAlgorithms::sealibGraphFromOgdfGraph(graph_);
+    Sealib::Graph *sealibGraph = Sealib::GraphIO::sealibGraphFromOgdfGraph(graph_);
 
     Sealib::TrailStructure** ts = GraphAlgorithms::hierholzer(sealibGraph);
 
-    GraphAlgorithms::graphAttributesFromTrail(GA_, sealibGraph, ts);
+    Sealib::GraphIO::graphAttributesFromTrail(GA_, sealibGraph, ts);
 
     /*timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(generateRandomGraph()));

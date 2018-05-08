@@ -22,14 +22,6 @@ namespace Sealib {
         unsigned int lastClosed;
         unsigned int dyckStart;
 
-    public:
-        unsigned int getDegree() const;
-
-        const boost::dynamic_bitset<> &getInAndOut() const;
-
-        const boost::dynamic_bitset<> &getMatched() const;
-
-    private:
         boost::dynamic_bitset<> inAndOut;
         boost::dynamic_bitset<> matched;
 
@@ -44,11 +36,10 @@ namespace Sealib {
 
         LocalDyckTable& table;
 
-
-    private:
         unsigned int *married;
 
         unsigned int *unused;
+
         /**
          * Removes nextUnused from the double linked unused array.
          * Updates links and returns nextUnused.
@@ -61,16 +52,33 @@ namespace Sealib {
          */
         void initDyckStructures();
 
+        /**
+         * Finds the match in a dyckword to idx idx in a naive way, i.e. by using a stack
+         * of size of word.size/2
+         * @param word
+         * @param idx
+         * @return idx of the match, or idx if there is no match
+         */
+
         static unsigned long findMatchNaive(boost::dynamic_bitset<> &word, unsigned long idx);
 
     public:
-        virtual ~TrailStructure();
-
-
+        /**
+         * @return value of degree
+         */
+        unsigned int getDegree() const;
 
         /**
-         * Reference to the dyck word formed by in and out arcs.
-         * Call only on black trailstructures.
+         * @return ref to inAndOut bitset
+         */
+        const boost::dynamic_bitset<> &getInAndOut() const;
+
+        /**
+         * @return ref to matched bitset
+         */
+        const boost::dynamic_bitset<> &getMatchedBitset() const;
+
+        /**
          * @return ref to dyckWord
          */
         const boost::dynamic_bitset<> &getDyckWord() const;
@@ -82,21 +90,21 @@ namespace Sealib {
         explicit TrailStructure(unsigned int _degree, LocalDyckTable& _table);
 
         /**
-         * Inline function to check if the TrailStructure is currently grey.
+         * check if the TrailStructure is currently grey.
          * Grey meaning atleast one arc has been used so far.
          * @return true when grey, false otherwise
          */
         bool isGrey();
 
         /**
-         * Inline function to check whether a TrailStructure is black.
+         * check whether a TrailStructure is black.
          * Black meaning all arcs have been traversed.
          * @return true when black, false otherwise
          */
         bool isBlack();
 
         /**
-         * Inline function to check whether a TrailStructure is even.
+         * check whether a TrailStructure is even.
          * Even meaning the number of unused arcs is even..
          * @return true when even, false otherwise
          */
@@ -138,7 +146,6 @@ namespace Sealib {
         void marry(unsigned int i, unsigned int o);
 
         /**
-         * Getter for lastClosed.
          * @return value of lastClosed variable.
          */
         unsigned int getLastClosed(){
@@ -146,8 +153,6 @@ namespace Sealib {
         }
 
         /**
-         * Returns the index of the starting arc of a Trail.
-         * If the TrailStructure has no starting arc, returns (unsigned int) - 1.
          * @return Starting index of a Trail, or (unsigned int) - 1
          */
 
@@ -167,14 +172,33 @@ namespace Sealib {
          */
         unsigned int getDyckStart();
 
+        /**
+         * Gets the match for a given matched arc.
+         * The inAndOut bit array is interpreted as a dyckword.
+         * @param idx
+         * @return
+         */
         unsigned int getMatchedNew(unsigned int idx);
 
+
+        /**
+         * initialize the pioneer match lookup table.
+         */
         void initPioneerTable();
 
+        /**
+         * initialize the dyckword associated with the inAndOut bitvektor.
+         */
         void initDyckWord();
 
+        /**
+         * initialize the rankselect structure for the pioneer dyckword.
+         */
         void initPioneerRankSelect();
 
+        /**
+         * initializes the pioneer dyckword
+         */
         void initPioneerWord();
     };
 }
