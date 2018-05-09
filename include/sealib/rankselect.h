@@ -8,16 +8,37 @@
 #include <boost/dynamic_bitset.hpp>
 
 namespace Sealib{
-    class RankSelect {
-        boost::dynamic_bitset<> bitset;
+/**
+ * Space efficient RankSelect implementation.
+ * @author Johannes Meintrup
+ */
+class RankSelect {
+    boost::dynamic_bitset<> bitset;
 
-    public:
-        unsigned long select(unsigned int k) const;
-        unsigned long rank(unsigned int k) const;
+ public:
+    /**
+     * Selects the k-th set bit
+     * @param k idx
+     * @return k-th set bit
+     */
+    unsigned long select(unsigned int k) const;
 
-        explicit RankSelect(const boost::dynamic_bitset<> &bitset);
+    /**
+     * Rank of the k-th idx
+     * @param k idx
+     * @return rank of k-th idx
+     */
+    unsigned long rank(unsigned int k) const;
 
-        RankSelect();
-    };
-}
-#endif //SEA_RANKSELECT_H
+    /**
+     * @param bitset rankselect bitset
+     */
+    explicit RankSelect(const boost::dynamic_bitset<> &bitset);
+
+    /**
+     * default empty constructor
+     */
+    RankSelect();
+};
+}  // namespace Sealib
+#endif  // SEA_RANKSELECT_H

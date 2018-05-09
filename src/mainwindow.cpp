@@ -12,8 +12,6 @@
 #include "mainwindow.h"
 #include <QTimer>
 
-using namespace ogdf;
-
 MainWindow::
 MainWindow(QWidget* parent) :
         QMainWindow(parent)
@@ -22,5 +20,4 @@ MainWindow(QWidget* parent) :
 
     ui_.graphView->layout();
     ui_.graphView->drawGraph();
-    /*ui_.dyckView->drawDyckWord();*/
 }

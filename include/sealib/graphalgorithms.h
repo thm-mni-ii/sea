@@ -5,36 +5,22 @@
 #ifndef SEA_GRAPHALGORITHMS_H
 #define SEA_GRAPHALGORITHMS_H
 
+#include "sealib/graph.h"
+#include "sealib/trailstructure.h"
 
-#include "graph.h"
-#include "trailstructure.h"
-#include <string>
-#include <sstream>
-#include <ogdf/basic/Graph.h>
-#include <ogdf/basic/GraphAttributes.h>
-#include <src/graphView.h>
-
+/**
+ * Collection of Space Efficient Algorithms for Graphs.
+ * @author Johannes Meintrup
+ */
 class GraphAlgorithms {
-
-public:
+ public:
+    /**
+     * Space efficient implementation of the hierholzer algorithm
+     * to find euler trails in a given graph.
+     * @param g Graph to be traversed
+     * @return Array of Sealib::TrailStrucutre Objects representing the trail
+     */
     static Sealib::TrailStructure ** hierholzer(Sealib::Graph *g);
-
-    /*static std::string stringFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail);
-
-    static void dotFileFromTrail(Sealib::Graph *g, Sealib::TrailStructure **trail, std::string fileName);
-
-    static void dotFileFromGraph(Sealib::Graph *g, std::string fileName);
-
-    static ogdf::Graph* ogdfGraphFromSealibGraph(Sealib::Graph *g);
-
-    static void graphAttributesFromTrail(ogdf::GraphAttributes*GA, Sealib::Graph *g, Sealib::TrailStructure **trail);
-
-    static Sealib::Graph* sealibGraphFromOgdfGraph(ogdf::Graph *g);
-
-    static ogdf::Graph *randomEulerianOgdfGrah(int nodeMax, int edgeMax);
-
-    static Sealib::Graph *randomEulerianSealibGraph(int nodeMax, int edgeMax);*/
 };
 
-
-#endif //SEA_GRAPHALGORITHMS_H
+#endif  // SEA_GRAPHALGORITHMS_H

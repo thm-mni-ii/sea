@@ -1,9 +1,9 @@
-#include <stdlib.h>
+#include <cstdlib>
 #include <limits>
 #include "sealib/graphcreator.h"
 
 Sealib::Graph *Sealib::GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order) {
-    Node *nodes = (Node *) malloc(sizeof(Node) * order);
+    auto *nodes = static_cast<Node *>(malloc(sizeof(Node) * order));
 
     for (unsigned int i = 0; i < order; i++) {
         unsigned int deg = 0;
@@ -29,7 +29,6 @@ Sealib::Graph *Sealib::GraphCreator::createGraphFromAdjacencyMatrix(unsigned int
 
         for (unsigned int j = 0; j < deg; j++) {
             if (adj_arr[j].crossIndex == std::numeric_limits<unsigned int>::max()) {
-
                 unsigned int v = adj_arr[j].vertex;
                 Sealib::Adjacency *_adj_arr = nodes[v].getAdj();
                 const unsigned int _deg = nodes[v].getDegree();
