@@ -7,18 +7,19 @@
  * @author Johannes Meintrup
  */
 namespace Sealib {
-    class Adjacency {
-    public:
-        unsigned int vertex;
-        unsigned int crossIndex;
+class Adjacency {
+ public:
+    unsigned int vertex;
+    unsigned int crossIndex;
 
-        /**
-         * Creates an adjacency with the given endpoint _vertex.
-         * Note: The construction will leave the crossIndex uninitialized.
-         * @param _vertex The vertex id
-         */
-        Adjacency(unsigned int _vertex);
-    };
-}
+    /**
+     * Creates an adjacency with the given endpoint _vertex.
+     * Note: The construction will leave the crossIndex uninitialized.
+     * @param _vertex The vertex id
+     */
+    explicit Adjacency(unsigned int _vertex);
+};
+}  // namespace Sealib
 
-#endif //SEA_ADJACENCY_H
+
+#endif  // SEA_ADJACENCY_H

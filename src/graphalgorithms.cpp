@@ -4,71 +4,56 @@
 
 
 #include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <list>
-#include <ogdf/basic/graphics.h>
 #include <ogdf/basic/GraphAttributes.h>
-#include <thread>
-#include <zconf.h>
-#include <set>
-#include <ogdf/basic/graph_generators.h>
 #include "sealib/graphalgorithms.h"
 
-using namespace std;
-
 Sealib::TrailStructure ** GraphAlgorithms::hierholzer(Sealib::Graph *g) {
-
     static Sealib::LocalDyckTable ldt = Sealib::LocalDyckTable();
 
     unsigned  int order = g->getOrder();
     Sealib::TrailStructure **ts = static_cast<Sealib::TrailStructure **>(malloc((sizeof(Sealib::TrailStructure *) * order)));
 
-    for(unsigned int i = 0; i < order; i ++) {
+    for (unsigned int i = 0; i < order; i ++) {
         unsigned  int degree = g->getNode(i)->getDegree();
         ts[i] = new Sealib::TrailStructure(degree, ldt);
     }
 
-    //find first start node
+    // find first start node
     unsigned int u = (unsigned int) - 1;
-    for(unsigned int i = 0; i < order; i ++) {
-        if(g->getNode(i)->getDegree() % 2 != 0) { //odd
+    for (unsigned int i = 0; i < order; i ++) {
+        if (g->getNode(i)->getDegree() % 2 != 0) {  // odd
             u = i;
             break;
         }
     }
-    if(u == (unsigned int) - 1) { //no odd found
-        for(unsigned int i = 0; i < order; i ++) {
-            if(g->getNode(i)->getDegree() != 0) { //first that has edges, it's possible to have a graph with no edges
+    if (u == (unsigned int) - 1) {  // no odd found
+        for (unsigned int i = 0; i < order; i ++) {
+            if (g->getNode(i)->getDegree() != 0) {  // first that has edges, it's possible to have a graph with no edges
                 u = i;
                 break;
             }
         }
     }
 
-    while(u != (unsigned int)  -1) { //loop the iteration while there is a non-black vertex
+    while (u != (unsigned int)  -1) {  // loop the iteration while there is a non-black vertex
         unsigned int kOld = (unsigned int) - 1;
-        if(ts[u]->isEven() && ts[u]->isGrey()) { //remember aOld
+        if (ts[u]->isEven() && ts[u]->isGrey()) {  // remember aOld
             kOld = ts[u]->getLastClosed();
         }
         unsigned int kFirst = ts[u]->leave();
-        //unsigned int kFirstMate = g.getNode(u)->getAdj()[kFirst].crossIndex;
 
         unsigned int k = kFirst;
         unsigned int uMate;
         do {
             uMate = g->getNode(u)->getAdj()[k].crossIndex;
-            u = g->getNode(u)->getAdj()[k].vertex; //next node
+            u = g->getNode(u)->getAdj()[k].vertex;  // next node
             k = ts[u]->enter(uMate);
-        } while(k != (unsigned int) - 1);
+        } while (k != (unsigned int) - 1);
 
-
-
-        if(kOld != (unsigned int) - 1) {
+        if (kOld != (unsigned int) - 1) {
             unsigned int kLast = uMate;
-            //unsigned int kOldMatch = ts[u]->getMatched(kOld);
             unsigned int kOldMatch = ts[u]->getMatchedNew(kOld);
-            if(kOldMatch != kOld) { //has match
+            if (kOldMatch != kOld) {  // has match
                 ts[u]->marry(kOldMatch, kFirst);
                 ts[u]->marry(kLast, kOld);
             } else {
@@ -76,33 +61,32 @@ Sealib::TrailStructure ** GraphAlgorithms::hierholzer(Sealib::Graph *g) {
             }
         }
 
-        //find next start node
+        // find next start node
         u = (unsigned int) - 1;
 
-        for(unsigned int i = 0; i < order; i ++) {
-            if(!ts[i]->isEven() && !ts[i]->isBlack()) { //odd
+        for (unsigned int i = 0; i < order; i ++) {
+            if (!ts[i]->isEven() && !ts[i]->isBlack()) {  // odd
                 u = i;
                 break;
             }
         }
-        if(u == (unsigned int) - 1) { //no odd found, search for grey
-            for(unsigned int i = 0; i < order; i ++) {
-                if(ts[i]->isGrey() && !ts[i]->isBlack()) { //first that has edges, it's possible to have a graph with no edges
+        if (u == (unsigned int) - 1) {  // no odd found, search for grey
+            for (unsigned int i = 0; i < order; i ++) {
+                if (ts[i]->isGrey() && !ts[i]->isBlack()) {  // first that has edges, it's possible to have a graph with no edges
                     u = i;
                     break;
                 }
             }
         }
-        if(u == (unsigned int) - 1) { //no odd found and no grey found, search for white
-            for(unsigned int i = 0; i < order; i ++) {
-                if(!ts[i]->isBlack()) { //first that has edges, it's possible to have a graph with no edges
+        if (u == (unsigned int) - 1) {  // no odd found and no grey found, search for white
+            for (unsigned int i = 0; i < order; i ++) {
+                if (!ts[i]->isBlack()) {  // first that has edges, it's possible to have a graph with no edges
                     u = i;
                     break;
                 }
             }
         }
-        //no node left, should break now.
+        // no node left, should break now.
     }
-
     return ts;
 }
