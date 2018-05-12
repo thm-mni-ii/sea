@@ -8,7 +8,7 @@
 #include <vector>
 #include <sealib/dynamicbitsetextension.h>
 #include "sealib/localdycktable.h"
-#include "sealib/rankselect.h"
+#include "sealib/simplerankselect.h"
 
 /**
  * Space efficient TrailStructure.
@@ -30,7 +30,7 @@ class TrailStructure{
     boost::dynamic_bitset<> pioneerDyckWord;
 
     boost::dynamic_bitset<> pioneerRankSelectBitSet;
-    RankSelect pioneerRankSelect;
+    SimpleRankSelect pioneerRankSelect;
 
     boost::dynamic_bitset<> flags;  // at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven
 

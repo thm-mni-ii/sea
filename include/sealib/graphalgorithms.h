@@ -12,6 +12,7 @@
  * Collection of Space Efficient Algorithms for Graphs.
  * @author Johannes Meintrup
  */
+namespace Sealib {
 class GraphAlgorithms {
  public:
     /**
@@ -22,5 +23,6 @@ class GraphAlgorithms {
      */
     static Sealib::TrailStructure ** hierholzer(Sealib::Graph *g);
 };
+}
 
 #endif  // SEA_GRAPHALGORITHMS_H

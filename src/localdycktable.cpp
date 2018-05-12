@@ -6,7 +6,13 @@
 #include <iostream>
 #include "sealib/localdycktable.h"
 
-static unsigned long mask[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072};
+
+static constexpr unsigned long mask[] = {
+        1, 2, 4, 8, 16, 32, 64, 128, 256,
+        512, 1024, 2048, 4096, 8192, 16384, 32768, 65536,
+        131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216,
+        33554432, 67108864, 134217728, 268435456, 536870912, 1073741824, 2147483648, 4294967296,
+        8589934592, 17179869184, 34359738368, 68719476736, 137438953472, 274877906944, 549755813888, 1099511627776};
 
 Sealib::LocalDyckTable::LocalDyckTable(unsigned char len) {
     entries = static_cast<unsigned long>(std::pow(2, len));
@@ -35,7 +41,7 @@ Sealib::LocalDyckTable::Data* Sealib::LocalDyckTable::calculateLocalData(unsigne
 
     auto *stack = static_cast<unsigned char *>(malloc((sizeof(unsigned char) * len)));
     while (j != len) {
-        if ((g & mask[j]) != 0) {  // '('
+        if (CHECK_BIT(g,j)) {  // '('
             stack[p++] = j;
         } else {
             if (p > 0) {  // j > stack[p]
@@ -52,22 +58,22 @@ Sealib::LocalDyckTable::Data* Sealib::LocalDyckTable::calculateLocalData(unsigne
     char openingDepth = 0;
     char closingDepth = 0;
     for (unsigned char c = 0; c < len; c++) {
-        if (d->localMatches[c] == c && (g & mask[c]) != 0) {  // global opening
+        if (d->localMatches[c] == c && CHECK_BIT(g,c)) {  // global opening
             d->localDepths[c] = ++openingDepth;
         }
-        if (d->localMatches[len - c - 1] == len - c - 1 && (g & mask[len - c - 1]) == 0) {  // global closing
+        if (d->localMatches[len - c - 1] == len - c - 1 && !CHECK_BIT(g, len - c - 1)) {  // global closing
             d->localDepths[len - c - 1] = --closingDepth;
         }
     }
     for (unsigned char c = 0; c < len; c++) {
-        if (d->localMatches[c] == c && (g & mask[c]) != 0) {
+        if (d->localMatches[c] == c && CHECK_BIT(g,c)) {
             d->leftPioneer = c;
             break;
         }
     }
 
     for (int c = len - 1; c >= 0; c--) {
-        if (d->localMatches[c] == c && (g & mask[c]) == 0) {
+        if (d->localMatches[c] == c && !CHECK_BIT(g,c)) {
             d->rightPioneer = static_cast<unsigned char>(c);
             break;
         }

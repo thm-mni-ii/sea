@@ -424,7 +424,7 @@ void GraphView::stop() {
 void GraphView::start() {
     Sealib::Graph *sealibGraph = Sealib::GraphIO::sealibGraphFromOgdfGraph(graph_);
 
-    Sealib::TrailStructure** ts = GraphAlgorithms::hierholzer(sealibGraph);
+    Sealib::TrailStructure** ts = Sealib::GraphAlgorithms::hierholzer(sealibGraph);
 
     Sealib::GraphIO::graphAttributesFromTrail(GA_, sealibGraph, ts);
 

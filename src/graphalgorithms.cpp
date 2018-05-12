@@ -7,7 +7,7 @@
 #include <ogdf/basic/GraphAttributes.h>
 #include "sealib/graphalgorithms.h"
 
-Sealib::TrailStructure ** GraphAlgorithms::hierholzer(Sealib::Graph *g) {
+Sealib::TrailStructure ** Sealib::GraphAlgorithms::hierholzer(Sealib::Graph *g) {
     static Sealib::LocalDyckTable ldt = Sealib::LocalDyckTable();
 
     unsigned  int order = g->getOrder();

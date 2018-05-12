@@ -145,9 +145,9 @@ unsigned int Sealib::TrailStructure::leave() {
 }
 
 unsigned int Sealib::TrailStructure::enter(unsigned int i) {
-    i = i*3+1;  // multiply index so it works with the actual array.
+    i = i*3+1; //multiply index so it works with the actual array.
 
-    if (flags[1]) {  // black node, should not be called here. something went wrong
+    if (flags[1]) {//black node, should not be called here. something went wrong
         return (unsigned int) - 1;
     }
 
@@ -174,7 +174,7 @@ unsigned int Sealib::TrailStructure::enter(unsigned int i) {
         initDyckStructures();
 
         nextUnused = 0;
-        return (unsigned int) - 1;  // returns non-value
+        return (unsigned int) - 1; // returns non-value
     }
     unused[temp+1] += nextLink;
 
@@ -233,7 +233,7 @@ unsigned int Sealib::TrailStructure::enter(unsigned int i) {
 
     nextUnused = temp;
 
-    return lastClosed;  // returns the leaver element.
+    return lastClosed;  //returns the leaver element.
 }
 
 bool Sealib::TrailStructure::isBlack() {
@@ -327,6 +327,7 @@ void Sealib::TrailStructure::initPioneerRankSelect() {
         }
         if (rightPioneer != (unsigned char) - 1) {
             if (!pioneerRankSelectBitSet[beg + rightPioneer]) {
+
                 pioneerRankSelectBitSet[beg + rightPioneer].flip();
 
                 unsigned long matchedPioneer = findMatchNaive(dyckWord, beg + rightPioneer);
@@ -374,7 +375,7 @@ void Sealib::TrailStructure::initPioneerRankSelect() {
         delete data;
     }
 
-    pioneerRankSelect = RankSelect(pioneerRankSelectBitSet);
+    pioneerRankSelect = SimpleRankSelect(pioneerRankSelectBitSet);
 }
 
 void Sealib::TrailStructure::initDyckStructures() {
@@ -385,9 +386,12 @@ void Sealib::TrailStructure::initDyckStructures() {
 }
 
 void Sealib::TrailStructure::initPioneerWord() {
-    pioneerDyckWord = boost::dynamic_bitset<>(pioneerRankSelectBitSet.count());
+    unsigned long rank = pioneerRankSelect.rank(pioneerRankSelectBitSet.size() - 1);
+    if (rank == boost::dynamic_bitset<>::npos) rank = 0;
+    pioneerDyckWord = boost::dynamic_bitset<>(rank);
+
     unsigned long idx = 0;
-    unsigned long pioneerIndex = pioneerRankSelectBitSet.find_first();
+    unsigned long pioneerIndex = pioneerRankSelect.select(1);
     while (pioneerIndex != boost::dynamic_bitset<>::npos) {
         pioneerDyckWord[idx++] = dyckWord[pioneerIndex];
         pioneerIndex = pioneerRankSelectBitSet.find_next(pioneerIndex);
