@@ -4,6 +4,9 @@
 
 #ifndef SEA_LOCALDYCKTABLE_H
 #define SEA_LOCALDYCKTABLE_H
+
+#define CHECK_BIT(var,pos) (((var)>>(pos)) & 1)
+
 namespace Sealib {
 /**
  * Lookup Table for local dyck matches, depths, and base pioneers

@@ -1,44 +1,40 @@
 //
-// Created by jmeintrup on 03.05.18.
+// Created by jmeintrup on 10.05.18.
 //
 
 #ifndef SEA_RANKSELECT_H
 #define SEA_RANKSELECT_H
 
-#include <boost/dynamic_bitset.hpp>
 
+
+#include "rankstructure.h"
 namespace Sealib{
-/**
+
+ /**
  * Space efficient RankSelect implementation.
+ * Extends the RankStructure with the select function.
  * @author Johannes Meintrup
  */
-class RankSelect {
-    boost::dynamic_bitset<> bitset;
+class RankSelect : public RankStructure {
+ private:
+    RankStructure firstInSegment;
+    std::vector<std::vector<unsigned char>> localSelectLookupTable;
 
- public:
+    inline unsigned char selectLocal(unsigned long segment, unsigned char localIdx) const;
+
+public:
+
+    /**
+     * @param bitset for rankselect
+     */
+    explicit RankSelect(const boost::dynamic_bitset<> &bitset);
+
     /**
      * Selects the k-th set bit
      * @param k idx
      * @return k-th set bit
      */
-    unsigned long select(unsigned int k) const;
-
-    /**
-     * Rank of the k-th idx
-     * @param k idx
-     * @return rank of k-th idx
-     */
-    unsigned long rank(unsigned int k) const;
-
-    /**
-     * @param bitset rankselect bitset
-     */
-    explicit RankSelect(const boost::dynamic_bitset<> &bitset);
-
-    /**
-     * default empty constructor
-     */
-    RankSelect();
+    unsigned long select(unsigned long k) const;
 };
 }  // namespace Sealib
-#endif  // SEA_RANKSELECT_H
+#endif //SEA_RANKSELECT_H
