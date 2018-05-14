@@ -54,9 +54,6 @@ class RankStructure {
      * @return segment count
      */
     unsigned int getSegmentCount() const;
-
-    static constexpr unsigned char DEFAULT_SEGMENT_LENGTH = 8;
-
 };
 }  // namespace Sealib
 #endif  // SEA_RANKSTRUCT_H

@@ -81,7 +81,6 @@ inline unsigned int Sealib::TrailStructure::getNextUnused() {
     return retVal;
 }
 
-
 unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) {
     // check if the idx is present in the married structure
     if (married!= nullptr) {
@@ -519,7 +518,7 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
         unsigned long p_wp = pioneerRankSelect.rank(dyckIdx);
         unsigned long p = pioneerRankSelect.select(static_cast<unsigned int>(p_wp));
 
-        unsigned int pMatch_wp = pioneerTable[p_wp - 1];
+        unsigned int pMatch_wp = static_cast<unsigned int>(findMatchNaive(pioneerDyckWord, p_wp - 1)); //pioneerTable[p_wp - 1];
         unsigned long pMatch = pioneerRankSelect.select(pMatch_wp + 1);
 
         unsigned long pSeg;
@@ -601,7 +600,7 @@ unsigned int Sealib::TrailStructure::getMatchedNew(unsigned int idx) {
             p = pioneerRankSelect.select(static_cast<unsigned int>(p_wp));
         }
 
-        unsigned int pMatch_wp = pioneerTable[p_wp - 1];
+        unsigned int pMatch_wp = static_cast<unsigned int>(findMatchNaive(pioneerDyckWord, p_wp - 1));  //pioneerTable[p_wp - 1];
         unsigned long pMatch = pioneerRankSelect.select(pMatch_wp + 1);
 
 
