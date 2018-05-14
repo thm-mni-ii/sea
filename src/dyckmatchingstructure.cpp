@@ -4,12 +4,12 @@
 
 #include <include/sealib/dyckmatchingstructure.h>
 
-const unsigned long DyckMatchingStructure::findMatchNaive(boost::dynamic_bitset &word, unsigned long idx) {
+unsigned long DyckMatchingStructure::findMatchNaive(boost::dynamic_bitset<> &word_, unsigned long idx) {
     unsigned int j = 0;
     unsigned int p = 0;
-    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * word.size() / 2)));
+    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * word_.size() / 2)));
     do {
-        if (word[j]) {  // '('
+        if (word_[j]) {  // '('
             stack[p++] = j;
         } else {
             unsigned int i = stack[--p];
@@ -21,7 +21,7 @@ const unsigned long DyckMatchingStructure::findMatchNaive(boost::dynamic_bitset 
             }
         }
         j++;
-    } while (j != word.size());
+    } while (j != word_.size());
 
     return idx;;
 }

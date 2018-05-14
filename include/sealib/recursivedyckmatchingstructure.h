@@ -13,13 +13,13 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure{
  public:
     static std::map<unsigned char, Sealib::LocalDyckTable> tables;
 
-    static const unsigned long findMatchNaive(boost::dynamic_bitset &word, unsigned long idx);
+    static unsigned long findMatchNaive(boost::dynamic_bitset<> &word, unsigned long idx);
     static const Sealib::LocalDyckTable& getOrCreateTable(unsigned char segmentSize);
-    static void initializePioneerRankSelectBitset(const boost::dynamic_bitset &word, boost::dynamic_bitset &pioneerRankSelectBitset);
+    static void initializePioneerRankSelectBitset(const boost::dynamic_bitset<> &word_, boost::dynamic_bitset<> &pioneerRankSelectBitset);
 
-    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word, bool last);
+    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_, bool last);
 
-    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word);
+    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_);
  private:
     boost::dynamic_bitset<> word;
     unsigned char segmentLength;

@@ -7,7 +7,7 @@
 
 std::map<unsigned char, Sealib::LocalDyckTable> RecursiveDyckMatchingStructure::tables = std::map<unsigned char, Sealib::LocalDyckTable>();
 
-static const Sealib::LocalDyckTable &RecursiveDyckMatchingStructure::getOrCreateTable(unsigned char segmentSize) {
+const Sealib::LocalDyckTable &RecursiveDyckMatchingStructure::getOrCreateTable(unsigned char segmentSize) {
     if(RecursiveDyckMatchingStructure::tables.find(segmentSize) != RecursiveDyckMatchingStructure::tables.end()) {
         return RecursiveDyckMatchingStructure::tables[segmentSize];
     } else {
@@ -16,12 +16,12 @@ static const Sealib::LocalDyckTable &RecursiveDyckMatchingStructure::getOrCreate
     };
 }
 
-static const unsigned long RecursiveDyckMatchingStructure::findMatchNaive(boost::dynamic_bitset &word, unsigned long idx) {
+unsigned long RecursiveDyckMatchingStructure::findMatchNaive(boost::dynamic_bitset<> &word_, unsigned long idx) {
     unsigned int j = 0;
     unsigned int p = 0;
-    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * word.size() / 2)));
+    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * word_.size() / 2)));
     do {
-        if (word[j]) {  // '('
+        if (word_[j]) {  // '('
             stack[p++] = j;
         } else {
             unsigned int i = stack[--p];
@@ -33,26 +33,32 @@ static const unsigned long RecursiveDyckMatchingStructure::findMatchNaive(boost:
             }
         }
         j++;
-    } while (j != word.size());
+    } while (j != word_.size());
 
     return idx;;
 }
 
-RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word, bool last) :
-        DyckMatchingStructure(word),
+RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_, bool last) :
+        DyckMatchingStructure(word_),
         pioneerMatchingStructure(nullptr){
-    segmentLength = static_cast<unsigned char>(std::log2(word.size()));
-    boost::dynamic_bitset<> pioneerRankSelectBitSet(word.size());
+    segmentLength = static_cast<unsigned char>(std::log2(word_.size()));
+    boost::dynamic_bitset<> pioneerRankSelectBitSet(word_.size());
     
-    initializePioneerRankSelectBitset(word, pioneerRankSelectBitSet);
+    initializePioneerRankSelectBitset(word_, pioneerRankSelectBitSet);
 
-    pioneerMatchingStructure = new RecursiveDyckMatchingStructure(word);
+    if (last) {
+
+    } else {
+        pioneerMatchingStructure = new RecursiveDyckMatchingStructure(word_);
+    }
+
 }
 
-RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word) : DyckMatchingStructure(word) {
-    pioneerMatchingStructure = new DyckMatchingStructure(word);
+RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_) : DyckMatchingStructure(word_) {
+    pioneerMatchingStructure = new DyckMatchingStructure(word_);
 }
 
-static void RecursiveDyckMatchingStructure::initializePioneerRankSelectBitset(const boost::dynamic_bitset &word, boost::dynamic_bitset &pioneerRankSelectBitset) {
-    pioneerRankSelectBitset[1] = 1;
+void RecursiveDyckMatchingStructure::initializePioneerRankSelectBitset(const boost::dynamic_bitset<> &word_, boost::dynamic_bitset<> &pioneerRankSelectBitset_) {
+    word_[1];
+    pioneerRankSelectBitset_[1] = 1;
 }

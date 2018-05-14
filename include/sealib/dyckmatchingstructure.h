@@ -10,7 +10,7 @@
 class DyckMatchingStructure {
 public:
 
-    static const unsigned long findMatchNaive(boost::dynamic_bitset &word, unsigned long idx);
+    static unsigned long findMatchNaive(boost::dynamic_bitset<> &word_, unsigned long idx);
 
     explicit DyckMatchingStructure(const boost::dynamic_bitset<> &word_);
     const boost::dynamic_bitset<> &getWord() const;
