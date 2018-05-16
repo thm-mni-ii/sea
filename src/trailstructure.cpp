@@ -376,7 +376,7 @@ void Sealib::TrailStructure::initPioneerRankSelect() {
     }
 
     pioneerRankSelectBitSet.shrink_to_fit();
-    pioneerRankSelect = RankSelect(pioneerRankSelectBitSet);
+    pioneerRankSelect = SimpleRankSelect(pioneerRankSelectBitSet);
 }
 
 void Sealib::TrailStructure::initDyckStructures() {

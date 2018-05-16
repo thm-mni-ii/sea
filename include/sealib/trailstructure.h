@@ -8,7 +8,8 @@
 #include <vector>
 #include <sealib/dynamicbitsetextension.h>
 #include "sealib/localdycktable.h"
-#include "sealib/simplerankselect.h"
+#include "sealib/rankselect.h"
+#include "simplerankselect.h"
 
 /**
  * Space efficient TrailStructure.

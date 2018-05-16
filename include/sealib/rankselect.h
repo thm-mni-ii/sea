@@ -29,6 +29,8 @@ public:
      */
     explicit RankSelect(const boost::dynamic_bitset<> &bitset);
 
+    RankSelect();
+
     /**
      * Selects the k-th set bit
      * @param k idx
