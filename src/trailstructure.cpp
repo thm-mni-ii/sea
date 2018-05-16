@@ -6,20 +6,22 @@
 #include <iostream>
 #include <cmath>
 #include <bitset>
+#include <include/sealib/rankselect.h>
 #include "sealib/trailstructure.h"
 
-Sealib::TrailStructure::TrailStructure(unsigned int _degree, LocalDyckTable& _table) : degree(_degree), table(_table) {
+Sealib::TrailStructure::TrailStructure(unsigned int _degree, LocalDyckTable& _table) :
+        degree(_degree),
+        lastClosed((unsigned int) - 1),
+        inAndOut(degree),
+        matched(degree),
+        flags(3),
+        table(_table)
+        {
+
     if (degree > 0) {
         nextUnused = 1;
-    } else {
-        nextUnused = 0;
     }
-    lastClosed = (unsigned int) - 1;
 
-    inAndOut = boost::dynamic_bitset<>(degree);
-    matched = boost::dynamic_bitset<>(degree);
-
-    flags = boost::dynamic_bitset<>(3);
     if (degree % 2 == 0) {
         flags[2].flip();
     }  // set parity
@@ -27,7 +29,6 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree, LocalDyckTable& _ta
         flags[1].flip();
     }  // node with no edges is possible, set black
 
-    married = nullptr;
 
     unused = static_cast<unsigned int *>(malloc(sizeof(unsigned int) * degree * 3));
     // [1][0][1] [1][1][1] [1][2][1] ... [1][degree-1][1]
@@ -374,7 +375,8 @@ void Sealib::TrailStructure::initPioneerRankSelect() {
         delete data;
     }
 
-    pioneerRankSelect = SimpleRankSelect(pioneerRankSelectBitSet);
+    pioneerRankSelectBitSet.shrink_to_fit();
+    pioneerRankSelect = RankSelect(pioneerRankSelectBitSet);
 }
 
 void Sealib::TrailStructure::initDyckStructures() {
