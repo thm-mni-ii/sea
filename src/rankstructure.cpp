@@ -14,11 +14,11 @@ unsigned long Sealib::RankStructure::rank(unsigned long k) const{
 }
 
 Sealib::RankStructure::RankStructure(const boost::dynamic_bitset<> &bitset_) {
-    segmentLength = calculateSegmentLength(bitset_.size());
+    segmentLength = RankStructure::log2(bitset_.size());
 
     // initialize local lookup tables
-    unsigned long lastSeg = bitset_.size() % segmentLength;
-    segmentCount = static_cast<unsigned int>(bitset_.size() / segmentLength);
+    unsigned long lastSeg = segmentLength == 0 ? 0 : bitset_.size() % segmentLength;
+    segmentCount = segmentLength == 0 ? 0 : static_cast<unsigned int>(bitset_.size() / segmentLength);
 
     localRankLookupTable.reserve(segmentCount);
 
@@ -104,8 +104,8 @@ unsigned char Sealib::RankStructure::getSegmentLength() const {
     return localRankLookupTable[segment][localIdx];
 }
 
-unsigned char Sealib::RankStructure::calculateSegmentLength(unsigned long bits) {
-    if(bits == 0 || bits == 1) return 0;
-    return static_cast<unsigned char>(std::log2(bits));
+inline unsigned char Sealib::RankStructure::log2(unsigned long bits) {
+    if(bits == 0) return 0;
+    return static_cast<unsigned char>(64 - __builtin_clzl(bits));
 }
 

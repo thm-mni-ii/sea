@@ -19,7 +19,7 @@ std::string Sealib::GraphIO::stringFromTrail(Sealib::Graph *g, Sealib::TrailStru
 
                 s += std::to_string(u);
                 // arc = trail[u]->getMatched(uCross);
-                arc = trail[u]->getMatchedNew(uCross);
+                arc = trail[u]->getMatched(uCross);
                 if (arc == uCross) {
                     arc = (unsigned int) -1;
                     s+="\n";
@@ -61,7 +61,7 @@ void Sealib::GraphIO::dotFileFromTrail(Sealib::Graph *g, Sealib::TrailStructure 
 
                 o << std::to_string(u) << "[label=" << std::to_string(cnt++) << ", color=" << colors[t % 10] << "]";
 
-                arc = trail[u]->getMatchedNew(uCross);
+                arc = trail[u]->getMatched(uCross);
                 if (arc == uCross) {
                     arc = (unsigned int) -1;
                 } else {
@@ -280,7 +280,7 @@ void Sealib::GraphIO::graphAttributesFromTrail(ogdf::GraphAttributes *GA, Sealib
                 unsigned int v = u;
                 u = g->getNode(u)->getAdj()[arc].vertex;
 
-                arc = trail[u]->getMatchedNew(uCross);
+                arc = trail[u]->getMatched(uCross);
                 if (arc == uCross) {
                     arc = (unsigned int) -1;
                 }

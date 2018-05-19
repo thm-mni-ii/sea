@@ -8,23 +8,29 @@
 #include <map>
 #include "localdycktable.h"
 #include "dyckmatchingstructure.h"
+#include "rankselect.h"
 
+namespace Sealib {
 class RecursiveDyckMatchingStructure : public DyckMatchingStructure{
  public:
-    static std::map<unsigned char, Sealib::LocalDyckTable> tables;
+    static std::map<unsigned char, Sealib::LocalDyckTable*> tables;
 
-    static unsigned long findMatchNaive(boost::dynamic_bitset<> &word, unsigned long idx);
-    static const Sealib::LocalDyckTable& getOrCreateTable(unsigned char segmentSize);
-    static void initializePioneerRankSelectBitset(const boost::dynamic_bitset<> &word_, boost::dynamic_bitset<> &pioneerRankSelectBitset);
+    static const Sealib::LocalDyckTable::Data* getTableEntry(unsigned char segmentSize, unsigned long segment);
 
-    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_, bool last);
+    void initializePioneerRankSelectBitset(boost::dynamic_bitset<> &pioneerRankSelectBitset);
+
+    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_, unsigned char recursions);
 
     explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_);
+    unsigned long findMatch(unsigned long idx);
  private:
-    boost::dynamic_bitset<> word;
     unsigned char segmentLength;
-
+    unsigned int segments;
+    unsigned char lastSegment;
     DyckMatchingStructure *pioneerMatchingStructure;
-};
+    RankSelect *pioneerRankSelect;
 
+
+};
+}  // namespace Sealib
 #endif //SEA_RECURSIVEDYCKMATCHINGSTRUCTURE_H

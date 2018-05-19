@@ -10,6 +10,8 @@
 #include "sealib/localdycktable.h"
 #include "sealib/rankselect.h"
 #include "simplerankselect.h"
+#include "dyckmatchingstructure.h"
+#include "doublelinkedlist.h"
 
 /**
  * Space efficient TrailStructure.
@@ -19,27 +21,20 @@ namespace Sealib {
 class TrailStructure{
  private:
     unsigned int degree;
-    unsigned int nextUnused;
     unsigned int lastClosed;
     unsigned int dyckStart;
 
     boost::dynamic_bitset<> inAndOut;
     boost::dynamic_bitset<> matched;
 
-    boost::dynamic_bitset<> dyckWord;
-    std::vector<unsigned int> pioneerTable;
-    boost::dynamic_bitset<> pioneerDyckWord;
-
-    boost::dynamic_bitset<> pioneerRankSelectBitSet;
-    SimpleRankSelect pioneerRankSelect;
+    DyckMatchingStructure* dyckMatchingStructure;
 
     boost::dynamic_bitset<> flags;  // at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven
 
-    LocalDyckTable& table;
 
     unsigned int *married;
 
-    unsigned int *unused;
+    DoubleLinkedList *dl;
 
     /**
      * Removes nextUnused from the double linked unused array.
@@ -49,19 +44,9 @@ class TrailStructure{
     inline unsigned int getNextUnused();
 
     /**
-     * Creates the dyckword formed by in and out arcs once the trailstructure turns black.
+     * initializes the DyckMatchingStructure used by getMatched
      */
-    void initDyckStructures();
-
-    /**
-     * Finds the match in a dyckword to idx idx in a naive way, i.e. by using a stack
-     * of size of word.size/2
-     * @param word
-     * @param idx
-     * @return idx of the match, or idx if there is no match
-     */
-
-    static unsigned long findMatchNaive(const boost::dynamic_bitset<> &word, unsigned long idx);
+    inline void initDyckStructure();
 
  public:
     /**
@@ -88,7 +73,7 @@ class TrailStructure{
      * Constructor for the TrailStructure object.
      * @param _degree Degree of the node, equals the number of outgoing arcs.
      */
-    explicit TrailStructure(unsigned int _degree, LocalDyckTable& _table);
+    explicit TrailStructure(unsigned int _degree);
 
     /**
      * check if the TrailStructure is currently grey.
@@ -130,14 +115,6 @@ class TrailStructure{
     unsigned int enter(unsigned int i);
 
     /**
-     * Gets the match for a given matched arc.
-     * The inAndOut bit array is interpreted as a dyckword.
-     * @param idx
-     * @return
-     */
-    unsigned int getMatched(unsigned int idx);
-
-    /**
      * Matches the elements i and o.
      * This is done by marking them in the married array.
      * Unmatches all previously matched elements to i and o.
@@ -177,28 +154,9 @@ class TrailStructure{
      * @param idx
      * @return
      */
-    unsigned int getMatchedNew(unsigned int idx);
+    unsigned int getMatched(unsigned int idx);
 
-
-    /**
-     * initialize the pioneer match lookup table.
-     */
-    void initPioneerTable();
-
-    /**
-     * initialize the dyckword associated with the inAndOut bitvektor.
-     */
-    void initDyckWord();
-
-    /**
-     * initialize the rankselect structure for the pioneer dyckword.
-     */
-    void initPioneerRankSelect();
-
-    /**
-     * initializes the pioneer dyckword
-     */
-    void initPioneerWord();
+    unsigned int getMatchedNaive(unsigned int idx);
 };
 }  // namespace Sealib
 

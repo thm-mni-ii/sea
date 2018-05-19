@@ -6,6 +6,7 @@
 #define SEA_RANKSTRUCT_H
 #define CHECK_BIT(var,pos) (((var)>>(pos)) & 1)
 
+
 #include <sealib/dynamicbitsetextension.h>
 
 /**
@@ -26,8 +27,10 @@ class RankStructure {
 
     unsigned int setBefore(unsigned long segment) const;
 
-    static unsigned char calculateSegmentLength(unsigned long bits);
+
  public:
+
+    static unsigned char log2(unsigned long bits);
     /**
      * Rank of the k-th idx
      * @param k idx

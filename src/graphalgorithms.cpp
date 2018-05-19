@@ -8,14 +8,13 @@
 #include "sealib/graphalgorithms.h"
 
 Sealib::TrailStructure ** Sealib::GraphAlgorithms::hierholzer(Sealib::Graph *g) {
-    static Sealib::LocalDyckTable ldt = Sealib::LocalDyckTable();
 
     unsigned  int order = g->getOrder();
     Sealib::TrailStructure **ts = static_cast<Sealib::TrailStructure **>(malloc((sizeof(Sealib::TrailStructure *) * order)));
 
     for (unsigned int i = 0; i < order; i ++) {
         unsigned  int degree = g->getNode(i)->getDegree();
-        ts[i] = new Sealib::TrailStructure(degree, ldt);
+        ts[i] = new Sealib::TrailStructure(degree);
     }
 
     // find first start node
@@ -52,7 +51,7 @@ Sealib::TrailStructure ** Sealib::GraphAlgorithms::hierholzer(Sealib::Graph *g) 
 
         if (kOld != (unsigned int) - 1) {
             unsigned int kLast = uMate;
-            unsigned int kOldMatch = ts[u]->getMatchedNew(kOld);
+            unsigned int kOldMatch = ts[u]->getMatched(kOld);
             if (kOldMatch != kOld) {  // has match
                 ts[u]->marry(kOldMatch, kFirst);
                 ts[u]->marry(kLast, kOld);

@@ -7,7 +7,7 @@
 #include "sealib/rankselect.h"
 
 Sealib::RankSelect::RankSelect(const boost::dynamic_bitset<> &bitset_) {
-    segmentLength = calculateSegmentLength(bitset_.size());
+    segmentLength = log2(bitset_.size());
 
     // initialize local lookup tables
     unsigned long lastSeg = bitset_.size() % segmentLength;
@@ -83,7 +83,8 @@ Sealib::RankSelect::RankSelect(const boost::dynamic_bitset<> &bitset_) {
     }
 
     //initialize rank structure for firstInBlock
-    boost::dynamic_bitset<> firstInBlockBitSet = boost::dynamic_bitset<>(rank(bitset_.size()));
+    unsigned long size = rank(bitset_.size());
+    boost::dynamic_bitset<> firstInBlockBitSet = boost::dynamic_bitset<>(size);
 
     for(unsigned int i = 0; i < segmentCount; i++) {
         unsigned char localFirst = selectLocal(i, 0);
@@ -92,16 +93,6 @@ Sealib::RankSelect::RankSelect(const boost::dynamic_bitset<> &bitset_) {
             firstInBlockBitSet[setBefore(i)] = 1;
         }
     }
-    std::cout << std::endl;
-    for(unsigned int i = 0; i < firstInBlockBitSet.size(); i++) {
-        if(firstInBlockBitSet[i] == 1) {
-            std::cout << "1";
-        }
-        else {
-            std::cout << "0";
-        }
-    }
-    std::cout << std::endl;
 
     firstInSegment = RankStructure(firstInBlockBitSet);
 

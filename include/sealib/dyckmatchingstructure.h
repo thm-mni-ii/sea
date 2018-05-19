@@ -6,16 +6,21 @@
 #define SEA_DYCKMATCHINGSTRUCTURE_H
 
 #include <include/sealib/dynamicbitsetextension.h>
+namespace Sealib {
+    class DyckMatchingStructure {
+    public:
+        static void printDyckWord(const boost::dynamic_bitset<>& word);
+        static void printDyckWord(const boost::dynamic_bitset<>& word, unsigned long breaks);
+        unsigned long findMatchNaive(unsigned long idx);
 
-class DyckMatchingStructure {
-public:
+        virtual unsigned long findMatch(unsigned long idx);
 
-    static unsigned long findMatchNaive(boost::dynamic_bitset<> &word_, unsigned long idx);
+        explicit DyckMatchingStructure(const boost::dynamic_bitset<> &word_);
 
-    explicit DyckMatchingStructure(const boost::dynamic_bitset<> &word_);
-    const boost::dynamic_bitset<> &getWord() const;
+        const boost::dynamic_bitset<> &getWord() const;
 
- protected:
-    boost::dynamic_bitset<> word;
-};
+    protected:
+        const boost::dynamic_bitset<> word;
+    };
+}  // namespace Sealib
 #endif //SEA_DYCKMATCHINGSTRUCTURE_H
