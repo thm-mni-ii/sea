@@ -65,7 +65,7 @@ DFS::DFS(Graph *p,void (*preprocess)(Node *),void (*preexplore)(Node *,Node *),
 	color=new unsigned int[g->getOrder()];
 	stack=new Node*[g->getOrder()];
 	sp=0;
-	preProcess=preprocess?preprocess:(void(*)(Node*))nop1;
+	preProcess=preprocess?preprocess:(void(*)(Node*))nop;
 	preExplore=preexplore?preexplore:(void(*)(Node*,Node*))nop;
 	postExplore=postexplore?postexplore:(void(*)(Node*,Node*))nop;
 	postProcess=postprocess?postprocess:(void(*)(Node*))nop;

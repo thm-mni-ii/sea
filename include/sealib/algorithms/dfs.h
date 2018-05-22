@@ -18,17 +18,34 @@ class DFS {
 		void (*postProcess)(Node *);
 
 	public:
+		/* Def. DFS
+			DFS.p: graph G=(V,E) to iterate over
+			DFS.[pre|post][process|explore]: user-defined functions
+		*/
 		DFS(Graph *p,void (*preprocess)(Node *),
 			void (*preexplore)(Node *,Node *),
 			void (*postexplore)(Node *,Node *),
 			void (*postprocess)(Node *));
+			
+		/* Def. run
+			- Run a depth-first search over the given graph, using the given user functions.
+		*/
 		void run();
+		
+		/* Def. process
+			process.u: vertex (in V) to be processed
+		*/
 		void process(uint u);
 		
 		void push(Node *u);
 		Node * pop();
 		Node * peek();
+		
+		/* Def. nop 
+			- Do nothing. Will be used in place of a NULL user function.
+		*/
 		static void nop();
+		
 		static void nop1(Node*);
 		static void nop2(Node*,Node*);
 };		
