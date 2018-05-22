@@ -2,35 +2,36 @@
 #define SEA_NODE_H
 
 #include <vector>
-#include "adjacency.h"
+#include "sealib/adjacency.h"
 
 /**
  * A Node object containing the nodes adjacencies and its degree.
  * @author Johannes Meintrup
  */
+namespace Sealib {
 class Node {
-
-private:
-    Adjacency *adj;
+ private:
+    Sealib::Adjacency *adj;
     unsigned int deg;
 
-public:
+ public:
     /**
      * Creates a node out of its adjacencies.
      * @param _adj array of adjacencies.
      * @param _deg degree of this node.
     */
-    Node(Adjacency *_adj, unsigned int _deg);
+    Node(Sealib::Adjacency *_adj, unsigned int _deg);
 
     /**
      * @return Returns a pointer to the adjacency array.
      */
-    Adjacency *getAdj();
+    Sealib::Adjacency *getAdj();
 
     /**
      * @return Returns the degree of the node.
      */
     unsigned int getDegree();
 };
+}  // namespace Sealib
 
-#endif //SEA_NODE_H
+#endif  // SEA_NODE_H

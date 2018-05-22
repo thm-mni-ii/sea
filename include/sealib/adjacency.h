@@ -6,8 +6,9 @@
  * Also it contains a cross link to its incomming edge.
  * @author Johannes Meintrup
  */
+namespace Sealib {
 class Adjacency {
-public:
+ public:
     unsigned int vertex;
     unsigned int crossIndex;
 
@@ -16,7 +17,9 @@ public:
      * Note: The construction will leave the crossIndex uninitialized.
      * @param _vertex The vertex id
      */
-    Adjacency(unsigned int _vertex);
+    explicit Adjacency(unsigned int _vertex);
 };
+}  // namespace Sealib
 
-#endif //SEA_ADJACENCY_H
+
+#endif  // SEA_ADJACENCY_H

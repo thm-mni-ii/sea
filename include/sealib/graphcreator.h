@@ -1,12 +1,15 @@
 #ifndef SEA_GRAPHCREATOR_H
 #define SEA_GRAPHCREATOR_H
 
-#include "graph.h"
+#include <string>
+#include "sealib/graph.h"
+
 
 /**
  * Static class that serves as a collection of functions to create graph objects from different inputs.
  * @author Johannes Meintrup
  */
+namespace Sealib {
 class GraphCreator {
 public:
     /**
@@ -25,7 +28,7 @@ public:
      * @param adj_matrix NxN adjacency matrix representation of the graph.
      * @param _order Order of the graph, order equals the number of nodes.
      */
-    static Graph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
+    static Sealib::Graph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
 };
-
-#endif //SEA_GRAPHCREATOR_H
+}  // namespace Sealib
+#endif  // SEA_GRAPHCREATOR_H

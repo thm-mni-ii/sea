@@ -3,6 +3,7 @@
 
 #include "sealib/node.h"
 
+
 /**
  * A undirected graph G = (V, E) with nodes V = [0, n - 1].
  * The graph stores its edges V inside adjacency arrays containing
@@ -10,6 +11,7 @@
  * @complexity (O((n + m) log n)) bits Stores a undirected graph with n vertices and m edges using (n + 4m) log n bits.
  * @author Johannes Meintrup
  */
+namespace Sealib {
 class Graph {
 private:
     Node *nodes;
@@ -43,5 +45,6 @@ public:
     */
     unsigned int getOrder();
 };
+}
 
-#endif //SEA_GRAPH_Hs
+#endif  // SEA_GRAPH_Hs

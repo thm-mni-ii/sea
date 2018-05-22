@@ -1,37 +1,113 @@
-#include <iostream>
-#include <sealib/graphcreator.h>
 
-using namespace std;
+
+#include <ctime>
+#include <iostream>
+#include <include/sealib/graph.h>
+#include <include/sealib/graphio.h>
+#include <include/sealib/rankselect.h>
+#include <include/sealib/graphalgorithms.h>
+#include <include/sealib/differencelist.h>
+#include <include/sealib/recursivedyckmatchingstructure.h>
+#include <include/sealib/doublelinkedlist.h>
+#include <include/sealib/graphcreator.h>
+#include <QtWidgets/QApplication>
+#include <QtGui/QIcon>
+#include "mainwindow.h"
+
+void testHierholzer() {
+    clock_t start = clock();
+    Sealib::Graph *g = Sealib::GraphIO::randomEulerianSealibGraph(1000, 10000);
+    clock_t end = clock();
+    std::cout << "GENERATION: " << (end - start)/CLOCKS_PER_SEC << "s" << std::endl;
+    start = clock();
+    Sealib::TrailStructure **ts = Sealib::GraphAlgorithms::hierholzer(g);
+    end = clock();
+    std::cout << "HIERHOLZER: " << (end - start)/CLOCKS_PER_SEC << "s" << std::endl;
+    start = clock();
+    std::cout << Sealib::GraphIO::stringFromTrail(g, ts) << std::endl;
+    end = clock();
+    std::cout << "STRING: " << (end - start)/CLOCKS_PER_SEC << "s" << std::endl;
+}
+
+void testRankStructure() {
+    boost::dynamic_bitset<> bits(2000);
+    bits[1] = 1;
+    bits[0] = 1;
+    bits[1000] = 1;
+    Sealib::RankSelect rankSelect(bits);
+    std::cout << rankSelect.select(0) << std::endl;
+    std::cout << rankSelect.rank(0) << std::endl;
+
+    std::cout << rankSelect.select(1) << std::endl;
+    std::cout << rankSelect.rank(1) << std::endl;
+
+    std::cout << rankSelect.select(2) << std::endl;
+    std::cout << rankSelect.rank(2) << std::endl;
+
+    std::cout << rankSelect.select(3) << std::endl;
+    std::cout << rankSelect.rank(3) << std::endl;
+
+    std::cout << rankSelect.select(4) << std::endl;
+    std::cout << rankSelect.rank(2000) << std::endl;
+
+}
+
+
+boost::dynamic_bitset<> wrapDyckWord(const boost::dynamic_bitset<> &toWrap) {
+    boost::dynamic_bitset<> wrapped(toWrap.size() + 2);
+    wrapped[0] = 1;
+    for(unsigned long i = 0; i < toWrap.size(); i++) {
+        wrapped[i+1] = toWrap[i];
+    }
+    wrapped[wrapped.size()-1] = 0;
+    return wrapped;
+}
+
+boost::dynamic_bitset<> concatDyckWord(const boost::dynamic_bitset<>& word1,const boost::dynamic_bitset<>& word2) {
+    boost::dynamic_bitset<> res(word1);
+    res.resize(word1.size()+word2.size());
+    size_t bs1Size=word1.size();
+    size_t bs2Size=word2.size();
+
+    for(size_t i=0;i<bs2Size;i++)
+        res[i+bs1Size]=word2[i];
+    return res;
+}
+boost::dynamic_bitset<> generateRandomDyckword(unsigned long size) {
+    boost::dynamic_bitset<> bits(2);
+    bits[0] = 1;
+    while(bits.size() < size) {
+        if(rand() % 2 == 0) {
+            bits = wrapDyckWord(bits);
+        } else {
+            bits = concatDyckWord(bits, generateRandomDyckword(size/2));
+        };
+    }
+
+    return bits;
+}
+
+int visual(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QIcon appIcon;
+    appIcon.addFile(":/Icons/AppIcon32");
+    appIcon.addFile(":/Icons/AppIcon128");
+    app.setWindowIcon(appIcon);
+    MainWindow mainWindow;
+    mainWindow.show();
+    return app.exec();
+}
 
 int main() {
-    unsigned int order = 4;
-    unsigned int **adj_mtrx = new unsigned int *[order];
-    /**
-     * (n)       0       1       2       3
-     *      **********************************
-     *  0   *    0   *   2   *   0   *   1   *
-     *      **********************************
-     *  1   *    2   *   0   *   1   *   0   *
-     *      **********************************
-     *  2   *    0   *   1   *   0   *   1   *
-     *      **********************************
-     *  3   *    1   *   0   *   1   *   0   *
-     *      **********************************
-     */
-    adj_mtrx[0] = new unsigned int[order]{0, 2, 0, 1};
-    adj_mtrx[1] = new unsigned int[order]{2, 0, 1, 0};
-    adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
-    adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
-
-    Graph *g = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
-
-    for (unsigned int i = 0; i < g->getOrder(); i++) {
-        Node *n = g->getNode(i);
-        Adjacency *a = n->getAdj();
-        cout << "Node(" << i << "): ";
-        for (unsigned int j = 0; j < n->getDegree(); j++) {
-            cout << "(" << a[j].vertex << ", " << a[j].crossIndex << ") ";
-        }
-        cout << "\n";
-    }
+    testHierholzer();
+    /*QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QIcon appIcon;
+    appIcon.addFile(":/Icons/AppIcon32");
+    appIcon.addFile(":/Icons/AppIcon128");
+    app.setWindowIcon(appIcon);
+    MainWindow mainWindow;
+    mainWindow.show();
+    return app.exec();*/
 }

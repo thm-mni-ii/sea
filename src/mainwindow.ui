@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1204</width>
+    <height>894</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="11" column="1">
+     <widget class="QSpinBox" name="edgeSpinBox">
+      <property name="maximum">
+       <number>1000</number>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="5" rowspan="2">
+     <widget class="QPushButton" name="moveRightButton">
+      <property name="text">
+       <string>Move right</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="randomGraphButton">
+      <property name="text">
+       <string>Random Graph</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0" rowspan="2" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="stopButton">
+      <property name="text">
+       <string>Stop</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QLabel" name="typeLabel">
+      <property name="text">
+       <string>Type</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="4" rowspan="2">
+     <widget class="QPushButton" name="moveDownButton">
+      <property name="text">
+       <string>Move down</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QSpinBox" name="nodeSpinBox">
+      <property name="maximum">
+       <number>1000</number>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QLabel" name="edgeLabel">
+      <property name="text">
+       <string>Edges</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QLabel" name="nodeLabel">
+      <property name="text">
+       <string>Nodes</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="1">
+     <widget class="QComboBox" name="graphTypeBox">
+      <item>
+       <property name="text">
+        <string>Planar Bi Connected</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Planar Connected</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="10" column="8" rowspan="2">
+     <widget class="QPushButton" name="xScaleUpButton">
+      <property name="text">
+       <string>X-Scale up</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="7" rowspan="3">
+     <widget class="QPushButton" name="yScaleUpButton">
+      <property name="text">
+       <string>Y-Scale up</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="4" rowspan="3">
+     <widget class="QPushButton" name="moveUpButton">
+      <property name="text">
+       <string>Move up</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="0" rowspan="3" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="saveButton">
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="7" rowspan="2">
+     <widget class="QPushButton" name="yScaleDownButton">
+      <property name="text">
+       <string>Y-Scale down</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="3" rowspan="2">
+     <widget class="QPushButton" name="moveLeftButton">
+      <property name="text">
+       <string>Move left</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="0" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="loadButton">
+      <property name="text">
+       <string>Load</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0" alignment="Qt::AlignLeft">
+     <widget class="QPushButton" name="startButton">
+      <property name="text">
+       <string>Start</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="6" rowspan="2">
+     <widget class="QPushButton" name="xScaleDownButton">
+      <property name="text">
+       <string>X-Scale down</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="9">
+     <widget class="DyckView" name="dyckView">
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="9">
+     <widget class="GraphView" name="graphView">
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>300</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1204</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GraphView</class>
+   <extends>QGraphicsView</extends>
+   <header>src/graphView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>DyckView</class>
+   <extends>QGraphicsView</extends>
+   <header>src/dyckView.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>startButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>616</x>
+     <y>641</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>save()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>616</x>
+     <y>703</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>load()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>616</x>
+     <y>734</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stopButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>stop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>616</x>
+     <y>672</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>616</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xScaleDownButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>scaleXDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>950</x>
+     <y>684</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xScaleUpButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>scaleXUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1170</x>
+     <y>684</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yScaleDownButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>scaleYDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1060</x>
+     <y>714</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yScaleUpButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>scaleYUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1060</x>
+     <y>654</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveDownButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>moveDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>734</x>
+     <y>714</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveLeftButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>moveLeft()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>634</x>
+     <y>684</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveRightButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>moveRight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>834</x>
+     <y>684</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>moveUpButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>moveUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>734</x>
+     <y>654</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>615</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>randomGraphButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphView</receiver>
+   <slot>generateRandomGraph()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>579</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>710</x>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
