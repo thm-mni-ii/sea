@@ -30,20 +30,11 @@ void testHierholzer() {
 }
 
 void testRankStructure() {
-    boost::dynamic_bitset<> bits(2);
-    Sealib::SimpleRankSelect simple(bits);
-
-    std::cout << simple.select(0) << std::endl;
-    std::cout << simple.rank(0) << std::endl;
-
-    std::cout << simple.select(1) << std::endl;
-    std::cout << simple.rank(1) << std::endl;
-
-    std::cout << simple.select(1241241) << std::endl;
-    std::cout << simple.rank(1241241) << std::endl;
-
+    boost::dynamic_bitset<> bits(2000);
+    bits[1] = 1;
+    bits[0] = 1;
+    bits[1000] = 1;
     Sealib::RankSelect rankSelect(bits);
-    std::cout << bits.size() << std::endl;
     std::cout << rankSelect.select(0) << std::endl;
     std::cout << rankSelect.rank(0) << std::endl;
 
@@ -53,8 +44,12 @@ void testRankStructure() {
     std::cout << rankSelect.select(2) << std::endl;
     std::cout << rankSelect.rank(2) << std::endl;
 
-    std::cout << rankSelect.select(1241241) << std::endl;
-    std::cout << rankSelect.rank(1241241) << std::endl;
+    std::cout << rankSelect.select(3) << std::endl;
+    std::cout << rankSelect.rank(3) << std::endl;
+
+    std::cout << rankSelect.select(4) << std::endl;
+    std::cout << rankSelect.rank(2000) << std::endl;
+
 }
 
 
@@ -104,9 +99,9 @@ int visual(int argc, char *argv[]) {
     return app.exec();
 }
 
-int main(int argc, char *argv[]) {
+int main() {
     testHierholzer();
-    QApplication app(argc, argv);
+    /*QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps);
     QIcon appIcon;
     appIcon.addFile(":/Icons/AppIcon32");
@@ -114,5 +109,5 @@ int main(int argc, char *argv[]) {
     app.setWindowIcon(appIcon);
     MainWindow mainWindow;
     mainWindow.show();
-    return app.exec();
+    return app.exec();*/
 }

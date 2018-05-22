@@ -22,6 +22,8 @@ class GraphAlgorithms {
      * @return Array of Sealib::TrailStrucutre Objects representing the trail
      */
     static Sealib::TrailStructure ** hierholzer(Sealib::Graph *g);
+
+    static std::map<unsigned int, std::map<unsigned int, unsigned int>*> hierholzerSimple(Sealib::Graph *g);
 };
 }
 

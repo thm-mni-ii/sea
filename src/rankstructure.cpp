@@ -7,6 +7,9 @@
 #include "sealib/rankstructure.h"
 
 unsigned long Sealib::RankStructure::rank(unsigned long k) const{
+    if(k == 0 || k > maxRank) {
+        return (unsigned long) - 1;
+    }
     unsigned long segmentIdx = (k - 1) / segmentLength;
     unsigned char localIdx = static_cast<unsigned char>((k - 1) % segmentLength);
 
@@ -15,9 +18,8 @@ unsigned long Sealib::RankStructure::rank(unsigned long k) const{
 
 Sealib::RankStructure::RankStructure(const boost::dynamic_bitset<> &bitset_) {
     segmentLength = RankStructure::log2(bitset_.size());
-
     // initialize local lookup tables
-    unsigned long lastSeg = segmentLength == 0 ? 0 : bitset_.size() % segmentLength;
+    unsigned char lastSeg = static_cast<unsigned char>(segmentLength == 0 ? 0 : bitset_.size() % segmentLength);
     segmentCount = segmentLength == 0 ? 0 : static_cast<unsigned int>(bitset_.size() / segmentLength);
 
     localRankLookupTable.reserve(segmentCount);
@@ -55,7 +57,7 @@ Sealib::RankStructure::RankStructure(const boost::dynamic_bitset<> &bitset_) {
 
         unsigned long segment;
         unsigned long beg = segmentCount * segmentLength;
-        boost::to_block_range(bitset_, make_tuple(beg, lastSeg, std::ref(segment)));
+        boost::to_block_range(bitset_, make_tuple(beg, static_cast<unsigned long>(lastSeg), std::ref(segment)));
 
         for (unsigned char j = 0; j < lastSeg; j++) {
             if (CHECK_BIT(segment,j)) {
@@ -74,6 +76,8 @@ Sealib::RankStructure::RankStructure(const boost::dynamic_bitset<> &bitset_) {
     if(segmentCount != 0) {
         // at(0) = number of set bits before the second block
         // at(segmentCount - 2) = number of bits set before the last block
+        maxRank = segmentLength * (lastSeg == 0 ? segmentCount : segmentCount - 1) + lastSeg;
+
         setCountTable.reserve(segmentCount);
         unsigned int cnt = 0;
         for (unsigned int i = 0; i < segmentCount - 1; i++) {

@@ -18,6 +18,7 @@ class RankStructure {
  protected:
     unsigned char segmentLength;
     unsigned int segmentCount;
+    unsigned int maxRank;
     std::vector<std::vector<unsigned char>> localRankLookupTable;
 
     std::vector<unsigned int> setCountTable;

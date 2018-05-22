@@ -9,10 +9,10 @@
 Sealib::RankSelect::RankSelect(const boost::dynamic_bitset<> &bitset_) {
     segmentLength = log2(bitset_.size());
 
-    // initialize local lookup tables
-    unsigned long lastSeg = bitset_.size() % segmentLength;
-    segmentCount = static_cast<unsigned int>(bitset_.size() / segmentLength);
 
+    // initialize local lookup tables
+    unsigned char lastSeg = static_cast<unsigned char>(segmentLength == 0 ? 0 : bitset_.size() % segmentLength);
+    segmentCount = segmentLength == 0 ? 0 : static_cast<unsigned int>(bitset_.size() / segmentLength);
     localRankLookupTable.reserve(segmentCount);
     localSelectLookupTable.reserve(segmentCount);
 
@@ -54,7 +54,7 @@ Sealib::RankSelect::RankSelect(const boost::dynamic_bitset<> &bitset_) {
 
         unsigned long segment;
         unsigned long beg = segmentCount * segmentLength;
-        boost::to_block_range(bitset_, make_tuple(beg, lastSeg, std::ref(segment)));
+        boost::to_block_range(bitset_, make_tuple(beg, static_cast<unsigned long>(lastSeg), std::ref(segment)));
 
         for (unsigned char j = 0; j < lastSeg; j++) {
             if (CHECK_BIT(segment,j)) {
@@ -72,6 +72,9 @@ Sealib::RankSelect::RankSelect(const boost::dynamic_bitset<> &bitset_) {
 
         segmentCount++;
     }
+
+    maxRank = segmentCount == 0 ? 0 : segmentLength * (lastSeg == 0 ? segmentCount : segmentCount - 1) + lastSeg;
+
 
     // at(0) = number of set bits before the second block
     // at(segmentCount - 2) = number of bits set before the last block
@@ -109,7 +112,14 @@ unsigned char Sealib::RankSelect::selectLocal(unsigned long segment, unsigned ch
 }
 
 unsigned long Sealib::RankSelect::select(unsigned long k) const {
-    unsigned long h = nonEmptySegments[firstInSegment.rank(k) - 1];
+    if(k == 0 || segmentLength == 0) {
+        return (unsigned long) - 1;
+    }
+    unsigned long firstInSegmentRank = firstInSegment.rank(k);
+    if(firstInSegmentRank == (unsigned long) - 1) {
+        return (unsigned long) - 1;
+    }
+    unsigned long h = nonEmptySegments[firstInSegmentRank - 1];
     unsigned char localIndex = static_cast<unsigned char>(k - setBefore(h) - 1);
-    return selectLocal(h, localIndex) + segmentLength * h;
+    return selectLocal(h, localIndex) + segmentLength * h + 1;
 }
