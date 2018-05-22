@@ -12,7 +12,7 @@ Graph *GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, un
             deg += adjMatrix[i][j];
         }
 
-        auto *adj = (Adjacency *) malloc(sizeof(Adjacency) * deg);
+        Adjacency *adj = (Adjacency *) malloc(sizeof(Adjacency) * deg);
 
         int idx = 0;
         for (unsigned int j = 0; j < order; j++) {
