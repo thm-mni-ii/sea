@@ -20,7 +20,6 @@ void DFS::process(uint u) {
 	printf("preprocess %u:\n",u);
 	#endif
 	preProcess(un);
-	push(un);
 	for(uint k=0; k<un->getDegree(); k++) {
 		#ifdef DFS_DEBUG
 		printf("head %u,%u = ",u,k);
@@ -60,8 +59,6 @@ uint DFS::getColor(uint u) {
 }
 
 void DFS::nop() {}
-void DFS::nop1(Node *p) { p->getDegree(); }
-void DFS::nop2(Node *p1,Node *p2) { p1->getDegree(); p2->getDegree(); }
 
 DFS::DFS(Graph *p,void (*preprocess)(Node *),void (*preexplore)(Node *,Node *),
 			void (*postexplore)(Node *,Node *),void (*postprocess)(Node *)) { 

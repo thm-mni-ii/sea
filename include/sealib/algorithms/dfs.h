@@ -47,8 +47,5 @@ class DFS {
 			- Do nothing. Will be used in place of a NULL user function.
 		*/
 		static void nop();
-		
-		static void nop1(Node*);
-		static void nop2(Node*,Node*);
 };		
 #endif
