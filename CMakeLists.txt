@@ -45,7 +45,7 @@ set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemo
 # --------------------------------------------------- #
 #                   build library
 # --------------------------------------------------- #
-include_directories(${Boost_INCLUDE_DIR} ${CMAKE_INCLUDE_PATH})
+include_directories(${CMAKE_INCLUDE_PATH})
 file(GLOB LIB_SOURCES "src/*.cpp")
 
 add_library(sealib SHARED ${LIB_SOURCES})
@@ -55,14 +55,14 @@ target_compile_options(sealib PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpeda
 #                   build tests
 # --------------------------------------------------- #
 file(GLOB TESTS "test/*.cpp")                                   # all test files
-add_executable(tests ${TESTS})
-add_dependencies(tests sealib gtest)
+add_executable(tests ${LIB_SOURCES} ${TESTS})
+add_dependencies(tests gtest)
 find_package(Threads)
-target_link_libraries(tests sealib gtest ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
 target_compile_options(tests PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 if (COVERAGE)
-MESSAGE(STATUS "Link Coverage")
+        MESSAGE(STATUS "Link Coverage")
         target_compile_options(tests PRIVATE --coverage)
         target_link_libraries(tests --coverage)
 endif ()
