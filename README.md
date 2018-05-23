@@ -10,13 +10,14 @@ Therefore, this library provides algorithms that treat space as a scarce resourc
 # Library features
 - [x] Graph data type. Requires $O((n + m) \log n)$ bits
 - [ ] Hierholzer's algorithm
+- [ ] Choice Dictionary
+- [ ] Rank Select
 - [ ] Linear time in-place BSF and DSF in the restore model [Link to PDF](https://arxiv.org/pdf/1803.04282.pdf)
 
 # Building the Library from Source
-1. Download Googles test library -> `git submodule update --init`
-2. Install CMake and a c++ compiler for your specific system.
-3. Build a make file for your system by using CMake -> `cmake .`
-4. Build the artifacts by executing make -> `make`
+1. Install CMake and a c++ compiler for your specific system.
+2. Build a make file for your system by using CMake -> `cmake .`
+3. Build the artifacts by executing make -> `make`
 
 # Project Structure
 ```bash
@@ -24,10 +25,10 @@ Therefore, this library provides algorithms that treat space as a scarce resourc
 ├── CMakeLists.txt  # CMake build script
 ├── LICENSE         # Licence descriptionö
 ├── README.md       # You are reading this file now
-├── gtest           # Third party: Googles test library
-├── gtest.cmake     # CMake Configucation for Googles test library
+├── third-party     # Third party libraries
 ├── include         # The libraries header files (*.h)
 ├── src             # The libraries source files (*.cpp)
+├── src-view        # The source files for the visualization (*.cpp)
 ├── test            # The test files
 ├── lib             # The library files
 └── bin             # Executable files to test the project
