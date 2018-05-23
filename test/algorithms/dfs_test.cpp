@@ -24,12 +24,14 @@ TEST(DFSTest,pop) {
 	ASSERT_EQ(d.pop(),(void*)NULL);
 }
 
-TEST(DFSTest,process) {
-	Node *nodes=(Node*)calloc(1,sizeof(Node)*6); //calloc!
-	for(int a=0; a<4; a++) nodes[a]=Node(new Adjacency(a+1),1);
-	nodes[5]=Node(new Adjacency(4),1);
-	DFS d=DFS(new Graph(nodes,6),NULL,NULL,NULL,NULL);
+TEST(DFSTest,run) {
+	int order=6;
+	Node *nodes=(Node*)calloc(1,sizeof(Node)*order); //calloc!
+	for(int a=0; a<order-2; a++) nodes[a]=Node(new Adjacency(a+1),1);
+	nodes[order-1]=Node(new Adjacency(4),1);
+	DFS d=DFS(new Graph(nodes,order),NULL,NULL,NULL,NULL);
+	for(uint a=0; a<(uint)order; a++) ASSERT_EQ(d.getColor(a),DFS_WHITE);
 	d.run();
-	ASSERT_EQ(1,1);
+	for(uint a=0; a<(uint)order; a++) ASSERT_EQ(d.getColor(a),DFS_BLACK);
 	free(nodes);
 }

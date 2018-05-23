@@ -9,7 +9,7 @@ typedef unsigned int uint;
 class DFS {
 	private:
 		Graph *g;
-		unsigned int *color;
+		uint *color;
 		Node **stack;
 		int sp;
 		void (*preProcess)(Node *);
@@ -40,6 +40,8 @@ class DFS {
 		void push(Node *u);
 		Node * pop();
 		Node * peek();
+		
+		uint getColor(uint u);
 		
 		/* Def. nop 
 			- Do nothing. Will be used in place of a NULL user function.

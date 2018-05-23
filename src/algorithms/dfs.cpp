@@ -5,8 +5,7 @@
 // TODO step 2: O(n+m) time, O(n*log log n) bits
 
 void DFS::run() {
-	for(unsigned int u=0; u<g->getOrder(); u++) color[u]=DFS_WHITE;
-	for(unsigned int u=0; u<g->getOrder(); u++) {
+	for(uint u=0; u<g->getOrder(); u++) {
 		if(color[u]==DFS_WHITE) process(u);
 	}
 }
@@ -22,11 +21,11 @@ void DFS::process(uint u) {
 	#endif
 	preProcess(un);
 	push(un);
-	for(unsigned int k=0; k<un->getDegree(); k++) {
+	for(uint k=0; k<un->getDegree(); k++) {
 		#ifdef DFS_DEBUG
 		printf("head %u,%u = ",u,k);
 		#endif
-		unsigned int v=g->head(u,k);
+		uint v=g->head(u,k);
 		#ifdef DFS_DEBUG
 		printf("%u\n",v);
 		#endif
@@ -55,6 +54,11 @@ Node * DFS::pop() {
 }
 Node * DFS::peek() { return stack[sp-1]; }
 
+uint DFS::getColor(uint u) { 
+	if(u>g->getOrder()) return -1;
+	else return color[u]; 
+}
+
 void DFS::nop() {}
 void DFS::nop1(Node *p) { p->getDegree(); }
 void DFS::nop2(Node *p1,Node *p2) { p1->getDegree(); p2->getDegree(); }
@@ -62,7 +66,8 @@ void DFS::nop2(Node *p1,Node *p2) { p1->getDegree(); p2->getDegree(); }
 DFS::DFS(Graph *p,void (*preprocess)(Node *),void (*preexplore)(Node *,Node *),
 			void (*postexplore)(Node *,Node *),void (*postprocess)(Node *)) { 
 	g=p;
-	color=new unsigned int[g->getOrder()];
+	color=new uint[g->getOrder()];
+	for(uint u=0; u<g->getOrder(); u++) color[u]=DFS_WHITE;
 	stack=new Node*[g->getOrder()];
 	sp=0;
 	preProcess=preprocess?preprocess:(void(*)(Node*))nop;
