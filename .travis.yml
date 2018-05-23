@@ -11,6 +11,10 @@ addons:
       - g++-6
       - clang-5.0
 
+cache:
+  directories:
+  - ./third-party
+
 before_install:
   - pip install --user cpp-coveralls
 
@@ -18,4 +22,4 @@ script:
   - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 . && make && ./bin/tests
 
 after_success:
-  - coveralls --root .  -E ".*CMakeFiles.*" -e test -e gtest -e include --gcov-options '\-lp'
+  - coveralls --root .  -E ".*CMakeFiles.*" -e test -e third-party -e include --gcov-options '\-lp'
