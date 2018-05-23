@@ -1,4 +1,4 @@
-#include "sealib/algorithms/dfs.h"
+#include "sealib/dfs.h"
 #include <stdio.h>
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 // TODO step 1: O((n+m)*log(n)) time, O((ld(3)+e)*n) bits

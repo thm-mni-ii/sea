@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <stdlib.h>
-#include <sealib/algorithms/dfs.h>
+#include <sealib/dfs.h>
 #define DFS_DEBUG
 
 TEST(DFSTest,push) {
