@@ -1,46 +1,68 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.0)
 project(sea)
-#set(PROJECT_SOURCE_DIR .)
-include(gtest.cmake)
+set(PROJECT_SOURCE_DIR .)
 
 SET(COVERAGE OFF CACHE BOOL "Coverage")
 
 # Project Structure
 set(LIBRARY_OUTPUT_PATH lib)                                    # generated library files
 set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated binary files
+set(CMAKE_INCLUDE_PATH include/)
 
-set(MAIN_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)                 # full name of the main file
-set(CMAKE_INCLUDE_PATH include/)                                # all headers
-file(GLOB SOURCES "src/*.cpp")                                  # all sources inside src/ except for the main file
-list(REMOVE_ITEM SOURCES ${MAIN_FILE})
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# --------------------------------------------------- #
+#                   Dependencies
+# --------------------------------------------------- #
+include(ExternalProject)
+find_program(MAKE NAMES cmake make)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+# --------------------------------------------------- #
+#                   gtest library
+# --------------------------------------------------- #
+ExternalProject_Add(GTEST_PROJECT
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
+        CMAKE_ARGS "-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=OFF -DINSTALL_GMOCK=OFF"
+        INSTALL_COMMAND ""
+        BUILD_COMMAND "${MAKE}" --build .)
+
+ExternalProject_Get_Property(GTEST_PROJECT source_dir)
+ExternalProject_Get_Property(GTEST_PROJECT binary_dir)
+set(GOOGLETEST_ROOT ${source_dir})
+set(GOOGLETEST_BIN ${binary_dir})
+MESSAGE(STATUS "GTest source_dir: ${GOOGLETEST_ROOT}")
+MESSAGE(STATUS "GTest build_dir: ${GOOGLETEST_BIN}")
+
+include_directories(SYSTEM ${GOOGLETEST_ROOT}/googletest/)
+include_directories(SYSTEM ${GOOGLETEST_ROOT}/googletest/include)
+add_library(gtest STATIC IMPORTED)
+add_dependencies(gtest GTEST_PROJECT)
+set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemock/gtest/libgtest.a")
+
+# --------------------------------------------------- #
+#                   build library
+# --------------------------------------------------- #
+include_directories(${Boost_INCLUDE_DIR} ${CMAKE_INCLUDE_PATH})
+file(GLOB LIB_SOURCES "src/*.cpp")
+
+add_library(sealib SHARED ${LIB_SOURCES})
+target_compile_options(sealib PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpedantic -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
+
+# --------------------------------------------------- #
+#                   build tests
+# --------------------------------------------------- #
 file(GLOB TESTS "test/*.cpp")                                   # all test files
+add_executable(tests ${TESTS})
+add_dependencies(tests sealib gtest)
+find_package(Threads)
+target_link_libraries(tests sealib gtest ${CMAKE_THREAD_LIBS_INIT})
+target_compile_options(tests PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
-include_directories(${CMAKE_INCLUDE_PATH})
-
-add_library(sealib SHARED ${SOURCES})
-
-add_executable(sealib_main ${MAIN_FILE} ${SOURCES})
-
-add_executable(tests ${SOURCES} ${TESTS})
-find_package (Threads)
-target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
-
-if (MSVC)
-    target_compile_options(tests PRIVATE /std:c++17 /W4 /WX)
-    target_compile_options(sealib_main PRIVATE /std:c++17 /W4 /WX)
-
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Ox")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od")
-
-    # VS 2017 removed tr1
-    add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
-else()
-    target_compile_options(tests PRIVATE -std=c++14 -g -Wall -Werror -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
-    target_compile_options(sealib_main PRIVATE -std=c++14 -g -Wall -Werror -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
-
-    if (COVERAGE)
-        MESSAGE( STATUS "Link Coverage")
+if (COVERAGE)
+MESSAGE(STATUS "Link Coverage")
         target_compile_options(tests PRIVATE --coverage)
         target_link_libraries(tests --coverage)
-    endif()
-endif()
+endif ()
