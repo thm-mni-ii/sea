@@ -1,6 +1,5 @@
 #ifndef DFS_H
 #define DFS_H
-#include <stdlib.h>
 #include "sealib/graph.h"
 #include "sealib/stack.h"
 #define DFS_WHITE 0

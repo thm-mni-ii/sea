@@ -1,3 +1,5 @@
+#ifndef STACK_H
+#define STACK_H
 #include "sealib/node.h"
 #define STACK_FAULT (Node*)0
 
@@ -33,3 +35,4 @@ class Stack {
 		*/
 		Node * peek();
 };
+#endif
