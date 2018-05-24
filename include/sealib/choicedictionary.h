@@ -5,7 +5,7 @@ class ChoiceDictionary
 {
   private:
     unsigned int *A, *B;
-    unsigned int pointer;
+    unsigned int length, pointer;
 
     /**
      * Reorders the Array and changes the pointer when an entry
@@ -27,7 +27,7 @@ class ChoiceDictionary
      * Creates choice dictionary with given size
      * @param _size Size of choice dictionary
      */
-    ChoiceDictionary(unsigned int _size);
+    ChoiceDictionary(unsigned int _length);
 
     /**
      * Inserts a color into the specified index

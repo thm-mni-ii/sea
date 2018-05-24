@@ -1,11 +1,10 @@
 #include <stdlib.h>
-
 #include "sealib/choicedictionary.h"
 
-ChoiceDictionary::ChoiceDictionary(unsigned int _size)
+ChoiceDictionary::ChoiceDictionary(unsigned int _length) : length(_length)
 {
-    A = new unsigned int[_size];
-    B = new unsigned int[_size];
+    A = new unsigned int[length];
+    B = new unsigned int[length];
     pointer = 0;
 }
 
@@ -20,8 +19,7 @@ bool ChoiceDictionary::get(unsigned int index)
 {
     unsigned int linkedIndex = A[index];
 
-    if (B[linkedIndex] != index)
-        return false;
+    if (linkedIndex >= length || B[linkedIndex] != index) return false;
     return true;
 }
 

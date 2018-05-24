@@ -15,8 +15,8 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity)
     ASSERT_EQ(c.choice(), 3);
     c.insert(6);
     ASSERT_EQ(c.choice(), 6);
-    c.insert(5);
-    ASSERT_EQ(c.choice(), 5);
+    c.insert(4);
+    ASSERT_EQ(c.choice(), 4);
     c.insert(9);
     ASSERT_EQ(c.choice(), 9);
 
@@ -25,12 +25,12 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity)
     ASSERT_TRUE(c.get(2));
     ASSERT_TRUE(c.get(3));
     ASSERT_TRUE(c.get(6));
-    ASSERT_TRUE(c.get(5));
+    ASSERT_TRUE(c.get(4));
     ASSERT_TRUE(c.get(9));
 
     // verify empty values don't return false positives
     ASSERT_FALSE(c.get(1));
-    ASSERT_FALSE(c.get(4));
     ASSERT_FALSE(c.get(7));
     ASSERT_FALSE(c.get(8));
+    ASSERT_FALSE(c.get(5));
 }
