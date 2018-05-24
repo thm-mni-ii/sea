@@ -2,44 +2,31 @@
 #define DFS_H
 #include <stdlib.h>
 #include "sealib/graph.h"
+#include "sealib/stack.h"
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
+typedef void (*UserFunc1)(Node*);
+typedef void (*UserFunc2)(Node*,Node*);
 typedef unsigned int uint;
 class DFS {
 	private:
-		Graph *g;
-		uint *color;
-		Node **stack;
-		int sp;
-		void (*preProcess)(Node *);
-		void (*preExplore)(Node *,Node *);
-		void (*postExplore)(Node *,Node *);
-		void (*postProcess)(Node *);
 
 	public:
-		/* Def. DFS
+		DFS();
+		/* Def. runStandardDFS
 			DFS.p: graph G=(V,E) to iterate over
 			DFS.[pre|post][process|explore]: user-defined functions
 		*/
-		DFS(Graph *p,void (*preprocess)(Node *),
-			void (*preexplore)(Node *,Node *),
-			void (*postexplore)(Node *,Node *),
-			void (*postprocess)(Node *));
-			
-		/* Def. run
-			- Run a depth-first search over the given graph, using the given user functions.
-		*/
-		void run();
+		static void runStandardDFS(Graph *g,UserFunc1 preprocess,
+			UserFunc2 preexplore,UserFunc2 postexplore,
+			UserFunc1 postprocess);
 		
-		/* Def. process
+		/* Def. process_standard
 			process.u: vertex (in V) to be processed
 		*/
-		void process(uint u);
-		
-		void push(Node *u);
-		Node * pop();
-		Node * peek();
+		static void process_standard(Graph *g,UserFunc1 preProcess,UserFunc2 preExplore,
+			UserFunc2 postExplore,UserFunc1 postProcess,uint *color,uint u);
 		
 		uint getColor(uint u);
 		
