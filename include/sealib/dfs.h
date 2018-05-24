@@ -9,6 +9,17 @@
 typedef void (*UserFunc1)(Node*);
 typedef void (*UserFunc2)(Node*,Node*);
 typedef unsigned int uint;
+
+/*
+	This class contains depth-first search algorithms.
+	The depth-first search of a graph processes all its nodes and
+	explores all its edges. 
+	During this procedure, the nodes will be colored
+	from white (initial) to gray (being processed) to black (finished processing).
+	
+	The following DFS variants are available:
+	- StandardDFS: the normal DFS, uses implicit recursion stack
+*/
 class DFS {
 	private:
 		/* @param u: vertex (in V) to be processed
