@@ -15,6 +15,7 @@ class Stack {
 	public:
 		/* Create a simple node stack of the given size. */
 		Stack(unsigned int pSize);
+		~Stack();
 		
 		/* Push a node to the stack if the stack is not full.
 			@param u the node to add to the stack

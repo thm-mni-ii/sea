@@ -20,3 +20,6 @@ Stack::Stack(unsigned int pSize) {
 	stack=new unsigned int[size];
 	sp=0;
 }
+Stack::~Stack() {
+	delete[] stack;
+}

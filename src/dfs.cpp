@@ -56,18 +56,11 @@ void DFS::runStandardDFS(Graph *g,void (*preProcess)(Node *),void (*preExplore)(
 	uint *color=new uint[g->getOrder()];
 	for(uint u=0; u<g->getOrder(); u++) color[u]=DFS_WHITE;
 	//Stack stack=Stack(g->getOrder());
-	/*void (*preProcess)(Node *);
-	void (*preExplore)(Node *,Node *);
-	void (*postExplore)(Node *,Node *);
-	void (*postProcess)(Node *);
-	preProcess=preprocess?preprocess:(void(*)(Node*))nop;
-	preExplore=preexplore?preexplore:(void(*)(Node*,Node*))nop;
-	postExplore=postexplore?postexplore:(void(*)(Node*,Node*))nop;
-	postProcess=postprocess?postprocess:(void(*)(Node*))nop;*/
 	for(uint u=0; u<g->getOrder(); u++) {
 		if(color[u]==DFS_WHITE) {
 			process_standard(g,preProcess,preExplore,
 				postExplore,postProcess,color,u);
 		}
 	}
+	delete[] color;
 }
