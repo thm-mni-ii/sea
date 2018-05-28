@@ -6,13 +6,13 @@ void Stack::push(unsigned int u) {
 }
 
 unsigned int Stack::pop() {
-	if(sp==0) return STACK_FAULT;
+	if(sp==0) throw STACK_FAULT;
 	else return stack[--sp];
 }
 
 unsigned int Stack::peek() {
-	if(sp==0) return STACK_FAULT; 
-	else return stack[sp-1]; 
+	if(sp==0) throw STACK_FAULT;
+	else return stack[sp-1];
 }
 
 Stack::Stack(unsigned int pSize) {

@@ -21,6 +21,15 @@ TEST(StackTest,pop) {
 	ASSERT_EQ(d.pop(),1);
 	ASSERT_EQ(d.pop(),4);
 	ASSERT_EQ(d.pop(),2);
-	ASSERT_EQ(d.pop(),STACK_FAULT);
-	ASSERT_EQ(d.peek(),STACK_FAULT);
+	try {
+		d.pop();
+	} catch(unsigned int e) {
+		try {
+			d.peek();
+		} catch(unsigned int e1) {
+			ASSERT_TRUE(true);
+			return;
+		}
+	}
+	ASSERT_TRUE(false);
 }

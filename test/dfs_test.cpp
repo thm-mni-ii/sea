@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include <sealib/dfs.h>
 #define DFS_DEBUG
-#define DFS_NOP_PROCESS (void(*)(Node*))DFS::nop
-#define DFS_NOP_EXPLORE (void(*)(Node*,Node*))DFS::nop
 TEST(DFSTest,runStd) {
 	int order=6;
 	Node *nodes=(Node*)calloc(1,sizeof(Node)*order);

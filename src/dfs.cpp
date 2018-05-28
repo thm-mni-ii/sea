@@ -8,48 +8,20 @@ void DFS::process_standard(Graph *g,
 	UserFunc1 preProcess,UserFunc2 preExplore,
 	UserFunc2 postExplore,UserFunc1 postProcess,
 	uint *color,uint u) {
-	#ifdef DFS_DEBUG
-	printf("process %u\n",u);
-	#endif
 	color[u]=DFS_GRAY;
 	Node *un=g->getNode(u);
-	#ifdef DFS_DEBUG
-	printf("preprocess %u:\n",u);
-	#endif
-	preProcess(un);
+	if(preProcess!=DFS_NOP_PROCESS) preProcess(un);
 	for(uint k=0; k<un->getDegree(); k++) {
-		#ifdef DFS_DEBUG
-		printf("head %u,%u = ",u,k);
-		#endif
 		uint v=g->head(u,k);
-		#ifdef DFS_DEBUG
-		printf("%u\n",v);
-		#endif
 		Node *vn=g->getNode(v);
-		#ifdef DFS_DEBUG
-		printf("preexplore %u,%u:\n",u,v);
-		#endif
-		preExplore(un,vn);
+		if(preExplore!=DFS_NOP_EXPLORE) preExplore(un,vn);
 		if(color[v]==DFS_WHITE) process_standard(g,preProcess,preExplore,
 			postExplore,postProcess,color,v);
-		#ifdef DFS_DEBUG
-		printf("postexplore %u,%u:\n",u,v);
-		#endif
-		postExplore(un,vn);
+		if(postExplore!=DFS_NOP_EXPLORE) postExplore(un,vn);
 	}
-	#ifdef DFS_DEBUG
-	printf("postprocess %u:\n",u);
-	#endif
-	postProcess(un);
+	if(postProcess!=DFS_NOP_PROCESS) postProcess(un);
 	color[u]=DFS_BLACK;
 }
-
-/*uint DFS::getColor(Graph *g,uint u) { 
-	if(u>g->getOrder()) return -1;
-	else return color[u]; 
-}*/
-
-void DFS::nop() {}
 
 void DFS::runStandardDFS(Graph *g,void (*preProcess)(Node *),void (*preExplore)(Node *,Node *),
 			void (*postExplore)(Node *,Node *),void (*postProcess)(Node *)) { 
