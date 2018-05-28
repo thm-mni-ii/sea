@@ -20,6 +20,8 @@ typedef unsigned int uint;
  * 
  * The following DFS variants are available
  *  - StandardDFS: the normal DFS, uses implicit recursion stack
+ * 
+ * @author Simon Heuser
  */
 class DFS {
 	private:
