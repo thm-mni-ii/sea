@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+//#define DFS_DEBUG
 #include <sealib/dfs.h>
 #define order 30
 Node *s[order];

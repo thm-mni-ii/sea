@@ -30,6 +30,15 @@ class DFS {
 		static void process_standard(Graph *g,UserFunc1 preProcess,UserFunc2 preExplore,
 			UserFunc2 postExplore,UserFunc1 postProcess,uint *color,uint u);
 
+		static void process_small(uint node,
+				Graph *g,CompactArray *color,
+				UserFunc1 preProcess,UserFunc2 preExplore,
+				UserFunc2 postExplore,UserFunc1 postProcess,
+				double epsilon);
+
+		static void tryPush(uint u,Stack *low,Stack *high,Stack *trailers);
+		static uint tryPop(Stack *low,Stack *high,Stack *trailers);
+		
 	public:
 
 		/**
@@ -44,6 +53,10 @@ class DFS {
 		 * @param postprocess to be executed after processing a node u
 		 */
 		static void runStandardDFS(Graph *g,UserFunc1 preprocess,
+			UserFunc2 preexplore,UserFunc2 postexplore,
+			UserFunc1 postprocess);
+			
+		static void runSmallDFS(Graph *g,UserFunc1 preprocess,
 			UserFunc2 preexplore,UserFunc2 postexplore,
 			UserFunc1 postprocess);
 };
