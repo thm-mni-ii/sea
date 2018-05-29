@@ -1,7 +1,6 @@
 #ifndef DFS_H
 #define DFS_H
 #include "sealib/graph.h"
-#include "sealib/stack.h"
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
@@ -13,7 +12,7 @@ typedef unsigned int uint;
 
 /**	
  * This class contains depth-first search algorithms.
- * 	The depth-first search of a graph processes all its nodes and
+ * The depth-first search of a graph processes all its nodes and
  * explores all its edges.
  * During this procedure, the nodes will be colored
  * from white (initial) to gray (being processed) to black (finished processing)
@@ -34,7 +33,6 @@ class DFS {
 	public:
 
 		/**
-		 *  runStandardDFS:
 		 * Run a standard depth-first search over a graph. <br>
 		 * EFFICIENCY: O(n+m) time, O(n log n) bits
 		 * @param g graph G=(V,E) to iterate over
