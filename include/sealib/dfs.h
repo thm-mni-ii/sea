@@ -3,6 +3,8 @@
 
 #include "sealib/graph.h"
 #include "sealib/node.h"
+#include "compactarray.h"
+#include <stack>
 
 #define DFS_WHITE 0
 #define DFS_GRAY 1
@@ -13,6 +15,7 @@
 typedef void (*UserFunc1)(Node*);
 typedef void (*UserFunc2)(Node*, Node*);
 typedef unsigned int uint;
+typedef std::stack<uint> Stack;
 
 /**	
  * This class contains depth-first search algorithms.
@@ -40,7 +43,7 @@ class DFS {
 				UserFunc2 postExplore,UserFunc1 postProcess,
 				double epsilon);
 
-		static void tryPush(uint u,Stack *low,Stack *high,Stack *trailers);
+		static void tryPush(uint u,uint q,Stack *low,Stack *high,Stack *trailers);
 		static uint tryPop(Stack *low,Stack *high,Stack *trailers);
 		
 	public:

@@ -37,10 +37,11 @@ void DFS::process_small(uint node,
 	#ifdef DFS_DEBUG
 	printf("q=%u, n=%u, (e/3)n=%.0f\n",q,n,(1.5/3)*n);
 	#endif
-	Stack *st=new Stack((unsigned)ceil(n/(double)q)),
-		*kt=new Stack((unsigned)ceil(n/(double)q));
-	Stack *s1=new Stack(q),*s2=new Stack(q);
-	Stack *k1=new Stack(q),*k2=new Stack(q);
+	Stack *st=new Stack,			//new Stack((unsigned)ceil(n/(double)q)),
+		*kt=new Stack;			//new Stack((unsigned)ceil(n/(double)q));
+	Stack *s1=new Stack,*s2=new Stack;		//new Stack(q)
+	Stack *k1=new Stack,*k2=new Stack;
+	st->push(0);
 	/*for(uint a=1; a<=n; a++) {
 		if(a%(q+1)==q||a==n) trailers->push(a);
 		uint b=tryPush(a,s1,s2);
@@ -57,12 +58,13 @@ void DFS::process_small(uint node,
 	while(s1->peek()!=STACK_FAULT) {
 		printf(" %u \n",s1->pop());
 	}*/
-	tryPush(node,s1,s2,st);
-	tryPush(1,k1,k2,kt);
+	tryPush(node,q,s1,s2,st);
+	tryPush(1,q,k1,k2,kt);
 	uint u,k;
-	while(st->peek()!=STACK_FAULT) {
-		u=tryPop(s1,s2,st);
-		if(u==STACK_FAULT) {
+	while(st->empty()) {
+		try {
+			u=tryPop(s1,s2,st);
+		} catch(unsigned e) {
 			#ifdef DFS_DEBUG
 			printf("no more nodes\n");
 			#endif
@@ -76,15 +78,15 @@ void DFS::process_small(uint node,
 		printf("u: %u(%p), k: %u\n",u,(void*)un,k);
 		#endif
 		if(k<un->getDegree()) {
-			tryPush(u,s1,s2,st);
-			tryPush(k+1,k1,k2,kt);
+			tryPush(u,q,s1,s2,st);
+			tryPush(k+1,q,k1,k2,kt);
 			uint v=g->head(u,k);
 			if(color->get(v)==DFS_WHITE) {
 				Node *vn=g->getNode(v);
 				preExplore(un,vn);
 				if(color->get(v)==DFS_WHITE) {
-					tryPush(v,s1,s2,st);
-					tryPush(1,k1,k2,kt);
+					tryPush(v,q,s1,s2,st);
+					tryPush(1,q,k1,k2,kt);
 				}
 				postExplore(un,vn);
 			}
@@ -94,11 +96,11 @@ void DFS::process_small(uint node,
 		postProcess(un);
 	}
 }
-void DFS::tryPush(uint u,Stack *low,Stack *high,Stack *trailers) {
+void DFS::tryPush(uint u,uint q,Stack *low,Stack *high,Stack *trailers) {
 	#ifdef DFS_DEBUG
 	printf("-> tryPush %u ",u);
 	#endif
-	if(!low->isFull()) {
+	if(low->size()==q) {
 		#ifdef DFS_DEBUG
 		printf("(low segment)\n");
 		#endif
@@ -109,14 +111,14 @@ void DFS::tryPush(uint u,Stack *low,Stack *high,Stack *trailers) {
 		trailers->pop();
 		trailers->push(u);
 	}
-	else if(!high->isFull()) {
+	else if(high->size()==q) {
 		high->push(u);
 		trailers->pop(); trailers->push(u);
 	}
 	else {
 		delete low;
 		low=high;
-		high=new Stack(low->getSize());
+		high=new Stack;
 		high->push(u);
 	}
 }
@@ -124,16 +126,18 @@ uint DFS::tryPop(Stack *low, Stack *high,Stack *trailers) { //fix
 	#ifdef DFS_DEBUG
 	printf("-> tryPop ");
 	#endif
-	uint r=STACK_FAULT;
-	if(high->peek()!=STACK_FAULT) {
-		r=high->pop();
-	} else if(low->peek()!=STACK_FAULT) {
+	uint r=0;
+	if(!high->empty()) {
+		r=high->top();
+		high->pop();
+	} else if(!low->empty()) {
 		#ifdef DFS_DEBUG
 		printf("(low segment)\n");
 		#endif
-		r=low->pop();
+		r=low->top();
+		low->pop();
 	} else {
-		if(trailers->peek()!=STACK_FAULT) {
+		if(!trailers->empty()) {
 			#ifdef DFS_DEBUG
 			printf("(restoring ... ");
 			#endif
@@ -141,7 +145,7 @@ uint DFS::tryPop(Stack *low, Stack *high,Stack *trailers) { //fix
 			#ifdef DFS_DEBUG
 			printf("done)\n");
 			#endif
-		} else r=STACK_FAULT;
+		} else throw 0;
 	}
 	#ifdef DFS_DEBUG
 	printf("<- tryPop = %u\n",r);
