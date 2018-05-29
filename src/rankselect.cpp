@@ -9,6 +9,9 @@
 Sealib::RankSelect::RankSelect(const boost::dynamic_bitset<unsigned char> &bitset_) : Sealib::RankStructure(bitset_), firstInSegment(nullptr){
     //initialize rank structure for firstInBlock
     unsigned long size = rank(bitset.size());
+    if(size == (unsigned long) - 1) {
+        size = 0;
+    }
     boost::dynamic_bitset<unsigned char> firstInBlockBitSet(size);
 
     for (unsigned long i = 0; i < segmentCount; i++) {
