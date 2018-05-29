@@ -1,12 +1,16 @@
 #include <gtest/gtest.h>
 //#define DFS_DEBUG
 #include "sealib/dfs.h"
+
 #define order 30
+
 Node *s[order];
 int sp = 0;
+
 void pushN(Node *u) {
 	s[sp++] = u;
 }
+
 TEST(DFSTest, runStd) {
 	Node *nodes = reinterpret_cast<Node*>(calloc(1, sizeof(Node) * 2 * order));
 	for(unsigned int a = 0; a < order - 2; a++) {

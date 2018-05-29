@@ -1,7 +1,7 @@
 #include <iostream>
 #include "sealib/graphcreator.h"
 
-using std;
+using std::cout;
 
 int main() {
     unsigned int order = 4;
