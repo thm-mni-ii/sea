@@ -3,7 +3,7 @@
 #include "sealib/graphcreator.h"
 
 Graph *GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order) {
-    Node *nodes = (Node *) malloc(sizeof(Node) * order);
+    Node *nodes = static_cast<Node *>(malloc(sizeof(Node) * order));
 
     for (unsigned int i = 0; i < order; i++) {
         unsigned int deg = 0;
@@ -12,7 +12,7 @@ Graph *GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, un
             deg += adjMatrix[i][j];
         }
 
-        Adjacency *adj = (Adjacency *) malloc(sizeof(Adjacency) * deg);
+        Adjacency *adj = static_cast<Adjacency *>(malloc(sizeof(Adjacency) * deg));
 
         int idx = 0;
         for (unsigned int j = 0; j < order; j++) {
@@ -29,7 +29,6 @@ Graph *GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, un
 
         for (unsigned int j = 0; j < deg; j++) {
             if (adj_arr[j].crossIndex == std::numeric_limits<unsigned int>::max()) {
-
                 unsigned int v = adj_arr[j].vertex;
                 Adjacency *_adj_arr = nodes[v].getAdj();
                 const unsigned int _deg = nodes[v].getDegree();

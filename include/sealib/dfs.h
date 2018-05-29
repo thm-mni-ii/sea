@@ -1,13 +1,17 @@
-#ifndef DFS_H
-#define DFS_H
+#ifndef SEALIB_DFS_H_
+#define SEALIB_DFS_H_
+
 #include "sealib/graph.h"
+#include "sealib/node.h"
+
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
 #define DFS_NOP_PROCESS (void(*)(Node*))0
-#define DFS_NOP_EXPLORE (void(*)(Node*,Node*))0
+#define DFS_NOP_EXPLORE (void(*)(Node*, Node*))0
+
 typedef void (*UserFunc1)(Node*);
-typedef void (*UserFunc2)(Node*,Node*);
+typedef void (*UserFunc2)(Node*, Node*);
 typedef unsigned int uint;
 
 /**	
@@ -23,12 +27,12 @@ typedef unsigned int uint;
  * @author Simon Heuser
  */
 class DFS {
-	private:
-		/** 
-		 * @param u: vertex (in V) to be processed
-		 */
-		static void process_standard(Graph *g,UserFunc1 preProcess,UserFunc2 preExplore,
-			UserFunc2 postExplore,UserFunc1 postProcess,uint *color,uint u);
+ private:
+	/**
+     * @param u: vertex (in V) to be processed
+     */
+	static void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
+								 UserFunc2 postExplore, UserFunc1 postProcess, uint *color, uint u);
 
 		static void process_small(uint node,
 				Graph *g,CompactArray *color,
@@ -60,4 +64,5 @@ class DFS {
 			UserFunc2 preexplore,UserFunc2 postexplore,
 			UserFunc1 postprocess);
 };
-#endif
+#endif  // SEALIB_DFS_H_
+

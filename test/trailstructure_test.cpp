@@ -10,7 +10,7 @@ TEST(TrailStructureTest, enter) {
 
     ASSERT_EQ(ts.enter(2), 3);
     ASSERT_EQ(ts.enter(4), 0);
-    ASSERT_EQ(ts.enter(1), (unsigned int) -1); //last element
+    ASSERT_EQ(ts.enter(1), (unsigned int) -1);  // last element
 }
 
 TEST(TrailStructureTest, leave) {
@@ -35,7 +35,7 @@ TEST(TrailStructureTest, matches) {
     ts.enter(1);
 
     ASSERT_EQ(ts.getMatched(0), 4);
-    ASSERT_EQ(ts.getMatched(1), 1); //has no match, same idx returned
+    ASSERT_EQ(ts.getMatched(1), 1);  // has no match, same idx returned
     ASSERT_EQ(ts.getMatched(2), 3);
     ASSERT_EQ(ts.getMatched(3), 2);
     ASSERT_EQ(ts.getMatched(4), 0);
@@ -48,13 +48,13 @@ TEST(TrailStructureTest, marry) {
     ts.enter(4);
     ts.enter(1);
 
-    ts.marry(0,1);
+    ts.marry(0, 1);
 
     ASSERT_EQ(ts.getMatched(0), 1);
-    ASSERT_EQ(ts.getMatched(1), 0); //had no match before
+    ASSERT_EQ(ts.getMatched(1), 0);  // had no match before
     ASSERT_EQ(ts.getMatched(2), 3);
     ASSERT_EQ(ts.getMatched(3), 2);
-    ASSERT_EQ(ts.getMatched(4), 4); //unmatched now
+    ASSERT_EQ(ts.getMatched(4), 4);  // unmatched now
 }
 
 TEST(TrailStructureTest, enterLeaveCombination) {

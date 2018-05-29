@@ -17,8 +17,13 @@ cache:
 
 before_install:
   - pip install --user cpp-coveralls
+  - pip install --user cpplint
 
 script:
+  - cpplint ./src/*.*
+  - cpplint ./include/*/*.*
+  - cpplint ./src-view/*.*
+  - cpplint ./test/*.*
   - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 . && make && ./bin/tests
 
 after_success:

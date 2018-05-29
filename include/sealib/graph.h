@@ -1,5 +1,5 @@
-#ifndef SEA_GRAPH_H
-#define SEA_GRAPH_H
+#ifndef SEALIB_GRAPH_H_
+#define SEALIB_GRAPH_H_
 
 #include "sealib/node.h"
 
@@ -11,11 +11,11 @@
  * @author Johannes Meintrup
  */
 class Graph {
-private:
+ private:
     Node *nodes;
     unsigned int order;
 
-public:
+ public:
     /**
      * Creates a graph out of its nodes.
      * @param _nodes Array of nodes.
@@ -44,4 +44,4 @@ public:
     unsigned int getOrder();
 };
 
-#endif //SEA_GRAPH_Hs
+#endif  // SEALIB_GRAPH_H_
