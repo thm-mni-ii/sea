@@ -10,11 +10,11 @@
  */
 class Node {
 
-private:
+ private:
     Adjacency *adj;
     unsigned int deg;
 
-public:
+ public:
     /**
      * Creates a node out of its adjacencies.
      * @param _adj array of adjacencies.

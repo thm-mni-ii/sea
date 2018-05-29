@@ -11,11 +11,11 @@
  * @author Johannes Meintrup
  */
 class Graph {
-private:
+ private:
     Node *nodes;
     unsigned int order;
 
-public:
+ public:
     /**
      * Creates a graph out of its nodes.
      * @param _nodes Array of nodes.

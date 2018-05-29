@@ -7,7 +7,7 @@
  * @author Johannes Meintrup
  */
 class Adjacency {
-public:
+ public:
     unsigned int vertex;
     unsigned int crossIndex;
 
