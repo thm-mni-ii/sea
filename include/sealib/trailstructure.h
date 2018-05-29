@@ -20,16 +20,15 @@
 namespace Sealib {
 class TrailStructure{
  private:
-    unsigned int degree;
     unsigned int lastClosed;
     unsigned int dyckStart;
 
-    boost::dynamic_bitset<> inAndOut;
-    boost::dynamic_bitset<> matched;
+    boost::dynamic_bitset<unsigned char> inAndOut;
+    boost::dynamic_bitset<unsigned char> matched;
 
     DyckMatchingStructure* dyckMatchingStructure;
 
-    boost::dynamic_bitset<> flags;  // at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven
+    boost::dynamic_bitset<unsigned char> flags;  // at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven
 
 
     unsigned int *married;
@@ -57,17 +56,17 @@ class TrailStructure{
     /**
      * @return ref to inAndOut bitset
      */
-    const boost::dynamic_bitset<> &getInAndOut() const;
+    const boost::dynamic_bitset<unsigned char> &getInAndOut() const;
 
     /**
      * @return ref to matched bitset
      */
-    const boost::dynamic_bitset<> &getMatchedBitset() const;
+    const boost::dynamic_bitset<unsigned char> &getMatchedBitset() const;
 
     /**
      * @return ref to dyckWord
      */
-    const boost::dynamic_bitset<> &getDyckWord() const;
+    const boost::dynamic_bitset<unsigned char> &getDyckWord() const;
 
     /**
      * Constructor for the TrailStructure object.

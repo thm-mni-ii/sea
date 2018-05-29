@@ -11,23 +11,43 @@
 #include "sealib/trailstructure.h"
 
 Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
-        degree(_degree),
         lastClosed((unsigned int) - 1),
-        inAndOut(degree),
-        matched(degree),
+        inAndOut( _degree),
+        matched(_degree),
         flags(3),
         married(nullptr),
-        dl(new DoubleLinkedList(degree))
+        dl(new DoubleLinkedList( _degree))
         {
 
-    if (degree % 2 == 0) {
+    if ( _degree % 2 == 0) {
         flags[2].flip();
     }  // set parity
-    if (degree == 0) {
+    if ( _degree == 0) {
         flags[1].flip();
         flags[2] = 1;
     }  // node with no edges is possible, set black
 }
+
+/*unsigned long sizeInBytes() {
+    unsigned int lastClosed;
+    unsigned int dyckStart;
+
+    boost::dynamic_bitset<unsigned char> inAndOut;
+    boost::dynamic_bitset<unsigned char> matched;
+
+    DyckMatchingStructure* dyckMatchingStructure;
+
+    boost::dynamic_bitset<unsigned char> flags;  // at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven
+
+
+    unsigned int *married;
+
+    DoubleLinkedList *dl;
+
+    return sizeof(unsigned int)  // lastClosed
+            + sizeof(unsigned int)  // dyckStart
+            + sizeof()
+}*/
 
 inline unsigned int Sealib::TrailStructure::getNextUnused() {
     if (flags[1]) {  // black node
@@ -114,7 +134,7 @@ void Sealib::TrailStructure::marry(unsigned int i, unsigned int o) {
 }
 
 unsigned int Sealib::TrailStructure::getStartingArc() {
-    for (unsigned int i =0; i < degree; i++) {
+    for (unsigned int i =0; i < inAndOut.size(); i++) {
         unsigned int match = getMatched(i);
         if (match == i && !inAndOut[i]) {
             return i;
@@ -128,12 +148,12 @@ bool Sealib::TrailStructure::isEndingArc(unsigned int i) {
 }
 
 inline void Sealib::TrailStructure::initDyckStructure() {
-    boost::dynamic_bitset<> dyckWord(matched.count());  // only matched are part of dyckword
-    dyckStart = lastClosed + 1 == degree ? 0 : lastClosed + 1;
+    boost::dynamic_bitset<unsigned char> dyckWord(matched.count());  // only matched are part of dyckword
+    dyckStart = lastClosed + 1 == inAndOut.size() ? 0 : lastClosed + 1;
 
     if (dyckWord.size() > 0) {
         while (!matched[dyckStart]) {  // start is the first opening bracket after the last one closed.
-            if (dyckStart == degree - 1) {
+            if (dyckStart == inAndOut.size() - 1) {
                 dyckStart = 0;
             } else {
                 dyckStart+=1;
@@ -146,7 +166,7 @@ inline void Sealib::TrailStructure::initDyckStructure() {
                 dyckWord[dyckIndex++] = inAndOut[j];
             }
             // increment circular
-            j = j == degree - 1 ? 0 : j + 1;
+            j = j == inAndOut.size() - 1 ? 0 : j + 1;
         } while (j != dyckStart);
         dyckMatchingStructure = new RecursiveDyckMatchingStructure(dyckWord);
     }
@@ -168,10 +188,10 @@ unsigned int Sealib::TrailStructure::getMatchedNaive(unsigned int idx) {
     if(!matched[idx]) return idx; //has no match
 
     //get start idx for the dyck word
-    unsigned int start = lastClosed + 1 == degree ? 0 : lastClosed + 1;
+    unsigned int start = lastClosed + 1 == inAndOut.size() ? 0 : lastClosed + 1;
 
     while(!matched[start]) { //start is the first opening bracket after the last one closed.
-        if(start == degree - 1) {
+        if(start == inAndOut.size() - 1) {
             start = 0;
         } else {
             start+=1;
@@ -180,7 +200,7 @@ unsigned int Sealib::TrailStructure::getMatchedNaive(unsigned int idx) {
 
     unsigned int j = start;
     unsigned int p = 0;
-    unsigned int *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * degree / 2)));
+    unsigned int *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * inAndOut.size() / 2)));
     do {
         if(matched[j]) { //only push matched index
             if(inAndOut[j]) { // '('
@@ -193,7 +213,7 @@ unsigned int Sealib::TrailStructure::getMatchedNaive(unsigned int idx) {
         }
 
         //increment circular
-        j = j == degree - 1 ? 0 : j + 1;
+        j = j == inAndOut.size() - 1 ? 0 : j + 1;
 
     } while(j != start);
 
@@ -219,7 +239,7 @@ unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) {
         if (matched[s]) {
             dyckIdx++;
         }
-        s = (s == (degree - 1)) ? 0 : s+1;
+        s = (s == (inAndOut.size() - 1)) ? 0 : s+1;
     }
     unsigned long match = dyckMatchingStructure->findMatch(dyckIdx);
     if(match == dyckIdx) {
@@ -231,23 +251,23 @@ unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) {
         if (matched[s]) {
             i++;
         }
-        s = (s == (degree - 1)) ? 0 : s+1;
+        s = (s == (inAndOut.size() - 1)) ? 0 : s+1;
     }
     while (!matched[s]) {
-        s = (s == (degree - 1)) ? 0 : s+1;
+        s = (s == (inAndOut.size() - 1)) ? 0 : s+1;
     }
     return s;
 }
 
 unsigned int Sealib::TrailStructure::getDegree() const {
-    return degree;
+    return static_cast<unsigned int>(inAndOut.size());
 }
 
-const boost::dynamic_bitset<> &Sealib::TrailStructure::getInAndOut() const {
+const boost::dynamic_bitset<unsigned char> &Sealib::TrailStructure::getInAndOut() const {
     return inAndOut;
 }
 
-const boost::dynamic_bitset<> &Sealib::TrailStructure::getMatchedBitset() const {
+const boost::dynamic_bitset<unsigned char> &Sealib::TrailStructure::getMatchedBitset() const {
     return matched;
 }
 

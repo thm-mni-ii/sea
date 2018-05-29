@@ -12,7 +12,7 @@ namespace Sealib {
 
 class DifferenceList {
 private:
- boost::dynamic_bitset<> bits;
+ boost::dynamic_bitset<unsigned char> bits;
  unsigned long currValue;
  unsigned long iterationValue;
  unsigned long iterationIdx;

@@ -16,15 +16,14 @@
 namespace Sealib{
 class RankStructure {
  protected:
-    unsigned char segmentLength;
+    static const unsigned char segmentLength = 8;
+    const boost::dynamic_bitset<unsigned char> bitset;
     unsigned int segmentCount;
     unsigned int maxRank;
-    std::vector<std::vector<unsigned char>> localRankLookupTable;
+
 
     std::vector<unsigned int> setCountTable;
     std::vector<unsigned int> nonEmptySegments;
-
-    unsigned char rankLocal(unsigned long segment, unsigned char localIdx) const;
 
     unsigned int setBefore(unsigned long segment) const;
 
@@ -42,7 +41,7 @@ class RankStructure {
     /**
      * @param bitset rankselect bitset
      */
-    explicit RankStructure(const boost::dynamic_bitset<> &bitset);
+    explicit RankStructure(const boost::dynamic_bitset<unsigned char> &bitset_);
 
     /**
      * default empty constructor

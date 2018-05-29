@@ -19,43 +19,37 @@ inline const Sealib::LocalDyckTable::Data* Sealib::RecursiveDyckMatchingStructur
     };
 }
 
-Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_, unsigned char recursions) :
+Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const boost::dynamic_bitset<unsigned char> &word_, unsigned char recursions) :
     DyckMatchingStructure(word_),
-    segmentLength(RankSelect::log2(word.size())),
     segments(static_cast<unsigned int>(word.size() / segmentLength)),
     lastSegment(static_cast<unsigned char>(word.size() % segmentLength)),
     pioneerMatchingStructure(nullptr) {
-
-    if(segmentLength % 2 == 0) {
-        segmentLength++;
-        lastSegment = static_cast<unsigned char>(word.size() % segmentLength);
-    }
     
-    boost::dynamic_bitset<> pioneerRankSelectBitset(word.size());
+    boost::dynamic_bitset<unsigned char> pioneerRankSelectBitset(word.size());
     initializePioneerRankSelectBitset(pioneerRankSelectBitset);
 
     pioneerRankSelect = new RankSelect(pioneerRankSelectBitset);
     unsigned long maxRank = pioneerRankSelect->rank(pioneerRankSelectBitset.size());
         if(maxRank > 0) {
-            boost::dynamic_bitset<> pioneerWord(maxRank);
+            boost::dynamic_bitset<unsigned char> pioneerWord(maxRank);
             for(unsigned long i = 0; i < maxRank; i++) {
                 unsigned long idx = pioneerRankSelect->select(i+1);
                 pioneerWord[i] = word[idx - 1];
             }
-
             if(recursions > 0) {
                 pioneerMatchingStructure = new Sealib::RecursiveDyckMatchingStructure(pioneerWord, static_cast<unsigned char>(recursions - 1));
             } else {
                 pioneerMatchingStructure = new Sealib::DyckMatchingStructure(pioneerWord);
             }
     }
+
     pioneerRankSelectBitset.reset();
 }
 
-Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_) : RecursiveDyckMatchingStructure(word_, 0) {
+Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const boost::dynamic_bitset<unsigned char> &word_) : RecursiveDyckMatchingStructure(word_, 0) {
 }
 
-void Sealib::RecursiveDyckMatchingStructure::initializePioneerRankSelectBitset(boost::dynamic_bitset<> &pioneerRankSelectBitset) {
+void Sealib::RecursiveDyckMatchingStructure::initializePioneerRankSelectBitset(boost::dynamic_bitset<unsigned char> &pioneerRankSelectBitset) {
     for (unsigned int i = 0; i < segments; i++) {
         unsigned long segment;
         unsigned long beg = segmentLength * i;
@@ -139,9 +133,9 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::findMatch(unsigned long id
     // match is not local
     if (word[idx]) {  // opening global
         unsigned long p_wp = pioneerRankSelect->rank(idx + 1);
-        unsigned long p = pioneerRankSelect->select(static_cast<unsigned int>(p_wp));
+        unsigned long p = pioneerRankSelect->select(static_cast<unsigned int>(p_wp)) - 1;
         unsigned long pMatch_wp = pioneerMatchingStructure->findMatch(p_wp - 1);
-        long pMatch = pioneerRankSelect->select(pMatch_wp + 1);
+        long pMatch = pioneerRankSelect->select(pMatch_wp + 1) - 1;
 
         unsigned long pSeg;
         unsigned long pSegment = p / segmentLength;
@@ -159,7 +153,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::findMatch(unsigned long id
         unsigned long pMatchSegment = static_cast<unsigned long>(pMatch / segmentLength);
         unsigned long matchSegmentIdx = static_cast<unsigned long>(pMatch % segmentLength);
 
-        if (pMatchSegment != lastSegment || matchSegmentIdx == 0) {  // not last segment or last segment has normal size, it is certain we can get a subword of length segmentLength
+        if (pMatch < segmentLength * segments) {  // not last segment or last segment has normal size, it is certain we can get a subword of length segmentLength
             beg = pMatchSegment * segmentLength;
             boost::to_block_range(word, make_tuple(beg, static_cast<unsigned long>(segmentLength), std::ref(pMatchSeg)));
             int pMatchDepth = getTableEntry(segmentLength,pMatchSeg)->localDepths[matchSegmentIdx];
@@ -187,16 +181,16 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::findMatch(unsigned long id
         }
     } else {  // closing global
         unsigned long p_wp = pioneerRankSelect->rank(idx + 1);
-        unsigned long p = pioneerRankSelect->select(static_cast<unsigned int>(p_wp));
-        if (p < idx + 1) {
+        unsigned long p = pioneerRankSelect->select(static_cast<unsigned int>(p_wp)) - 1;
+        if (p < idx) {
             p_wp++;
-            p = pioneerRankSelect->select(static_cast<unsigned int>(p_wp));
+            p = pioneerRankSelect->select(static_cast<unsigned int>(p_wp)) - 1;
         }
         unsigned long pMatch_wp = pioneerMatchingStructure->findMatch(p_wp - 1);
-        unsigned long pMatch = pioneerRankSelect->select(pMatch_wp + 1);
+        unsigned long pMatch = pioneerRankSelect->select(pMatch_wp + 1) - 1;
 
-        unsigned long pSegment = (p - 1) / segmentLength;
-        unsigned long pSegmentIdx = (p - 1) % segmentLength;
+        unsigned long pSegment = p / segmentLength;
+        unsigned long pSegmentIdx = p % segmentLength;
 
         unsigned long pSeg;
         unsigned long beg;
@@ -205,7 +199,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::findMatch(unsigned long id
         int bDepth;
         int depthDiff;
 
-        if (pSegment != lastSegment || lastSegment == 0) {  // not in last segment
+        if (pMatch < segmentLength * segments) {  // not in last segment
             beg = pSegment * segmentLength;
             boost::to_block_range(word, make_tuple(beg, static_cast<unsigned long>(segmentLength), std::ref(pSeg)));
 
@@ -226,8 +220,8 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::findMatch(unsigned long id
             depthDiff = pDepth - bDepth;
         }
         unsigned long pMatchSeg;
-        unsigned long pMatchSegment = (pMatch - 1) / segmentLength;
-        unsigned long matchSegmentIdx = (pMatch - 1) % segmentLength;
+        unsigned long pMatchSegment = pMatch / segmentLength;
+        unsigned long matchSegmentIdx = pMatch % segmentLength;
 
         beg = pMatchSegment * segmentLength;
         boost::to_block_range(word, make_tuple(beg, static_cast<unsigned long>(segmentLength), std::ref(pMatchSeg)));

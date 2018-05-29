@@ -8,7 +8,6 @@
 #include "sealib/graphalgorithms.h"
 
 Sealib::TrailStructure ** Sealib::GraphAlgorithms::hierholzer(Sealib::Graph *g) {
-
     unsigned  int order = g->getOrder();
     Sealib::TrailStructure **ts = static_cast<Sealib::TrailStructure **>(malloc((sizeof(Sealib::TrailStructure *) * order)));
 

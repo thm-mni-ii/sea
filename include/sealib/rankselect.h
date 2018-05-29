@@ -5,8 +5,6 @@
 #ifndef SEA_RANKSELECT_H
 #define SEA_RANKSELECT_H
 
-
-
 #include "rankstructure.h"
 namespace Sealib{
 
@@ -17,17 +15,14 @@ namespace Sealib{
  */
 class RankSelect : public RankStructure {
  private:
-    RankStructure firstInSegment;
-    std::vector<std::vector<unsigned char>> localSelectLookupTable;
-
-    inline unsigned char selectLocal(unsigned long segment, unsigned char localIdx) const;
+    RankStructure *firstInSegment;
 
 public:
 
     /**
      * @param bitset for rankselect
      */
-    explicit RankSelect(const boost::dynamic_bitset<> &bitset);
+    explicit RankSelect(const boost::dynamic_bitset<unsigned char> &bitset);
 
     RankSelect();
 

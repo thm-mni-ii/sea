@@ -8,33 +8,36 @@
 inline unsigned long Sealib::DyckMatchingStructure::findMatchNaive(unsigned long idx) {
     unsigned int j = 0;
     unsigned int p = 0;
-    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * word.size() / 2) + 1));
+    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * word.size())));
     do {
-        if (word[j]) {  // '('
-            stack[p++] = j;
-        } else {
-            unsigned int i = stack[--p];
-            if (idx == i) {
-                free(stack);
-                return j;
+            if (word[j]) {  // '('
+                stack[p++] = j;
+            } else {
+                if(p == 0) {
+                    return idx;
+                }
+                unsigned int i = stack[--p];
+                if (idx == i) {
+                    free(stack);
+                    return j;
+                }
+                if (idx == j) {
+                    free(stack);
+                    return i;
+                }
             }
-            if (idx == j) {
-                free(stack);
-                return i;
-            }
-        }
-        j++;
+            j++;
     } while (j != word.size());
     free(stack);
 
     return idx;;
 }
 
-const boost::dynamic_bitset<> &Sealib::DyckMatchingStructure::getWord() const {
+const boost::dynamic_bitset<unsigned char> &Sealib::DyckMatchingStructure::getWord() const {
     return word;
 }
 
-Sealib::DyckMatchingStructure::DyckMatchingStructure(const boost::dynamic_bitset<> &word_) : word(word_){
+Sealib::DyckMatchingStructure::DyckMatchingStructure(const boost::dynamic_bitset<unsigned char> &word_) : word(word_){
 
 }
 
@@ -42,7 +45,7 @@ unsigned long Sealib::DyckMatchingStructure::findMatch(unsigned long idx) {
     return findMatchNaive(idx);
 }
 
-void Sealib::DyckMatchingStructure::printDyckWord(const boost::dynamic_bitset<> &word)  {
+void Sealib::DyckMatchingStructure::printDyckWord(const boost::dynamic_bitset<unsigned char> &word)  {
     for(unsigned long i = 0; i < word.size(); i++) {
         if(word[i]) {
             std::cout << "(";
@@ -53,7 +56,7 @@ void Sealib::DyckMatchingStructure::printDyckWord(const boost::dynamic_bitset<> 
     std::cout << std::endl;
 }
 
-void Sealib::DyckMatchingStructure::printDyckWord(const boost::dynamic_bitset<> &word, unsigned long breaks) {
+void Sealib::DyckMatchingStructure::printDyckWord(const boost::dynamic_bitset<unsigned char> &word, unsigned long breaks) {
     for(unsigned long i = 0; i < word.size(); i++) {
         if(i % breaks == 0 && i != 0) {
             std::cout << " ";

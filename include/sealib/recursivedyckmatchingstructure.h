@@ -17,20 +17,18 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure{
 
     static const Sealib::LocalDyckTable::Data* getTableEntry(unsigned char segmentSize, unsigned long segment);
 
-    void initializePioneerRankSelectBitset(boost::dynamic_bitset<> &pioneerRankSelectBitset);
+    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<unsigned char> &word_, unsigned char recursions);
 
-    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_, unsigned char recursions);
-
-    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<> &word_);
+    explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<unsigned char> &word_);
     unsigned long findMatch(unsigned long idx);
  private:
-    unsigned char segmentLength;
+    static const unsigned char segmentLength = 7;
     unsigned int segments;
     unsigned char lastSegment;
     DyckMatchingStructure *pioneerMatchingStructure;
     RankSelect *pioneerRankSelect;
 
-
+    void initializePioneerRankSelectBitset(boost::dynamic_bitset<unsigned char> &pioneerRankSelectBitset);
 };
 }  // namespace Sealib
 #endif //SEA_RECURSIVEDYCKMATCHINGSTRUCTURE_H

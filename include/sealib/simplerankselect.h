@@ -8,7 +8,7 @@
 namespace Sealib {
 class SimpleRankSelect {
  private:
-    boost::dynamic_bitset<> bitset;
+    boost::dynamic_bitset<unsigned char> bitset;
 
  public:
     /**
@@ -25,7 +25,7 @@ class SimpleRankSelect {
      */
     unsigned long rank(unsigned long k) const;
 
-    SimpleRankSelect(const boost::dynamic_bitset<> &bitset);
+    SimpleRankSelect(const boost::dynamic_bitset<unsigned char> &bitset);
     SimpleRankSelect();
 };
 }

@@ -18,7 +18,7 @@ Sealib::DifferenceList::DifferenceList(unsigned long maxElements, unsigned long 
         reverse(false){
     std::cout << (maxElements*maxElements / maxValue * RankStructure::log2(maxValue)) << std::endl;
     std::cout << (maxElements* RankStructure::log2(2 + maxValue/maxElements)) << std::endl;
-    bits = boost::dynamic_bitset<>((maxValue/( (maxValue/maxElements) * (maxValue/maxElements) )) * RankStructure::log2(maxValue) + 2);
+    bits = boost::dynamic_bitset<unsigned char>((maxValue/( (maxValue/maxElements) * (maxValue/maxElements) )) * RankStructure::log2(maxValue) + 2);
     std::cout << bits.size() << std::endl;
 }
 
