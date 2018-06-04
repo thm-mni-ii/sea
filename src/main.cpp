@@ -1,21 +1,8 @@
-
-
 #include <ctime>
-#include <iostream>
-#include <include/sealib/graph.h>
 #include <include/sealib/graphio.h>
-#include <include/sealib/rankselect.h>
+#include <iostream>
 #include <include/sealib/graphalgorithms.h>
-#include <include/sealib/differencelist.h>
-#include <include/sealib/recursivedyckmatchingstructure.h>
-#include <include/sealib/doublelinkedlist.h>
 #include <include/sealib/graphcreator.h>
-#include <QtWidgets/QApplication>
-#include <QtGui/QIcon>
-#include <include/sealib/localranktable.h>
-#include <include/sealib/localselecttable.h>
-#include <include/sealib/simpletrail.h>
-#include "mainwindow.h"
 
 void testHierholzer() {
     clock_t start = clock();
@@ -32,175 +19,91 @@ void testHierholzer() {
     std::cout << "STRING: " << (end - start)/CLOCKS_PER_SEC << "s" << std::endl;
 }
 
-void testRankStructure() {
-    boost::dynamic_bitset<unsigned char> bits(16);
-    bits[0] = 1;
-    bits[7] = 1;
-    bits[8] = 1;
-    bits[15] = 1;
-    Sealib::RankSelect rankSelect(bits);
-    std::cout << rankSelect.select(1) << std::endl;
-    std::cout << rankSelect.select(2) << std::endl;
-    std::cout << rankSelect.select(3) << std::endl;
-    std::cout << rankSelect.select(4) << std::endl;
-}
+clock_t profileHierholzer(unsigned int m, unsigned int n, bool getMatches = false) {
+    Sealib::Graph *g = Sealib::GraphIO::randomEulerianSealibGraph(m, n);
 
-
-boost::dynamic_bitset<> wrapDyckWord(const boost::dynamic_bitset<> &toWrap) {
-    boost::dynamic_bitset<> wrapped(toWrap.size() + 2);
-    wrapped[0] = 1;
-    for(unsigned long i = 0; i < toWrap.size(); i++) {
-        wrapped[i+1] = toWrap[i];
-    }
-    wrapped[wrapped.size()-1] = 0;
-    return wrapped;
-}
-
-boost::dynamic_bitset<> concatDyckWord(const boost::dynamic_bitset<>& word1,const boost::dynamic_bitset<>& word2) {
-    boost::dynamic_bitset<> res(word1);
-    res.resize(word1.size()+word2.size());
-    size_t bs1Size=word1.size();
-    size_t bs2Size=word2.size();
-
-    for(size_t i=0;i<bs2Size;i++)
-        res[i+bs1Size]=word2[i];
-    return res;
-}
-boost::dynamic_bitset<> generateRandomDyckword(unsigned long size) {
-    boost::dynamic_bitset<> bits(2);
-    bits[0] = 1;
-    while(bits.size() < size) {
-        if(rand() % 2 == 0) {
-            bits = wrapDyckWord(bits);
-        } else {
-            bits = concatDyckWord(bits, generateRandomDyckword(size/2));
-        };
-    }
-
-    return bits;
-}
-
-int visual(int argc, char *argv[]) {
-    QApplication app(argc, argv);
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-    QIcon appIcon;
-    appIcon.addFile(":/Icons/AppIcon32");
-    appIcon.addFile(":/Icons/AppIcon128");
-    app.setWindowIcon(appIcon);
-    MainWindow mainWindow;
-    mainWindow.show();
-    return app.exec();
-}
-
-void testAllDyckWords() {
-    unsigned char c1 = 0 ;
-    do {
-        unsigned char c2 = 0 ;
-        do {
-            unsigned char c3 = 0;
-            do {
-                for(unsigned int off = 0; off < 20; off+=2) {
-                    boost::dynamic_bitset<unsigned char> bs;
-                    bs.append(c1);
-                    bs.append(c2);
-                    bs.append(c3);
-                    bs.resize(bs.size() - off);
-
-                    if (bs.count() == bs.size() / 2) {
-                        Sealib::DyckMatchingStructure dyckMatchingStructure(bs);
-                        std::vector<unsigned long> matches(bs.size());
-                        bool isWord = true;
-                        for (unsigned int i = 0; i < bs.size(); i++) {
-                            unsigned long match = dyckMatchingStructure.findMatch(i);
-                            if (match == i) {
-                                isWord = false;
-                                break;
-                            }
-                            matches[i] = match;
-                        }
-                        if (isWord) {
-                            Sealib::RecursiveDyckMatchingStructure recursiveDyckMatchingStructure(bs);
-                            for (unsigned int i = 0; i < bs.size(); i++) {
-                                unsigned long match = recursiveDyckMatchingStructure.findMatch(i);
-                                if (match != matches[i]) {
-                                    std::cout << "WORD: " << std::endl;
-                                    Sealib::DyckMatchingStructure::printDyckWord(bs);
-                                    std::cout << "CORRECT MATCH: " << i << " : " << matches[i] << std::endl;
-                                    std::cout << "ENCOUNTERED MATCH: " << i << " : " << match << std::endl;
-                                }
-                            }
-                        }
-                    }
-                }
+    if(getMatches) {
+        clock_t start = clock();
+        Sealib::TrailStructure **ts = Sealib::GraphAlgorithms::hierholzer(g);
+        for(unsigned int i = 0; i < g->getOrder(); i++) {
+            for(unsigned int j = 0; j < ts[i]->getDegree(); j++) {
+                ts[i]->getMatched(j);
             }
-            while (++c3);
         }
-        while ( ++c2 ) ;
+        clock_t end = clock();
+        delete(g);
+        return (end - start);
+    } else {
+        clock_t start = clock();
+        Sealib::GraphAlgorithms::hierholzer(g);
+        clock_t end = clock();
+        delete(g);
+        return (end - start);
     }
-    while ( ++c1 ) ;
 }
 
-int stuff(){ return 0;}
+clock_t profileHierholzerOverhead(unsigned int m, unsigned int n) {
+    clock_t start = clock();
+    Sealib::Graph *g = Sealib::GraphIO::randomEulerianSealibGraph(m, n);
+    delete(g);
+    clock_t end = clock();
+    return (end - start);
+}
 
-int main() {
-    Sealib::SimpleTrail simpleTrail;
-    for(unsigned int i = 0; i < 5; i++) {
-        simpleTrail.addEdge(i);
-    }
-    for(auto a: simpleTrail.getTrail()) {
-        std::cout << a << " ";
-    }
-    std::cout << std::endl;
+clock_t profileHierholzerSimple(unsigned int m, unsigned int n, bool getMatches = false) {
+    Sealib::Graph *g = Sealib::GraphIO::randomEulerianSealibGraph(m, n);
 
-    Sealib::SimpleTrail subTrail;
-    for(unsigned int i = 5; i < 10; i++) {
-        subTrail.addEdge(i);
+    if(getMatches) {
+        clock_t start = clock();
+        Sealib::SimpleTrail ts = Sealib::GraphAlgorithms::hierholzerSimple(g);
+        for(auto a: ts.getTrail()) {
+            std::get<0>(a);
+            std::get<1>(a);
+        }
+        clock_t end = clock();
+        delete(g);
+        return (end - start);
+    } else {
+        clock_t start = clock();
+        Sealib::GraphAlgorithms::hierholzerSimple(g);
+        clock_t end = clock();
+        delete(g);
+        return (end - start);
     }
-    for(auto a: subTrail.getTrail()) {
-        std::cout << a << " ";
-    }
-    std::cout << std::endl;
+}
 
-    simpleTrail.insertSubTrail(subTrail, 5);
-    for(auto a: simpleTrail.getTrail()) {
-        std::cout << a << " ";
-    }
-    std::cout << std::endl;
-
-
-    //testHierholzer();
-    /*testAllDyckWords();
-    boost::dynamic_bitset<unsigned char> bs(22);
-    for(unsigned int i = 0; i < 8; i++) {
-        bs[i] = 1;
-    }
-    bs[13] = 1;
-    bs[14] = 1;
-    bs[15] = 1;
-    Sealib::DyckMatchingStructure::printDyckWord(bs);
-    Sealib::DyckMatchingStructure dyckMatchingStructure(bs);
-    Sealib::RecursiveDyckMatchingStructure recursiveDyckMatchingStructure(bs);
-    for(unsigned int i = 0; i < bs.size(); i++) {
-        unsigned long match = recursiveDyckMatchingStructure.findMatch(i);
-        unsigned long matchSimple = dyckMatchingStructure.findMatch(i);
-        if(match != matchSimple) {
-            std::cout << "WORD: " << std::endl;
-            Sealib::DyckMatchingStructure::printDyckWord(bs);
-            std::cout << "CORRECT MATCH: " << i << " : " << matchSimple << std::endl;
-            std::cout << "ENCOUNTERED MATCH: " << i << " : " << match << std::endl;
+int main(int argc, char *argv[]) {
+    std::string mPrefix("m=");
+    std::string nPrefix("m=");
+    std::string typePrefix("type=");
+    std::string traversePrefix("traverse=");
+    int m = 100;
+    int n = 1000;
+    bool overhead = false;
+    bool simple = false;
+    bool traverse = false;
+    for(int i = 1; i < argc; i++) {
+        std::string arg(argv[i]);
+        if (!arg.compare(0, mPrefix.size(), mPrefix)) {
+            m = atoi(arg.substr(mPrefix.size()).c_str());
+        } else if (!arg.compare(0, nPrefix.size(), nPrefix)) {
+            n = atoi(arg.substr(nPrefix.size()).c_str());
+        } else if (!arg.compare(0, typePrefix.size(), typePrefix)) {
+            std::string subString = arg.substr(typePrefix.size());
+            simple = !subString.compare("simple");
+        } else if (!arg.compare(0, typePrefix.size(), typePrefix)) {
+            std::string subString = arg.substr(typePrefix.size());
+            overhead = !subString.compare("overhead");
+        } else if (!arg.compare(0, traversePrefix.size(), traversePrefix)) {
+            std::string subString = arg.substr(traversePrefix.size());
+            traverse = !subString.compare("true");
         }
     }
-
-    return 0;*/
-
-
-    /*QApplication app(argc, argv);
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps);
-    QIcon appIcon;
-    appIcon.addFile(":/Icons/AppIcon32");
-    appIcon.addFile(":/Icons/AppIcon128");
-    app.setWindowIcon(appIcon);
-    MainWindow mainWindow;
-    mainWindow.show();
-    return app.exec();*/
+    if(overhead) {
+        std::cout << profileHierholzerOverhead(m,n);
+    } else if(simple) {
+        std::cout << profileHierholzerSimple(m,n, traverse);
+    } else {
+        std::cout << profileHierholzer(m,n, traverse);
+    }
 }

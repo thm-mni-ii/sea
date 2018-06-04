@@ -5,8 +5,9 @@
 #ifndef SEA_GRAPHALGORITHMS_H
 #define SEA_GRAPHALGORITHMS_H
 
-#include "sealib/graph.h"
-#include "sealib/trailstructure.h"
+#include <sealib/graph.h>
+#include <sealib/trailstructure.h>
+#include <sealib/simpletrail.h>
 
 /**
  * Collection of Space Efficient Algorithms for Graphs.
@@ -23,7 +24,7 @@ class GraphAlgorithms {
      */
     static Sealib::TrailStructure ** hierholzer(Sealib::Graph *g);
 
-    static std::map<unsigned int, std::map<unsigned int, unsigned int>*> hierholzerSimple(Sealib::Graph *g);
+    static Sealib::SimpleTrail hierholzerSimple(Sealib::Graph *g);
 };
 }
 

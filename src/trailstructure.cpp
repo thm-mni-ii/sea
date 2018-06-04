@@ -20,10 +20,10 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
         {
 
     if ( _degree % 2 == 0) {
-        flags[2].flip();
+        flags[2] = 1;
     }  // set parity
     if ( _degree == 0) {
-        flags[1].flip();
+        flags[1] = 1;
         flags[2] = 1;
     }  // node with no edges is possible, set black
 }
@@ -71,6 +71,7 @@ unsigned int Sealib::TrailStructure::leave() {
     unsigned int u = getNextUnused();
     if(u != (unsigned int) -1) {
         lastClosed = u;
+        flags[3] = 1;
     }
     if (flags[1]) {
         delete dl;
@@ -87,7 +88,8 @@ unsigned int Sealib::TrailStructure::enter(unsigned int i) {
     inAndOut[i] = 1;
     flags[2].flip();
     if(next == i) {  // no elements left
-        flags[1].flip();  // blacken it
+        flags[3] = 1;  // has unmatched elements
+        flags[1] = 1;  // blacken it
         flags[2] = 1;
         // black now, unused is not needed anymore
         delete dl;
@@ -134,6 +136,8 @@ void Sealib::TrailStructure::marry(unsigned int i, unsigned int o) {
 }
 
 unsigned int Sealib::TrailStructure::getStartingArc() {
+    if(!flags[3]) return (unsigned int) - 1;
+
     for (unsigned int i =0; i < inAndOut.size(); i++) {
         unsigned int match = getMatched(i);
         if (match == i && !inAndOut[i]) {

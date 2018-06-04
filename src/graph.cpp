@@ -7,3 +7,4 @@ unsigned int Sealib::Graph::head(unsigned int u, unsigned int k) { return nodes[
 unsigned int Sealib::Graph::getOrder() { return order; }
 
 Sealib::Graph::Graph(Node *_nodes, unsigned int _order) : nodes(_nodes), order(_order) {}
+

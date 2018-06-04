@@ -28,7 +28,8 @@ class TrailStructure{
 
     DyckMatchingStructure* dyckMatchingStructure;
 
-    boost::dynamic_bitset<unsigned char> flags;  // at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven
+    // at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven, at(3) flipped = has no unmatched
+    boost::dynamic_bitset<unsigned char> flags;
 
 
     unsigned int *married;
