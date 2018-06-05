@@ -30,7 +30,7 @@ void DFS::process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 void DFS::process_small(uint node, Graph *g, CompactArray *color,
                         UserFunc1 preProcess, UserFunc2 preExplore,
                         UserFunc2 postExplore, UserFunc1 postProcess,
-                        double epsilon) {
+                        double epsilon, bool isRestoring) {
   unsigned n = g->getOrder();
   unsigned q =
       (unsigned)ceil(n / log(n) * epsilon /
@@ -42,7 +42,7 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
       *kt = new Stack;    // new Stack((unsigned)ceil(n/(double)q));
   Stack *s1 = new Stack, *s2 = new Stack;  // new Stack(q)
   Stack *k1 = new Stack, *k2 = new Stack;
-  st->push(0);
+  if (!isRestoring) st->push(0);
   /*for(uint a=1; a<=n; a++) {
           if(a%(q+1)==q||a==n) trailers->push(a);
           uint b=tryPush(a,s1,s2);
@@ -60,16 +60,35 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
           printf(" %u \n",s1->pop());
   }*/
   tryPush(node, q, s1, s2, st);
+  if (isRestoring && s2->top() == st->top()) return;
   tryPush(1, q, k1, k2, kt);
   uint u, k;
   while (st->empty()) {
     try {
       u = tryPop(s1, s2, st);
     } catch (unsigned e) {
+      if (e == DFS_NO_MORE_NODES) {
 #ifdef DFS_DEBUG
-      printf("no more nodes\n");
+        printf("no more nodes\n");
 #endif
-      return;
+        return;
+      } else if (e == DFS_DO_RESTORE) {
+#ifdef DFS_DEBUG
+        printf("(restoring ... ");
+#endif
+        for (uint a = 0; a < g->getOrder(); a++) {
+          if (color->get(a) == DFS_GRAY) color->insert(a, DFS_WHITE);
+        }
+        for (uint a = 0; a < g->getOrder(); a++) {
+          if (color->get(a) == DFS_WHITE)
+            process_small(a, g, color, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                          DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon, true);
+        }
+
+#ifdef DFS_DEBUG
+        printf("done)\n");
+#endif
+      }
     }
     k = tryPop(k1, k2, kt);
     color->insert(u, DFS_GRAY);
@@ -98,6 +117,7 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
   }
 }
 void DFS::tryPush(uint u, uint q, Stack *low, Stack *high, Stack *trailers) {
+// todo: throw DFS_RESTORE_DONE if top(high)==top(trailers)
 #ifdef DFS_DEBUG
   printf("-> tryPush %u ", u);
 #endif
@@ -138,15 +158,9 @@ uint DFS::tryPop(Stack *low, Stack *high, Stack *trailers) {  // fix
     low->pop();
   } else {
     if (!trailers->empty()) {
-#ifdef DFS_DEBUG
-      printf("(restoring ... ");
-#endif
-// todo: restore
-#ifdef DFS_DEBUG
-      printf("done)\n");
-#endif
+      throw DFS_DO_RESTORE;
     } else {
-      throw 0;
+      throw DFS_NO_MORE_NODES;
     }
   }
 #ifdef DFS_DEBUG
@@ -180,7 +194,10 @@ void DFS::runSmallDFS(Graph *g, void (*preProcess)(Node *),
       n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n
   CompactArray *color = new CompactArray(n, e);
   for (uint a = 0; a < g->getOrder(); a++) color->insert(a, DFS_WHITE);
-  process_small(0, g, color, preProcess, preExplore, postExplore, postProcess,
-                e);
+  for (uint a = 0; a < g->getOrder(); a++) {
+    if (color->get(a) == DFS_WHITE)
+      process_small(a, g, color, preProcess, preExplore, postExplore,
+                    postProcess, e, false);
+  }
   delete color;
 }

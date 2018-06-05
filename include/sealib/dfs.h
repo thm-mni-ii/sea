@@ -11,6 +11,8 @@
 #define DFS_BLACK 2
 #define DFS_NOP_PROCESS (void (*)(Node *))0
 #define DFS_NOP_EXPLORE (void (*)(Node *, Node *))0
+#define DFS_NO_MORE_NODES 0
+#define DFS_DO_RESTORE 1
 
 typedef void (*UserFunc1)(Node *);
 typedef void (*UserFunc2)(Node *, Node *);
@@ -41,7 +43,7 @@ class DFS {
   static void process_small(uint node, Graph *g, CompactArray *color,
                             UserFunc1 preProcess, UserFunc2 preExplore,
                             UserFunc2 postExplore, UserFunc1 postProcess,
-                            double epsilon);
+                            double epsilon, bool isRestoring);
 
   static void tryPush(uint u, uint q, Stack *low, Stack *high, Stack *trailers);
   static uint tryPop(Stack *low, Stack *high, Stack *trailers);
