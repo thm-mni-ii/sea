@@ -127,7 +127,7 @@ void DFS::tryPush(uint u, uint q, Stack *low, Stack *high, Stack *trailers) {
 #endif
     low->push(u);
 #ifdef DFS_DEBUG
-    printf(" trailer %u => %u\n", trailers->peek(), u);
+    printf(" trailer %u => %u\n", trailers->top(), u);
 #endif
     trailers->pop();
     trailers->push(u);
@@ -194,7 +194,9 @@ void DFS::runSmallDFS(Graph *g, void (*preProcess)(Node *),
       n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n
   CompactArray *color = new CompactArray(n, e);
   for (uint a = 0; a < g->getOrder(); a++) color->insert(a, DFS_WHITE);
+  printf("runSmallDFS\n");
   for (uint a = 0; a < g->getOrder(); a++) {
+    printf("node %u: color %d\n", a, color->get(COMPACTARRAY_VALUE, a));
     if (color->get(a) == DFS_WHITE)
       process_small(a, g, color, preProcess, preExplore, postExplore,
                     postProcess, e, false);

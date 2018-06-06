@@ -2,7 +2,8 @@
 #include <stdio.h>
 
 void CompactArray::insert(unsigned int i, unsigned int p) {
-  // values per group: 3/e, groups per data: dataWidth/groupWidth
+  // values per group: 3/e, groups per datum: dataWidth/groupWidth => values per
+  // datum: dataWidth/(groupWidth/(3/e))
   if (i >= valueCount) return;
   int groupIndex = static_cast<int>(floor(i / static_cast<double>(3 / e)));
   int dataIndex = static_cast<int>(
@@ -11,7 +12,6 @@ void CompactArray::insert(unsigned int i, unsigned int p) {
       fmod(groupIndex, dataWidth / static_cast<double>(groupWidth)));
   int valueOffset = static_cast<int>(fmod(i, 3 / e));
   // insert p into slot 'data X + group Y + value Z'
-  // data[dataIndex]=~0;
   unsigned a = data[dataIndex];
 #ifdef COMPACTARRAY_DEBUG
   printf("before: %08x, ", a);
@@ -39,15 +39,60 @@ void CompactArray::insert(unsigned int i, unsigned int p) {
 }
 
 unsigned int CompactArray::get(unsigned int selector, unsigned int i) {
+  // printf("TODO: CompactArray::get\n");
+  int groupIndex = static_cast<int>(floor(i / (3 / e)));
+  int dataIndex = static_cast<int>(
+      floor(groupIndex / (dataWidth / static_cast<double>(groupWidth))));
+  int groupOffset = static_cast<int>(
+      fmod(groupIndex, dataWidth / static_cast<double>(groupWidth)));
+  int valueOffset = static_cast<int>(fmod(i, 3 / e));
   switch (selector) {
     case COMPACTARRAY_DATA:
       if (i > dataCount)
         return COMPACTARRAY_FAULT;
       else
         return data[i];
-    case COMPACTARRAY_GROUP:
-    //...
-
+    case COMPACTARRAY_GROUP: {
+      // get result from data X + group Y
+      unsigned a = data[dataIndex];
+      unsigned b1 = (unsigned)pow(2, groupWidth) - 1,
+               b2 = (dataWidth - groupWidth) - (groupOffset + 1) * groupWidth;
+      unsigned b = b1 << b2;
+#ifdef COMPACTARRAY_DEBUG
+      printf(" shifting %08x %d to the left: %08x... ", b1, b2, b);
+#endif
+      unsigned c = a & b;
+#ifdef COMPACTARRAY_DEBUG
+      printf(" masking %08x with %08x: %08x... ", a, b, c);
+#endif
+      int d = c >> b2;
+#ifdef COMPACTARRAY_DEBUG
+      printf(" shifting %08x %d to the left: %08x... ", c, b2, d);
+      printf("got group %d.%d = %u\n", dataIndex, groupOffset, d);
+#endif
+      return d;
+    }
+    case COMPACTARRAY_VALUE: {
+      unsigned a = data[dataIndex];
+      unsigned b1 = (unsigned)pow(2, valueWidth) - 1,
+               b2 = (dataWidth - valueWidth) - groupOffset * groupWidth -
+                    valueOffset * valueWidth;
+      unsigned b = b1 << b2;
+#ifdef COMPACTARRAY_DEBUG
+      printf(" shifting %08x %d to the left: %08x... ", b1, b2, b);
+#endif
+      unsigned c = a & b;
+#ifdef COMPACTARRAY_DEBUG
+      printf(" masking %08x with %08x: %08x... ", a, b, c);
+#endif
+      int d = c >> b2;
+#ifdef COMPACTARRAY_DEBUG
+      printf(" shifting %08x %d to the left: %08x... ", c, b2, d);
+      printf("got value %d.%d.%d = %u\n", dataIndex, groupOffset, valueOffset,
+             d);
+#endif
+      return d;
+    }
     default:
       return COMPACTARRAY_FAULT;
   }

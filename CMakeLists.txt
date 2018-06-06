@@ -55,9 +55,13 @@ else()
                 set( Boost_b2_Command b2.exe )
         endif()
 endif()
-
 ExternalProject_Add(BOOST_PROJECT
-        URL https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2
+        #URL https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2
+        # always update:
+        #DOWNLOAD_COMMAND wget https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2 && tar xjf boost_1_62_0.tar.bz2
+        #SOURCE_DIR third-party/boost/src/boost_1_62_0
+        # local:
+        SOURCE_DIR third-party/boost_1_62_0
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/boost
         BUILD_IN_SOURCE 1
         UPDATE_COMMAND ""

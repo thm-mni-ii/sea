@@ -20,9 +20,9 @@ class CompactArray {
   unsigned int *data;
   double e;
   /**
-   * data width: no. bits in unsigned int
+   * data width: no. bits a datum occupies (e.g. 32 bits in unsigned int)
    * group width: no. bits a group occupies
-   * value width: no. bits a value needs (e.g. ld(3) for 3 possible states)
+   * value width: no. bits a value occupies (e.g. ld(3) for 3 possible states)
    */
   unsigned int valueWidth, valueCount, groupWidth, groupCount, dataWidth,
       dataCount;
