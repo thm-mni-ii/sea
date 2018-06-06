@@ -5,7 +5,7 @@
 #ifndef SEA_SIMPLETRAILSTRUCTURE_H
 #define SEA_SIMPLETRAILSTRUCTURE_H
 
-#include "doublelinkedlist.h"
+#include "largedoublelinkedlist.h"
 #include <map>
 #include <list>
 

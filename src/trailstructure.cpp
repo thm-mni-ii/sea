@@ -16,7 +16,7 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
         matched(_degree),
         flags(3),
         married(nullptr),
-        dl(new DoubleLinkedList( _degree))
+        dl(new LargeDoubleLinkedList( _degree))
         {
 
     if ( _degree % 2 == 0) {

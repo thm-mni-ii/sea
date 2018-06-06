@@ -1,25 +1,18 @@
 //
-// Created by jmeintrup on 18.05.18.
+// Created by jmeintrup on 06.06.18.
 //
 
 #ifndef SEA_DOUBLELINKEDLIST_H
 #define SEA_DOUBLELINKEDLIST_H
-
-#include <vector>
-#include <ostream>
-
 namespace Sealib {
     class DoubleLinkedList {
-    private:
-        std::vector<unsigned int> links;
-        unsigned int current;
 
     public:
-        DoubleLinkedList(unsigned int size);
-        unsigned int get();
-        unsigned int remove(unsigned int idx);
-        bool isEmpty();
-
+        DoubleLinkedList(void) = default;;
+        ~DoubleLinkedList(void) = default;;
+        virtual unsigned int get() = 0;
+        virtual unsigned int remove(unsigned int idx) = 0;
+        virtual bool isEmpty() = 0;
     };
 }
 #endif //SEA_DOUBLELINKEDLIST_H

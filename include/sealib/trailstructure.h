@@ -11,7 +11,7 @@
 #include "sealib/rankselect.h"
 #include "simplerankselect.h"
 #include "dyckmatchingstructure.h"
-#include "doublelinkedlist.h"
+#include "largedoublelinkedlist.h"
 
 /**
  * Space efficient TrailStructure.
@@ -34,7 +34,7 @@ class TrailStructure{
 
     unsigned int *married;
 
-    DoubleLinkedList *dl;
+    LargeDoubleLinkedList *dl;
 
     /**
      * Removes nextUnused from the double linked unused array.

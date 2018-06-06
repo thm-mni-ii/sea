@@ -2,15 +2,15 @@
 // Created by jmeintrup on 18.05.18.
 //
 
-#include <sealib/doublelinkedlist.h>
+#include <sealib/largedoublelinkedlist.h>
 #include <iostream>
 
-Sealib::DoubleLinkedList::DoubleLinkedList(unsigned int size) :
+Sealib::LargeDoubleLinkedList::LargeDoubleLinkedList(unsigned int size) :
         links(size*2,1),
         current(size == 0 ? (unsigned int) - 1 : 0) {
 }
 
-unsigned int Sealib::DoubleLinkedList::get() {
+unsigned int Sealib::LargeDoubleLinkedList::get() {
     if(current != (unsigned int) - 1) {
         unsigned int retVal = current;
         remove(current);
@@ -22,7 +22,7 @@ unsigned int Sealib::DoubleLinkedList::get() {
 
 
 
-unsigned int Sealib::DoubleLinkedList::remove(unsigned int idx) {
+unsigned int Sealib::LargeDoubleLinkedList::remove(unsigned int idx) {
     if(current == (unsigned int) - 1) {  // empty list
         return current;
     }
@@ -54,6 +54,6 @@ unsigned int Sealib::DoubleLinkedList::remove(unsigned int idx) {
     return current;
 }
 
-bool Sealib::DoubleLinkedList::isEmpty() {
+bool Sealib::LargeDoubleLinkedList::isEmpty() {
     return current == (unsigned int) - 1;
 }
