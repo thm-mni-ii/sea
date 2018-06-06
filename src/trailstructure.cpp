@@ -8,6 +8,7 @@
 #include <bitset>
 #include <include/sealib/rankselect.h>
 #include <include/sealib/recursivedyckmatchingstructure.h>
+#include <include/sealib/smalldoublelinkedlist.h>
 #include "sealib/trailstructure.h"
 
 Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
@@ -16,9 +17,7 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
         matched(_degree),
         flags(3),
         married(nullptr),
-        dl(new LargeDoubleLinkedList( _degree))
-        {
-
+        dl(_degree < (unsigned char) - 1 ? SmallDoubleLinkedList(_degree) : LargeDoubleLinkedList(_degree)) {
     if ( _degree % 2 == 0) {
         flags[2] = 1;
     }  // set parity

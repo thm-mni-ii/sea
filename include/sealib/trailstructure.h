@@ -34,7 +34,7 @@ class TrailStructure{
 
     unsigned int *married;
 
-    LargeDoubleLinkedList *dl;
+    DoubleLinkedList *dl;
 
     /**
      * Removes nextUnused from the double linked unused array.
