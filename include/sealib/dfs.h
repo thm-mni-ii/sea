@@ -13,8 +13,8 @@
 #define DFS_BLACK 2
 #define DFS_NOP_PROCESS (void (*)(Node *))0
 #define DFS_NOP_EXPLORE (void (*)(Node *, Node *))0
-#define DFS_NO_MORE_NODES 0
-#define DFS_DO_RESTORE 1
+#define DFS_NO_MORE_NODES (unsigned)0
+#define DFS_DO_RESTORE (unsigned)1
 
 typedef void (*UserFunc1)(Node *);
 typedef void (*UserFunc2)(Node *, Node *);
