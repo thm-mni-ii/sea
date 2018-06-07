@@ -42,23 +42,10 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
       *kt = new Stack;    // new Stack((unsigned)ceil(n/(double)q));
   Stack *s1 = new Stack, *s2 = new Stack;  // new Stack(q)
   Stack *k1 = new Stack, *k2 = new Stack;
-  if (!isRestoring) st->push(0);
-  /*for(uint a=1; a<=n; a++) {
-          if(a%(q+1)==q||a==n) trailers->push(a);
-          uint b=tryPush(a,s1,s2);
-          if(b!=STACK_FAULT) trailers->push(b);
-  }
-  while(trailers->peek()!=STACK_FAULT) {
-          printf(" %u \n",trailers->pop());
-  }
-  printf("Top segment:\n");
-  while(s2->peek()!=STACK_FAULT) {
-          printf(" %u \n",s2->pop());
-  }
-  printf("Bottom segment:\n");
-  while(s1->peek()!=STACK_FAULT) {
-          printf(" %u \n",s1->pop());
-  }*/
+  //if (!isRestoring) {
+    //st->push(0);
+    //kt->push(0);
+  //}
   tryPush(node, q, s1, s2, st);
   if (isRestoring && s2->top() == st->top()) return;
   tryPush(0, q, k1, k2, kt);
@@ -133,18 +120,19 @@ void DFS::tryPush(uint u, uint q, Stack *low, Stack *high, Stack *trailers) {
 // todo: throw DFS_RESTORE_DONE if top(high)==top(trailers)
 #ifdef DFS_DEBUG
   printf("-> tryPush %u \n", u);
+  printf("|low|=%lu, |high|=%lu, |trailers|=%lu\n",low->size(),high->size(),trailers->size());
 #endif
-  if (low->size() == q) {
+  if (low->size() < q) {
 #ifdef DFS_DEBUG
     printf("(low segment)\n");
 #endif
     low->push(u);
 #ifdef DFS_DEBUG
-    printf(" trailer %u => %u\n", trailers->top(), u);
+    printf(" trailer %u => %u\n", trailers->size()>0?trailers->top():42, u);
 #endif
-    trailers->pop();
+    if(trailers->size()>0) trailers->pop();
     trailers->push(u);
-  } else if (high->size() == q) {
+  } else if (high->size() < q) {
     #ifdef DFS_DEBUG
         printf("(high segment)\n");
     #endif
@@ -153,13 +141,31 @@ void DFS::tryPush(uint u, uint q, Stack *low, Stack *high, Stack *trailers) {
     trailers->push(u);
   } else {
     #ifdef DFS_DEBUG
-        printf("(drop old segment)\n");
+        printf("(drop old segment, %lu)\n",low->size());
     #endif
-    delete low;
+    /*delete low;
     low = high;
     high = new Stack;
-    high->push(u);
+    high->push(u);*/
+    while(!low->empty()) {
+      #ifdef DFS_DEBUG
+          printf("(pop low)\n");
+      #endif
+      low->pop();
+    }
+    while(!high->empty()) {
+      printf("lh");
+      unsigned a=high->top();
+      #ifdef DFS_DEBUG
+          printf("(push low %u, pop high)\n",a);
+      #endif
+      low->push(a);
+      high->pop();
+    }
   }
+  #ifdef DFS_DEBUG
+      printf("<- tryPush \n");
+  #endif
 }
 uint DFS::tryPop(Stack *low, Stack *high, Stack *trailers) {  // fix
 #ifdef DFS_DEBUG
