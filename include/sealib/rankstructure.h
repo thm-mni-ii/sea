@@ -15,12 +15,12 @@
  */
 namespace Sealib{
 class RankStructure {
+
  protected:
     static const unsigned char segmentLength = 8;
-    const boost::dynamic_bitset<unsigned char> bitset;
+    std::unique_ptr<boost::dynamic_bitset<unsigned char>> bitsetPointer;
     unsigned int segmentCount;
     unsigned int maxRank;
-
 
     std::vector<unsigned int> setCountTable;
     std::vector<unsigned int> nonEmptySegments;
@@ -29,7 +29,9 @@ class RankStructure {
 
 
  public:
-
+    //#ifdef MEMORY_DEBUG_MACRO
+    static int count;
+    //#endif
     static unsigned char log2(unsigned long bits);
     /**
      * Rank of the k-th idx
@@ -39,9 +41,9 @@ class RankStructure {
     unsigned long rank(unsigned long k) const;
 
     /**
-     * @param bitset rankselect bitset
+     * @param uniqe pointer to dynamic_bitset, use move to pass the pointer
      */
-    explicit RankStructure(const boost::dynamic_bitset<unsigned char> &bitset_);
+    explicit RankStructure(std::unique_ptr<boost::dynamic_bitset<unsigned char>> bitsetPointer_);
 
     /**
      * default empty constructor

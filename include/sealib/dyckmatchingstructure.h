@@ -13,6 +13,7 @@ namespace Sealib {
         static void printDyckWord(const boost::dynamic_bitset<unsigned char>& word, unsigned long breaks);
         unsigned long findMatchNaive(unsigned long idx);
 
+
         virtual unsigned long findMatch(unsigned long idx);
 
         explicit DyckMatchingStructure(const boost::dynamic_bitset<unsigned char> &word_);

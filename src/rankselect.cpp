@@ -5,21 +5,22 @@
 #include <include/sealib/localselecttable.h>
 #include "sealib/rankselect.h"
 
-Sealib::RankSelect::RankSelect(const boost::dynamic_bitset<unsigned char> &bitset_) : Sealib::RankStructure(bitset_), firstInSegment(nullptr){
+Sealib::RankSelect::RankSelect(std::unique_ptr<boost::dynamic_bitset<unsigned char>> bitsetPointer_) : Sealib::RankStructure(std::move(bitsetPointer_)), firstInSegment(nullptr){
     //initialize rank structure for firstInBlock
-    unsigned long size = rank(bitset.size());
-    boost::dynamic_bitset<unsigned char> firstInBlockBitSet(size);
+    unsigned long size = rank(bitsetPointer->size());
+
+    auto firstInBlockBitSet = std::unique_ptr<boost::dynamic_bitset<unsigned char>>(new boost::dynamic_bitset<unsigned char>(size));
 
     for(unsigned long i = 0; i < segmentCount; i++) {
         unsigned char segment;
-        boost::to_block_range(bitset, std::make_tuple(i, std::ref(segment)));
+        boost::to_block_range(*bitsetPointer, std::make_tuple(i, std::ref(segment)));
         unsigned char localFirst = LocalSelectTable::getLocalSelect(segment, 0);
         if (localFirst != (unsigned char) -1) {  // has a local first, i.e. is not an empty segment
             // setBefore gives us the index in firstInBlockBitset
-            firstInBlockBitSet[setBefore(i)] = 1;
+            firstInBlockBitSet->operator[](setBefore(i)) = 1;
         }
     }
-    firstInSegment = new RankStructure(firstInBlockBitSet);
+    firstInSegment = std::unique_ptr<RankStructure>(new RankStructure(std::move(firstInBlockBitSet)));
 }
 
 
@@ -33,7 +34,7 @@ unsigned long Sealib::RankSelect::select(unsigned long k) const {
     }
     unsigned long h = nonEmptySegments[firstInSegmentRank - 1];
     unsigned char segment;
-    boost::to_block_range(bitset, std::make_tuple(h, std::ref(segment)));
+    boost::to_block_range(*bitsetPointer, std::make_tuple(h, std::ref(segment)));
     auto localIndex = static_cast<unsigned char>(k - setBefore(h) - 1);
     unsigned char localSelect = LocalSelectTable::getLocalSelect(segment, localIndex);
     return localSelect + segmentLength * h + 1;

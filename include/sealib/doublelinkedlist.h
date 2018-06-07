@@ -8,8 +8,8 @@ namespace Sealib {
     class DoubleLinkedList {
 
     public:
-        DoubleLinkedList(void) = default;;
-        ~DoubleLinkedList(void) = default;;
+        DoubleLinkedList(void) = default;
+        virtual ~DoubleLinkedList(void) = default;
         virtual unsigned int get() = 0;
         virtual unsigned int remove(unsigned int idx) = 0;
         virtual bool isEmpty() = 0;

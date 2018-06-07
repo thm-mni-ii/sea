@@ -16,7 +16,7 @@ static constexpr unsigned long mask[] = {
 
 Sealib::LocalDyckTable::LocalDyckTable(unsigned char len) {
     entries = static_cast<unsigned long>(std::pow(2, len));
-    table = static_cast<Data**>(malloc((sizeof(Data*) * entries)));
+    table = static_cast<Data**>(malloc((sizeof(Data*) * (entries + 1))));
 
     for (unsigned long i = 0; i <= entries; i++) {
         table[i] = calculateLocalData(i, len);
@@ -54,6 +54,7 @@ Sealib::LocalDyckTable::Data* Sealib::LocalDyckTable::calculateLocalData(unsigne
         }
         j++;
     }
+    free(stack);
 
     char openingDepth = 0;
     char closingDepth = 0;

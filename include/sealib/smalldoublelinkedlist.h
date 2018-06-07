@@ -16,6 +16,7 @@ namespace Sealib {
 
     public:
         explicit SmallDoubleLinkedList(unsigned int size);
+        ~SmallDoubleLinkedList() override {};
         unsigned int get() override;
         unsigned int remove(unsigned int idx) override;
         bool isEmpty() override;

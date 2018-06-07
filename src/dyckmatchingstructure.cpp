@@ -8,7 +8,7 @@
 inline unsigned long Sealib::DyckMatchingStructure::findMatchNaive(unsigned long idx) {
     unsigned int j = 0;
     unsigned int p = 0;
-    auto *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * word.size())));
+    std::vector<unsigned int> stack(word.size());
     do {
             if (word[j]) {  // '('
                 stack[p++] = j;
@@ -18,17 +18,14 @@ inline unsigned long Sealib::DyckMatchingStructure::findMatchNaive(unsigned long
                 }
                 unsigned int i = stack[--p];
                 if (idx == i) {
-                    free(stack);
                     return j;
                 }
                 if (idx == j) {
-                    free(stack);
                     return i;
                 }
             }
             j++;
     } while (j != word.size());
-    free(stack);
 
     return idx;;
 }

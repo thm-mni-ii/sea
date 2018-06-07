@@ -16,21 +16,21 @@ Sealib::SimpleTrail Sealib::GraphAlgorithms::hierholzerSimple(Sealib::Graph *g) 
     unsigned  int order = g->getOrder();
     std::vector<Sealib::SimpleTrailStructure*> ts;
     for (unsigned int i = 0; i < order; i ++) {
-        unsigned  int degree = g->getNode(i)->getDegree();
+        unsigned  int degree = g->getNode(i).getDegree();
         ts.push_back(new Sealib::SimpleTrailStructure(degree));
     }
 
     // find first start node
     unsigned int u = (unsigned int) - 1;
     for (unsigned int i = 0; i < order; i ++) {
-        if (g->getNode(i)->getDegree() % 2 != 0) {  // odd
+        if (g->getNode(i).getDegree() % 2 != 0) {  // odd
             u = i;
             break;
         }
     }
     if (u == (unsigned int) - 1) {  // no odd found
         for (unsigned int i = 0; i < order; i ++) {
-            if (g->getNode(i)->getDegree() != 0) {  // first that has edges, it's possible to have a graph with no edges
+            if (g->getNode(i).getDegree() != 0) {  // first that has edges, it's possible to have a graph with no edges
                 u = i;
                 break;
             }
@@ -47,8 +47,8 @@ Sealib::SimpleTrail Sealib::GraphAlgorithms::hierholzerSimple(Sealib::Graph *g) 
         unsigned int uMate;
         do {
             unsigned int from = u;
-            uMate = g->getNode(u)->getAdj()[k].crossIndex;
-            u = g->getNode(u)->getAdj()[k].vertex;  // next node
+            uMate = g->getNode(u).getAdj(k).crossIndex;
+            u = g->getNode(u).getAdj(k).vertex;  // next node
             k = ts[u]->enter(uMate);
             tempTrail.addArc(std::make_tuple(from, u));
         } while (k != (unsigned int) - 1);
@@ -95,21 +95,21 @@ Sealib::TrailStructure ** Sealib::GraphAlgorithms::hierholzer(Sealib::Graph *g) 
     Sealib::TrailStructure **ts = static_cast<Sealib::TrailStructure **>(malloc((sizeof(Sealib::TrailStructure *) * order)));
 
     for (unsigned int i = 0; i < order; i ++) {
-        unsigned  int degree = g->getNode(i)->getDegree();
+        unsigned  int degree = g->getNode(i).getDegree();
         ts[i] = new Sealib::TrailStructure(degree);
     }
 
     // find first start node
     unsigned int u = (unsigned int) - 1;
     for (unsigned int i = 0; i < order; i ++) {
-        if (g->getNode(i)->getDegree() % 2 != 0) {  // odd
+        if (g->getNode(i).getDegree() % 2 != 0) {  // odd
             u = i;
             break;
         }
     }
     if (u == (unsigned int) - 1) {  // no odd found
         for (unsigned int i = 0; i < order; i ++) {
-            if (g->getNode(i)->getDegree() != 0) {  // first that has edges, it's possible to have a graph with no edges
+            if (g->getNode(i).getDegree() != 0) {  // first that has edges, it's possible to have a graph with no edges
                 u = i;
                 break;
             }
@@ -126,8 +126,8 @@ Sealib::TrailStructure ** Sealib::GraphAlgorithms::hierholzer(Sealib::Graph *g) 
         unsigned int k = kFirst;
         unsigned int uMate;
         do {
-            uMate = g->getNode(u)->getAdj()[k].crossIndex;
-            u = g->getNode(u)->getAdj()[k].vertex;  // next node
+            uMate = g->getNode(u).getAdj(k).crossIndex;
+            u = g->getNode(u).getAdj(k).vertex;  // next node
             k = ts[u]->enter(uMate);
         } while (k != (unsigned int) - 1);
 

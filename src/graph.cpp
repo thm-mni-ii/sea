@@ -1,10 +1,16 @@
+#include <utility>
+
 #include "sealib/graph.h"
 
-Sealib::Node *Sealib::Graph::getNode(unsigned int u) { return &nodes[u]; }
+const Sealib::Node &Sealib::Graph::getNode(unsigned int u) const { return nodes[u]; }
 
-unsigned int Sealib::Graph::head(unsigned int u, unsigned int k) { return nodes[u].getAdj()[k].vertex; }
+unsigned int Sealib::Graph::head(unsigned int u, unsigned int k) const { return nodes[u].getAdj(k).vertex; }
 
-unsigned int Sealib::Graph::getOrder() { return order; }
+unsigned int Sealib::Graph::getOrder() const { return static_cast<unsigned int>(nodes.size()); }
 
-Sealib::Graph::Graph(Node *_nodes, unsigned int _order) : nodes(_nodes), order(_order) {}
+void Sealib::Graph::setNodes(std::vector<Sealib::Node> nodes_) {
+    nodes = std::move(nodes_);
+}
+
+Sealib::Graph::Graph() {}
 

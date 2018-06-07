@@ -54,6 +54,7 @@ class TrailStructure{
      */
     unsigned int getDegree() const;
 
+
     /**
      * @return ref to inAndOut bitset
      */

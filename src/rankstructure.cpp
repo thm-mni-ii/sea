@@ -6,6 +6,7 @@
 #include <cmath>
 #include <include/sealib/localranktable.h>
 #include "sealib/rankstructure.h"
+int Sealib::RankStructure::count = 0;
 
 unsigned long Sealib::RankStructure::rank(unsigned long k) const{
     if(k == 0 || k > maxRank) {
@@ -13,18 +14,18 @@ unsigned long Sealib::RankStructure::rank(unsigned long k) const{
     }
     unsigned long segmentIdx = (k - 1) / segmentLength;
     unsigned char segment;
-    boost::to_block_range(bitset, std::make_tuple(segmentIdx, std::ref(segment)));
+    boost::to_block_range(*bitsetPointer, std::make_tuple(segmentIdx, std::ref(segment)));
     auto localIdx = static_cast<unsigned char>((k - 1) % segmentLength);
     return setBefore(segmentIdx) + LocalRankTable::getLocalRank(segment, localIdx);
 }
 
-Sealib::RankStructure::RankStructure(const boost::dynamic_bitset<unsigned char> &bitset_) :
-        bitset(bitset_),
-        segmentCount(static_cast<unsigned int>(bitset_.size() / segmentLength)){
+Sealib::RankStructure::RankStructure(std::unique_ptr<boost::dynamic_bitset<unsigned char>> bitsetPointer_) :
+        bitsetPointer(std::move(bitsetPointer_)),
+        segmentCount(static_cast<unsigned int>(bitsetPointer->size() / segmentLength)){
 
-    auto lastSeg = static_cast<unsigned char>((bitset_.size() % segmentLength));
+    auto lastSeg = static_cast<unsigned char>((bitsetPointer->size() % segmentLength));
 
-    if(lastSeg != 0 && !bitset.empty()) {
+    if(lastSeg != 0 && !bitsetPointer->empty()) {
         segmentCount++;
     }
 
@@ -33,14 +34,14 @@ Sealib::RankStructure::RankStructure(const boost::dynamic_bitset<unsigned char> 
 
     for (unsigned int i = 0; i < segmentCount; i++) {
         unsigned char segment;
-        boost::to_block_range(bitset, make_tuple(i, std::ref(segment)));
+        boost::to_block_range(*bitsetPointer, make_tuple(i, std::ref(segment)));
         if (LocalRankTable::getLocalRank(segment, 7) != 0) {
             nonEmptySegments.push_back(i);
         }
     }
 
     if(segmentCount != 0) {
-        if(static_cast<unsigned char>((bitset_.size() % segmentLength)) != 0) {
+        if(static_cast<unsigned char>((bitsetPointer->size() % segmentLength)) != 0) {
             segmentCount++;
         }
 
@@ -48,15 +49,17 @@ Sealib::RankStructure::RankStructure(const boost::dynamic_bitset<unsigned char> 
         unsigned int cnt = 0;
         for (unsigned long i = 0; i < segmentCount - 1; i++) {
             unsigned char segment;
-            boost::to_block_range(bitset, std::make_tuple(i, std::ref(segment)));
+            boost::to_block_range(*bitsetPointer, std::make_tuple(i, std::ref(segment)));
             cnt += LocalRankTable::getLocalRank(segment, 7);
             setCountTable.push_back(cnt);
         }
     }
+    RankStructure::count++;
 }
 
 
-Sealib::RankStructure::RankStructure() : bitset(0){
+Sealib::RankStructure::RankStructure() {
+    RankStructure::count++;
 }
 
 unsigned int Sealib::RankStructure::getSegmentCount() const {

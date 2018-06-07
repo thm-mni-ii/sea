@@ -13,15 +13,15 @@
 namespace Sealib {
 class RecursiveDyckMatchingStructure : public DyckMatchingStructure{
  public:
-    static std::map<unsigned char, Sealib::LocalDyckTable*> tables;
-
-    static const Sealib::LocalDyckTable::Data* getTableEntry(unsigned char segmentSize, unsigned long segment);
+    static const Sealib::LocalDyckTable::Data* getTableEntry(unsigned long segment);
 
     explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<unsigned char> &word_, unsigned char recursions);
 
     explicit RecursiveDyckMatchingStructure(const boost::dynamic_bitset<unsigned char> &word_);
     unsigned long findMatch(unsigned long idx);
- private:
+
+
+private:
     static const unsigned char segmentLength = 7;
     unsigned int segments;
     unsigned char lastSegment;

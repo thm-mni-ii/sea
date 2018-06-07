@@ -16,6 +16,7 @@ namespace Sealib {
         unsigned int current;
 
     public:
+        ~LargeDoubleLinkedList() override {}
         explicit LargeDoubleLinkedList(unsigned int size);
         unsigned int get() override;
         unsigned int remove(unsigned int idx) override;

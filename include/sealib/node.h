@@ -11,8 +11,7 @@
 namespace Sealib {
 class Node {
  private:
-    Sealib::Adjacency *adj;
-    unsigned int deg;
+    std::vector<Sealib::Adjacency> adj;
 
  public:
     /**
@@ -20,17 +19,25 @@ class Node {
      * @param _adj array of adjacencies.
      * @param _deg degree of this node.
     */
-    Node(Sealib::Adjacency *_adj, unsigned int _deg);
+    Node();
 
     /**
-     * @return Returns a pointer to the adjacency array.
+     * @return Returns a ref to the adjacency vector.
      */
-    Sealib::Adjacency *getAdj();
+    std::vector<Sealib::Adjacency> &getAdj();
+
+    /**
+     * @param i idx of the adjacency
+     * @return Returns a ref to the adjacency in the vector at i.
+     */
+    const Sealib::Adjacency& getAdj(unsigned int i) const;
 
     /**
      * @return Returns the degree of the node.
      */
-    unsigned int getDegree();
+    unsigned int getDegree() const;
+
+    void setAdjacencies(std::vector<Adjacency> adj_);
 };
 }  // namespace Sealib
 

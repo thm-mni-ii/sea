@@ -28,7 +28,9 @@ public:
      * @param adj_matrix NxN adjacency matrix representation of the graph.
      * @param _order Order of the graph, order equals the number of nodes.
      */
-    static Sealib::Graph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
+    static void createGraphFromAdjacencyMatrix(const std::vector<std::vector<unsigned int>>& adjMatrix, unsigned int order, Sealib::Graph &graph);
+
+    static void randomEulerianOgdfGraph(unsigned int nodeMax, unsigned int edgeMax, Graph &g);
 };
 }  // namespace Sealib
 #endif  // SEA_GRAPHCREATOR_H

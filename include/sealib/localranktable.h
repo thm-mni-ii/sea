@@ -14,8 +14,6 @@ namespace Sealib {
         LocalRankTable();
         ~LocalRankTable();
 
-        static LocalRankTable* instance;
-
     public:
         static unsigned char getLocalRank(unsigned char segment, unsigned char localIdx);
 

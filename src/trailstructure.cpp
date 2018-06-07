@@ -17,7 +17,12 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
         matched(_degree),
         flags(3),
         married(nullptr),
-        dl(_degree < (unsigned char) - 1 ? SmallDoubleLinkedList(_degree) : LargeDoubleLinkedList(_degree)) {
+        dl(nullptr) {
+    if(_degree < 255) {
+        dl = new SmallDoubleLinkedList(_degree);
+    } else {
+        dl = new LargeDoubleLinkedList(_degree);
+    }
     if ( _degree % 2 == 0) {
         flags[2] = 1;
     }  // set parity
@@ -26,27 +31,6 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
         flags[2] = 1;
     }  // node with no edges is possible, set black
 }
-
-/*unsigned long sizeInBytes() {
-    unsigned int lastClosed;
-    unsigned int dyckStart;
-
-    boost::dynamic_bitset<unsigned char> inAndOut;
-    boost::dynamic_bitset<unsigned char> matched;
-
-    DyckMatchingStructure* dyckMatchingStructure;
-
-    boost::dynamic_bitset<unsigned char> flags;  // at(0) flipped == grey, at(1) flipped == black, at(2) flipped = uneven
-
-
-    unsigned int *married;
-
-    DoubleLinkedList *dl;
-
-    return sizeof(unsigned int)  // lastClosed
-            + sizeof(unsigned int)  // dyckStart
-            + sizeof()
-}*/
 
 inline unsigned int Sealib::TrailStructure::getNextUnused() {
     if (flags[1]) {  // black node
@@ -277,3 +261,4 @@ const boost::dynamic_bitset<unsigned char> &Sealib::TrailStructure::getMatchedBi
 unsigned int Sealib::TrailStructure::getLastClosed() {
     return lastClosed;
 }
+

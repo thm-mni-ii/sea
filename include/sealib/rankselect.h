@@ -15,14 +15,15 @@ namespace Sealib{
  */
 class RankSelect : public RankStructure {
  private:
-    RankStructure *firstInSegment;
+    std::unique_ptr<RankStructure> firstInSegment;
 
 public:
 
     /**
      * @param bitset for rankselect
      */
-    explicit RankSelect(const boost::dynamic_bitset<unsigned char> &bitset);
+
+    explicit RankSelect(std::unique_ptr<boost::dynamic_bitset<unsigned char>> bitsetPointer_);
 
     RankSelect();
 

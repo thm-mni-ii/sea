@@ -80,5 +80,6 @@ to_block_range(const dynamic_bitset<unsigned int>& b, std::tuple<unsigned long, 
     }
 }
 
+
 }  // namespace boost
 #endif  // SEA_DYNAMICBITSETEXTENSION_H

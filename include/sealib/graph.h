@@ -14,23 +14,20 @@
 namespace Sealib {
 class Graph {
 private:
-    Node *nodes;
-    unsigned int order;
+    std::vector<Sealib::Node> nodes;
 
 public:
     /**
-     * Creates a graph out of its nodes.
-     * @param _nodes Array of nodes.
-     * @param _order Order of the graph (equals the length of the nodes array).
+     * empty graph.
      */
-    Graph(Node *_nodes, unsigned int _order);
+    Graph();
 
     /**
      * Getter for a specific node in the nodes array.
      * @param u index in the nodes array.
      * @return Pointer to the Node in the nodes array.
      */
-    Node *getNode(unsigned int u);
+    const Sealib::Node &getNode(unsigned int u) const;
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
@@ -38,12 +35,18 @@ public:
     * @param k index in the adjacency vector of node u
     * @return Returns v that is the k-th neighbor of u.
     */
-    unsigned int head(unsigned int u, unsigned int k);
+    unsigned int head(unsigned int u, unsigned int k) const ;
 
     /**
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
-    unsigned int getOrder();
+    unsigned int getOrder() const;
+
+    /**
+     * Sets the nodes of the graph
+     * @param nodes_ - Node vector
+     */
+    void setNodes(std::vector<Sealib::Node> nodes_);
 };
 }
 

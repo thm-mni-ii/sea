@@ -32,7 +32,7 @@ public:
     QPolygonF createArrow(const QPointF& start, const QPointF& end);
 
 
-    ogdf::GraphAttributes* getGraphAttributes();
+    ogdf::GraphAttributes& getGraphAttributes();
     void drawGraph();
     void layout();
     void drawGraphDelayed();
@@ -60,8 +60,8 @@ public slots:
 
 private:
     QTimer * timer;
-    ogdf::Graph* graph_;
-    ogdf::GraphAttributes* GA_;
+    ogdf::Graph graph_;
+    ogdf::GraphAttributes GA_;
 
     QVector<ogdf::node> nodeList_;
     QVector<ogdf::edge> edgeList_;

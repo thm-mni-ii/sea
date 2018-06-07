@@ -3,7 +3,6 @@
 //
 
 #include <sealib/smalldoublelinkedlist.h>
-#include <iostream>
 
 Sealib::SmallDoubleLinkedList::SmallDoubleLinkedList(unsigned int size) :
         links(size*2,1),
@@ -19,8 +18,6 @@ unsigned int Sealib::SmallDoubleLinkedList::get() {
         return (unsigned char) - 1;
     }
 }
-
-
 
 unsigned int Sealib::SmallDoubleLinkedList::remove(unsigned int idx) {
     if(current == (unsigned char) - 1) {  // empty list
@@ -44,11 +41,15 @@ unsigned int Sealib::SmallDoubleLinkedList::remove(unsigned int idx) {
         current = (unsigned char) - 1;
         return idx;
     }
-    links[prevIdx+1] += links[actualIdx+1];
+
+    int val = links[prevIdx+1] + links[actualIdx+1];
+    links[prevIdx+1] = static_cast<unsigned char>(val);
 
     int nextIdx = actualIdx + links[actualIdx + 1] * 2;
     nextIdx = nextIdx % n;
-    links[nextIdx] += links[actualIdx];
+
+    val = links[nextIdx] + links[actualIdx];
+    links[nextIdx] = static_cast<unsigned char>(val);
 
     current = static_cast<unsigned char>(nextIdx / 2);
     return current;
@@ -57,3 +58,4 @@ unsigned int Sealib::SmallDoubleLinkedList::remove(unsigned int idx) {
 bool Sealib::SmallDoubleLinkedList::isEmpty() {
     return current == (unsigned char) - 1;
 }
+

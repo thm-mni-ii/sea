@@ -41,15 +41,14 @@ using namespace ogdf;
 GraphView::GraphView(QWidget* parent) :
         QGraphicsView(parent)
 {
-    graph_ = new Graph();
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(generateRandomGraph()));
 
     //ogdf::randomPlanarBiconnectedGraph(*graph_, 5, 15);
-    graph_ = Sealib::GraphIO::randomEulerianOgdfGrah(10,25);
+    Sealib::GraphIO::randomEulerianOgdfGraph(10,25, graph_);
 
     std::cout<<"generated"<<std::endl;
-    GA_ = new GraphAttributes(*graph_,
+    GA_ =  GraphAttributes(graph_,
                               GraphAttributes::nodeGraphics |
                               GraphAttributes::edgeGraphics |
                               GraphAttributes::nodeLabel |
@@ -59,11 +58,11 @@ GraphView::GraphView(QWidget* parent) :
                               GraphAttributes::edgeArrow |
                               GraphAttributes::edgeStyle);
 
-    GA_->setAllHeight(30);
-    GA_->setAllWidth(30);
+    GA_.setAllHeight(30);
+    GA_.setAllWidth(30);
 
-    for(edge e: graph_->edges) {
-        GA_->arrowType(e) = EdgeArrow::None;
+    for(edge e: graph_.edges) {
+        GA_.arrowType(e) = EdgeArrow::None;
     }
 
     scene_ = new QGraphicsScene(this);
@@ -77,7 +76,7 @@ GraphView::GraphView(QWidget* parent) :
 void GraphView::layout() {
     PlanarizationLayout layout;
 
-    layout.call(*GA_);
+    layout.call(GA_);
 }
 
 void GraphView::drawGraph()
@@ -88,7 +87,7 @@ void GraphView::drawGraph()
     // Draw the edges
     //
     List<edge> edges;
-    graph_->allEdges(edges);
+    graph_.allEdges(edges);
 
     for (auto e: edges) {
         /*
@@ -103,9 +102,9 @@ void GraphView::drawGraph()
         p.lineTo(x2, y2);
         (void) scene_->addPath(p, QPen(QColor(strokeColor.red(), strokeColor.green(), strokeColor.blue()), GA_->strokeWidth(e)));*/
 
-        DPolyline& points = GA_->bends(e);
+        DPolyline& points = GA_.bends(e);
 
-        Color strokeColor = GA_->strokeColor(e).toString();
+        Color strokeColor = GA_.strokeColor(e).toString();
 
         List<DPoint>::const_iterator iter = points.begin();
         if ( iter != points.end() ) {
@@ -120,9 +119,9 @@ void GraphView::drawGraph()
             }
 
 
-            scene_->addPath(path, QPen(QColor(strokeColor.red(), strokeColor.green(), strokeColor.blue()), GA_->strokeWidth(e)));
+            scene_->addPath(path, QPen(QColor(strokeColor.red(), strokeColor.green(), strokeColor.blue()), GA_.strokeWidth(e)));
 
-            if(GA_->arrowType(e) == EdgeArrow::Last) {
+            if(GA_.arrowType(e) == EdgeArrow::Last) {
                 List<DPoint>::iterator arrowStartPoint =
                         points.get(points.size() - 2);
                 List<DPoint>::iterator arrowEndPoint =
@@ -132,7 +131,7 @@ void GraphView::drawGraph()
                         QPointF((*arrowEndPoint).m_x, (*arrowEndPoint).m_y),
                         QColor(strokeColor.red(), strokeColor.green(), strokeColor.blue())
                 );
-            } else if(GA_->arrowType(e) == EdgeArrow::First) {
+            } else if(GA_.arrowType(e) == EdgeArrow::First) {
                 List<DPoint>::iterator arrowStartPoint =
                         points.get(1);
                 List<DPoint>::iterator arrowEndPoint =
@@ -145,7 +144,7 @@ void GraphView::drawGraph()
             }
 
 
-            QString ls(GA_->label(e).c_str());
+            QString ls(GA_.label(e).c_str());
 
             if(ls.size()!= 0) {
                 QPointF labelPoint;
@@ -203,10 +202,10 @@ void GraphView::drawGraph()
     }
 
     for (auto e: edges) {
-        DPolyline& points = GA_->bends(e);
+        DPolyline& points = GA_.bends(e);
 
-        QString ls(GA_->label(e).c_str());
-        Color strokeColor = GA_->strokeColor(e).toString();
+        QString ls(GA_.label(e).c_str());
+        Color strokeColor = GA_.strokeColor(e).toString();
 
 
         if(ls.size()!= 0) {
@@ -255,17 +254,17 @@ void GraphView::drawGraph()
     // Draw the nodes
     //
     ogdf::List<node> nodes;
-    graph_->allNodes(nodes);
+    graph_.allNodes(nodes);
     int i = 0;
     for (auto n: nodes)
     {
 
-        double x = GA_->x(n);
-        double y = GA_->y(n);
-        double w = GA_->width(n);
-        double h = GA_->height(n);
-        Color strokeColor = GA_->strokeColor(n);
-        Color fillColor = GA_->fillColor(n);
+        double x = GA_.x(n);
+        double y = GA_.y(n);
+        double w = GA_.width(n);
+        double h = GA_.height(n);
+        Color strokeColor = GA_.strokeColor(n);
+        Color fillColor = GA_.fillColor(n);
 
         QRectF rect(x-w/2, y-h/2, w, h);
 
@@ -336,7 +335,7 @@ void GraphView::drawArrow(const QPointF& start, const QPointF& end, const QColor
     scene_->addLine(line, QPen(color));
 }
 
-ogdf::GraphAttributes *GraphView::getGraphAttributes() {
+ogdf::GraphAttributes &GraphView::getGraphAttributes() {
     return GA_;
 }
 
@@ -353,14 +352,14 @@ void GraphView::save() {
             }
         }
         if(extension == "gml") {
-            GraphIO::writeGML(*GA_, out);
+            GraphIO::writeGML(GA_, out);
         } else if(extension == "dot") {
-            GraphIO::writeDOT(*GA_, out);
+            GraphIO::writeDOT(GA_, out);
         } else if(extension == "gdf") {
-            GraphIO::writeGDF(*GA_, out);
+            GraphIO::writeGDF(GA_, out);
         }
         else if(extension == "leda") {
-            GraphIO::writeLEDA(GA_->constGraph(), out);
+            GraphIO::writeLEDA(GA_.constGraph(), out);
         } else {
             QMessageBox::information(this,  tr("Sealib Visual Graph"), tr("Please use one of the following file extensions: gml, gdf, dot, leda."));
         }
@@ -383,21 +382,21 @@ void GraphView::load() {
         }
 
         if(extension == "gml") {
-            GraphIO::readGML(*GA_, *graph_, in);
+            GraphIO::readGML(GA_, graph_, in);
             layout();
             drawGraph();
         } else if(extension == "dot") {
-            GraphIO::readDOT(*GA_, *graph_, in);
+            GraphIO::readDOT(GA_, graph_, in);
             layout();
             drawGraph();
         } else if(extension == "gdf") {
-            GraphIO::readGDF(*GA_, *graph_, in);
+            GraphIO::readGDF(GA_, graph_, in);
             layout();
             drawGraph();
         }
         else if(extension == "leda") {
-            GraphIO::readLEDA(*graph_, in);
-            GA_ = new GraphAttributes(*graph_,
+            GraphIO::readLEDA(graph_, in);
+            GA_ = GraphAttributes(graph_,
                                       GraphAttributes::nodeGraphics |
                                       GraphAttributes::edgeGraphics |
                                       GraphAttributes::nodeLabel |
@@ -407,8 +406,8 @@ void GraphView::load() {
                                       GraphAttributes::edgeArrow |
                                       GraphAttributes::edgeStyle);
 
-            GA_->setAllHeight(30);
-            GA_->setAllWidth(30);
+            GA_.setAllHeight(30);
+            GA_.setAllWidth(30);
             layout();
             drawGraph();
         }
@@ -422,9 +421,10 @@ void GraphView::stop() {
 }
 
 void GraphView::start() {
-    Sealib::Graph *sealibGraph = Sealib::GraphIO::sealibGraphFromOgdfGraph(graph_);
+    Sealib::Graph sealibGraph;
+    Sealib::GraphIO::sealibGraphFromOgdfGraph(graph_, sealibGraph);
 
-    Sealib::TrailStructure** ts = Sealib::GraphAlgorithms::hierholzer(sealibGraph);
+    Sealib::TrailStructure** ts = Sealib::GraphAlgorithms::hierholzer(&sealibGraph);
 
     Sealib::GraphIO::graphAttributesFromTrail(GA_, sealibGraph, ts);
 
@@ -435,42 +435,42 @@ void GraphView::start() {
 }
 
 void GraphView::moveUp() {
-    GA_->translate(0, -20);
+    GA_.translate(0, -20);
     drawGraph();
 }
 
 void GraphView::moveDown() {
-    GA_->translate(0, 20);
+    GA_.translate(0, 20);
     drawGraph();
 }
 
 void GraphView::moveLeft() {
-    GA_->translate(-20, 0);
+    GA_.translate(-20, 0);
     drawGraph();
 }
 
 void GraphView::moveRight() {
-    GA_->translate(20, 0);
+    GA_.translate(20, 0);
     drawGraph();
 }
 
 void GraphView::scaleXUp() {
-    GA_->scale(1.1, 1, true);
+    GA_.scale(1.1, 1, true);
     drawGraph();
 }
 
 void GraphView::scaleYUp() {
-    GA_->scale(1, 1.1, true);
+    GA_.scale(1, 1.1, true);
     drawGraph();
 }
 
 void GraphView::scaleXDown() {
-    GA_->scale(0.9, 1, true);
+    GA_.scale(0.9, 1, true);
     drawGraph();
 }
 
 void GraphView::scaleYDown() {
-    GA_->scale(1, 0.9, true);
+    GA_.scale(1, 0.9, true);
     drawGraph();
 }
 
@@ -492,13 +492,13 @@ void GraphView::generateRandomGraph() {
     }
 
     if (graphType.toStdString() == "Planar Bi Connected") {
-        ogdf::randomPlanarBiconnectedGraph(*graph_, nodeNumber, edgeNumber);
+        ogdf::randomPlanarBiconnectedGraph(graph_, nodeNumber, edgeNumber);
     } else if (graphType.toStdString() == "Planar Connected") {
-        ogdf::randomPlanarConnectedGraph(*graph_, nodeNumber, edgeNumber);
+        ogdf::randomPlanarConnectedGraph(graph_, nodeNumber, edgeNumber);
     }
 
-    for(edge e: graph_->edges) {
-        GA_->arrowType(e) = EdgeArrow::None;
+    for(edge e: graph_.edges) {
+        GA_.arrowType(e) = EdgeArrow::None;
     }
 
     layout();
