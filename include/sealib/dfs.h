@@ -2,6 +2,7 @@
 #define SEALIB_DFS_H_
 
 #include <stack>
+#include <tuple>
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
 #include "sealib/node.h"
@@ -19,7 +20,7 @@
 typedef void (*UserFunc1)(Node *);
 typedef void (*UserFunc2)(Node *, Node *);
 typedef unsigned int uint;
-typedef std::stack<uint> Stack;
+typedef std::tuple<uint,uint> State;
 
 /**
  * This class contains depth-first search algorithms.
@@ -47,8 +48,9 @@ class DFS {
                             UserFunc2 postExplore, UserFunc1 postProcess,
                             double epsilon, bool isRestoring);
 
-  static void tryPush(uint u, uint q, Stack *low, Stack *high, Stack *trailers);
-  static uint tryPop(Stack *low, Stack *high, Stack *trailers);
+  static void tryPush(State *u, uint q, Stack *low, Stack *high,
+                      Stack *trailers);
+  static State *tryPop(Stack *low, Stack *high, Stack *trailers);
 
  public:
   /**
