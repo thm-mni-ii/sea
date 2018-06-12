@@ -113,7 +113,7 @@ set(Boost_INCLUDE_DIR ${install_dir}/include/ )
 #                   build library
 # --------------------------------------------------- #
 include_directories(${Boost_INCLUDE_DIR} ${CMAKE_INCLUDE_PATH})
-file(GLOB LIB_SOURCES "src/*.cpp")
+file(GLOB LIB_SOURCES "src/*.cpp" "src/*.h")
 
 add_library(sealib SHARED ${LIB_SOURCES})
 add_dependencies(sealib BOOST_PROJECT)

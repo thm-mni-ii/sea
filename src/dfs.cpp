@@ -1,10 +1,7 @@
 #include "sealib/dfs.h"
 #include <stdio.h>
+#include "segmentstack.h"
 
-State::State(uint pu, uint pk) {
-  u = pu;
-  k = pk;
-}
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void DFS::process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                            UserFunc2 postExplore, UserFunc1 postProcess,
@@ -42,57 +39,47 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
 #ifdef DFS_DEBUG
   printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (1.5 / 3) * n);
 #endif
-  Stack *st = new Stack;  // new Stack((unsigned)ceil(n/(double)q)),
-  //*kt = new Stack;    // new Stack((unsigned)ceil(n/(double)q));
-  Stack *s1 = new Stack, *s2 = new Stack;  // new Stack(q)
-  // Stack *k1 = new Stack, *k2 = new Stack;
-  // if (!isRestoring) {
-  // st->push(0);
-  // kt->push(0);
-  //}
-  tryPush(new State(node, 0), q, s1, s2, st);
-  if (isRestoring && s2->top() == st->top()) {
+  SegmentStack *s = new SegmentStack(q);
+  s->push(std::make_tuple(node, 0));
+  if (isRestoring && s->isAligned()) {
 #ifdef DFS_DEBUG
-    printf("restoration finished: %p = %p\n", (void *)s2->top(),
-           (void *)st->top());
+    printf("restoration finished\n");
 #endif
     return;
   }
-  State *x;
-  uint u, k;
-  while (!st->empty()) {
-    try {
-      x = tryPop(s1, s2, st);
-    } catch (unsigned e) {
-      if (e == DFS_NO_MORE_NODES) {
+  State x;
+  while (!s->empty()) {
+    int e = s->pop(&x);
+    if (e == DFS_NO_MORE_NODES) {
 #ifdef DFS_DEBUG
-        printf("no more nodes\n");
+      printf("no more nodes\n");
 #endif
-        return;
-      } else if (e == DFS_DO_RESTORE) {
+      return;
+    } else if (e == DFS_DO_RESTORE) {
 #ifdef DFS_DEBUG
-        printf("(restoring ... ");
+      printf("(restoring ... ");
 #endif
-        for (uint a = 0; a < g->getOrder(); a++) {
-          printf("recoloring %u?\n", a);
-          if (color->get(a) == DFS_GRAY) {
-            printf("YES\n");
-            color->insert(a, DFS_WHITE);
-          }
+      for (uint a = 0; a < g->getOrder(); a++) {
+        if (color->get(a) == DFS_GRAY) {
+#ifdef DFS_DEBUG
+          printf("recoloring %u to white\n", a);
+#endif
+          color->insert(a, DFS_WHITE);
         }
-        printf("new process(u)\n");
-        for (uint a = 0; a < g->getOrder(); a++) {
-          if (color->get(a) == DFS_WHITE)
-            process_small(a, g, color, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                          DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon, true);
-        }
-#ifdef DFS_DEBUG
-        printf("done)\n");
-#endif
       }
+      printf("new process(u)\n");
+      for (uint a = 0; a < g->getOrder(); a++) {
+        if (color->get(a) == DFS_WHITE)
+          process_small(a, g, color, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                        DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon, true);
+      }
+#ifdef DFS_DEBUG
+      printf("done)\n");
+#endif
     }
-    u = x->u;
-    k = x->k;
+    uint u, k;
+    u = std::get<0>(x);
+    k = std::get<1>(x);
     color->insert(u, DFS_GRAY);
     Node *un = g->getNode(u);
     if (preProcess != DFS_NOP_PROCESS) {
@@ -103,10 +90,7 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
     printf("deg(u): %u\n", un->getDegree());
 #endif
     if (k < un->getDegree()) {
-      tryPush(new State(u, k + 1), q, s1, s2, st);
-#ifdef DFS_DEBUG
-      printf("uAdj: %p (%u)\n", (void *)un->getAdj(), un->getAdj()->vertex);
-#endif
+      s->push(std::make_tuple(u, k + 1));
       uint v = g->head(u, k);
 #ifdef DFS_DEBUG
       printf("v: %u (%p)\n", v, (void *)g->getNode(v));
@@ -116,7 +100,7 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
         if (preExplore != DFS_NOP_EXPLORE) {
           preExplore(un, vn);
         }
-        tryPush(new State(v, 0), q, s1, s2, st);
+        s->push(std::make_tuple(v, 0));
         if (postExplore != DFS_NOP_EXPLORE) {
           postExplore(un, vn);
         }
@@ -128,83 +112,6 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
       postProcess(un);
     }
   }
-}
-void DFS::tryPush(State *u, uint q, Stack *low, Stack *high, Stack *trailers) {
-// todo: throw DFS_RESTORE_DONE if top(high)==top(trailers)
-#ifdef DFS_DEBUG
-  printf("-> tryPush (%u,%u) \n", u->u, u->k);
-  printf("|low|=%lu, |high|=%lu, |trailers|=%lu\n", low->size(), high->size(),
-         trailers->size());
-#endif
-  if (low->size() < q) {
-#ifdef DFS_DEBUG
-    printf(" (low segment)\n");
-#endif
-    low->push(u);
-#ifdef DFS_DEBUG
-    printf(" trailer %p => (%u,%u)\n",
-           !trailers->empty() ? trailers->top() : (void *)0, u->u, u->k);
-#endif
-    if (trailers->size() > 0) trailers->pop();
-    trailers->push(u);
-  } else if (high->size() < q) {
-#ifdef DFS_DEBUG
-    printf(" (high segment)\n");
-#endif
-    high->push(u);
-    trailers->pop();
-    trailers->push(u);
-  } else {
-#ifdef DFS_DEBUG
-    printf(" (drop old segment, %lu)\n", low->size());
-#endif
-    while (!low->empty()) {
-#ifdef DFS_DEBUG
-      printf(" (pop low)\n");
-#endif
-      low->pop();
-    }
-    while (!high->empty()) {
-      State *a = high->top();
-#ifdef DFS_DEBUG
-      printf(" (mov high (%u,%u) -> low)\n", a->u, a->k);
-#endif
-      low->push(a);
-      high->pop();
-    }
-  }
-#ifdef DFS_DEBUG
-  printf("<- tryPush \n");
-#endif
-}
-State *DFS::tryPop(Stack *low, Stack *high, Stack *trailers) {
-#ifdef DFS_DEBUG
-  printf("-> tryPop \n");
-#endif
-  State *r = 0;
-  if (!high->empty()) {
-#ifdef DFS_DEBUG
-    printf(" (high segment)\n");
-#endif
-    r = high->top();
-    high->pop();
-  } else if (!low->empty()) {
-#ifdef DFS_DEBUG
-    printf(" (low segment)\n");
-#endif
-    r = low->top();
-    low->pop();
-  } else {
-    if (!trailers->empty()) {
-      throw DFS_DO_RESTORE;
-    } else {
-      throw DFS_NO_MORE_NODES;
-    }
-  }
-#ifdef DFS_DEBUG
-  printf("<- tryPop = (%u,%u)\n", r->u, r->k);
-#endif
-  return r;
 }
 
 void DFS::runStandardDFS(Graph *g, void (*preProcess)(Node *),
