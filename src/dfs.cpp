@@ -144,12 +144,11 @@ void DFS::runSmallDFS(Graph *g, void (*preProcess)(Node *),
   SegmentStack *s = new SegmentStack(q);
   CompactArray *color = new CompactArray(n, e);
   for (uint a = 0; a < g->getOrder(); a++) color->insert(a, DFS_WHITE);
-  printf("runSmallDFS\n");
   for (uint a = 0; a < g->getOrder(); a++) {
-    printf("node %u: color %d\n", a, color->get(COMPACTARRAY_VALUE, a));
     if (color->get(a) == DFS_WHITE)
       process_small(a, g, color, s, preProcess, preExplore, postExplore,
                     postProcess, e, false);
   }
   delete color;
+  delete s;
 }

@@ -7,7 +7,7 @@
 #include "sealib/graph.h"
 #include "sealib/node.h"
 
-#define DFS_DEBUG
+// #define DFS_DEBUG
 
 #define DFS_WHITE 0
 #define DFS_GRAY 1

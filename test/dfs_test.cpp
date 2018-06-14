@@ -3,9 +3,8 @@
 
 #define order 30
 
-Node *s[order];
+Node *s[order*2];
 int sp = 0;
-
 void pushN(Node *u) { s[sp++] = u; }
 
 TEST(DFSTest, runStd) {
@@ -31,11 +30,16 @@ TEST(DFSTest, runSmall) {
   for (int a = 0; a < order; a++) s[a] = static_cast<Node *>(0);
   sp = 0;
   DFS::runSmallDFS(new Graph(nodes, order), DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                   DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
-  while (sp-- > 0) {
-    printf("actual=%p, expected=%p\n", reinterpret_cast<void *>(s[sp]),
-           reinterpret_cast<void *>(nodes + sp));
-    ASSERT_EQ(s[sp], nodes + sp);
+                   DFS_NOP_EXPLORE, pushN);
+  for(int a=0; a<order; a++) {
+    bool ok=false;
+    for(int b=0; b<sp; b++) {
+      if(nodes+a==s[b]) {
+        ok=true;
+        break;
+      }
+    }
+    ASSERT_TRUE(ok); //node a has been processed
   }
   free(nodes);
 }
