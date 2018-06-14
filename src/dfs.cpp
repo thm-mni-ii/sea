@@ -1,20 +1,21 @@
 #include "sealib/dfs.h"
-#include "segmentstack.h"
 #include <stdio.h>
+#include "./segmentstack.h"
 
-  static void process_standard(Graph *g, UserFunc1 preProcess,
-                               UserFunc2 preExplore, UserFunc2 postExplore,
-                               UserFunc1 postProcess, uint *color, uint u);
+static void process_standard(Graph *g, UserFunc1 preProcess,
+                             UserFunc2 preExplore, UserFunc2 postExplore,
+                             UserFunc1 postProcess, uint *color, uint u);
 
-  static void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
-                            UserFunc1 preProcess, UserFunc2 preExplore,
-                            UserFunc2 postExplore, UserFunc1 postProcess,
-                            double epsilon, bool isRestoring);
+static void process_small(uint node, Graph *g, CompactArray *color,
+                          SegmentStack *s, UserFunc1 preProcess,
+                          UserFunc2 preExplore, UserFunc2 postExplore,
+                          UserFunc1 postProcess, double epsilon,
+                          bool isRestoring);
 
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
-                           UserFunc2 postExplore, UserFunc1 postProcess,
-                           uint *color, uint u) {
+                      UserFunc2 postExplore, UserFunc1 postProcess, uint *color,
+                      uint u) {
   color[u] = DFS_GRAY;
   Node *un = g->getNode(u);
   if (preProcess != DFS_NOP_PROCESS) preProcess(un);
@@ -38,9 +39,9 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   color[u] = DFS_BLACK;
 }
 void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
-                        UserFunc1 preProcess, UserFunc2 preExplore,
-                        UserFunc2 postExplore, UserFunc1 postProcess,
-                        double epsilon, bool isRestoring) {
+                   UserFunc1 preProcess, UserFunc2 preExplore,
+                   UserFunc2 postExplore, UserFunc1 postProcess, double epsilon,
+                   bool isRestoring) {
   s->push(std::make_tuple(node, 0));
   if (isRestoring && s->isAligned()) {
 #ifdef DFS_DEBUG

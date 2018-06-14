@@ -33,8 +33,6 @@ typedef unsigned int uint;
  */
 class DFS {
  private:
-
-
  public:
   /**
    * Run a standard depth-first search over a graph. <br>

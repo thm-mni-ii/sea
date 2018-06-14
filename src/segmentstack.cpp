@@ -1,4 +1,4 @@
-#include "segmentstack.h"
+#include "src/segmentstack.h"
 
 SegmentStack::SegmentStack(uint segmentSize) {
   q = segmentSize;
@@ -90,13 +90,11 @@ void SegmentStack::dropAll() {
   delete low;
   delete high;
   delete trailers;
-  low=new Stack;
-  high=new Stack;
-  trailers=new Stack;
+  low = new Stack;
+  high = new Stack;
+  trailers = new Stack;
 }
-void SegmentStack::saveTrailer() {
-  savedTrailer=trailers->top();
-}
+void SegmentStack::saveTrailer() { savedTrailer = trailers->top(); }
 bool SegmentStack::isAligned() {
   bool r = false;
   if (high->size() == 0 || trailers->size() == 0)
