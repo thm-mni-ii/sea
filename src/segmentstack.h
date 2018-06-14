@@ -1,5 +1,5 @@
-#ifndef SEALIB_SEGMENTSTACK_H_
-#define SEALIB_SEGMENTSTACK_H_
+#ifndef SRC_SEGMENTSTACK_H_
+#define SRC_SEGMENTSTACK_H_
 
 #include <stack>
 #include <tuple>
@@ -15,7 +15,7 @@ class SegmentStack {
   State savedTrailer;
 
  public:
-  SegmentStack(uint segmentSize);
+  explicit SegmentStack(uint segmentSize);
   ~SegmentStack();
 
   int push(State u);
@@ -26,4 +26,4 @@ class SegmentStack {
   bool isAligned();
 };
 
-#endif  // SEALIB_SEGMENTSTACK_H_
+#endif  // SRC_SEGMENTSTACK_H_
