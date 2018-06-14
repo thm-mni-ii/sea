@@ -1,9 +1,18 @@
 #include "sealib/dfs.h"
-#include <stdio.h>
 #include "segmentstack.h"
+#include <stdio.h>
+
+  static void process_standard(Graph *g, UserFunc1 preProcess,
+                               UserFunc2 preExplore, UserFunc2 postExplore,
+                               UserFunc1 postProcess, uint *color, uint u);
+
+  static void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
+                            UserFunc1 preProcess, UserFunc2 preExplore,
+                            UserFunc2 postExplore, UserFunc1 postProcess,
+                            double epsilon, bool isRestoring);
 
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
-void DFS::process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
+void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                            UserFunc2 postExplore, UserFunc1 postProcess,
                            uint *color, uint u) {
   color[u] = DFS_GRAY;
@@ -28,18 +37,10 @@ void DFS::process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   }
   color[u] = DFS_BLACK;
 }
-void DFS::process_small(uint node, Graph *g, CompactArray *color,
+void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
                         UserFunc1 preProcess, UserFunc2 preExplore,
                         UserFunc2 postExplore, UserFunc1 postProcess,
                         double epsilon, bool isRestoring) {
-  unsigned n = g->getOrder();
-  unsigned q =
-      (unsigned)ceil(n / log(n) * epsilon /
-                     6);  // 2q entries on S shall take up at most (e/3)n bits
-#ifdef DFS_DEBUG
-  printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (1.5 / 3) * n);
-#endif
-  SegmentStack *s = new SegmentStack(q);
   s->push(std::make_tuple(node, 0));
   if (isRestoring && s->isAligned()) {
 #ifdef DFS_DEBUG
@@ -59,6 +60,8 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
 #ifdef DFS_DEBUG
       printf("(restoring ... ");
 #endif
+      s->saveTrailer();
+      s->dropAll();
       for (uint a = 0; a < g->getOrder(); a++) {
         if (color->get(a) == DFS_GRAY) {
 #ifdef DFS_DEBUG
@@ -67,12 +70,8 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
           color->insert(a, DFS_WHITE);
         }
       }
-      printf("new process(u)\n");
-      for (uint a = 0; a < g->getOrder(); a++) {
-        if (color->get(a) == DFS_WHITE)
-          process_small(a, g, color, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                        DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon, true);
-      }
+      process_small(node, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon, true);
 #ifdef DFS_DEBUG
       printf("done)\n");
 #endif
@@ -86,14 +85,14 @@ void DFS::process_small(uint node, Graph *g, CompactArray *color,
       preProcess(un);
     }
 #ifdef DFS_DEBUG
-    printf("u: %u(%p), k: %u\n", u, static_cast<void *>(un), k);
-    printf("deg(u): %u\n", un->getDegree());
+    printf("u: %u, k: %u\n", u, k);
+// printf("deg(u): %u\n", un->getDegree());
 #endif
     if (k < un->getDegree()) {
       s->push(std::make_tuple(u, k + 1));
       uint v = g->head(u, k);
 #ifdef DFS_DEBUG
-      printf("v: %u (%p)\n", v, (void *)g->getNode(v));
+      printf("v: %u\n", v);
 #endif
       if (color->get(v) == DFS_WHITE) {
         Node *vn = g->getNode(v);
@@ -137,13 +136,19 @@ void DFS::runSmallDFS(Graph *g, void (*preProcess)(Node *),
   unsigned n = g->getOrder();
   double e =
       n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n
+  unsigned q = (unsigned)ceil(
+      n / log(n) * e / 6);  // 2q entries on S shall take up at most (e/3)n bits
+#ifdef DFS_DEBUG
+  printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (1.5 / 3) * n);
+#endif
+  SegmentStack *s = new SegmentStack(q);
   CompactArray *color = new CompactArray(n, e);
   for (uint a = 0; a < g->getOrder(); a++) color->insert(a, DFS_WHITE);
   printf("runSmallDFS\n");
   for (uint a = 0; a < g->getOrder(); a++) {
     printf("node %u: color %d\n", a, color->get(COMPACTARRAY_VALUE, a));
     if (color->get(a) == DFS_WHITE)
-      process_small(a, g, color, preProcess, preExplore, postExplore,
+      process_small(a, g, color, s, preProcess, preExplore, postExplore,
                     postProcess, e, false);
   }
   delete color;

@@ -30,7 +30,7 @@ TEST(DFSTest, runSmall) {
   nodes[order - 1] = Node(new Adjacency(4), 1U);
   for (int a = 0; a < order; a++) s[a] = static_cast<Node *>(0);
   sp = 0;
-  DFS::runSmallDFS(new Graph(nodes, order), pushN, DFS_NOP_EXPLORE,
+  DFS::runSmallDFS(new Graph(nodes, order), DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
   while (sp-- > 0) {
     printf("actual=%p, expected=%p\n", reinterpret_cast<void *>(s[sp]),

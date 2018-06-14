@@ -14,13 +14,10 @@
 #define DFS_BLACK 2
 #define DFS_NOP_PROCESS (void (*)(Node *))0
 #define DFS_NOP_EXPLORE (void (*)(Node *, Node *))0
-#define DFS_NO_MORE_NODES (unsigned)11
-#define DFS_DO_RESTORE (unsigned)12
 
 typedef void (*UserFunc1)(Node *);
 typedef void (*UserFunc2)(Node *, Node *);
 typedef unsigned int uint;
-typedef std::tuple<uint, uint> State;
 
 /**
  * This class contains depth-first search algorithms.
@@ -36,17 +33,7 @@ typedef std::tuple<uint, uint> State;
  */
 class DFS {
  private:
-  /**
-*@param u: vertex (in V) to be processed
-*/
-  static void process_standard(Graph *g, UserFunc1 preProcess,
-                               UserFunc2 preExplore, UserFunc2 postExplore,
-                               UserFunc1 postProcess, uint *color, uint u);
 
-  static void process_small(uint node, Graph *g, CompactArray *color,
-                            UserFunc1 preProcess, UserFunc2 preExplore,
-                            UserFunc2 postExplore, UserFunc1 postProcess,
-                            double epsilon, bool isRestoring);
 
  public:
   /**

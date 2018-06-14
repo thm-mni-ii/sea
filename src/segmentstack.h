@@ -1,11 +1,19 @@
 #ifndef SEALIB_SEGMENTSTACK_H_
 #define SEALIB_SEGMENTSTACK_H_
-#include "sealib/dfs.h"
+
+#include <tuple>
+#include <stack>
+#define DFS_DEBUG
+#define DFS_NO_MORE_NODES (unsigned)11
+#define DFS_DO_RESTORE (unsigned)12
+typedef std::tuple<uint, uint> State;
 typedef std::stack<State> Stack;
+
 class SegmentStack {
  private:
   Stack *low, *high, *trailers;
   uint q;
+  State savedTrailer;
 
  public:
   SegmentStack(uint segmentSize);
@@ -13,8 +21,9 @@ class SegmentStack {
 
   int push(State u);
   int pop(State *r);
-  int dropLow();
   bool empty();
+  void dropAll();
+  void saveTrailer();
   bool isAligned();
 };
 
