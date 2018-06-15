@@ -10,12 +10,12 @@ typedef std::tuple<uint, uint> State;
 class SegmentStack {
  private:
   State *low, *high, *trailers;
-  long unsigned lp=0,hp=0,tp=0;
+  long unsigned lp = 0, hp = 0, tp = 0;
   uint q;
   State savedTrailer;
 
  public:
-  explicit SegmentStack(uint segmentSize);
+  explicit SegmentStack(uint size, uint segmentSize);
   ~SegmentStack();
 
   int push(State u);

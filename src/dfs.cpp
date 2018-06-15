@@ -107,9 +107,9 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
       }
     } else {
       color->insert(u, DFS_BLACK);
-    }
-    if (postProcess != DFS_NOP_PROCESS) {
-      postProcess(un);
+      if (postProcess != DFS_NOP_PROCESS) {
+        postProcess(un);
+      }
     }
   }
 }
@@ -134,7 +134,7 @@ void DFS::runSmallDFS(Graph *g, void (*preProcess)(Node *),
                       void (*preExplore)(Node *, Node *),
                       void (*postExplore)(Node *, Node *),
                       void (*postProcess)(Node *)) {
-  unsigned n = g->getOrder();
+  unsigned int n = g->getOrder();
   double e =
       n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n
   unsigned q = (unsigned)ceil(
@@ -142,7 +142,7 @@ void DFS::runSmallDFS(Graph *g, void (*preProcess)(Node *),
 #ifdef DFS_DEBUG
   printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (1.5 / 3) * n);
 #endif
-  SegmentStack *s = new SegmentStack(q);
+  SegmentStack *s = new SegmentStack(n, q);
   CompactArray *color = new CompactArray(n, e);
   for (uint a = 0; a < g->getOrder(); a++) color->insert(a, DFS_WHITE);
   for (uint a = 0; a < g->getOrder(); a++) {

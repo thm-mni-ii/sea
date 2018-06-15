@@ -23,7 +23,7 @@ TEST(DFSTest, runStd) {
 }
 TEST(DFSTest, runSmall) {
   Node *nodes = reinterpret_cast<Node *>(calloc(1, sizeof(Node) * 2 * order));
-  for (unsigned int a = 0; a < order - 2; a++) {
+  for (unsigned int a = 0; a < order - 1; a++) {
     nodes[a] = Node(new Adjacency(a + 1), 1U);
   }
   nodes[order - 1] = Node(new Adjacency(4), 1U);

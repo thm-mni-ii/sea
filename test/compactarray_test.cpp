@@ -18,5 +18,7 @@ TEST(CompactArrayTest, insert) {
   ASSERT_EQ(a->get(COMPACTARRAY_GROUP, 1), 6);
   a->insert(60, 1);
   ASSERT_EQ(a->get(60), 1);
+  a->insert(1499, 1);
+  ASSERT_EQ(a->get(1499), 1);
   delete a;
 }
