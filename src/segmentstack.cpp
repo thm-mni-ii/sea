@@ -1,5 +1,4 @@
 #include "src/segmentstack.h"
-#define DFS_DEBUG
 
 SegmentStack::SegmentStack(uint size, uint segmentSize) {
   q = segmentSize;

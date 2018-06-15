@@ -5,7 +5,10 @@
 
 Node *s[order * 2];
 int sp = 0;
-void pushN(Node *u) { s[sp++] = u; }
+void pushN(Node *u) {
+  printf("pushing %p\n",(void*)u);
+  s[sp++] = u; 
+}
 
 TEST(DFSTest, runStd) {
   Node *nodes = reinterpret_cast<Node *>(calloc(1, sizeof(Node) * 2 * order));
@@ -27,9 +30,8 @@ TEST(DFSTest, runSmall) {
     nodes[a] = Node(new Adjacency(a + 1), 1U);
   }
   nodes[order - 1] = Node(new Adjacency(4), 1U);
-  for (int a = 0; a < order; a++) s[a] = static_cast<Node *>(0);
   sp = 0;
-  DFS::runSmallDFS(new Graph(nodes, order), DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+  DFS::runEHKDFS(new Graph(nodes, order), DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
                    DFS_NOP_EXPLORE, pushN);
   for (int a = 0; a < order; a++) {
     bool ok = false;
@@ -39,6 +41,7 @@ TEST(DFSTest, runSmall) {
         break;
       }
     }
+    printf("%u ",a);
     ASSERT_TRUE(ok);  // node a has been processed
   }
   free(nodes);

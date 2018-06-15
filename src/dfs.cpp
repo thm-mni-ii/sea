@@ -130,7 +130,7 @@ void DFS::runStandardDFS(Graph *g, void (*preProcess)(Node *),
   }
   delete[] color;
 }
-void DFS::runSmallDFS(Graph *g, void (*preProcess)(Node *),
+void DFS::runEHKDFS(Graph *g, void (*preProcess)(Node *),
                       void (*preExplore)(Node *, Node *),
                       void (*postExplore)(Node *, Node *),
                       void (*postProcess)(Node *)) {
