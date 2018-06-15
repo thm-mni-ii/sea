@@ -6,11 +6,11 @@
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
 typedef std::tuple<uint, uint> State;
-typedef std::stack<State> Stack;
 
 class SegmentStack {
  private:
-  Stack *low, *high, *trailers;
+  State *low, *high, *trailers;
+  long unsigned lp=0,hp=0,tp=0;
   uint q;
   State savedTrailer;
 

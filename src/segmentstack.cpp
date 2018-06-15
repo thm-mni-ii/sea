@@ -1,10 +1,11 @@
 #include "src/segmentstack.h"
+#define DFS_DEBUG
 
 SegmentStack::SegmentStack(uint segmentSize) {
   q = segmentSize;
-  low = new Stack;
-  high = new Stack;
-  trailers = new Stack;
+  low = static_cast<State*>(malloc(q*sizeof(State)));
+  high = static_cast<State*>(malloc(q*sizeof(State)));
+  trailers = static_cast<State*>(malloc(q*sizeof(State)));
 }
 SegmentStack::~SegmentStack() {
   delete low;
@@ -15,67 +16,65 @@ SegmentStack::~SegmentStack() {
 int SegmentStack::push(State u) {
 // todo: throw DFS_RESTORE_DONE if top(high)==top(trailers)
 #ifdef DFS_DEBUG
-  printf("|low|=%lu, |high|=%lu, |trailers|=%lu\n", low->size(), high->size(),
-         trailers->size());
+  printf("|low|=%lu, |high|=%lu, |trailers|=%lu\n", lp, hp, tp);
 #endif
-  if (low->size() < q) {
+  if (lp < q) {
 #ifdef DFS_DEBUG
     printf(" (low segment+1)\n");
 #endif
-    low->push(u);
-    if (low->size() == q) {
+    low[lp++]=u;
+    if (lp == q) {
 #ifdef DFS_DEBUG
       printf(" + trailer (%u,%u)\n", std::get<0>(u), std::get<1>(u));
 #endif
-      trailers->push(u);
+      trailers[tp++]=u;
     }
-  } else if (high->size() < q) {
+  } else if (hp < q) {
 #ifdef DFS_DEBUG
     printf(" (high segment+1)\n");
 #endif
-    high->push(u);
-    if (high->size() == q) {
+    high[hp++]=u;
+    if (hp == q) {
 #ifdef DFS_DEBUG
       printf(" + trailer (%u,%u)\n", std::get<0>(u), std::get<1>(u));
 #endif
-      trailers->push(u);
+      trailers[tp++]=u;
     }
   } else {
 #ifdef DFS_DEBUG
     printf(" (drop old segment)\n");
 #endif
-    delete low;
-    low = high;
-    high = new Stack;
-    high->push(u);
+    State *tmp=low;
+    low=high;
+    lp=hp;
+    high=tmp;
+    hp=0;
+    high[hp++]=u;
   }
   return 0;
 }
 int SegmentStack::pop(State *r) {
 #ifdef DFS_DEBUG
-  printf("|low|=%lu, |high|=%lu, |trailers|=%lu\n", low->size(), high->size(),
-         trailers->size());
+  printf("|low|=%lu, |high|=%lu, |trailers|=%lu\n", lp, hp, tp);
 #endif
-  if (!high->empty()) {
+  if (hp>0) {
 #ifdef DFS_DEBUG
     printf(" (high segment-1)\n");
 #endif
-    if (high->size() == q) {
-      trailers->pop();
+    if (hp == q) {
+      tp--;
     }
-    *r = high->top();
-    high->pop();
-  } else if (!low->empty()) {
+    *r = high[--hp];
+  } else if (lp>0) {
 #ifdef DFS_DEBUG
     printf(" (low segment-1)\n");
 #endif
-    if (low->size() == q) {
-      trailers->pop();
+    if (lp == q) {
+      tp--;
     }
-    *r = low->top();
-    low->pop();
+    *r = low[--lp];
   } else {
-    if (!trailers->empty()) {
+    if (tp>0) {
       return DFS_DO_RESTORE;
     } else {
       return DFS_NO_MORE_NODES;
@@ -84,22 +83,19 @@ int SegmentStack::pop(State *r) {
   return 0;
 }
 bool SegmentStack::empty() {
-  return low->empty() && high->empty() && trailers->empty();
+  return lp==0 && hp==0 && tp==0;
 }
 void SegmentStack::dropAll() {
-  delete low;
-  delete high;
-  delete trailers;
-  low = new Stack;
-  high = new Stack;
-  trailers = new Stack;
+  lp=0;
+  hp=0;
+  tp=0;
 }
-void SegmentStack::saveTrailer() { savedTrailer = trailers->top(); }
+void SegmentStack::saveTrailer() { savedTrailer = trailers[tp-1]; }
 bool SegmentStack::isAligned() {
   bool r = false;
-  if (high->size() == 0 || trailers->size() == 0)
+  if (hp == 0 || tp == 0)
     r = false;
   else
-    r = high->top() == savedTrailer;
+    r = high[hp-1] == savedTrailer;
   return r;
 }
