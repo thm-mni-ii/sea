@@ -44,38 +44,23 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
                    bool isRestoring) {
   s->push(std::make_tuple(node, 0));
   if (isRestoring && s->isAligned()) {
-#ifdef DFS_DEBUG
-    printf("restoration finished\n");
-#endif
     return;
   }
   State x;
   while (!s->empty()) {
     int e = s->pop(&x);
     if (e == DFS_NO_MORE_NODES) {
-#ifdef DFS_DEBUG
-      printf("no more nodes\n");
-#endif
       return;
     } else if (e == DFS_DO_RESTORE) {
-#ifdef DFS_DEBUG
-      printf("(restoring ... ");
-#endif
       s->saveTrailer();
       s->dropAll();
       for (uint a = 0; a < g->getOrder(); a++) {
         if (color->get(a) == DFS_GRAY) {
-#ifdef DFS_DEBUG
-          printf("recoloring %u to white\n", a);
-#endif
           color->insert(a, DFS_WHITE);
         }
       }
       process_small(node, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
                     DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon, true);
-#ifdef DFS_DEBUG
-      printf("done)\n");
-#endif
     }
     uint u, k;
     u = std::get<0>(x);
@@ -85,16 +70,9 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
     if (preProcess != DFS_NOP_PROCESS) {
       preProcess(un);
     }
-#ifdef DFS_DEBUG
-    printf("u: %u, k: %u\n", u, k);
-// printf("deg(u): %u\n", un->getDegree());
-#endif
     if (k < un->getDegree()) {
       s->push(std::make_tuple(u, k + 1));
       uint v = g->head(u, k);
-#ifdef DFS_DEBUG
-      printf("v: %u\n", v);
-#endif
       if (color->get(v) == DFS_WHITE) {
         Node *vn = g->getNode(v);
         if (preExplore != DFS_NOP_EXPLORE) {
@@ -131,9 +109,9 @@ void DFS::runStandardDFS(Graph *g, void (*preProcess)(Node *),
   delete[] color;
 }
 void DFS::runEHKDFS(Graph *g, void (*preProcess)(Node *),
-                      void (*preExplore)(Node *, Node *),
-                      void (*postExplore)(Node *, Node *),
-                      void (*postProcess)(Node *)) {
+                    void (*preExplore)(Node *, Node *),
+                    void (*postExplore)(Node *, Node *),
+                    void (*postProcess)(Node *)) {
   unsigned int n = g->getOrder();
   double e =
       n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n

@@ -13,33 +13,16 @@ void CompactArray::insert(unsigned int i, unsigned int p) {
   int valueOffset = static_cast<int>(fmod(i, 3 / e));
   // insert p into slot 'data X + group Y + value Z'
   unsigned a = data[dataIndex];
-#ifdef COMPACTARRAY_DEBUG
-  printf("before: %08x, ", a);
-#endif
   unsigned b1 = (unsigned)pow(2, valueWidth) - 1,
            b2 = (dataWidth - valueWidth) - groupOffset * groupWidth -
                 valueOffset * valueWidth;
   unsigned b = b1 << b2;
-#ifdef COMPACTARRAY_DEBUG
-  printf(" shifting %08x %d to the left: %08x... ", b1, b2, b);
-#endif
   unsigned c = a & ~b;
-#ifdef COMPACTARRAY_DEBUG
-  printf(" masking %08x with %08x: %08x... ", a, ~b, c);
-#endif
   unsigned d = c | (p << b2);
-#ifdef COMPACTARRAY_DEBUG
-  printf(" melding %08x with %08x: %08x... ", c, p << b2, d);
-#endif
   data[dataIndex] = d;
-#ifdef COMPACTARRAY_DEBUG
-  printf("after: %08x\n", data[dataIndex]);
-  printf("offs(%u)=%d.%d.%d\t%u\n", i, dataIndex, groupOffset, valueOffset, p);
-#endif
 }
 
 unsigned int CompactArray::get(unsigned int selector, unsigned int i) {
-  // printf("TODO: CompactArray::get\n");
   int groupIndex = static_cast<int>(floor(i / (3 / e)));
   int dataIndex = static_cast<int>(
       floor(groupIndex / (dataWidth / static_cast<double>(groupWidth))));
@@ -58,18 +41,8 @@ unsigned int CompactArray::get(unsigned int selector, unsigned int i) {
       unsigned b1 = (unsigned)pow(2, groupWidth) - 1,
                b2 = (dataWidth - groupWidth) - (groupOffset + 1) * groupWidth;
       unsigned b = b1 << b2;
-#ifdef COMPACTARRAY_DEBUG
-      printf(" shifting %08x %d to the left: %08x... ", b1, b2, b);
-#endif
       unsigned c = a & b;
-#ifdef COMPACTARRAY_DEBUG
-      printf(" masking %08x with %08x: %08x... ", a, b, c);
-#endif
       int d = c >> b2;
-#ifdef COMPACTARRAY_DEBUG
-      printf(" shifting %08x %d to the left: %08x... ", c, b2, d);
-      printf("got group %d.%d = %u\n", dataIndex, groupOffset, d);
-#endif
       return d;
     }
     case COMPACTARRAY_VALUE: {
@@ -78,19 +51,8 @@ unsigned int CompactArray::get(unsigned int selector, unsigned int i) {
                b2 = (dataWidth - valueWidth) - groupOffset * groupWidth -
                     valueOffset * valueWidth;
       unsigned b = b1 << b2;
-#ifdef COMPACTARRAY_DEBUG
-      printf(" shifting %08x %d to the left: %08x... ", b1, b2, b);
-#endif
       unsigned c = a & b;
-#ifdef COMPACTARRAY_DEBUG
-      printf(" masking %08x with %08x: %08x... ", a, b, c);
-#endif
       int d = c >> b2;
-#ifdef COMPACTARRAY_DEBUG
-      printf(" shifting %08x %d to the left: %08x... ", c, b2, d);
-      printf("got value %d.%d.%d = %u\n", dataIndex, groupOffset, valueOffset,
-             d);
-#endif
       return d;
     }
     default:
@@ -114,10 +76,6 @@ CompactArray::CompactArray(unsigned int count, double epsilon) {
   dataWidth = 8 * sizeof(unsigned int);
   dataCount = static_cast<int>(
       ceil((groupCount * groupWidth) / static_cast<double>(dataWidth)));
-#ifdef COMPACTARRAY_DEBUG
-  printf("vw=%d, gw=%d, gc=%d, dc=%d\n", valueWidth, groupWidth, groupCount,
-         dataCount);
-#endif
   data = new unsigned int[dataCount];
 }
 

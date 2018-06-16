@@ -3,6 +3,7 @@
 
 #include <stack>
 #include <tuple>
+
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
 typedef std::tuple<uint, uint> State;

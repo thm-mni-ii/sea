@@ -13,35 +13,17 @@ SegmentStack::~SegmentStack() {
 }
 
 int SegmentStack::push(State u) {
-#ifdef DFS_DEBUG
-  printf("|low|=%lu, |high|=%lu, |trailers|=%lu\n", lp, hp, tp);
-#endif
   if (lp < q) {
-#ifdef DFS_DEBUG
-    printf(" (low segment+1)\n");
-#endif
     low[lp++] = u;
     if (lp == q) {
-#ifdef DFS_DEBUG
-      printf(" + trailer (%u,%u)\n", std::get<0>(u), std::get<1>(u));
-#endif
       trailers[tp++] = u;
     }
   } else if (hp < q) {
-#ifdef DFS_DEBUG
-    printf(" (high segment+1)\n");
-#endif
     high[hp++] = u;
     if (hp == q) {
-#ifdef DFS_DEBUG
-      printf(" + trailer (%u,%u)\n", std::get<0>(u), std::get<1>(u));
-#endif
       trailers[tp++] = u;
     }
   } else {
-#ifdef DFS_DEBUG
-    printf(" (drop old segment)\n");
-#endif
     State *tmp = low;
     low = high;
     high = tmp;
@@ -51,21 +33,12 @@ int SegmentStack::push(State u) {
   return 0;
 }
 int SegmentStack::pop(State *r) {
-#ifdef DFS_DEBUG
-  printf("|low|=%lu, |high|=%lu, |trailers|=%lu\n", lp, hp, tp);
-#endif
   if (hp > 0) {
-#ifdef DFS_DEBUG
-    printf(" (high segment-1)\n");
-#endif
     if (hp == q) {
       tp--;
     }
     *r = high[--hp];
   } else if (lp > 0) {
-#ifdef DFS_DEBUG
-    printf(" (low segment-1)\n");
-#endif
     if (lp == q) {
       tp--;
     }

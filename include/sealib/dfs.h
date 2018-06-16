@@ -7,8 +7,6 @@
 #include "sealib/graph.h"
 #include "sealib/node.h"
 
-// #define DFS_DEBUG
-
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
@@ -33,7 +31,6 @@ typedef unsigned int uint;
  * @author Simon Heuser
  */
 class DFS {
- private:
  public:
   /**
    * Run a standard depth-first search over a given graph. <br>
@@ -48,7 +45,8 @@ class DFS {
                              UserFunc2 preexplore, UserFunc2 postexplore,
                              UserFunc1 postprocess);
   /**
-   * Run a space-efficient depth-first search over a given graph. (Elmasry et al., 2015) <br>
+   * Run a space-efficient depth-first search over a given graph. (Elmasry et
+   * al., 2015) <br>
    * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) space
    * @param g graph G=(V,E) to iterate over
    * @param preprocess to be executed before processing a node u
@@ -57,6 +55,6 @@ class DFS {
    * @param postprocess to be executed after processing a node u
    */
   static void runEHKDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
-                          UserFunc2 postexplore, UserFunc1 postprocess);
+                        UserFunc2 postexplore, UserFunc1 postprocess);
 };
 #endif  // SEALIB_DFS_H_

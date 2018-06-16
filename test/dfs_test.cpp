@@ -6,8 +6,8 @@
 Node *s[order * 2];
 int sp = 0;
 void pushN(Node *u) {
-  printf("pushing %p\n",(void*)u);
-  s[sp++] = u; 
+  printf("pushing %p\n", (void *)u);
+  s[sp++] = u;
 }
 
 TEST(DFSTest, runStd) {
@@ -32,7 +32,7 @@ TEST(DFSTest, runSmall) {
   nodes[order - 1] = Node(new Adjacency(4), 1U);
   sp = 0;
   DFS::runEHKDFS(new Graph(nodes, order), DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                   DFS_NOP_EXPLORE, pushN);
+                 DFS_NOP_EXPLORE, pushN);
   for (int a = 0; a < order; a++) {
     bool ok = false;
     for (int b = 0; b < sp; b++) {
@@ -41,7 +41,7 @@ TEST(DFSTest, runSmall) {
         break;
       }
     }
-    printf("%u ",a);
+    printf("%u ", a);
     ASSERT_TRUE(ok);  // node a has been processed
   }
   free(nodes);
