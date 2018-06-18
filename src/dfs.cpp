@@ -4,7 +4,8 @@
 
 static void process_standard(Graph *g, UserFunc1 preProcess,
                              UserFunc2 preExplore, UserFunc2 postExplore,
-                             UserFunc1 postProcess, uint *color, uint u);
+                             UserFunc1 postProcess, CompactArray *color,
+                             uint u);
 
 static void process_small(uint node, Graph *g, CompactArray *color,
                           SegmentStack *s, UserFunc1 preProcess,
@@ -14,28 +15,28 @@ static void process_small(uint node, Graph *g, CompactArray *color,
 
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
-                      UserFunc2 postExplore, UserFunc1 postProcess, uint *color,
-                      uint u0) {
+                      UserFunc2 postExplore, UserFunc1 postProcess,
+                      CompactArray *color, uint u0) {
   std::stack<uint> *s = new std::stack<uint>;
   s->push(u0);
   while (!s->empty()) {
     uint u = s->top();
     s->pop();
-    color[u] = DFS_GRAY;
+    color->insert(u, DFS_GRAY);
     Node *un = g->getNode(u);
     if (preProcess != DFS_NOP_PROCESS) preProcess(un);
     for (uint k = 0; k < un->getDegree(); k++) {
       uint v = g->head(u, k);
       Node *vn = g->getNode(v);
-      if (color[v] == DFS_WHITE) {
+      if (color->get(v) == DFS_WHITE) {
         if (preExplore != DFS_NOP_EXPLORE) preExplore(un, vn);
         s->push(v);
-        color[v] = DFS_GRAY;
+        color->insert(v, DFS_GRAY);
         if (postExplore != DFS_NOP_EXPLORE) postExplore(un, vn);
       }
     }
     if (postProcess != DFS_NOP_PROCESS) postProcess(un);
-    color[u] = DFS_BLACK;
+    color->insert(u, DFS_BLACK);
   }
 }
 void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
@@ -99,17 +100,17 @@ void DFS::runStandardDFS(Graph *g, void (*preProcess)(Node *),
                          void (*preExplore)(Node *, Node *),
                          void (*postExplore)(Node *, Node *),
                          void (*postProcess)(Node *)) {
-  uint *color = new uint[g->getOrder()];
+  CompactArray *color = new CompactArray(g->getOrder(), 1.5);
   for (uint u = 0; u < g->getOrder(); u++) {
-    color[u] = DFS_WHITE;
+    color->insert(u, DFS_WHITE);
   }
   for (uint u = 0; u < g->getOrder(); u++) {
-    if (color[u] == DFS_WHITE) {
+    if (color->get(u) == DFS_WHITE) {
       process_standard(g, preProcess, preExplore, postExplore, postProcess,
                        color, u);
     }
   }
-  delete[] color;
+  delete color;
 }
 void DFS::runEHKDFS(Graph *g, void (*preProcess)(Node *),
                     void (*preExplore)(Node *, Node *),
@@ -120,10 +121,9 @@ void DFS::runEHKDFS(Graph *g, void (*preProcess)(Node *),
       n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n
   unsigned q = (unsigned)ceil(
       n / log(n) * e / 6);  // 2q entries on S shall take up at most (e/3)n bits
-#ifdef DFS_DEBUG
+  // unsigned q=n;   /* uncomment to disable restoration */
   printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (1.5 / 3) * n);
-#endif
-  SegmentStack *s = new SegmentStack(n, q);
+  SegmentStack *s = new SegmentStack(n, q, false);
   CompactArray *color = new CompactArray(n, e);
   for (uint a = 0; a < g->getOrder(); a++) color->insert(a, DFS_WHITE);
   for (uint a = 0; a < g->getOrder(); a++) {

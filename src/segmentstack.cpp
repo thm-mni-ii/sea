@@ -1,27 +1,38 @@
 #include "src/segmentstack.h"
 
-SegmentStack::SegmentStack(uint size, uint segmentSize) {
+SegmentStack::SegmentStack(uint size, uint segmentSize, bool useTrailers) {
   q = segmentSize;
+  t=useTrailers;
   low = new State[q];
   high = new State[q];
-  trailers = new State[size / q + 1];
+  if(t) {
+    trailers = new State[size / q + 1];
+  } else {
+    // use only the last pushed entry as trailer
+  }
 }
 SegmentStack::~SegmentStack() {
   delete[] low;
   delete[] high;
-  delete[] trailers;
+  if(t) delete[] trailers;
 }
 
 int SegmentStack::push(State u) {
   if (lp < q) {
     low[lp++] = u;
-    if (lp == q) {
+    if (t&&lp == q) {
       trailers[tp++] = u;
+    } else if(!t) {
+      last=u;
+      tp++;
     }
   } else if (hp < q) {
     high[hp++] = u;
-    if (hp == q) {
+    if (t&&hp == q) {
       trailers[tp++] = u;
+    } else if(!t) {
+      last=u;
+      tp++;
     }
   } else {
     State *tmp = low;
@@ -34,12 +45,16 @@ int SegmentStack::push(State u) {
 }
 int SegmentStack::pop(State *r) {
   if (hp > 0) {
-    if (hp == q) {
+    if (t&&hp == q) {
+      tp--;
+    } else if(!t) {
       tp--;
     }
     *r = high[--hp];
   } else if (lp > 0) {
-    if (lp == q) {
+    if (t&&lp == q) {
+      tp--;
+    } else if(!t) {
       tp--;
     }
     *r = low[--lp];
@@ -54,11 +69,16 @@ int SegmentStack::pop(State *r) {
 }
 bool SegmentStack::empty() { return lp == 0 && hp == 0 && tp == 0; }
 void SegmentStack::dropAll() {
+  static int numRestores=0;
   lp = 0;
   hp = 0;
   tp = 0;
+  printf("%d\n",numRestores++);
 }
-void SegmentStack::saveTrailer() { savedTrailer = trailers[tp - 1]; }
+void SegmentStack::saveTrailer() { 
+  if(t) savedTrailer = trailers[tp - 1]; 
+  else savedTrailer=last;
+}
 bool SegmentStack::isAligned() {
   bool r = false;
   if (hp == 0 || tp == 0) {

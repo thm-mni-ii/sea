@@ -11,12 +11,15 @@ typedef std::tuple<uint, uint> State;
 class SegmentStack {
  private:
   State *low, *high, *trailers;
+  bool t=false;
+  State last;
   long unsigned lp = 0, hp = 0, tp = 0;
   uint q;
   State savedTrailer;
 
  public:
-  explicit SegmentStack(uint size, uint segmentSize);
+  /* size: number of stored entries, useTrailers: if true, use stack of trailers; if false, use last pushed entry*/
+  explicit SegmentStack(uint size, uint segmentSize, bool useTrailers);
   ~SegmentStack();
 
   int push(State u);
