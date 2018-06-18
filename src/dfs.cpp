@@ -15,28 +15,28 @@ static void process_small(uint node, Graph *g, CompactArray *color,
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                       UserFunc2 postExplore, UserFunc1 postProcess, uint *color,
-                      uint u) {
-  color[u] = DFS_GRAY;
-  Node *un = g->getNode(u);
-  if (preProcess != DFS_NOP_PROCESS) preProcess(un);
-  for (uint k = 0; k < un->getDegree(); k++) {
-    uint v = g->head(u, k);
-    Node *vn = g->getNode(v);
-    if (preExplore != DFS_NOP_EXPLORE) {
-      preExplore(un, vn);
+                      uint u0) {
+  std::stack<uint> *s = new std::stack<uint>;
+  s->push(u0);
+  while (!s->empty()) {
+    uint u = s->top();
+    s->pop();
+    color[u] = DFS_GRAY;
+    Node *un = g->getNode(u);
+    if (preProcess != DFS_NOP_PROCESS) preProcess(un);
+    for (uint k = 0; k < un->getDegree(); k++) {
+      uint v = g->head(u, k);
+      Node *vn = g->getNode(v);
+      if (color[v] == DFS_WHITE) {
+        if (preExplore != DFS_NOP_EXPLORE) preExplore(un, vn);
+        s->push(v);
+        color[v] = DFS_GRAY;
+        if (postExplore != DFS_NOP_EXPLORE) postExplore(un, vn);
+      }
     }
-    if (color[v] == DFS_WHITE) {
-      process_standard(g, preProcess, preExplore, postExplore, postProcess,
-                       color, v);
-    }
-    if (postExplore != DFS_NOP_EXPLORE) {
-      postExplore(un, vn);
-    }
+    if (postProcess != DFS_NOP_PROCESS) postProcess(un);
+    color[u] = DFS_BLACK;
   }
-  if (postProcess != DFS_NOP_PROCESS) {
-    postProcess(un);
-  }
-  color[u] = DFS_BLACK;
 }
 void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
                    UserFunc1 preProcess, UserFunc2 preExplore,
@@ -45,10 +45,10 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
   s->push(std::make_tuple(node, 0));
   State x;
   while (!s->empty()) {
-    int e = s->pop(&x);
-    if (e == DFS_NO_MORE_NODES) {
+    int sr = s->pop(&x);
+    if (sr == DFS_NO_MORE_NODES) {
       return;
-    } else if (e == DFS_DO_RESTORE) {
+    } else if (sr == DFS_DO_RESTORE) {
       s->saveTrailer();
       s->dropAll();
       for (uint a = 0; a < g->getOrder(); a++) {
