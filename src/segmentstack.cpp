@@ -2,14 +2,14 @@
 
 SegmentStack::SegmentStack(uint size, uint segmentSize) {
   q = segmentSize;
-  low = reinterpret_cast<State *>(malloc(q * sizeof(State)));
-  high = reinterpret_cast<State *>(malloc(q * sizeof(State)));
-  trailers = reinterpret_cast<State *>(malloc((size / q + 1) * sizeof(State)));
+  low = new State[q];
+  high = new State[q];
+  trailers = new State[size / q + 1];
 }
 SegmentStack::~SegmentStack() {
-  delete low;
-  delete high;
-  delete trailers;
+  delete[] low;
+  delete[] high;
+  delete[] trailers;
 }
 
 int SegmentStack::push(State u) {
@@ -61,9 +61,12 @@ void SegmentStack::dropAll() {
 void SegmentStack::saveTrailer() { savedTrailer = trailers[tp - 1]; }
 bool SegmentStack::isAligned() {
   bool r = false;
-  if (hp == 0 || tp == 0)
+  if (hp == 0 || tp == 0) {
     r = false;
-  else
-    r = high[hp - 1] == savedTrailer;
+  } else {
+    unsigned hu = std::get<0>(high[hp - 1]), hk = std::get<1>(high[hp - 1]);
+    unsigned tu = std::get<0>(savedTrailer), tk = std::get<1>(savedTrailer);
+    r = hu == tu && hk == tk;
+  }
   return r;
 }

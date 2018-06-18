@@ -43,9 +43,6 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
                    UserFunc2 postExplore, UserFunc1 postProcess, double epsilon,
                    bool isRestoring) {
   s->push(std::make_tuple(node, 0));
-  if (isRestoring && s->isAligned()) {
-    return;
-  }
   State x;
   while (!s->empty()) {
     int e = s->pop(&x);
@@ -65,13 +62,16 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
     uint u, k;
     u = std::get<0>(x);
     k = std::get<1>(x);
-    color->insert(u, DFS_GRAY);
     Node *un = g->getNode(u);
     if (preProcess != DFS_NOP_PROCESS) {
       preProcess(un);
     }
+    color->insert(u, DFS_GRAY);
     if (k < un->getDegree()) {
       s->push(std::make_tuple(u, k + 1));
+      if (isRestoring && s->isAligned()) {
+        return;
+      }
       uint v = g->head(u, k);
       if (color->get(v) == DFS_WHITE) {
         Node *vn = g->getNode(v);
@@ -79,6 +79,9 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
           preExplore(un, vn);
         }
         s->push(std::make_tuple(v, 0));
+        if (isRestoring && s->isAligned()) {
+          return;
+        }
         if (postExplore != DFS_NOP_EXPLORE) {
           postExplore(un, vn);
         }
