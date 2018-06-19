@@ -13,7 +13,7 @@ class SegmentStack {
   State *low, *high, *trailers;
   bool t = false;
   State last;
-  long unsigned lp = 0, hp = 0, tp = 0;
+  unsigned lp = 0, hp = 0, tp = 0;
   uint q;
   State savedTrailer;
 
