@@ -10,13 +10,13 @@ void pushN(Node *u) {
   s[sp++] = u;
 }
 void printI(Node *u) {
-  static unsigned i=0;
-  printf("%u\n",i++);
+  static unsigned i = 0;
+  printf("%u\n", i++);
   u->getDegree();
 }
 
 TEST(DFSTest, runStd) {
-  unsigned order=30;
+  unsigned order = 30;
   Node *nodes = reinterpret_cast<Node *>(calloc(1, sizeof(Node) * 2 * order));
   for (unsigned int a = 0; a < order - 2; a++) {
     nodes[a] = Node(new Adjacency(a + 1), 1U);
@@ -31,7 +31,7 @@ TEST(DFSTest, runStd) {
   free(nodes);
 }
 TEST(DFSTest, runSmall) {
-  unsigned order=100;
+  unsigned order = 100;
   Node *nodes = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
   for (unsigned int a = 0; a < order - 1; a++) {
     nodes[a] = Node(new Adjacency(a + 1), 1U);

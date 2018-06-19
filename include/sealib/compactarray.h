@@ -27,6 +27,8 @@ class CompactArray {
    */
   unsigned int valueWidth, valueCount, groupWidth, groupCount, dataWidth,
       dataCount;
+  double valuesPerGroup, groupsPerDatum;
+  unsigned shv1, shg1;
 
  public:
   /**

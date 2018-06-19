@@ -1,5 +1,6 @@
 #include "sealib/dfs.h"
 #include <stdio.h>
+#include <stack>
 #include "./segmentstack.h"
 
 static void process_standard(Graph *g, UserFunc1 preProcess,
@@ -118,7 +119,8 @@ void DFS::runEHKDFS(Graph *g, void (*preProcess)(Node *),
                     void (*postProcess)(Node *)) {
   unsigned int n = g->getOrder();
   double e =
-      n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n
+      // n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n
+      0.001;
   unsigned q = (unsigned)ceil(
       n / log(n) * e / 6);  // 2q entries on S shall take up at most (e/3)n bits
   // unsigned q=n;   /* uncomment to disable restoration */
@@ -129,7 +131,7 @@ void DFS::runEHKDFS(Graph *g, void (*preProcess)(Node *),
   for (uint a = 0; a < g->getOrder(); a++) {
     if (color->get(a) == DFS_WHITE)
       process_small(a, g, color, s, preProcess, preExplore, postExplore,
-                    postProcess, e, false);
+                    postProcess, e, true);
   }
   delete color;
   delete s;
