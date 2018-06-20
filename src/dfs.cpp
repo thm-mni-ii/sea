@@ -23,18 +23,16 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   while (!s->empty()) {
     uint u = s->top();
     s->pop();
-    color->insert(u, DFS_GRAY);
     Node *un = g->getNode(u);
     if (preProcess != DFS_NOP_PROCESS) preProcess(un);
+    color->insert(u, DFS_GRAY);
     for (uint k = 0; k < un->getDegree(); k++) {
       uint v = g->head(u, k);
       Node *vn = g->getNode(v);
-      if (color->get(v) == DFS_WHITE) {
-        if (preExplore != DFS_NOP_EXPLORE) preExplore(un, vn);
-        s->push(v);
-        color->insert(v, DFS_GRAY);
-        if (postExplore != DFS_NOP_EXPLORE) postExplore(un, vn);
-      }
+      if (preExplore != DFS_NOP_EXPLORE) preExplore(un, vn);
+      if (color->get(v) == DFS_WHITE) s->push(v);
+      color->insert(v, DFS_GRAY);
+      if (postExplore != DFS_NOP_EXPLORE) postExplore(un, vn);
     }
     if (postProcess != DFS_NOP_PROCESS) postProcess(un);
     color->insert(u, DFS_BLACK);
@@ -65,34 +63,26 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
     u = std::get<0>(x);
     k = std::get<1>(x);
     Node *un = g->getNode(u);
-    if (preProcess != DFS_NOP_PROCESS) {
-      preProcess(un);
+    if (color->get(u) == DFS_WHITE) {
+      if (preProcess != DFS_NOP_PROCESS) preProcess(un);
+      color->insert(u, DFS_GRAY);
     }
-    color->insert(u, DFS_GRAY);
     if (k < un->getDegree()) {
       s->push(std::make_tuple(u, k + 1));
       if (isRestoring && s->isAligned()) {
         return;
       }
       uint v = g->head(u, k);
-      if (color->get(v) == DFS_WHITE) {
-        Node *vn = g->getNode(v);
-        if (preExplore != DFS_NOP_EXPLORE) {
-          preExplore(un, vn);
-        }
-        s->push(std::make_tuple(v, 0));
-        if (isRestoring && s->isAligned()) {
-          return;
-        }
-        if (postExplore != DFS_NOP_EXPLORE) {
-          postExplore(un, vn);
-        }
+      Node *vn = g->getNode(v);
+      if (preExplore != DFS_NOP_EXPLORE) preExplore(un, vn);
+      if (color->get(v) == DFS_WHITE) s->push(std::make_tuple(v, 0));
+      if (isRestoring && s->isAligned()) {
+        return;
       }
+      if (postExplore != DFS_NOP_EXPLORE) postExplore(un, vn);
     } else {
       color->insert(u, DFS_BLACK);
-      if (postProcess != DFS_NOP_PROCESS) {
-        postProcess(un);
-      }
+      if (postProcess != DFS_NOP_PROCESS) postProcess(un);
     }
   }
 }
@@ -118,9 +108,8 @@ void DFS::runEHKDFS(Graph *g, void (*preProcess)(Node *),
                     void (*postExplore)(Node *, Node *),
                     void (*postProcess)(Node *)) {
   unsigned int n = g->getOrder();
-  double e =
-      // n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that divides n
-      0.001;
+  double e = n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that
+                                    // divides n 0.001;
   unsigned q = (unsigned)ceil(
       n / log(n) * e / 6);  // 2q entries on S shall take up at most (e/3)n bits
   // unsigned q=n;   /* uncomment to disable restoration */

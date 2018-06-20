@@ -13,9 +13,11 @@ class SegmentStack {
   State *low, *high, *trailers;
   bool t = false;
   State last;
+  // unsigned lc=0;
   unsigned lp = 0, hp = 0, tp = 0;
   uint q;
   State savedTrailer;
+  int alignTarget;
 
  public:
   /* size: number of stored entries, useTrailers: if true, use stack of

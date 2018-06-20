@@ -8,7 +8,7 @@ SegmentStack::SegmentStack(uint size, uint segmentSize, bool useTrailers) {
   if (t) {
     trailers = new State[size / q + 1];
   } else {
-    // use only the last pushed entry as trailer
+    // use only the last trailer
   }
 }
 SegmentStack::~SegmentStack() {
@@ -20,21 +20,20 @@ SegmentStack::~SegmentStack() {
 int SegmentStack::push(State u) {
   if (lp < q) {
     low[lp++] = u;
-    if (t && lp == q) {
-      trailers[tp++] = u;
-    } else if (!t) {
-      last = u;
+    if (lp == q) {
+      if (t) trailers[tp] = u;
+      // else last = u;
       tp++;
     }
   } else if (hp < q) {
     high[hp++] = u;
-    if (t && hp == q) {
-      trailers[tp++] = u;
-    } else if (!t) {
-      last = u;
+    if (hp == q) {
+      if (t) trailers[tp] = u;
+      // else if(tp>2) last = u;
       tp++;
     }
   } else {
+    if (!t) last = low[lp - 1];
     State *tmp = low;
     low = high;
     high = tmp;
@@ -45,16 +44,12 @@ int SegmentStack::push(State u) {
 }
 int SegmentStack::pop(State *r) {
   if (hp > 0) {
-    if (t && hp == q) {
-      tp--;
-    } else if (!t) {
+    if (hp == q) {
       tp--;
     }
     *r = high[--hp];
   } else if (lp > 0) {
-    if (t && lp == q) {
-      tp--;
-    } else if (!t) {
+    if (lp == q) {
       tp--;
     }
     *r = low[--lp];
@@ -67,28 +62,42 @@ int SegmentStack::pop(State *r) {
   }
   return 0;
 }
-bool SegmentStack::empty() { return lp == 0 && hp == 0 && tp == 0; }
+bool SegmentStack::empty() {
+  bool r;
+  r = lp == 0 && hp == 0 && tp == 0;
+  return r;
+}
 void SegmentStack::dropAll() {
-  static int numRestores = 0;
+  // static int numRestores = 0;
+  // printf("%d\n", numRestores++);
   lp = 0;
   hp = 0;
   tp = 0;
-  printf("%d\n", numRestores++);
 }
 void SegmentStack::saveTrailer() {
-  if (t)
-    savedTrailer = trailers[tp - 1];
-  else
-    savedTrailer = last;
+  if (tp == 1) {
+    savedTrailer = t ? trailers[tp - 1] : last;
+    alignTarget = 1;
+  } else if (tp > 1) {
+    savedTrailer = t ? trailers[tp - 1] : last;
+    alignTarget = 2;
+  } else {
+    throw 0;
+  }
 }
+
 bool SegmentStack::isAligned() {
   bool r = false;
-  if (hp == 0 || tp == 0) {
+  if ((alignTarget == 2 && hp == 0) || lp == 0 || tp == 0) {
     r = false;
   } else {
-    unsigned hu = std::get<0>(high[hp - 1]), hk = std::get<1>(high[hp - 1]);
+    unsigned lu = std::get<0>(low[lp - 1]), lk = std::get<1>(low[lp - 1]);
+    unsigned hu = 0, hk = 0;
+    if (alignTarget == 2)
+      hu = std::get<0>(high[hp - 1]), hk = std::get<1>(high[hp - 1]);
     unsigned tu = std::get<0>(savedTrailer), tk = std::get<1>(savedTrailer);
-    r = hu == tu && hk == tk;
+    r = (alignTarget == 2 && hu == tu && hk == tk) ||
+        (alignTarget == 1 && lu == tu && lk == tk);
   }
   return r;
 }
