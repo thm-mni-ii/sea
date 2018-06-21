@@ -31,9 +31,7 @@ class DFSTest : public ::testing::Test {
     }
     g = new Graph(n, order);
   }
-  virtual void TearDown() {
-    free(n);
-  }
+  virtual void TearDown() { free(n); }
 };
 TEST_F(DFSTest, runStd) {
   DFS::runStandardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
@@ -46,13 +44,13 @@ TEST_F(DFSTest, EHK_pre) {
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
 }
 TEST_F(DFSTest, EHK_post) {
-  cnt=new unsigned[order];
+  cnt = new unsigned[order];
   DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incrCnt);
-  bool ok=true;
+  bool ok = true;
   for (unsigned a = 0; a < order; a++) {
-    if(cnt[a]!=1) {
-      printf("a: %u, cnt: %u\n",a,cnt[a]);
-      ok=false;
+    if (cnt[a] != 1) {
+      printf("a: %u, cnt: %u\n", a, cnt[a]);
+      ok = false;
     }
   }
   EXPECT_TRUE(ok);

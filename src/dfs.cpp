@@ -83,10 +83,8 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
   }
 }
 
-void DFS::runStandardDFS(Graph *g, UserFunc1 preProcess,
-                         UserFunc2 preExplore,
-                         UserFunc2 postExplore,
-                         UserFunc1 postProcess) {
+void DFS::runStandardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
+                         UserFunc2 postExplore, UserFunc1 postProcess) {
   CompactArray *color = new CompactArray(g->getOrder(), 1.5);
   for (uint u = 0; u < g->getOrder(); u++) {
     color->insert(u, DFS_WHITE);
@@ -99,10 +97,8 @@ void DFS::runStandardDFS(Graph *g, UserFunc1 preProcess,
   }
   delete color;
 }
-void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess,
-                    UserFunc2 preExplore,
-                    UserFunc2 postExplore,
-                    UserFunc1 postProcess) {
+void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
+                    UserFunc2 postExplore, UserFunc1 postProcess) {
   unsigned int n = g->getOrder();
   double e = n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that
                                     // divides n 0.001;

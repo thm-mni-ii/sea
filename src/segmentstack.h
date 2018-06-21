@@ -13,11 +13,15 @@ typedef std::tuple<uint, uint> State;
   - the segment stack has a low and a high segment
   - the trailer (the last slot) of each segment is kept
   - on push, both segments are filled from low to high
-    - if both segments are full, the low segment is dropped and a new segment is placed above of the high segment
+    - if both segments are full, the low segment is dropped and a new segment is
+  placed above of the high segment
   - on pop, values are taken from high and then low segment
-    - if the segments are empty and there are trailers left, a restoration request is issued
-    - if the segments are empty and the trailers are empty, there is no more data in the stack
-  - instead of using a list of trailers, there is the option to store only the last trailer in a variable (used in EHKDFS)
+    - if the segments are empty and there are trailers left, a restoration
+  request is issued
+    - if the segments are empty and the trailers are empty, there is no more
+  data in the stack
+  - instead of using a list of trailers, there is the option to store only the
+  last trailer in a variable (used in EHKDFS)
 
   @author Simon Heuser
 */
@@ -43,7 +47,8 @@ class SegmentStack {
   void dropAll();
   /* save a trailer to survive the restoration */
   void saveTrailer();
-  /* is the restoration finished? (i.e. saved trailer and actual trailer are aligned) */
+  /* is the restoration finished? (i.e. saved trailer and actual trailer are
+   * aligned) */
   bool isAligned();
 };
 
