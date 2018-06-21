@@ -56,6 +56,7 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
       }
       process_small(node, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
                     DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon, true);
+      sr = s->pop(&x);
     }
     uint u, k;
     u = std::get<0>(x);
