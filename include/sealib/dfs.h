@@ -7,15 +7,15 @@
 #include "sealib/graph.h"
 #include "sealib/node.h"
 
+typedef unsigned int uint;
+typedef void (*UserFunc1)(uint);
+typedef void (*UserFunc2)(uint, uint);
+
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
-#define DFS_NOP_PROCESS (void (*)(Node *))0
-#define DFS_NOP_EXPLORE (void (*)(Node *, Node *))0
-
-typedef void (*UserFunc1)(Node *);
-typedef void (*UserFunc2)(Node *, Node *);
-typedef unsigned int uint;
+#define DFS_NOP_PROCESS (UserFunc1)0
+#define DFS_NOP_EXPLORE (UserFunc2)0
 
 /**
  * This class contains depth-first search algorithms.

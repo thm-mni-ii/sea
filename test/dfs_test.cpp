@@ -3,28 +3,25 @@
 #include <random>
 
 unsigned c1 = 0, c2 = 0;
-void incr1(Node *u) {
+void incr1(uint u) {
   c1++;
-  u->getDegree();
+  u = u;
 }
-void incr2(Node *u, Node *v) {
+void incr2(uint u, uint v) {
   c2++;
-  u->getDegree();
-  v->getDegree();
+  u = v = u;
 }
-// TODO(shsr04): make user actions functions of unsigned
+unsigned *cnt;
 void incrCnt(unsigned u) { cnt[u]++; }
 Graph *g;
 std::random_device rnd;
 unsigned order = rnd() % 50000;
-unsigned *cnt;
 class DFSTest : public ::testing::Test {
  protected:
   Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
   virtual void SetUp() {  // executed before each TEST_F
     c1 = 0;
     c2 = 0;
-    cnt = new unsigned[order];
     for (unsigned int a = 0; a < order; a++) {
       int ai = 5;
       Adjacency *ad =
@@ -34,7 +31,9 @@ class DFSTest : public ::testing::Test {
     }
     g = new Graph(n, order);
   }
-  virtual void TearDown() { free(n); }
+  virtual void TearDown() {
+    free(n);
+  }
 };
 TEST_F(DFSTest, runStd) {
   DFS::runStandardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
@@ -47,7 +46,16 @@ TEST_F(DFSTest, EHK_pre) {
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
 }
 TEST_F(DFSTest, EHK_post) {
-  DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
-  EXPECT_EQ(c1, order);
+  cnt=new unsigned[order];
+  DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incrCnt);
+  bool ok=true;
+  for (unsigned a = 0; a < order; a++) {
+    if(cnt[a]!=1) {
+      printf("a: %u, cnt: %u\n",a,cnt[a]);
+      ok=false;
+    }
+  }
+  EXPECT_TRUE(ok);
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
+  delete cnt;
 }

@@ -15,6 +15,7 @@
  * The compact array consists of _data_ elements (the source array slots),
  * which are split into a number of _groups_,
  * which contain a number of _values_ (the slots of the compact array).
+ * @author Simon Heuser
  */
 class CompactArray {
  private:

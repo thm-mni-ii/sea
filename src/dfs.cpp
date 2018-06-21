@@ -23,18 +23,16 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   while (!s->empty()) {
     uint u = s->top();
     s->pop();
-    Node *un = g->getNode(u);
-    if (preProcess != DFS_NOP_PROCESS) preProcess(un);
+    if (preProcess != DFS_NOP_PROCESS) preProcess(u);
     color->insert(u, DFS_GRAY);
-    for (uint k = 0; k < un->getDegree(); k++) {
+    for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
       uint v = g->head(u, k);
-      Node *vn = g->getNode(v);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(un, vn);
+      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color->get(v) == DFS_WHITE) s->push(v);
       color->insert(v, DFS_GRAY);
-      if (postExplore != DFS_NOP_EXPLORE) postExplore(un, vn);
+      if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
     }
-    if (postProcess != DFS_NOP_PROCESS) postProcess(un);
+    if (postProcess != DFS_NOP_PROCESS) postProcess(u);
     color->insert(u, DFS_BLACK);
   }
 }
@@ -62,35 +60,33 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
     uint u, k;
     u = std::get<0>(x);
     k = std::get<1>(x);
-    Node *un = g->getNode(u);
     if (color->get(u) == DFS_WHITE) {
-      if (preProcess != DFS_NOP_PROCESS) preProcess(un);
+      if (preProcess != DFS_NOP_PROCESS) preProcess(u);
       color->insert(u, DFS_GRAY);
     }
-    if (k < un->getDegree()) {
+    if (k < g->getNode(u)->getDegree()) {
       s->push(std::make_tuple(u, k + 1));
       if (isRestoring && s->isAligned()) {
         return;
       }
       uint v = g->head(u, k);
-      Node *vn = g->getNode(v);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(un, vn);
+      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color->get(v) == DFS_WHITE) s->push(std::make_tuple(v, 0));
       if (isRestoring && s->isAligned()) {
         return;
       }
-      if (postExplore != DFS_NOP_EXPLORE) postExplore(un, vn);
+      if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
     } else {
       color->insert(u, DFS_BLACK);
-      if (postProcess != DFS_NOP_PROCESS) postProcess(un);
+      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
     }
   }
 }
 
-void DFS::runStandardDFS(Graph *g, void (*preProcess)(Node *),
-                         void (*preExplore)(Node *, Node *),
-                         void (*postExplore)(Node *, Node *),
-                         void (*postProcess)(Node *)) {
+void DFS::runStandardDFS(Graph *g, UserFunc1 preProcess,
+                         UserFunc2 preExplore,
+                         UserFunc2 postExplore,
+                         UserFunc1 postProcess) {
   CompactArray *color = new CompactArray(g->getOrder(), 1.5);
   for (uint u = 0; u < g->getOrder(); u++) {
     color->insert(u, DFS_WHITE);
@@ -103,10 +99,10 @@ void DFS::runStandardDFS(Graph *g, void (*preProcess)(Node *),
   }
   delete color;
 }
-void DFS::runEHKDFS(Graph *g, void (*preProcess)(Node *),
-                    void (*preExplore)(Node *, Node *),
-                    void (*postExplore)(Node *, Node *),
-                    void (*postProcess)(Node *)) {
+void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess,
+                    UserFunc2 preExplore,
+                    UserFunc2 postExplore,
+                    UserFunc1 postProcess) {
   unsigned int n = g->getOrder();
   double e = n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that
                                     // divides n 0.001;
