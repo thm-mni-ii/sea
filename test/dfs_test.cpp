@@ -3,23 +3,27 @@
 #include <random>
 
 unsigned c1 = 0, c2 = 0;
+unsigned tmp = 0;
 void incr1(uint u) {
   c1++;
-  u = u;
+  tmp = u;
 }
 void incr2(uint u, uint v) {
   c2++;
-  u = v = u;
+  tmp = u;
+  tmp = v;
 }
 unsigned *cnt;
 void incrCnt(unsigned u) { cnt[u]++; }
 Graph *g;
 std::random_device rnd;
-unsigned order = rnd() % 50000;
+unsigned order = 0;
 class DFSTest : public ::testing::Test {
  protected:
-  Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
+  Node *n;
   virtual void SetUp() {  // executed before each TEST_F
+    order = rnd() % 50000;
+    n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
     c1 = 0;
     c2 = 0;
     for (unsigned int a = 0; a < order; a++) {
@@ -34,9 +38,9 @@ class DFSTest : public ::testing::Test {
   virtual void TearDown() { free(n); }
 };
 TEST_F(DFSTest, runStd) {
-  DFS::runStandardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
-  EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
+  DFS::runStandardDFS(g, incr1, incr2, incr2, incr1);
+  EXPECT_EQ(c1, 2 * order);
+  EXPECT_EQ(c2, 2 * 5 * order);  // every node has 5 edges
 }
 TEST_F(DFSTest, EHK_pre) {
   DFS::runEHKDFS(g, incr1, incr2, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
@@ -44,16 +48,16 @@ TEST_F(DFSTest, EHK_pre) {
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
 }
 TEST_F(DFSTest, EHK_post) {
-  cnt = new unsigned[order];
-  DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incrCnt);
-  bool ok = true;
+  DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
+  /*bool ok = true;
   for (unsigned a = 0; a < order; a++) {
     if (cnt[a] != 1) {
       printf("a: %u, cnt: %u\n", a, cnt[a]);
       ok = false;
     }
   }
-  EXPECT_TRUE(ok);
+  EXPECT_TRUE(ok);*/
+  EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
   delete cnt;
 }

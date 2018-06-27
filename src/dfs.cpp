@@ -11,8 +11,7 @@ static void process_standard(Graph *g, UserFunc1 preProcess,
 static void process_small(uint node, Graph *g, CompactArray *color,
                           SegmentStack *s, UserFunc1 preProcess,
                           UserFunc2 preExplore, UserFunc2 postExplore,
-                          UserFunc1 postProcess, double epsilon,
-                          bool isRestoring);
+                          UserFunc1 postProcess, double epsilon);
 
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
@@ -38,8 +37,8 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 }
 void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
                    UserFunc1 preProcess, UserFunc2 preExplore,
-                   UserFunc2 postExplore, UserFunc1 postProcess, double epsilon,
-                   bool isRestoring) {
+                   UserFunc2 postExplore, UserFunc1 postProcess,
+                   double epsilon) {
   s->push(std::make_tuple(node, 0));
   State x;
   while (!s->empty()) {
@@ -55,7 +54,7 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
         }
       }
       process_small(node, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon, true);
+                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon);
       sr = s->pop(&x);
     }
     uint u, k;
@@ -67,13 +66,13 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
     }
     if (k < g->getNode(u)->getDegree()) {
       s->push(std::make_tuple(u, k + 1));
-      if (isRestoring && s->isAligned()) {
+      if (s->isAligned()) {
         return;
       }
       uint v = g->head(u, k);
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color->get(v) == DFS_WHITE) s->push(std::make_tuple(v, 0));
-      if (isRestoring && s->isAligned()) {
+      if (s->isAligned()) {
         return;
       }
       if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
@@ -101,19 +100,22 @@ void DFS::runStandardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                     UserFunc2 postExplore, UserFunc1 postProcess) {
   unsigned int n = g->getOrder();
-  double e = n % 2 == 0 ? 1.5 : 3;  // assume that 3/e is an integer that
-                                    // divides n 0.001;
-  unsigned q = (unsigned)ceil(
-      n / log(n) * e / 6);  // 2q entries on S shall take up at most (e/3)n bits
+  // assume that 3/e is an integer that divides n:
+  // double e = n % 2 == 0 ? 1.5 : 3;
+  double e = 0.2;
+  // 2q entries on S shall take up at most (e/3)n bits:
+  // unsigned q = (unsigned)ceil(n / (log(n)/log(2)) * e / 6);	// old
+  unsigned q = static_cast<unsigned>(ceil(e / 6 * n) / sizeof(State));
+
   // unsigned q=n;   /* uncomment to disable restoration */
-  printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (1.5 / 3) * n);
+  printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (e / 3) * n);
   SegmentStack *s = new SegmentStack(n, q, false);
   CompactArray *color = new CompactArray(n, e);
   for (uint a = 0; a < g->getOrder(); a++) color->insert(a, DFS_WHITE);
   for (uint a = 0; a < g->getOrder(); a++) {
     if (color->get(a) == DFS_WHITE)
       process_small(a, g, color, s, preProcess, preExplore, postExplore,
-                    postProcess, e, true);
+                    postProcess, e);
   }
   delete color;
   delete s;
