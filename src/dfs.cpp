@@ -101,10 +101,9 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                     UserFunc2 postExplore, UserFunc1 postProcess) {
   unsigned int n = g->getOrder();
   // assume that 3/e is an integer that divides n:
-  // double e = n % 2 == 0 ? 1.5 : 3;
-  double e = 0.2;
+  double e = n % 2 == 0 ? 1.5 : 3;
+  // double e = 0.2;
   // 2q entries on S shall take up at most (e/3)n bits:
-  // unsigned q = (unsigned)ceil(n / (log(n)/log(2)) * e / 6);	// old
   unsigned q = static_cast<unsigned>(ceil(e / 6 * n) / sizeof(State));
 
   // unsigned q=n;   /* uncomment to disable restoration */

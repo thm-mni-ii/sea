@@ -26,8 +26,7 @@ class CompactArray {
    * group width: no. bits a group occupies
    * value width: no. bits a value occupies (e.g. ld(3) for 3 possible states)
    */
-  unsigned int valueWidth, valueCount, groupWidth, groupCount, dataWidth,
-      dataCount;
+  double valueWidth, valueCount, groupWidth, groupCount, dataWidth, dataCount;
   double valuesPerGroup, groupsPerDatum;
   unsigned shv1, shg1;
 
