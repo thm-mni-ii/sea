@@ -20,7 +20,11 @@ namespace Sealib {
         typedef unsigned char blocktype;
         typedef unsigned long sizetype;
         typedef bool bittype;
+    public:
+        explicit Bitset(sizetype bits) : mbits(bits/bitsPerByte + 1), bits(bits) {}
+        ~Bitset() = default;
 
+    private:
         /**
          * @param idx of the block
          * @return const ref to the block
