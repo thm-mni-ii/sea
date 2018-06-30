@@ -61,7 +61,7 @@ namespace Sealib {
          * @param bit idx of the bit
          * @return true if the bit is set, false otherwise
          */
-        inline bool get(sizetype bit) {
+        inline bittype get(sizetype bit) {
             assert(bit < bits);
             return get(mbits[bit / bitsPerByte], bit % bitsPerByte);
         }
@@ -89,7 +89,7 @@ namespace Sealib {
             assert(bit < bits);
             flip(mbits[bit / bitsPerByte], bit % bitsPerByte);
         }
-        
+
     private:
         static unsigned int bitsPerByte = 8;
         static blocktype blocktype_one = blocktype(1);
