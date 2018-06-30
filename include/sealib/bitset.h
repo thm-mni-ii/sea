@@ -101,7 +101,7 @@ namespace Sealib {
         std::vector<blocktype> mbits;
         sizetype bits;
 
-        inline bittype get(blocktype i, sizetype b){
+        inline bittype get(const blocktype &i, sizetype b){
             return i & (blocktype_one << b);
         }
 
@@ -113,7 +113,7 @@ namespace Sealib {
             i &= ~(blocktype_one << b);
         }
 
-        inline void flip(blocktype i, sizetype b){
+        inline void flip(blocktype &i, sizetype b){
             i ^= (blocktype_one << b);
         }
     };
