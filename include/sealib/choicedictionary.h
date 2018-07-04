@@ -1,19 +1,10 @@
-#ifndef SEA_CHOICEDICTIONARY_H
-#define SEA_CHOICEDICTIONARY_H
+#ifndef SEALIB_CHOICEDICTIONARY_H_
+#define SEALIB_CHOICEDICTIONARY_H_
 
-class ChoiceDictionary
-{
-  private:
+class ChoiceDictionary {
+ private:
     unsigned int *A, *B;
     unsigned int length, pointer;
-
-    /**
-     * Reorders the Array and changes the pointer when an entry
-     * A[index] < pointer is changed to a value v=false
-     * @param index Index of changed value in A
-     * @param linkedIndex Index of B where A[index] is currently linked to
-     */
-    // void reorder(unsigned int index, unsigned int linedIndex);
 
     /**
      * Creates a link between A and B by setting and B[pointer-1]=a and
@@ -22,12 +13,12 @@ class ChoiceDictionary
      */
     unsigned int makeLink(unsigned int target);
 
-  public:
+ public:
     /**
      * Creates choice dictionary with given size
      * @param _size Size of choice dictionary
      */
-    ChoiceDictionary(unsigned int _length);
+    explicit ChoiceDictionary(unsigned int _length);
 
     /**
      * Inserts a color into the specified index
@@ -49,4 +40,4 @@ class ChoiceDictionary
     ~ChoiceDictionary();
 };
 
-#endif //SEA_CHOICEDICTIONARY_H
+#endif  // SEALIB_CHOICEDICTIONARY_H_
