@@ -9,8 +9,10 @@
 typedef boost::dynamic_bitset<> Group;
 
 /**
- * This compact array stores a given number of values in as low space as possible.
- * Therefore an "epsilon" parameter is used: the smaller epsilon is, the more values are put into one storage group.
+ * This compact array stores a given number of values in as low space as
+ * possible.
+ * Therefore an "epsilon" parameter is used: the smaller epsilon is, the more
+ * values are put into one storage group.
  * @author Simon Heuser
  */
 class CompactArray {
