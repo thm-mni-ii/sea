@@ -1,80 +1,53 @@
 #include "sealib/compactarray.h"
 #include <stdio.h>
+Group **group;
+  double e;
+  /**
+   * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible states)
+   * group width: no. bits a group occupies (e.g. ceil(valueWidth*3/e) for 3 possible states)
+   */
+  unsigned valueWidth, maxValue, groupWidth;
+  double valuesPerGroup;
+  unsigned groupCount;
 
 void CompactArray::insert(unsigned int i, unsigned int p) {
-  // values per group: 3/e, groups per datum: dataWidth/groupWidth => values per
-  // datum: dataWidth/(groupWidth/(3/e))
-  if (i >= valueCount) return;
-  double groupIndex = floor(i / valuesPerGroup);
-  unsigned dataIndex =
-      static_cast<unsigned>(floor(groupIndex / groupsPerDatum));
-  double groupOffset = fmod(groupIndex, groupsPerDatum);
-  double valueOffset = fmod(i, valuesPerGroup);
-  // insert p into slot 'data X + group Y + value Z'
-  unsigned a = data[dataIndex];
-  unsigned b2 = static_cast<unsigned>((dataWidth - valueWidth) -
-                                      groupOffset * groupWidth -
-                                      valueOffset * valueWidth);
-  unsigned b = shv1 << b2;
-  unsigned c = a & ~b;
-  unsigned d = c | (p << b2);
-  data[dataIndex] = d;
+  // values per group: 3/e, value width=ceil(log3) bits, group width
+  unsigned groupOffset = static_cast<unsigned>(floor(i / valuesPerGroup));
+  if (groupOffset >= groupCount) throw COMPACTARRAY_FAULT;
+  unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
+  Group a = *(group[groupOffset]);
+  unsigned gap=static_cast<unsigned>((valuesPerGroup-valueOffset-1)*valueWidth);
+  Group b = Group(groupWidth,maxValue<< gap);
+  Group c = a & ~b;
+  Group d = Group(groupWidth,p << gap);
+  Group r=c|d;
+  delete group[groupOffset];
+  group[groupOffset] = new Group(r);
 }
 
-unsigned int CompactArray::get(unsigned int selector, unsigned int i) {
-  double groupIndex = floor(i / valuesPerGroup);
-  unsigned dataIndex =
-      static_cast<unsigned>(floor(groupIndex / groupsPerDatum));
-  double groupOffset = fmod(groupIndex, groupsPerDatum);
-  double valueOffset = fmod(i, valuesPerGroup);
-  switch (selector) {
-    case COMPACTARRAY_DATA:
-      if (i > dataCount)
-        return COMPACTARRAY_FAULT;
-      else
-        return data[i];
-    case COMPACTARRAY_GROUP: {
-      // get result from data X + group Y
-      unsigned a = data[dataIndex];
-      unsigned b2 = static_cast<unsigned>((dataWidth - groupWidth) -
-                                          (groupOffset + 1) * groupWidth);
-      unsigned b = shg1 << b2;
-      unsigned c = a & b;
-      int d = c >> b2;
-      return d;
-    }
-    case COMPACTARRAY_VALUE: {
-      unsigned a = data[dataIndex];
-      unsigned b2 = static_cast<unsigned>((dataWidth - valueWidth) -
-                                          groupOffset * groupWidth -
-                                          valueOffset * valueWidth);
-      unsigned b = shv1 << b2;
-      unsigned c = a & b;
-      int d = c >> b2;
-      return d;
-    }
-    default:
-      return COMPACTARRAY_FAULT;
-  }
-}
 unsigned int CompactArray::get(unsigned int i) {
-  return get(COMPACTARRAY_VALUE, i);
+  unsigned groupOffset = static_cast<unsigned>(floor(i / valuesPerGroup));
+  if (groupOffset >= groupCount) throw COMPACTARRAY_FAULT;
+  unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
+  unsigned gap=static_cast<unsigned>((valuesPerGroup-valueOffset-1)*valueWidth);
+  unsigned a = static_cast<unsigned>(group[groupOffset]->to_ulong());
+  unsigned b = maxValue<<gap;
+  unsigned c = a & b;
+  unsigned d = c >> gap;
+  return d;
 }
 
 CompactArray::CompactArray(unsigned int count, double epsilon) {
   e = epsilon;
   // the following is valid if the inserted values can have 3 states:
-  valueCount = static_cast<double>(count);
-  valueWidth = ceil(log(3) / log(2));
-  groupWidth = ceil(3/e) * valueWidth;  // bits for a group of 3/e (e.g. 2) consec. colors
-  groupCount = ceil(count / (groupWidth / valueWidth));
-  dataWidth = 8 * sizeof(unsigned int);
-  dataCount = ceil((groupCount * groupWidth) / dataWidth);
-  data = new unsigned int[static_cast<unsigned>(dataCount)];
-  valuesPerGroup = 3 / e;
-  groupsPerDatum = dataWidth / groupWidth;
-  shv1 = static_cast<unsigned>(pow(2, valueWidth) - 1);
-  shg1 = static_cast<unsigned>(pow(2, groupWidth) - 1);
+  valueWidth = static_cast<unsigned>(ceil(log(3) / log(2)));
+  valuesPerGroup = ceil(3 / e);
+  groupWidth = static_cast<unsigned>(valuesPerGroup * valueWidth);  // bits for a group of 3/e (e.g. 2) consec. colors
+  maxValue = static_cast<unsigned>(pow(2, valueWidth) - 1);
+  groupCount = static_cast<unsigned>(ceil(count / (groupWidth / valueWidth)));
+  printf("e=%3.2f, vw=%u, vpg=%.0f, maxv=0x%x\n",e,valueWidth,valuesPerGroup,maxValue);
+  group = new Group*[groupCount];
+  for(unsigned a=0; a<groupCount; a++) group[a]=new Group(groupWidth,0);
 }
 
-CompactArray::~CompactArray() { delete[] data; }
+CompactArray::~CompactArray() { delete[] group; }

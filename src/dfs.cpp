@@ -110,8 +110,8 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (e / 3) * n);
   SegmentStack *s = new SegmentStack(n, q, false);
   CompactArray *color = new CompactArray(n, e);
-  for (uint a = 0; a < g->getOrder(); a++) color->insert(a, DFS_WHITE);
-  for (uint a = 0; a < g->getOrder(); a++) {
+  for (uint a = 0; a < n; a++) color->insert(a, DFS_WHITE);
+  for (uint a = 0; a < n; a++) {
     if (color->get(a) == DFS_WHITE)
       process_small(a, g, color, s, preProcess, preExplore, postExplore,
                     postProcess, e);

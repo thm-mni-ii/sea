@@ -2,39 +2,23 @@
 #define SEALIB_COMPACTARRAY_H_
 
 #include <math.h>
+#include <third-party/boost/include/boost/dynamic_bitset.hpp>
 
-#define COMPACTARRAY_DATA 100
-#define COMPACTARRAY_GROUP 10
-#define COMPACTARRAY_VALUE 1
 #define COMPACTARRAY_FAULT (unsigned)-99
 
+typedef boost::dynamic_bitset<> Group;
+
 /**
- * This compact array tries to use the space of an unsigned int array as
- * well as possible.
- *
- * The compact array consists of _data_ elements (the source array slots),
- * which are split into a number of _groups_,
- * which contain a number of _values_ (the slots of the compact array).
+ * This compact array stores a given number of values in as low space as possible.
+ * Therefore an "epsilon" parameter is used: the smaller epsilon is, the more values are put into one storage group.
  * @author Simon Heuser
  */
 class CompactArray {
- private:
-  unsigned int *data;
-  double e;
-  /**
-   * data width: no. bits a datum occupies (e.g. 32 bits in unsigned int)
-   * group width: no. bits a group occupies
-   * value width: no. bits a value occupies (e.g. ld(3) for 3 possible states)
-   */
-  double valueWidth, valueCount, groupWidth, groupCount, dataWidth, dataCount;
-  double valuesPerGroup, groupsPerDatum;
-  unsigned shv1, shg1;
-
  public:
   /**
    * Create a new compact array.
    * @param count number of values this compact array can hold
-   * @param epsilon width parameter: 3/e must divide n
+   * @param epsilon width parameter: 3/e should divide n
    * If you don't know what to use for epsilon: 1.5 if count is even, 3.0 if
    * count is odd.
    */
@@ -50,17 +34,8 @@ class CompactArray {
   void insert(unsigned int i, unsigned int p);
 
   /**
-   * Get an element from the specified compartment.
-   * @param selector level of the compact array to take the result from
-   * COMPACTARRAY_DATA, COMPACTARRAY_GROUP or COMPACTARRAY_VALUE
-   * @param i index (depending on the selector, this will specify a
-   * data element, a group or a value index)
-   * @return the retrieved number
-   */
-  unsigned int get(unsigned int selector, unsigned int i);
-  /**
    * Get a value from the compact array.
-   * @param i value index to get the value from
+   * @param i index to get the value from
    * @return the found value
    */
   unsigned int get(unsigned int i);
