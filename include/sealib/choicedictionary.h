@@ -1,6 +1,8 @@
 #ifndef SEALIB_CHOICEDICTIONARY_H_
 #define SEALIB_CHOICEDICTIONARY_H_
 
+namespace Sealib {
+
 class ChoiceDictionary {
  private:
     unsigned int *A, *B;
@@ -39,5 +41,5 @@ class ChoiceDictionary {
 
     ~ChoiceDictionary();
 };
-
+}  // namespace Sealib
 #endif  // SEALIB_CHOICEDICTIONARY_H_

@@ -10,10 +10,13 @@
 #define DFS_NOP_PROCESS (void(*)(Node*))0
 #define DFS_NOP_EXPLORE (void(*)(Node*, Node*))0
 
+using Sealib::Node;
+
 typedef void (*UserFunc1)(Node*);
 typedef void (*UserFunc2)(Node*, Node*);
 typedef unsigned int uint;
 
+namespace Sealib {
 /**	
  * This class contains depth-first search algorithms.
  * The depth-first search of a graph processes all its nodes and
@@ -49,5 +52,6 @@ class DFS {
 	static void runStandardDFS(Graph *g, UserFunc1 preprocess,
 							   UserFunc2 preexplore, UserFunc2 postexplore, UserFunc1 postprocess);
 };
+}  // namespace Sealib
 #endif  // SEALIB_DFS_H_
 

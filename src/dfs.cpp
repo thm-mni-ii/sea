@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "sealib/dfs.h"
 
+using Sealib::DFS;
+using Sealib::Node;
+
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void DFS::process_standard(Graph *g,
 						   UserFunc1 preProcess, UserFunc2 preExplore,

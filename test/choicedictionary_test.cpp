@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <sealib/choicedictionary.h>
 
+using Sealib::ChoiceDictionary;
+
 TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     unsigned int size = 10;
     ChoiceDictionary c = ChoiceDictionary(size);

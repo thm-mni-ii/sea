@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "sealib/choicedictionary.h"
 
+using Sealib::ChoiceDictionary;
+
 ChoiceDictionary::ChoiceDictionary(unsigned int _length) : length(_length) {
     A = new unsigned int[length];
     B = new unsigned int[length];
