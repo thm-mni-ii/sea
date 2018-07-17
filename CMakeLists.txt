@@ -43,80 +43,12 @@ add_dependencies(gtest GTEST_PROJECT)
 set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemock/gtest/libgtest.a")
 
 # --------------------------------------------------- #
-#                   Boost library
-# --------------------------------------------------- #
-set( Boost_Bootstrap_Command )
-if( UNIX )
-        set( Boost_Bootstrap_Command ./bootstrap.sh )
-        set( Boost_b2_Command ./b2 )
-else()
-        if( WIN32 )
-                set( Boost_Bootstrap_Command bootstrap.bat )
-                set( Boost_b2_Command b2.exe )
-        endif()
-endif()
-
-ExternalProject_Add(BOOST_PROJECT
-        URL https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2
-        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/boost
-        BUILD_IN_SOURCE 1
-        UPDATE_COMMAND ""
-        PATCH_COMMAND ""
-        CONFIGURE_COMMAND ${Boost_Bootstrap_Command}
-        BUILD_COMMAND  ${Boost_b2_Command} install
-        --without-python
-        --without-mpi
-        --without-random
-        --without-log
-        --without-regex
-        --without-serialization
-        --without-test
-        --without-thread
-        --without-timer
-        --without-type_erasure
-        --without-wave
-        --without-atomic
-        --without-chrono
-        --without-container
-        --without-context
-        --without-coroutine
-        --without-date_time
-        --without-exception
-        --without-fiber
-        --without-filesystem
-        --without-locale
-        --without-signals
-        --without-program_options
-        --without-math
-        --without-iostreams
-        --without-graph_parallel
-        --without-graph
-        --without-system
-        --disable-icu
-        --prefix=${CMAKE_CURRENT_BINARY_DIR}/third-party/boost
-        --threading=single,multi
-        --link=shared
-        --variant=release
-        -j8
-        INSTALL_COMMAND "")
-
-ExternalProject_Get_Property(BOOST_PROJECT install_dir)
-
-set(Boost_INCLUDE_DIR ${install_dir}/include/ )
-
-#add_library(boost STATIC IMPORTED)
-#add_dependencies(boost BOOST_PROJECT)
-#set_property(TARGET boost PROPERTY IMPORTED_LOCATION "${install_dir}/lib/libboost_system.a")
-#MESSAGE(STATUS "BOOST: ${Boost_INCLUDE_DIR}")
-
-# --------------------------------------------------- #
 #                   build library
 # --------------------------------------------------- #
-include_directories(${Boost_INCLUDE_DIR} ${CMAKE_INCLUDE_PATH})
+include_directories(${CMAKE_INCLUDE_PATH})
 file(GLOB LIB_SOURCES "src/*.cpp")
 
 add_library(sealib SHARED ${LIB_SOURCES})
-add_dependencies(sealib BOOST_PROJECT)
 target_compile_options(sealib PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpedantic -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 # --------------------------------------------------- #
