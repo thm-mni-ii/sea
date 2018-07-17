@@ -8,8 +8,9 @@
 namespace Sealib {
 /**
  * Simple Bitset to be used by all classes that need a dynamically allocated bitset.
- * Adds the ability to simply adress whole blocks in the bitset for table lookup convenience.
- * No implementation of the [] operator for convenience, because it adds overhead.
+ * Adds the ability to simply address whole blocks in the bitset for table lookup convenience.
+ * Includes an implementation of operator[] for convenient use.
+ * Partly based on dynamic_bitset from the boost library.
  * @author Johannes Meintrup
  */
 class Bitset {
@@ -17,11 +18,13 @@ class Bitset {
     typedef unsigned long sizetype;
     typedef bool bittype;
 
- public:
-    explicit Bitset(sizetype bits) : mbits(bits/bitsPerByte + 1), bits(bits) {}
-    ~Bitset() = default;
-
  private:
+    static unsigned int bitsPerByte = 8;
+    static blocktype blocktype_one = blocktype(1);
+
+    std::vector<blocktype> mbits;
+    sizetype bits;
+
     /**
      * @param idx of the block
      * @return const ref to the block
@@ -41,6 +44,90 @@ class Bitset {
     }
 
  public:
+    explicit Bitset(sizetype bits) : mbits(bits/bitsPerByte + 1), bits(bits) {}
+    ~Bitset() = default;
+
+    /**
+     * Proxy class to simulate lvalues of bit type.
+     * Implementation taken from boost dynamic_bitset.
+     */
+     class BitReference {
+         friend class Bitset;
+
+         BitReference(blocktype &b, sizetype pos) :
+                 mblock(b),
+                 mmask(blocktype(1) << pos)
+         {}
+
+         void operator&();  // left undefined
+
+      private:
+         blocktype  & mblock;
+         const blocktype mmask;
+
+         void doSet() { mblock |= mmask; }
+         void doReset() { mblock &= ~mmask; }
+         void doFlip() { mblock ^= mmask; }
+         void doAssign(bool b) { b ? doSet() : doReset(); }
+
+      public:
+         operator bool() const { return (mblock & mmask) != 0; }
+         bool operator~() const { return (mblock & mmask) == 0; }
+
+         BitReference& flip() {
+             doFlip();
+             return *this;
+         }
+
+         // for b[i] = x
+         BitReference& operator=(bool x) {
+             doAssign(x);
+             return *this;
+         }
+
+         // for b[i] = b[j]
+         BitReference& operator=(const BitReference& rhs) {
+             doAssign(rhs);
+             return *this;
+         }
+
+         BitReference& operator|=(bool x) {
+             if (x) doSet();
+             return *this;
+         }
+
+         BitReference& operator&=(bool x) {
+             if (!x) doReset();
+             return *this;
+         }
+
+         BitReference& operator^=(bool x) {
+             if (x) doFlip();
+             return *this;
+         }
+
+         BitReference& operator-=(bool x) {
+             if (x) doReset();
+             return *this;
+         }
+     };
+
+     /**
+      * non-const version of the [] operator, uses the BitReference wrapper class.
+      * @param bit index of the bit
+      * @return BitReference referencing the block and index of the bit.
+      */
+     BitReference operator[](sizetype bit) {
+         return BitReference(mbits[bit / bitsPerByte], bit % bitsPerByte);
+     }
+
+     /**
+      * const version of the operator needs only a simple get instead of the BitReference wrapper class.
+      * @param bit index of the bit
+      * @return true if set, false otherwise
+      */
+     bool operator[](sizetype bit) const { return get(bit); }
+
     /**
      * sets all bits to true
      */
@@ -63,7 +150,7 @@ class Bitset {
      * @param bit idx of the bit
      * @return true if the bit is set, false otherwise
      */
-    inline bittype get(sizetype bit) {
+    inline bittype get(sizetype bit) const {
         assert(bit < bits);
         return get(mbits[bit / bitsPerByte], bit % bitsPerByte);
     }
@@ -92,27 +179,19 @@ class Bitset {
         flip(mbits[bit / bitsPerByte], bit % bitsPerByte);
     }
 
- private:
-    static unsigned int bitsPerByte = 8;
-    static blocktype blocktype_one = blocktype(1);
-
-    std::vector<blocktype> mbits;
-    sizetype bits;
-
- public:
-    inline bittype get(const blocktype &i, sizetype b) {
+    inline bittype get(const blocktype &i, sizetype b) const {
         return i & (blocktype_one << b);
     }
 
-    inline void set(const blocktype &i, sizetype b) {
+    inline void set(blocktype &i, sizetype b) {
         i |= (blocktype_one << b);
     }
 
-    inline void clear(const blocktype &i, sizetype b) {
+    inline void clear(blocktype &i, sizetype b) {
         i &= ~(blocktype_one << b);
     }
 
-    inline void flip(const blocktype &i, sizetype b) {
+    inline void flip(blocktype &i, sizetype b) {
         i ^= (blocktype_one << b);
     }
 };
