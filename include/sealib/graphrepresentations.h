@@ -26,11 +26,17 @@ class Graphrepresentations{
 		 */
 		static unsigned int* graphToStandard(Graph *g);
 		/**
-		 * Transforms graph from standard representation to 
-		 * cross pointer representation
+		 * Transforms graph from standard to 
+		 * crosspointer representation
 		 * @param g graph in standard representation
 		 */
 		static unsigned int* standardToCrosspointer(unsigned int* g);
+		/**
+		 * Transforms graph from standard to
+		 * beginpointer representation
+		 * @param g graph in standard representation
+		 */
+		static unsigned int* standardToBeginpointer(unsigned int* g);
 };
 #endif //SEA_LIBS_REPS_H
 
