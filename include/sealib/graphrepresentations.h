@@ -26,7 +26,7 @@ class Graphrepresentations{
 		 */
 		static unsigned int* graphToStandard(Graph *g);
 		/**
-		 * Transforms graph in standard representation to 
+		 * Transforms graph from standard representation to 
 		 * cross pointer representation
 		 * @param g graph in standard representation
 		 */
