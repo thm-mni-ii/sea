@@ -66,3 +66,14 @@ unsigned int* Graphrepresentations::standardToBeginpointer(unsigned int* a){
 	return a;
 }
 
+//Transforms graph inplace from cross or beginpointer to swapped crossor beginpointer representation
+unsigned int* Graphrepresentations::swapRepresentation(unsigned int* a){
+	unsigned int order = a[0];
+	for(unsigned int i = 1 ; i <= order; ++i){
+		unsigned int temp = a[a[i]];
+	  a[a[i]] = i;
+		a[i] = temp;
+	}
+	return a;
+}
+
