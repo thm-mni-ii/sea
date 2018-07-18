@@ -27,7 +27,7 @@ unsigned int* Graphrepresentations::graphToStandard(Graph *g){
 	return standardgraph;
 }
 
-// Transforms graph from standard representation to crosspointer representation inplace
+// Transforms graph inplace from standard representation to crosspointer representation
 unsigned int* Graphrepresentations::standardToCrosspointer(unsigned int* a){
 	unsigned int n = a[0],v,u,pv,pu;	
 	//n = order of the graph
@@ -52,6 +52,17 @@ unsigned int* Graphrepresentations::standardToCrosspointer(unsigned int* a){
 		--v;
 	}
 	a[1] = n + 2;
+	return a;
+}
+
+// Transforms graph inplace from standard to beginpointer representation 
+unsigned int* Graphrepresentations::standardToBeginpointer(unsigned int* a){
+	unsigned int order = a[0];
+	unsigned int numedges = a[order + 1];
+	unsigned int asize = order + numedges + 2;
+	for(unsigned int i = order + 2; i < asize; ++i){
+		a[i] = a[a[i]];
+	}
 	return a;
 }
 
