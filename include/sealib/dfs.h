@@ -33,7 +33,28 @@ class DFS {
      */
 	static void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 								 UserFunc2 postExplore, UserFunc1 postProcess, uint *color, uint u);
-
+	/**
+	 * @param p: position in graph to get the vertex name from
+	 */
+	class Inplace{
+		private:
+			uint *g;
+			uint startVertex;
+			UserFunc1 preProcess;
+			UserFunc1 postProcess;
+			uint findStartVertex(v);
+			void visit(uint p);
+			uint& accessStar( uint p);
+			void nextNeighbor(uint p, bool firstcheck);
+			bool isWhite(uint p);
+			void gotoChild(uint p);
+			void gotoParent(uint q);
+			uint& access(uint p);
+			uint name(uint p);
+		public:
+			Inplace(uint *graph, uint v, UserFunc1 pre, UserFunc1 post);
+	};
+	//findnextstartvertex
  public:
 	/**
      * Run a standard depth-first search over a graph. <br>
@@ -48,6 +69,18 @@ class DFS {
      */
 	static void runStandardDFS(Graph *g, UserFunc1 preprocess,
 							   UserFunc2 preexplore, UserFunc2 postexplore, UserFunc1 postprocess);
+	/** 
+	 * Run an inplace depth-first search over a directed graph.
+	 * EFFICIENCY: O(n+m) time, O(n + m + 2) words
+	 * @param g Graph G=(V,E) to iterate over
+	 * @param v Vertex to start the DFS from
+	 * @param [pre|post][Process]: user-defined functions
+	 * to be executed before/after processing a node
+   * @param preprocess to be executed before processing a node u
+   * @param postprocess to be executed after processing a node u
+	 */
+	static void runInplaceDirectedDFS(Graph *g,uint v, UserFunc1 preprocess,
+								 UserFunc1 postprocess);
 };
 #endif  // SEALIB_DFS_H_
 

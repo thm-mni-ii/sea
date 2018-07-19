@@ -41,3 +41,107 @@ void DFS::runStandardDFS(Graph *g, void (*preProcess)(Node *), void (*preExplore
 	}
 	delete[] color;
 }
+
+DFS::Inplace::Inplace(uint *graph, uint v, UserFunc1 pre, UserFunc1 post){
+	this->g = graph;
+	this->startVertex = v;
+	this->preProcess = pre;
+	this->postProcess = post;
+}
+
+uint DFS::Inplace::findStartVertex(uint p){
+	unsigned int order = g[0];
+	unsigned int numedges = g[0] + 1;
+	for(unsigned int i = order + 2; i < numedges; ++i){
+		if(g[i] == p){
+			return i;
+		}
+	}
+	return 0;	
+}
+
+uint DFS::Inplace::name(uint p){
+	if(g[p] != 0 && g[p] <= g[0]){
+		return g[p];
+	}else{
+		return 0; 
+	}
+}
+
+uint& DFS::Inplace::access(uint p){
+	if(g[p] == 0 || g[p] > g[0]){
+		return g[p];
+	}else{
+		return g[g[p]];
+	}
+}
+
+uint& DFS::Inplace::accessStar(uint p){
+	if(name(p - 1) == 0 || (0 < access(p) && access(p) <= g[0])){
+		return access(p);
+	}else if(name(p - 1) != 0){
+		return access(access(p)-1);
+	}else{
+		return access(access(p));
+	}
+}
+
+void DFS::Inplace::visit(uint p){
+	//preprocess
+	nextNeighbor(p,true);
+}
+
+void DFS::Inplace::nextNeighbor(uint p,bool firstcheck){
+	if(firstcheck){
+		if(name(p) == 0){
+			if(isWhite(p)){
+				gotoChild(p);
+			}else{
+				nextNeighbor(p+1,true);
+			}
+		}else{
+			gotoParent(q);
+		}
+	}else{
+		if(isWhite(p)){
+			gotoChild(p);
+		}else{
+			nextNeighbor(p+1,true);
+		}
+	}
+}
+
+bool DFS::Inplace::isWhite(uint p){
+	return g[access(p)] <= g[0];
+}
+
+void DFS::Inplace::gotoChild(uint p){
+	uint q = accessStar(p);
+	uint v = name(q);
+	uint x = access(q + 1);
+	access(p) = x;
+	if(!name(p)){
+		access(q+1) = p + 1;
+	}else{
+		access(q+1) = p;
+	}
+	visit(q);
+}
+
+void DFS::Inplace::gotoParent(uint q){
+	uint p = access(q+1);
+	access(q+1) = access(p)+1;
+	access(p) = q;
+	if(name(p-1)!= 0){
+		if(accessStar(p-1) < accessStar(p)){
+			uint temp = accessStar(p-1);
+			accessStar(p-1) = accessStar(p);
+			accessStar(p) = temp;
+			nextNeighbor(p,true);
+		}else{
+			nextNeighbor(p+1,true);
+	}else{
+		nextNeighbor(q+1,true);
+	}
+}
+}
