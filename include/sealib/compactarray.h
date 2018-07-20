@@ -4,8 +4,6 @@
 #include <math.h>
 #include <third-party/boost/include/boost/dynamic_bitset.hpp>
 
-#define COMPACTARRAY_FAULT (unsigned)-99
-
 typedef boost::dynamic_bitset<> Group;
 
 /**
@@ -16,6 +14,9 @@ typedef boost::dynamic_bitset<> Group;
  * @author Simon Heuser
  */
 class CompactArray {
+ private:
+  std::out_of_range OUTOFBOUNDS = std::out_of_range("index out of bounds");
+
  public:
   /**
    * Create a new compact array.

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <sealib/compactarray.h>
+#include <stdexcept>
 
 TEST(CompactArrayTest, insertAndGet) {
   CompactArray *a = new CompactArray(1500, 0.2);
@@ -10,7 +11,7 @@ TEST(CompactArrayTest, insertAndGet) {
   EXPECT_EQ(a->get(60), 1);
   a->insert(1499, 1);
   EXPECT_EQ(a->get(1499), 1);
-  EXPECT_THROW(a->get(1500), unsigned int);
-  EXPECT_THROW(a->insert(1500, 1), unsigned int);
+  EXPECT_THROW(a->get(1500), std::out_of_range);
+  EXPECT_THROW(a->insert(1500, 1), std::out_of_range);
   delete a;
 }

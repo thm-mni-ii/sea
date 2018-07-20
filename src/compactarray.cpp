@@ -8,14 +8,13 @@ double e;
  * group width: no. bits a group occupies (e.g. ceil(valueWidth*3/e) for 3
  * possible states)
  */
-unsigned valueWidth, maxValue, groupWidth;
-double valuesPerGroup;
+unsigned valueWidth, maxValue, groupWidth, valuesPerGroup;
 unsigned groupCount;
 
 void CompactArray::insert(unsigned int i, unsigned int p) {
   // values per group: 3/e, value width=ceil(log3) bits, group width
-  unsigned groupOffset = static_cast<unsigned>(floor(i / valuesPerGroup));
-  if (groupOffset >= groupCount) throw COMPACTARRAY_FAULT;
+  unsigned groupOffset = static_cast<unsigned>(floor(i / static_cast<double>(valuesPerGroup)));
+  if (groupOffset >= groupCount) throw CompactArray::OUTOFBOUNDS;
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
   Group a = *(group[groupOffset]);
   unsigned gap =
@@ -30,7 +29,7 @@ void CompactArray::insert(unsigned int i, unsigned int p) {
 
 unsigned int CompactArray::get(unsigned int i) {
   unsigned groupOffset = static_cast<unsigned>(floor(i / valuesPerGroup));
-  if (groupOffset >= groupCount) throw COMPACTARRAY_FAULT;
+  if (groupOffset >= groupCount) throw CompactArray::OUTOFBOUNDS;
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
@@ -45,13 +44,11 @@ CompactArray::CompactArray(unsigned int count, double epsilon) {
   e = epsilon;
   // the following is valid if the inserted values can have 3 states:
   valueWidth = static_cast<unsigned>(ceil(log(3) / log(2)));
-  valuesPerGroup = ceil(3 / e);
-  groupWidth = static_cast<unsigned>(
-      valuesPerGroup *
-      valueWidth);  // bits for a group of 3/e (e.g. 2) consec. colors
+  valuesPerGroup = static_cast<unsigned>(ceil(3 / e));
+  groupWidth = valuesPerGroup*valueWidth;  // bits for a group of 3/e (e.g. 2) consec. colors
   maxValue = static_cast<unsigned>(pow(2, valueWidth) - 1);
-  groupCount = static_cast<unsigned>(ceil(count / (groupWidth / valueWidth)));
-  printf("e=%3.2f, vw=%u, vpg=%.0f, maxv=0x%x\n", e, valueWidth, valuesPerGroup,
+  groupCount = static_cast<unsigned>(ceil(count / (groupWidth / static_cast<double>(valueWidth))));
+  printf("e=%3.2f, vw=%u, vpg=%u, maxv=0x%x\n", e, valueWidth, valuesPerGroup,
          maxValue);
   group = new Group *[groupCount];
   for (unsigned a = 0; a < groupCount; a++) group[a] = new Group(groupWidth, 0);

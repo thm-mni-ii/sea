@@ -48,7 +48,11 @@ TEST_F(DFSTest, EHK_pre) {
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
 }
 TEST_F(DFSTest, EHK_post) {
-  DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
+  try {
+    DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
+  } catch (unsigned e) {
+    printf("caught %u\n", e);
+  }
   /*bool ok = true;
   for (unsigned a = 0; a < order; a++) {
     if (cnt[a] != 1) {
