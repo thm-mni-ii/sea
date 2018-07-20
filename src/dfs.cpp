@@ -16,6 +16,9 @@ static void process_small(uint node, Graph *g, CompactArray *color,
                           UserFunc2 preExplore, UserFunc2 postExplore,
                           UserFunc1 postProcess, double epsilon);
 
+using Sealib::DFS;
+using Sealib::Node;
+
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                       UserFunc2 postExplore, UserFunc1 postProcess,

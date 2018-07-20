@@ -1,5 +1,8 @@
 #include "sealib/graph.h"
 
+using Sealib::Graph;
+using Sealib::Node;
+
 Node *Graph::getNode(unsigned int u) { return &nodes[u]; }
 
 unsigned int Graph::head(unsigned int u, unsigned int k) { return nodes[u].getAdj()[k].vertex; }

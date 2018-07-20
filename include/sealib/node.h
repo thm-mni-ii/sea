@@ -4,6 +4,7 @@
 #include <vector>
 #include "sealib/adjacency.h"
 
+namespace Sealib {
 /**
  * A Node object containing the nodes adjacencies and its degree.
  * @author Johannes Meintrup
@@ -31,5 +32,5 @@ class Node {
      */
     unsigned int getDegree();
 };
-
+}  // namespace Sealib
 #endif  // SEALIB_NODE_H_

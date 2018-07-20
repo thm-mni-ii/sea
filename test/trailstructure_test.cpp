@@ -5,6 +5,8 @@
 #include <gtest/gtest.h>
 #include <sealib/trailstructure.h>
 
+using Sealib::TrailStructure;
+
 TEST(TrailStructureTest, enter) {
     TrailStructure ts = TrailStructure(5);
 
