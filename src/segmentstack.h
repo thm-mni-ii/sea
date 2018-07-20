@@ -23,6 +23,11 @@ typedef std::tuple<uint, uint> State;
   - instead of using a list of trailers, there is the option to store only the
   last trailer in a variable (used in EHKDFS)
 
+  The segment size can be computed using the ε parameter:
+  2q entries on the segment stack shall take up at most (ε/3)n bits, thus each
+  segment has a size of ((ε/6)n)/bitsize(ENTRY) bits, where bitsize(x) is the
+  number of bits a type occupies (e.g. bitsize(uint)=32).
+
   @author Simon Heuser
 */
 namespace Sealib {
@@ -44,5 +49,4 @@ class SegmentStack {
   bool isAligned();
 };
 }  // namespace Sealib
-
 #endif  // SRC_SEGMENTSTACK_H_

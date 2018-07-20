@@ -9,8 +9,8 @@ typedef boost::dynamic_bitset<> Group;
 /**
  * This compact array stores a given number of values in as low space as
  * possible.
- * Therefore an "epsilon" parameter is used: the smaller epsilon is, the more
- * values are put into one storage group.
+ * Therefore an "epsilon" parameter is used: the smaller epsilon is, the larger
+ * the storage groups will be.
  * @author Simon Heuser
  */
 namespace Sealib {
@@ -31,7 +31,7 @@ class CompactArray {
   ~CompactArray();
 
   /**
-   *  Insert a value to the given index.
+   * Insert a value to the given index.
    * @param i the destination index
    * @param p the value to insert
    */

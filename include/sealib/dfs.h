@@ -46,8 +46,8 @@ class DFS {
                              UserFunc2 preexplore, UserFunc2 postexplore,
                              UserFunc1 postprocess);
   /**
-   * Run a space-efficient depth-first search over a given graph. (Elmasry et
-   * al., 2015) <br>
+   * Run a space-efficient depth-first search over a given graph. (Elmasry,
+   * Hagerup and Kammer; 2015) <br>
    * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) space
    * @param g graph G=(V,E) to iterate over
    * @param preprocess to be executed before processing a node u

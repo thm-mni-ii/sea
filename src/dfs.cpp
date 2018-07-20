@@ -26,7 +26,7 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   while (!s->empty()) {
     uint u = s->top();
     s->pop();
-    if(color[u]==DFS_WHITE) {
+    if (color[u] == DFS_WHITE) {
       if (preProcess != DFS_NOP_PROCESS) preProcess(u);
       color[u] = DFS_GRAY;
       for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
@@ -106,7 +106,7 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   // double e = n % 2 == 0 ? 1.5 : 3;
   double e = 0.2;
   // 2q entries on S shall take up at most (e/3)n bits:
-  unsigned q = static_cast<unsigned>(ceil(e / 6 * n) / sizeof(State));
+  unsigned q = static_cast<unsigned>(ceil(e / 6 * n) / (8*sizeof(State)))+1;
 
   // unsigned q=n;   /* uncomment to disable restoration */
   printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (e / 3) * n);
