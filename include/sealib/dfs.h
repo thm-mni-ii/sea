@@ -33,16 +33,14 @@ class DFS {
      */
 	static void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 								 UserFunc2 postExplore, UserFunc1 postProcess, uint *color, uint u);
-	/**
-	 * @param p: position in graph to get the vertex name from
-	 */
+
 	class Inplace{
 		private:
 			uint *g;
 			uint startVertex;
 			UserFunc1 preProcess;
 			UserFunc1 postProcess;
-			uint findStartVertex(v);
+			uint findStartVertex(uint v);
 			void visit(uint p);
 			uint& accessStar( uint p);
 			void nextNeighbor(uint p, bool firstcheck);
@@ -54,7 +52,6 @@ class DFS {
 		public:
 			Inplace(uint *graph, uint v, UserFunc1 pre, UserFunc1 post);
 	};
-	//findnextstartvertex
  public:
 	/**
      * Run a standard depth-first search over a graph. <br>

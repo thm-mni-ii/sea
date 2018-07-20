@@ -100,7 +100,7 @@ void DFS::Inplace::nextNeighbor(uint p,bool firstcheck){
 				nextNeighbor(p+1,true);
 			}
 		}else{
-			gotoParent(q);
+			//gotoParent(q);
 		}
 	}else{
 		if(isWhite(p)){
@@ -117,7 +117,7 @@ bool DFS::Inplace::isWhite(uint p){
 
 void DFS::Inplace::gotoChild(uint p){
 	uint q = accessStar(p);
-	uint v = name(q);
+	//uint v = name(q);
 	uint x = access(q + 1);
 	access(p) = x;
 	if(!name(p)){
@@ -140,8 +140,6 @@ void DFS::Inplace::gotoParent(uint q){
 			nextNeighbor(p,true);
 		}else{
 			nextNeighbor(p+1,true);
-	}else{
-		nextNeighbor(q+1,true);
+		}
 	}
-}
 }
