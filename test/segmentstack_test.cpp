@@ -6,6 +6,7 @@ using Sealib::SegmentStack;
 TEST(SegmentStackTest, withTrailers) {
   SegmentStack *s = new SegmentStack(20, 3, true);
   ASSERT_TRUE(s->empty());
+  ASSERT_THROW(s->saveTrailer(), std::logic_error);
   for (int a = 0; a < 7; a++) s->push(std::make_tuple(a, 0));
   State r;
   for (int a = 0; a < 4; a++) ASSERT_EQ(s->pop(&r), 0);
@@ -37,6 +38,7 @@ TEST(SegmentStackTest, withTrailers) {
 TEST(SegmentStackTest, withoutTrailers) {
   SegmentStack *s = new SegmentStack(20, 3, false);
   ASSERT_TRUE(s->empty());
+  ASSERT_THROW(s->saveTrailer(), std::logic_error);
   for (int a = 0; a < 7; a++) s->push(std::make_tuple(a, 0));
   State r;
   for (int a = 0; a < 4; a++) ASSERT_EQ(s->pop(&r), 0);

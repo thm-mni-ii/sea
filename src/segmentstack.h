@@ -2,6 +2,7 @@
 #define SRC_SEGMENTSTACK_H_
 
 #include <stack>
+#include <stdexcept>
 #include <tuple>
 
 #define DFS_NO_MORE_NODES (unsigned)11

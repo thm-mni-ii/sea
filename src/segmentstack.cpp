@@ -88,7 +88,7 @@ void SegmentStack::saveTrailer() {
     savedTrailer = t ? trailers[tp - 1] : last;
     alignTarget = 2;
   } else {
-    throw 0;
+    throw std::logic_error("cannot save from empty trailers");
   }
 }
 

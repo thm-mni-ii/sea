@@ -28,7 +28,7 @@ class DFSTest : public ::testing::Test {
  protected:
   Node *n;
   virtual void SetUp() {  // executed before each TEST_F
-    order = rnd() % 50000;
+    order = rnd() % 5000;
     n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
     c1 = 0;
     c2 = 0;
