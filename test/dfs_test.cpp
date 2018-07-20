@@ -3,6 +3,10 @@
 #include <random>
 
 using Sealib::DFS;
+using Sealib::CompactArray;
+using Sealib::Graph;
+using Sealib::Node;
+using Sealib::Adjacency;
 
 unsigned c1 = 0, c2 = 0;
 unsigned tmp = 0;
@@ -50,19 +54,7 @@ TEST_F(DFSTest, EHK_pre) {
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
 }
 TEST_F(DFSTest, EHK_post) {
-  try {
-    DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
-  } catch (unsigned e) {
-    printf("caught %u\n", e);
-  }
-  /*bool ok = true;
-  for (unsigned a = 0; a < order; a++) {
-    if (cnt[a] != 1) {
-      printf("a: %u, cnt: %u\n", a, cnt[a]);
-      ok = false;
-    }
-  }
-  EXPECT_TRUE(ok);*/
+  DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
   delete cnt;

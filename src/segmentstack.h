@@ -43,6 +43,6 @@ class SegmentStack {
    * aligned) */
   bool isAligned();
 };
-}
+}  // namespace Sealib
 
 #endif  // SRC_SEGMENTSTACK_H_

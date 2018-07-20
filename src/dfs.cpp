@@ -6,6 +6,8 @@
 using Sealib::DFS;
 using Sealib::SegmentStack;
 using Sealib::CompactArray;
+using Sealib::Graph;
+using Sealib::Node;
 
 static void process_standard(Graph *g, UserFunc1 preProcess,
                              UserFunc2 preExplore, UserFunc2 postExplore,
@@ -16,10 +18,6 @@ static void process_small(uint node, Graph *g, CompactArray *color,
                           UserFunc2 preExplore, UserFunc2 postExplore,
                           UserFunc1 postProcess, double epsilon);
 
-using Sealib::DFS;
-using Sealib::Node;
-
-// starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                       UserFunc2 postExplore, UserFunc1 postProcess,
                       unsigned *color, uint u0) {
@@ -28,21 +26,21 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   while (!s->empty()) {
     uint u = s->top();
     s->pop();
-    if (preProcess != DFS_NOP_PROCESS) preProcess(u);
-    color[u] = DFS_GRAY;
-    for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
-      uint v = g->head(u, k);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
-      if (color[v] == DFS_WHITE) {
-        s->push(v);
-        color[v] = DFS_GRAY;
+    if(color[u]==DFS_WHITE) {
+      if (preProcess != DFS_NOP_PROCESS) preProcess(u);
+      color[u] = DFS_GRAY;
+      for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
+        uint v = g->head(u, k);
+        if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
+        if (color[v] == DFS_WHITE) s->push(v);
+        if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
       }
-      if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
+      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
+      color[u] = DFS_BLACK;
     }
-    if (postProcess != DFS_NOP_PROCESS) postProcess(u);
-    color[u] = DFS_BLACK;
   }
 }
+
 void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
                    UserFunc1 preProcess, UserFunc2 preExplore,
                    UserFunc2 postExplore, UserFunc1 postProcess,

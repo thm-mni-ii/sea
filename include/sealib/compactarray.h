@@ -44,5 +44,5 @@ class CompactArray {
    */
   unsigned int get(unsigned int i);
 };
-}
+}  // namespace Sealib
 #endif  // SEALIB_COMPACTARRAY_H_
