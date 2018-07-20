@@ -14,7 +14,7 @@ namespace Sealib {
  * @author Johannes Meintrup
  */
 class Bitset {
-    typedef unsigned char blocktype;
+    typedef unsigned long blocktype;
     typedef unsigned long sizetype;
     typedef bool bittype;
 
@@ -59,10 +59,8 @@ class Bitset {
                  mmask(blocktype(1) << pos)
          {}
 
-         void operator&();  // left undefined
-
       private:
-         blocktype  & mblock;
+         blocktype &mblock;
          const blocktype mmask;
 
          void doSet() { mblock |= mmask; }
