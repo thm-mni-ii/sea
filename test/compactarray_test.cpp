@@ -2,6 +2,8 @@
 #include <sealib/compactarray.h>
 #include <stdexcept>
 
+using Sealib::CompactArray;
+
 TEST(CompactArrayTest, insertAndGet) {
   CompactArray *a = new CompactArray(1500, 0.2);
   for (int b = 0; b < 50; b++) a->insert(b, 3);

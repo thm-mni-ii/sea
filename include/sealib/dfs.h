@@ -30,6 +30,7 @@ typedef void (*UserFunc2)(uint, uint);
  *
  * @author Simon Heuser
  */
+namespace Sealib {
 class DFS {
  public:
   /**
@@ -57,4 +58,5 @@ class DFS {
   static void runEHKDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
                         UserFunc2 postexplore, UserFunc1 postprocess);
 };
+}
 #endif  // SEALIB_DFS_H_

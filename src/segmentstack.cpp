@@ -1,5 +1,15 @@
 #include "src/segmentstack.h"
 
+using Sealib::SegmentStack;
+
+State *low, *high, *trailers;
+bool t = false;
+State last;
+unsigned lp = 0, hp = 0, tp = 0;
+uint q;
+State savedTrailer;
+int alignTarget;
+
 SegmentStack::SegmentStack(uint size, uint segmentSize, bool useTrailers) {
   q = segmentSize;
   t = useTrailers;
@@ -22,14 +32,12 @@ int SegmentStack::push(State u) {
     low[lp++] = u;
     if (lp == q) {
       if (t) trailers[tp] = u;
-      // else last = u;
       tp++;
     }
   } else if (hp < q) {
     high[hp++] = u;
     if (hp == q) {
       if (t) trailers[tp] = u;
-      // else if(tp>2) last = u;
       tp++;
     }
   } else {
@@ -68,8 +76,6 @@ bool SegmentStack::empty() {
   return r;
 }
 void SegmentStack::dropAll() {
-  // static int numRestores = 0;
-  // printf("%d\n", numRestores++);
   lp = 0;
   hp = 0;
   tp = 0;

@@ -13,6 +13,7 @@ typedef boost::dynamic_bitset<> Group;
  * values are put into one storage group.
  * @author Simon Heuser
  */
+namespace Sealib {
 class CompactArray {
  private:
   std::out_of_range OUTOFBOUNDS = std::out_of_range("index out of bounds");
@@ -43,4 +44,5 @@ class CompactArray {
    */
   unsigned int get(unsigned int i);
 };
+}
 #endif  // SEALIB_COMPACTARRAY_H_

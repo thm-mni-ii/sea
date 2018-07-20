@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include <random>
 
+using Sealib::DFS;
+
 unsigned c1 = 0, c2 = 0;
 unsigned tmp = 0;
 void incr1(uint u) {

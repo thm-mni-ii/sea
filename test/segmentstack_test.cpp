@@ -1,6 +1,8 @@
 #include "../src/segmentstack.h"
 #include <gtest/gtest.h>
 
+using Sealib::SegmentStack;
+
 TEST(SegmentStackTest, withTrailers) {
   SegmentStack *s = new SegmentStack(20, 3, true);
   ASSERT_TRUE(s->empty());

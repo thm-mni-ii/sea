@@ -3,6 +3,10 @@
 #include <stack>
 #include "./segmentstack.h"
 
+using Sealib::DFS;
+using Sealib::SegmentStack;
+using Sealib::CompactArray;
+
 static void process_standard(Graph *g, UserFunc1 preProcess,
                              UserFunc2 preExplore, UserFunc2 postExplore,
                              UserFunc1 postProcess, unsigned *color, uint u);
@@ -14,7 +18,8 @@ static void process_small(uint node, Graph *g, CompactArray *color,
 
 // starting point of the DFS algorithm: O(n+m) time, O(n*log n) bits
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
-                      UserFunc2 postExplore, UserFunc1 postProcess, unsigned *color, uint u0) {
+                      UserFunc2 postExplore, UserFunc1 postProcess,
+                      unsigned *color, uint u0) {
   std::stack<uint> *s = new std::stack<uint>;
   s->push(u0);
   while (!s->empty()) {
