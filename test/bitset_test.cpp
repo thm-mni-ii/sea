@@ -1,0 +1,79 @@
+#include <gtest/gtest.h>
+#include <sealib/bitset.h>
+
+using Sealib::Bitset;
+
+TEST(BitsetTest, BitsetFunctionality) {
+    Bitset bs;
+    std::cout << bs.size() << std::endl;
+    std::cout << bs.blocks() << std::endl;
+    ASSERT_EQ(bs.size(), 0);
+    ASSERT_EQ(bs.blocks(), 0);
+
+    bs = Bitset(1);
+    ASSERT_EQ(bs.size(), 1);
+    ASSERT_EQ(bs.blocks(), 1);
+
+    bs = Bitset(64);
+    ASSERT_EQ(bs.size(), 64);
+    ASSERT_EQ(bs.blocks(), 1);
+
+    bs = Bitset(65);
+    ASSERT_EQ(bs.size(), 65);
+    ASSERT_EQ(bs.blocks(), 2);
+
+    for(unsigned int i = 0; i < bs.size(); i++) {
+        ASSERT_EQ(bs[i], 0);
+        bs[i] = 1;
+    }
+
+    Bitset bs_(65);
+    for(unsigned int i = 0; i < bs.size(); i++) {
+        ASSERT_EQ(bs[i], 1);
+    }
+
+    for(unsigned int i = 0; i < bs.size(); i++) {
+        bs_[i] = bs[i];
+        ASSERT_EQ(bs_[i], bs[i]);
+    }
+
+    bs.clear();
+    for(unsigned int i = 0; i < bs.size(); i++) {
+        ASSERT_EQ(bs[i], 0);
+    }
+    bs.set();
+    for(unsigned int i = 0; i < bs.size(); i++) {
+        ASSERT_EQ(bs[i], 1);
+    }
+
+    bs.setBlock(0,0);
+    ASSERT_EQ(bs.getBlock(0), 0);
+
+    for(unsigned int i = 0; i < bs.size() - 1; i++) {
+        ASSERT_EQ(bs[i], 0);
+    }
+    ASSERT_EQ(bs[bs.size() - 1], 1);
+
+    bs.setBlock(1,0);
+    ASSERT_EQ(bs[bs.size() - 1], 0);
+
+    bs.setBlock(0, (unsigned long) - 1);
+    for(unsigned int i = 0; i < bs.size() - 1; i++) {
+        ASSERT_EQ(bs[i], 1);
+    }
+
+    ASSERT_EQ(bs.getBlock(0), (unsigned long) - 1);
+
+    bs.clear();
+    for(unsigned int i = 0; i < bs.size(); i++) {
+        ASSERT_EQ(bs.get(i), 0);
+        bs.set(i);
+        ASSERT_EQ(bs.get(i), 1);
+        bs.unset(i);
+        ASSERT_EQ(bs.get(i), 0);
+        bs.flip(i);
+        ASSERT_EQ(bs.get(i), 1);
+        bs.flip(i);
+        ASSERT_EQ(bs.get(i), 0);
+    }
+}
