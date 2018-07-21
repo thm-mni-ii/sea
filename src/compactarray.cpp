@@ -5,6 +5,8 @@ using Sealib::CompactArray;
 
 Group **group;
 double e;
+std::out_of_range OUTOFBOUNDS =
+    std::out_of_range("compactarray: index out of bounds");
 /**
  * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible
  * states)
@@ -18,7 +20,7 @@ void CompactArray::insert(unsigned int i, unsigned int p) {
   // values per group: 3/e, value width=ceil(log3) bits, group width
   unsigned groupOffset =
       static_cast<unsigned>(floor(i / static_cast<double>(valuesPerGroup)));
-  if (groupOffset >= groupCount) throw CompactArray::OUTOFBOUNDS;
+  if (groupOffset >= groupCount) throw OUTOFBOUNDS;
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
   Group a = *(group[groupOffset]);
   unsigned gap =
@@ -33,7 +35,7 @@ void CompactArray::insert(unsigned int i, unsigned int p) {
 
 unsigned int CompactArray::get(unsigned int i) {
   unsigned groupOffset = static_cast<unsigned>(floor(i / valuesPerGroup));
-  if (groupOffset >= groupCount) throw CompactArray::OUTOFBOUNDS;
+  if (groupOffset >= groupCount) throw OUTOFBOUNDS;
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
@@ -52,10 +54,8 @@ CompactArray::CompactArray(unsigned int count, double epsilon) {
   groupWidth = valuesPerGroup *
                valueWidth;  // bits for a group of 3/e (e.g. 2) consec. colors
   maxValue = static_cast<unsigned>(pow(2, valueWidth) - 1);
-  groupCount = static_cast<unsigned>(
-      ceil(count / (groupWidth / static_cast<double>(valueWidth))));
-  printf("e=%3.2f, vw=%u, vpg=%u, maxv=0x%x\n", e, valueWidth, valuesPerGroup,
-         maxValue);
+  groupCount =
+      static_cast<unsigned>(ceil(count / static_cast<double>(valuesPerGroup)));
   group = new Group *[groupCount];
   for (unsigned a = 0; a < groupCount; a++) group[a] = new Group(groupWidth, 0);
 }

@@ -28,7 +28,7 @@ class DFSTest : public ::testing::Test {
  protected:
   Node *n;
   virtual void SetUp() {  // executed before each TEST_F
-    order = rnd() % 5000;
+    order = 1000;
     n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
     c1 = 0;
     c2 = 0;
@@ -57,5 +57,4 @@ TEST_F(DFSTest, EHK_post) {
   DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
-  delete cnt;
 }

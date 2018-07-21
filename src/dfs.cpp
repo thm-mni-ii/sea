@@ -16,7 +16,7 @@ static void process_standard(Graph *g, UserFunc1 preProcess,
 static void process_small(uint node, Graph *g, CompactArray *color,
                           SegmentStack *s, UserFunc1 preProcess,
                           UserFunc2 preExplore, UserFunc2 postExplore,
-                          UserFunc1 postProcess, double epsilon);
+                          UserFunc1 postProcess);
 
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                       UserFunc2 postExplore, UserFunc1 postProcess,
@@ -43,8 +43,7 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 
 void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
                    UserFunc1 preProcess, UserFunc2 preExplore,
-                   UserFunc2 postExplore, UserFunc1 postProcess,
-                   double epsilon) {
+                   UserFunc2 postExplore, UserFunc1 postProcess) {
   s->push(std::make_tuple(node, 0));
   State x;
   while (!s->empty()) {
@@ -60,7 +59,7 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
         }
       }
       process_small(node, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS, epsilon);
+                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
       sr = s->pop(&x);
     }
     uint u, k;
@@ -110,14 +109,13 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   if (q < 4) q = 4;  // stable segment size (?)
 
   // unsigned q=n;   /* uncomment to disable restoration */
-  printf("q=%u, n=%u, (e/3)n=%.0f\n", q, n, (e / 3) * n);
   SegmentStack *s = new SegmentStack(n, q, false);
   CompactArray *color = new CompactArray(n, e);
   for (uint a = 0; a < n; a++) color->insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
     if (color->get(a) == DFS_WHITE)
       process_small(a, g, color, s, preProcess, preExplore, postExplore,
-                    postProcess, e);
+                    postProcess);
   }
   delete color;
   delete s;

@@ -14,9 +14,16 @@ typedef void (*UserFunc2)(uint, uint);
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
+/**
+ * These two functions symbolize a NOP: you can call a DFS which accepts
+ * (preprocess,preexplore,postexplore,postprocess) with the arguments
+ * (DFS_NOP_PROCESS,DFS_NOP_EXPLORE,DFS_NOP_EXPLORE,DFS_NOP_PROCESS) to run it
+ * silently.
+ */
 #define DFS_NOP_PROCESS (UserFunc1)0
 #define DFS_NOP_EXPLORE (UserFunc2)0
 
+namespace Sealib {
 /**
  * This class contains depth-first search algorithms.
  * The depth-first search of a graph processes all its nodes and
@@ -24,13 +31,12 @@ typedef void (*UserFunc2)(uint, uint);
  * During this procedure, the nodes will be colored
  * from white (initial) to gray (being processed) to black (finished processing)
  *
- * The following DFS variants are available
+ * The following DFS variants are available:
  *  - StandardDFS: the normal DFS, uses implicit recursion stack
  *  - EHKDFS: space-efficient DFS, explicit stack
  *
  * @author Simon Heuser
  */
-namespace Sealib {
 class DFS {
  public:
   /**

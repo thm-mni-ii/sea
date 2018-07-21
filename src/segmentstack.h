@@ -9,6 +9,7 @@
 #define DFS_DO_RESTORE (unsigned)12
 typedef std::tuple<uint, uint> State;
 
+namespace Sealib {
 /*
   auxiliary stack, used by the EHKDFS
   - the segment stack has a low and a high segment
@@ -31,7 +32,6 @@ typedef std::tuple<uint, uint> State;
 
   @author Simon Heuser
 */
-namespace Sealib {
 class SegmentStack {
  public:
   /* size: number of stored entries, useTrailers: if true, use stack of
