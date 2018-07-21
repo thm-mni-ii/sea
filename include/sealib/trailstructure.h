@@ -7,6 +7,7 @@
 
 #include <vector>
 
+namespace Sealib {
 /**
  * Space efficient TrailStructure.
  * Each vertex in a graph has an object of this type to store trail information.
@@ -107,5 +108,5 @@ class TrailStructure {
         return flags.at(3);
     }
 };
-
+}  // namespace Sealib
 #endif  // SEALIB_TRAILSTRUCTURE_H_
