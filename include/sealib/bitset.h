@@ -19,32 +19,31 @@ class Bitset {
     typedef bool bittype;
 
  private:
-    static unsigned int bitsPerByte = 8;
-    static blocktype blocktype_one = blocktype(1);
+    static const unsigned int bitsPerByte = 64;
+    static const blocktype blocktype_one = blocktype(1);
 
-    std::vector<blocktype> mbits;
     sizetype bits;
+    std::vector<blocktype> mbits;
 
-    /**
-     * @param idx of the block
-     * @return const ref to the block
-     */
-    inline const blocktype& getBlock(sizetype idx) const {
-        assert(mbits.size() > idx);
-        return mbits[idx];
+    inline bittype get(const blocktype &i, sizetype b) const {
+        return i & (blocktype_one << b);
     }
 
-    /**
-        * @param idx of the block
-        * @param block value to be set
-        */
-    inline void setBlock(sizetype idx,  blocktype block) {
-        assert(mbits.size() > idx);
-        mbits[idx] = block;
+    inline void set(blocktype &i, sizetype b) {
+        i |= (blocktype_one << b);
+    }
+
+    inline void clear(blocktype &i, sizetype b) {
+        i &= ~(blocktype_one << b);
+    }
+
+    inline void flip(blocktype &i, sizetype b) {
+        i ^= (blocktype_one << b);
     }
 
  public:
-    explicit Bitset(sizetype bits) : mbits(bits/bitsPerByte + 1), bits(bits) {}
+    explicit Bitset(sizetype bits_) : bits(bits_), mbits(bits % bitsPerByte == 0 ? bits/bitsPerByte : bits/bitsPerByte + 1) {}
+    Bitset() : Bitset(0) {}
     ~Bitset() = default;
 
     /**
@@ -130,7 +129,7 @@ class Bitset {
      * sets all bits to true
      */
     void set() {
-        for (sizetype i; i < mbits.size(); i++) {
+        for (sizetype i = 0; i < mbits.size(); i++) {
             mbits[i] = std::numeric_limits<blocktype>::max();
         }
     }
@@ -139,7 +138,7 @@ class Bitset {
      * clears all bits
      */
     void clear() {
-        for (sizetype i; i < mbits.size(); i++) {
+        for (sizetype i = 0; i < mbits.size(); i++) {
             mbits[i] = 0;
         }
     }
@@ -177,20 +176,30 @@ class Bitset {
         flip(mbits[bit / bitsPerByte], bit % bitsPerByte);
     }
 
-    inline bittype get(const blocktype &i, sizetype b) const {
-        return i & (blocktype_one << b);
+    sizetype size() {
+        return bits;
     }
 
-    inline void set(blocktype &i, sizetype b) {
-        i |= (blocktype_one << b);
+    sizetype blocks() {
+        return mbits.size();
     }
 
-    inline void clear(blocktype &i, sizetype b) {
-        i &= ~(blocktype_one << b);
+    /**
+     * @param idx of the block
+     * @return const ref to the block
+     */
+    inline const blocktype& getBlock(sizetype idx) const {
+        assert(mbits.size() > idx);
+        return mbits[idx];
     }
 
-    inline void flip(blocktype &i, sizetype b) {
-        i ^= (blocktype_one << b);
+    /**
+        * @param idx of the block
+        * @param block value to be set
+        */
+    inline void setBlock(sizetype idx,  blocktype block) {
+        assert(mbits.size() > idx);
+        mbits[idx] = block;
     }
 };
 }  // namespace Sealib
