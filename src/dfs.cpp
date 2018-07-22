@@ -105,15 +105,15 @@ void DFS::runStandardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                     UserFunc2 postExplore, UserFunc1 postProcess) {
   unsigned int n = g->getOrder();
-  // assume that 3/e is an integer that divides n:
   double e = 0.2;
-  // 2q entries on S shall take up at most (e/3)n bits:
-  unsigned q =
-      static_cast<unsigned>(ceil(ceil(e / 6 * n) / (8 * sizeof(State))));
-  if (q < 3) q = 3;  // stable segment size (?)
-  // q=n;   /* uncomment to disable restoration */
-  // 3/e values per group:
-  unsigned vpg = static_cast<unsigned>(ceil(3 / e));
+  unsigned q = static_cast<unsigned>(ceil(
+      ceil(e / 6 * n) /
+      (8 *
+       sizeof(State))));  // 2q entries on S shall take up at most (e/3)n bits
+  if (q < 3) q = 3;       // stable segment size (?)
+  unsigned vpg = static_cast<unsigned>(ceil(3 / e));  // 3/e values per group,
+                                                      // assume that 3/e is an
+                                                      // integer that divides n
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   SegmentStack *s = new SegmentStack(n, q, false);
   CompactArray *color = new CompactArray(n, vpg);

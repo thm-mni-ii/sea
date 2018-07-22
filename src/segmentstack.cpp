@@ -98,7 +98,7 @@ bool SegmentStack::isAligned() {
     r = false;
   } else {
     unsigned lu = std::get<0>(low[lp - 1]), lk = std::get<1>(low[lp - 1]);
-    unsigned hu = 0, hk = 0;
+    unsigned hu, hk;
     if (alignTarget == 2)
       hu = std::get<0>(high[hp - 1]), hk = std::get<1>(high[hp - 1]);
     unsigned tu = std::get<0>(savedTrailer), tk = std::get<1>(savedTrailer);
