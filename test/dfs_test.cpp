@@ -53,14 +53,30 @@ TEST_F(DFSTest, runStd) {
   EXPECT_EQ(c1, 2 * order);
   EXPECT_EQ(c2, 2 * 5 * order);  // every node has 5 edges
 }
-TEST_F(DFSTest, EHK_pre) {
-  DFS::runEHKDFS(g, incr1, incr2, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
-  EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
+// TODO(!!!): fix random test failures!
+TEST_F(DFSTest, EHKpre) {
+  unsigned b = 0;
+  for (int a = 0; a < 10; a++) {
+    c1 = 0;
+    c2 = 0;
+    DFS::runEHKDFS(g, incr1, incr2, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+    if (c1 != order)
+      b++;
+    else if (c2 != 5 * order)
+      b++;  // every node has 5 edges
+  }
+  EXPECT_EQ(b, 0) << "failed in " << b << " out of 10 iterations";
 }
-TEST_F(DFSTest, EHK_post) {
-  // TODO: fix random test failures!
-  DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
-  EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
+TEST_F(DFSTest, EHKpost) {
+  unsigned b = 0;
+  for (int a = 0; a < 10; a++) {
+    c1 = 0;
+    c2 = 0;
+    DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
+    if (c1 != order)
+      b++;
+    else if (c2 != 5 * order)
+      b++;  // every node has 5 edges
+  }
+  EXPECT_EQ(b, 0) << "failed in " << b << " out of 10 iterations";
 }
