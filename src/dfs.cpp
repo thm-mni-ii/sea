@@ -33,12 +33,12 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color[v] == DFS_WHITE) {
         s->push(v);
-        color[v]=DFS_RESERVED;
+        color[v] = DFS_RESERVED;
       }
       if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
     }
-    if (postProcess != DFS_NOP_PROCESS) postProcess(u);
     color[u] = DFS_BLACK;
+    if (postProcess != DFS_NOP_PROCESS) postProcess(u);
   }
   delete s;
 }
@@ -110,11 +110,13 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   // 2q entries on S shall take up at most (e/3)n bits:
   unsigned q =
       static_cast<unsigned>(ceil(ceil(e / 6 * n) / (8 * sizeof(State))));
-  if (q < 4) q = 4;  // stable segment size (?)
-
+  if (q < 3) q = 3;  // stable segment size (?)
   // q=n;   /* uncomment to disable restoration */
+  // 3/e values per group:
+  unsigned vpg=static_cast<unsigned>(ceil(3/e));
+  printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   SegmentStack *s = new SegmentStack(n, q, false);
-  CompactArray *color = new CompactArray(n, e);
+  CompactArray *color = new CompactArray(n, vpg);
   for (uint a = 0; a < n; a++) color->insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
     if (color->get(a) == DFS_WHITE)

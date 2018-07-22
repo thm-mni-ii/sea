@@ -3,10 +3,6 @@
 
 using Sealib::CompactArray;
 
-Group **group;
-double e;
-std::out_of_range OUTOFBOUNDS =
-    std::out_of_range("compactarray: index out of bounds");
 /**
  * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible
  * states)
@@ -15,6 +11,10 @@ std::out_of_range OUTOFBOUNDS =
  */
 unsigned valueWidth, maxValue, groupWidth, valuesPerGroup;
 unsigned groupCount;
+
+Group **group;
+std::out_of_range OUTOFBOUNDS =
+    std::out_of_range("compactarray: index out of bounds");
 
 void CompactArray::insert(unsigned int i, unsigned int p) {
   // values per group: 3/e, value width=ceil(log3) bits, group width
@@ -46,11 +46,10 @@ unsigned int CompactArray::get(unsigned int i) {
   return d;
 }
 
-CompactArray::CompactArray(unsigned int count, double epsilon) {
-  e = epsilon;
+CompactArray::CompactArray(unsigned int count, unsigned int vpg) {
   // the following is valid if the inserted values can have 3 states:
   valueWidth = static_cast<unsigned>(ceil(log(3) / log(2)));
-  valuesPerGroup = static_cast<unsigned>(ceil(3 / e));
+  valuesPerGroup = vpg;
   groupWidth = valuesPerGroup *
                valueWidth;  // bits for a group of 3/e (e.g. 2) consec. colors
   maxValue = static_cast<unsigned>(pow(2, valueWidth) - 1);

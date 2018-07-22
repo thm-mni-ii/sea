@@ -32,7 +32,7 @@ class DFSTest : public ::testing::Test {
  protected:
   Node *n;
   virtual void SetUp() {  // executed before each TEST_F
-    order = 10;
+    order = 500;
     n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
     c1 = 0;
     c2 = 0;
@@ -49,7 +49,7 @@ class DFSTest : public ::testing::Test {
 };
 TEST_F(DFSTest, runStd) {
   DFS::runStandardDFS(g, incr1, incr2, incr2, incr1);
-  //DFS::runStandardDFS(g, p0, e0, e1, p1);
+  // DFS::runStandardDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, 2 * order);
   EXPECT_EQ(c2, 2 * 5 * order);  // every node has 5 edges
 }
@@ -59,6 +59,7 @@ TEST_F(DFSTest, EHK_pre) {
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
 }
 TEST_F(DFSTest, EHK_post) {
+  // TODO: fix random test failures!
   DFS::runEHKDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, incr2, incr1);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges

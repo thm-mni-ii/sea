@@ -5,7 +5,7 @@
 using Sealib::CompactArray;
 
 TEST(CompactArrayTest, insertAndGet) {
-  CompactArray *a = new CompactArray(1500, 0.2);
+  CompactArray *a = new CompactArray(1500, 50);
   for (int b = 0; b < 50; b++) a->insert(b, 3);
   for (int b = 0; b < 50; b++) EXPECT_EQ(a->get(b), 3);
   for (int b = 50; b < 1500; b++) EXPECT_EQ(a->get(b), 0);

@@ -20,13 +20,11 @@ class CompactArray {
   /**
    * Create a new compact array.
    * @param count number of values this compact array can hold
-   * @param epsilon width parameter: the larger ε is, the more values are put
+   * @param vpg values per group: the larger vpg is, the more values are put
    * into one group. It does not affect the total space needed.
-   * The space efficiency is optimal if 3/ε divides n.
-   * If you don't know what to use for ε: 1.5 if count is even, 3.0 if
-   * count is odd.
+   * The space efficiency is optimal if vpg divides n.
    */
-  CompactArray(unsigned int count, double epsilon);
+  CompactArray(unsigned int count, unsigned int vpg);
 
   ~CompactArray();
 
