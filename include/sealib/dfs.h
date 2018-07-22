@@ -64,6 +64,9 @@ class DFS {
    */
   static void nBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
                       UserFunc2 postexplore, UserFunc1 postprocess);
+
+    // TODO: write documentation!
+    static void runLinearTimeInplaceDFS(unsigned int* graph, unsigned int startVertex);
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_
