@@ -19,6 +19,10 @@ void incr2(uint u, uint v) {
   tmp = u;
   tmp = v;
 }
+void p0(uint u) { printf("preprocess %u\n", u); }
+void p1(uint u) { printf("postprocess %u\n", u); }
+void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
+void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }
 unsigned *cnt;
 void incrCnt(unsigned u) { cnt[u]++; }
 Graph *g;
@@ -28,7 +32,7 @@ class DFSTest : public ::testing::Test {
  protected:
   Node *n;
   virtual void SetUp() {  // executed before each TEST_F
-    order = 1000;
+    order = 10;
     n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
     c1 = 0;
     c2 = 0;
@@ -45,6 +49,7 @@ class DFSTest : public ::testing::Test {
 };
 TEST_F(DFSTest, runStd) {
   DFS::runStandardDFS(g, incr1, incr2, incr2, incr1);
+  //DFS::runStandardDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, 2 * order);
   EXPECT_EQ(c2, 2 * 5 * order);  // every node has 5 edges
 }

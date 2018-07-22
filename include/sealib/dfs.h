@@ -14,6 +14,8 @@ typedef void (*UserFunc2)(uint, uint);
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
+#define DFS_RESERVED 3
+
 /**
  * These two functions symbolize a NOP: you can call a DFS which accepts
  * (preprocess,preexplore,postexplore,postprocess) with the arguments
