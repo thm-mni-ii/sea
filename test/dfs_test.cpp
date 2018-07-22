@@ -1,6 +1,7 @@
 #include "sealib/dfs.h"
 #include <gtest/gtest.h>
 #include <random>
+#include <vector>
 
 using Sealib::DFS;
 using Sealib::CompactArray;
@@ -34,15 +35,18 @@ void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
 void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }
 unsigned *cnt;
 void incrCnt(unsigned u) { cnt[u]++; }
-Graph *g;
+
 std::random_device rnd;
+const unsigned GRAPHCOUNT = 10;  // how many random graphs to generate?
 unsigned order = 0;
-class DFSTest : public ::testing::Test {
- protected:
-  Node *n;
-  virtual void SetUp() {  // executed before each TEST_F
+class DFSTest : public ::testing::TestWithParam<Graph *> {
+  virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }
+};
+std::vector<Graph *> makeGraphs() {
+  std::vector<Graph *> g = std::vector<Graph *>();
+  for (uint c = 0; c < GRAPHCOUNT; c++) {
     order = 500;
-    n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
+    Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
     c1 = c2 = c3 = c4 = 0;
     for (unsigned int a = 0; a < order; a++) {
       int ai = 5;
@@ -51,12 +55,15 @@ class DFSTest : public ::testing::Test {
       for (int b = 0; b < ai; b++) ad[b] = Adjacency(rnd() % order);
       n[a] = Node(ad, ai);
     }
-    g = new Graph(n, order);
+    g.push_back(new Graph(n, order));
   }
-  virtual void TearDown() { free(n); }
-};
-TEST_F(DFSTest, runStd) {
-  DFS::runStandardDFS(g, incr1, incr2, incr3, incr4);
+  return g;
+}
+std::vector<Graph *> graphs = makeGraphs();
+INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(graphs));
+
+TEST_P(DFSTest, Std_userproc) {
+  DFS::runStandardDFS(GetParam(), incr1, incr2, incr3, incr4);
   // DFS::runStandardDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
@@ -64,25 +71,10 @@ TEST_F(DFSTest, runStd) {
   EXPECT_EQ(c4, order);
 }
 // TODO(!!!): fix random test failures!
-TEST_F(DFSTest, EHK_userproc) {
-  unsigned errorcount = 0;
-  for (int a = 0; a < 10; a++) {
-    c1 = c2 = c3 = c4 = 0;
-    DFS::runEHKDFS(g, incr1, incr2, incr3, incr4);
-    if (c1 != order) {
-      printf("c1 = %u\n", c1);
-      errorcount++;
-    } else if (c2 != 5 * order) {
-      printf("c2 = %u\n", c2);
-      errorcount++;  // every node has 5 edges
-    } else if (c3 != 5 * order) {
-      printf("c3 = %u\n", c3);
-      errorcount++;
-    } else if (c4 != order) {
-      printf("c4 = %u\n", c4);
-      errorcount++;
-    }
-  }
-  EXPECT_EQ(errorcount, 0) << "failed in " << errorcount
-                           << " out of 10 iterations";
+TEST_P(DFSTest, EHK_userproc) {
+  DFS::runEHKDFS(GetParam(), incr1, incr2, incr3, incr4);
+  EXPECT_EQ(c1, order);
+  EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
+  EXPECT_EQ(c3, 5 * order);
+  EXPECT_EQ(c4, order);
 }
