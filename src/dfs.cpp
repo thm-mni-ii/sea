@@ -42,18 +42,28 @@ void DFS::runStandardDFS(Graph *g, void (*preProcess)(Node *), void (*preExplore
 	delete[] color;
 }
 
-DFS::Inplace::Inplace(uint *graph, uint v, UserFunc1 pre, UserFunc1 post){
+void DFS::runInplaceDirectedDFS(uint* graph,uint v, void (*pre)(unsigned int),void (*post)(unsigned int)){
+	Inplace inplace(graph,v,pre,post);
+	inplace.processInplace();
+}
+
+DFS::Inplace::Inplace(uint *graph,uint v, void(*pre)(unsigned int),void(*post)(unsigned int)){
 	this->g = graph;
-	this->startVertex = v;
+	this->start = v;
 	this->preProcess = pre;
 	this->postProcess = post;
 }
 
-uint DFS::Inplace::findStartVertex(uint p){
+void DFS::Inplace::processInplace(){
+	uint v = findStartVertex();
+	visit(v);
+}
+
+uint DFS::Inplace::findStartVertex(){
 	unsigned int order = g[0];
-	unsigned int numedges = g[0] + 1;
-	for(unsigned int i = order + 2; i < numedges; ++i){
-		if(g[i] == p){
+	unsigned int numedges = g[g[0] + 1];
+	for(unsigned int i = order + 2; i < numedges + order +2; ++i){
+		if(g[i] == start){
 			return i;
 		}
 	}
@@ -87,40 +97,38 @@ uint& DFS::Inplace::accessStar(uint p){
 }
 
 void DFS::Inplace::visit(uint p){
-	//preprocess
+	preProcess(name(p));
 	nextNeighbor(p,true);
 }
 
-void DFS::Inplace::nextNeighbor(uint p,bool firstcheck){
-	if(firstcheck){
-		if(name(p) == 0){
-			if(isWhite(p)){
-				gotoChild(p);
-			}else{
-				nextNeighbor(p+1,true);
-			}
-		}else{
-			//gotoParent(q);
-		}
-	}else{
-		if(isWhite(p)){
+void DFS::Inplace::nextNeighbor(uint p,bool skipfirstcheck){
+	if((name(p) == 0 || skipfirstcheck) && p < 19){
+		if(isWhite(accessStar(p))){
 			gotoChild(p);
 		}else{
-			nextNeighbor(p+1,true);
+			nextNeighbor(p+1,false);
+		}
+	}else{
+		uint q = p;
+		while(q > 1){
+			if(name(q)){
+				gotoParent(q);
+			}else{
+				--q;
+			}
 		}
 	}
 }
 
 bool DFS::Inplace::isWhite(uint p){
-	return g[access(p)] <= g[0];
+	return g[access(p+1)] <= g[0] && g[p]!=start;
 }
 
 void DFS::Inplace::gotoChild(uint p){
 	uint q = accessStar(p);
-	//uint v = name(q);
 	uint x = access(q + 1);
-	access(p) = x;
-	if(!name(p)){
+	accessStar(p) = x;
+	if(name(p) != 0){
 		access(q+1) = p + 1;
 	}else{
 		access(q+1) = p;
@@ -137,9 +145,9 @@ void DFS::Inplace::gotoParent(uint q){
 			uint temp = accessStar(p-1);
 			accessStar(p-1) = accessStar(p);
 			accessStar(p) = temp;
-			nextNeighbor(p,true);
+			nextNeighbor(p,false);
 		}else{
-			nextNeighbor(p+1,true);
+			nextNeighbor(p+1,false);
 		}
 	}
 }

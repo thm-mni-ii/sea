@@ -1,0 +1,101 @@
+#include <iostream>
+#include "sealib/graphrepresentations.h"
+#include "sealib/graph.h"
+#include "sealib/graphcreator.h"
+#include "sealib/dfs.h"
+
+
+uint* swappedbeginpointer;
+void preProcess(uint v){
+	std::cout << std::endl;
+	std::cout << "visiting: " << v << std::endl;
+	for(unsigned int i = 0; i < 19; ++i){
+		std::cout << swappedbeginpointer[i] << "\t";
+	}
+}
+
+int main(){
+	uint order = 5;
+	uint **adjmatrixptr 	= new uint*[order];
+	for(int i = 0; i < order; ++i){
+		adjmatrixptr[i] = new uint[order];
+	}
+	uint adjmatrix[5][5] = {{0,1,0,0,1},
+		{1,0,1,1,0},
+		{0,1,0,1,0},
+		{0,1,1,0,1},
+		{1,0,0,1,0}};
+	for(uint i = 0; i < order; ++i){
+		for(uint j = 0; j < order; ++j){
+			adjmatrixptr[i][j] = adjmatrix[i][j];
+		}
+	}
+	Graph *g = GraphCreator::createGraphFromAdjacencyMatrix(adjmatrixptr,order);
+	Graph *g2 = GraphCreator::createGraphFromAdjacencyMatrix(adjmatrixptr,order);
+	uint* standard = Graphrepresentations::graphToStandard(g);
+	uint* standard2 = Graphrepresentations::graphToStandard(g2);
+/*
+	//print graph in standard representation
+	std::cout << "Standard representation:" << std::endl;
+	for(uint i = 0; i < standard[0] + standard[standard[0]+1] + 2; ++i){
+		std::cout << i << "\t";
+	}
+	std::cout << std::endl;
+	for(uint i = 0; i < standard[0] + standard[standard[0]+1] + 2; ++i){
+		std::cout << standard[i] << "\t";
+	}
+	std::cout << std::endl;
+
+	//compute and print crosspointer representation
+	uint* crosspointer = Graphrepresentations::standardToCrosspointer(standard);
+	std::cout << "Crosspointer representation:" << std::endl;
+	for(uint i = 0; i < crosspointer[0] + crosspointer[crosspointer[0]+1] + 2; ++i){
+		std::cout << i << "\t";
+	}
+	std::cout << std::endl;
+	for(uint i = 0; i < crosspointer[0] + crosspointer[crosspointer[0]+1] + 2; ++i){
+		std::cout << crosspointer[i] << "\t";
+	}
+	std::cout << std::endl;
+	//compute and print beginpointer representation
+	uint* beginpointer = Graphrepresentations::standardToBeginpointer(standard2);
+	std::cout << "Beginpointer representation:" << std::endl;
+	for(uint i = 0; i < beginpointer[0] + beginpointer[beginpointer[0]+1] + 2; ++i){
+		std::cout << i << "\t";
+	}
+	std::cout << std::endl;
+	for(uint i = 0; i < beginpointer[0] + beginpointer[beginpointer[0]+1] + 2; ++i){
+		std::cout << beginpointer[i] << "\t";
+	}
+	std::cout << std::endl;
+	//swap and print crosspointer representation
+	uint* swappedcrosspointer = Graphrepresentations::swapRepresentation(crosspointer);
+	std::cout << "swapped Crosspointer representation:" << std::endl;
+	for(uint i = 0; i < swappedcrosspointer[0] + swappedcrosspointer[swappedcrosspointer[0]+1] + 2; ++i){
+		std::cout << i << "\t";
+	}
+	std::cout << std::endl;
+	for(uint i = 0; i < swappedcrosspointer[0] + swappedcrosspointer[swappedcrosspointer[0]+1] + 2; ++i){
+		std::cout << swappedcrosspointer[i] << "\t";
+	}
+	std::cout << std::endl;
+	//swap and print beginpointer representation
+	*/
+	swappedbeginpointer = Graphrepresentations::swapRepresentation(standard2);
+	std::cout << "swapped Beginpointer representation:" << std::endl;
+	for(uint i = 0; i < swappedbeginpointer[0] + swappedbeginpointer[swappedbeginpointer[0]+1] + 2; ++i){
+		std::cout << i << "\t";
+	}
+	std::cout << std::endl;
+	for(uint i = 0; i < swappedbeginpointer[0] + swappedbeginpointer[swappedbeginpointer[0]+1] + 2; ++i){
+		std::cout << swappedbeginpointer[i] << "\t";
+	}
+	
+	std::cout << std::endl;
+	for(unsigned int i = 0; i < 19; ++i){
+		std::cout << i << "\t";
+	}
+	DFS::runInplaceDirectedDFS(swappedbeginpointer,3,preProcess,preProcess);
+	return 0;
+}
+

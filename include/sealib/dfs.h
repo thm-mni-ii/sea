@@ -12,6 +12,7 @@
 
 typedef void (*UserFunc1)(Node*);
 typedef void (*UserFunc2)(Node*, Node*);
+
 typedef unsigned int uint;
 
 /**	
@@ -37,11 +38,9 @@ class DFS {
 	class Inplace{
 		private:
 			uint *g;
-			uint startVertex;
-			UserFunc1 preProcess;
-			UserFunc1 postProcess;
-			uint findStartVertex(uint v);
-			void visit(uint p);
+			uint start;
+			void (*preProcess)(unsigned int v);
+			void (*postProcess)(unsigned int v);
 			uint& accessStar( uint p);
 			void nextNeighbor(uint p, bool firstcheck);
 			bool isWhite(uint p);
@@ -49,8 +48,11 @@ class DFS {
 			void gotoParent(uint q);
 			uint& access(uint p);
 			uint name(uint p);
+			uint findStartVertex();
+			void visit(uint p);
 		public:
-			Inplace(uint *graph, uint v, UserFunc1 pre, UserFunc1 post);
+			Inplace(uint *graph,uint v, void(*preProcess)(unsigned int),void(*postProcess)(unsigned int));
+			void processInplace();
 	};
  public:
 	/**
@@ -76,8 +78,7 @@ class DFS {
    * @param preprocess to be executed before processing a node u
    * @param postprocess to be executed after processing a node u
 	 */
-	static void runInplaceDirectedDFS(Graph *g,uint v, UserFunc1 preprocess,
-								 UserFunc1 postprocess);
+	static void runInplaceDirectedDFS(uint *graph,uint v, void (*pre)(unsigned int),void (*post)(unsigned int));
 };
 #endif  // SEALIB_DFS_H_
 
