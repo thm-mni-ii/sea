@@ -102,7 +102,7 @@ void DFS::Inplace::visit(uint p){
 }
 
 void DFS::Inplace::nextNeighbor(uint p,bool skipfirstcheck){
-	if((name(p) == 0 || skipfirstcheck) && p < 19){
+	if((name(p) == 0 || skipfirstcheck) && p < g[g[0]+1]+g[0]+2){
 		if(isWhite(redirectAccess(p))){
 			gotoChild(p);
 		}else{
@@ -127,6 +127,7 @@ bool DFS::Inplace::isWhite(uint p){
 void DFS::Inplace::gotoChild(uint p){
 	uint q = redirectAccess(p);
 	uint x = access(q + 1);
+
 	access(p) = x;
 	if(name(p) != 0){
 		access(q+1) = p + 1;
