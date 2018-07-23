@@ -30,11 +30,9 @@ class Bitset {
     }
 
  public:
-    explicit Bitset(sizetype bits_) :
-            bits(bits_),
-            mbits(bits % bitsPerByte == 0 ? bits/bitsPerByte : bits/bitsPerByte + 1) {}
-    Bitset() : Bitset(0) {}
-    ~Bitset() = default;
+    explicit Bitset(sizetype bits_);
+    Bitset();
+    ~Bitset();
 
     /**
      * Proxy class to simulate lvalues of bit type.
@@ -52,10 +50,10 @@ class Bitset {
          blocktype *mblock;
          const blocktype mmask;
 
-         void doSet() { *mblock |= mmask; }
-         void doReset() { *mblock &= ~mmask; }
-         void doFlip() { *mblock ^= mmask; }
-         void doAssign(bool b) { b ? doSet() : doReset(); }
+         inline void doSet() { *mblock |= mmask; }
+         inline void doReset() { *mblock &= ~mmask; }
+         inline void doFlip() { *mblock ^= mmask; }
+         inline void doAssign(bool b) { b ? doSet() : doReset(); }
 
       public:
          operator bool() const { return (*mblock & mmask) != 0; }
@@ -104,129 +102,62 @@ class Bitset {
       * @param bit index of the bit
       * @return BitReference referencing the block and index of the bit.
       */
-     BitReference operator[](sizetype bit) {
-         assert(bit < bits);
-         return BitReference(&mbits[bit / bitsPerByte], bit % bitsPerByte);
-     }
+     BitReference operator[](sizetype bit);
 
      /**
       * const version of the operator needs only a simple get instead of the BitReference wrapper class.
       * @param bit index of the bit
       * @return true if set, false otherwise
       */
-     bool operator[](sizetype bit) const { return get(bit); }
+     bool operator[](sizetype bit) const;
 
     /**
      * sets all bits to true
      */
-    void set() {
-        for (unsigned long &mbit : mbits) {
-            mbit = std::numeric_limits<blocktype>::max();
-        }
-    }
+    void set();
 
     /**
      * clears all bits
      */
-    void clear() {
-        for (unsigned long &mbit : mbits) {
-            mbit = 0;
-        }
-    }
+    void clear();
 
     /**
      * @param bit idx of the bit
      * @return true if the bit is set, false otherwise
      */
-    inline bittype get(sizetype bit) const {
-        assert(bit < bits);
-        return get(mbits[bit / bitsPerByte], bit % bitsPerByte);
-    }
+    bittype get(sizetype bit) const;
 
-    sizetype size() const {
-        return bits;
-    }
-
-    sizetype blocks() const {
-        return mbits.size();
-    }
+    /**
+     * @return number of bits held by bitset
+     */
+    sizetype size() const;
+    /**
+     * @return number of blocks used to store bits
+     */
+    sizetype blocks() const;
 
     /**
      * @param idx of the block
      * @return const ref to the block
      */
-    inline const blocktype& getBlock(sizetype idx) const {
-        assert(mbits.size() > idx);
-        return mbits[idx];
-    }
+    const blocktype& getBlock(sizetype idx) const;
 
     /**
-        * @param idx of the block
-        * @param block value to be set
-        */
-    inline void setBlock(sizetype idx,  blocktype block) {
-        assert(mbits.size() > idx);
-        mbits[idx] = block;
-    }
+     * @param idx of the block
+     * @param block value to be set
+     */
+    void setBlock(sizetype idx,  blocktype block);
 
     //  basic bitset operations
-    Bitset& operator&=(const Bitset& rhs) {
-        assert(size() == rhs.size());
-        for (sizetype i = 0; i < blocks(); i++) {
-            mbits[i] &= rhs.mbits[i];
-        }
-        return *this;
-    }
+    Bitset& operator&=(const Bitset& rhs);
 
-    Bitset& operator|=(const Bitset& rhs) {
-        assert(size() == rhs.size());
-        for (sizetype i = 0; i < blocks(); i++) {
-            mbits[i] |= rhs.mbits[i];
-        }
-        return *this;
-    }
+    Bitset& operator|=(const Bitset& rhs);
 
-    Bitset& operator^=(const Bitset& rhs) {
-        assert(size() == rhs.size());
-        for (sizetype i = 0; i < blocks(); i++) {
-            mbits[i] ^= rhs.mbits[i];
-        }
-        return *this;
-    }
+    Bitset& operator^=(const Bitset& rhs);
 
-    Bitset& operator-=(const Bitset& rhs) {
-        assert(size() == rhs.size());
-        for (sizetype i = 0; i < blocks(); i++) {
-            mbits[i] &= ~rhs.mbits[i];
-        }
-        return *this;
-    }
+    Bitset& operator-=(const Bitset& rhs);
 
     friend bool operator==(const Bitset& lhs, const Bitset& rhs);
 };
-
-Bitset operator&(const Bitset& lhs, const Bitset& rhs) {
-    Bitset b(lhs);
-    return b &= rhs;
-}
-
-Bitset operator|(const Bitset& lhs, const Bitset& rhs) {
-    Bitset b(lhs);
-    return b |= rhs;
-}
-
-Bitset operator^(const Bitset& lhs, const Bitset& rhs) {
-    Bitset b(lhs);
-    return b ^= rhs;
-}
-
-Bitset operator-(const Bitset& lhs, const Bitset& rhs) {
-    Bitset b(lhs);
-    return b -= rhs;
-}
-
-bool operator==(const Bitset& lhs, const Bitset& rhs) {
-    return (lhs.size() == rhs.size()) && (lhs.mbits == rhs.mbits);
-}
 }  // namespace Sealib
 #endif  // SEALIB_BITSET_H_
