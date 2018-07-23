@@ -70,4 +70,7 @@ TEST(BitsetTest, BitsetFunctionality) {
     }
 
     ASSERT_EQ(bs.getBlock(0), (unsigned long) - 1);
+
+    Bitset bsCpy(bs);
+    ASSERT_EQ(bsCpy, bs);
 }
