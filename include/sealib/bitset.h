@@ -13,19 +13,19 @@ namespace Sealib {
  * Partly based on dynamic_bitset from the boost library.
  * @author Johannes Meintrup
  */
+template<typename Block>
 class Bitset {
-    typedef unsigned long blocktype;
     typedef unsigned long sizetype;
     typedef bool bittype;
 
  private:
-    static const unsigned int bitsPerByte = 64;
-    static const blocktype blocktype_one = blocktype(1);
+    static const unsigned int bitsPerByte = sizeof(Block) * 8;
+    static const Block blocktype_one = Block(1);
 
     sizetype bits;
-    std::vector<blocktype> mbits;
+    std::vector<Block> mbits;
 
-    inline bittype get(const blocktype &i, sizetype b) const {
+    inline bittype get(const Block &i, sizetype b) const {
         return static_cast<bittype>(i & (blocktype_one << b));
     }
 
@@ -39,20 +39,20 @@ class Bitset {
      * Implementation taken from boost dynamic_bitset.
      */
      class BitReference {
-         friend class Bitset;
+         friend class Bitset<Block>;
 
-         BitReference(blocktype *b, sizetype pos) :
+         BitReference(Block *b, Block pos) :
                  mblock(b),
-                 mmask(blocktype(1) << pos)
+                 mmask(static_cast<Block>(Block(1) << pos))
          {}
 
       private:
-         blocktype *mblock;
-         const blocktype mmask;
+         Block *mblock;
+         const Block mmask;
 
-         inline void doSet() { *mblock |= mmask; }
-         inline void doReset() { *mblock &= ~mmask; }
-         inline void doFlip() { *mblock ^= mmask; }
+         inline void doSet() { *mblock = *mblock | mmask; }
+         inline void doReset() { *mblock = *mblock & static_cast<Block>(~mmask); }
+         inline void doFlip() { *mblock = *mblock ^ mmask; }
          inline void doAssign(bool b) { b ? doSet() : doReset(); }
 
       public:
@@ -140,24 +140,22 @@ class Bitset {
      * @param idx of the block
      * @return const ref to the block
      */
-    const blocktype& getBlock(sizetype idx) const;
+    const Block& getBlock(sizetype idx) const;
 
     /**
      * @param idx of the block
      * @param block value to be set
      */
-    void setBlock(sizetype idx,  blocktype block);
+    void setBlock(sizetype idx,  Block block);
 
     //  basic bitset operations
-    Bitset& operator&=(const Bitset& rhs);
+    Bitset<Block>& operator&=(const Bitset<Block>& rhs);
 
-    Bitset& operator|=(const Bitset& rhs);
+    Bitset<Block>& operator|=(const Bitset<Block>& rhs);
 
-    Bitset& operator^=(const Bitset& rhs);
+    Bitset<Block>& operator^=(const Bitset<Block>& rhs);
 
-    Bitset& operator-=(const Bitset& rhs);
-
-    friend bool operator==(const Bitset& lhs, const Bitset& rhs);
+    Bitset<Block>& operator-=(const Bitset<Block>& rhs);
 };
 }  // namespace Sealib
 #endif  // SEALIB_BITSET_H_
