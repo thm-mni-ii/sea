@@ -65,7 +65,12 @@ class DFS {
   static void nBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
                       UserFunc2 postexplore, UserFunc1 postprocess);
 
-    // TODO: write documentation!
+    /**
+     * Runs an inplace DFS in linear time over a graph that is given in a special representation. <br>
+     * EFFICIENCY: O(n+m) time, O(log n) bits
+     * @param graph Graph A graph in a swapped begin pointer representation.
+     * @param startVertex startVertex The begin of the DFS tree.
+     */
     static void runLinearTimeInplaceDFS(unsigned int* graph, unsigned int startVertex);
 };
 }  // namespace Sealib
