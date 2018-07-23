@@ -3,7 +3,7 @@
 //
 
 #include <include/sealib/localselecttable.h>
-#include <include/sealib/rankstructure.h>
+#include <include/sealib/sharedrankstructure.h>
 #include <iostream>
 
 Sealib::LocalSelectTable::LocalSelectTable() : localSelectLookupTable(256){

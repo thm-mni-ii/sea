@@ -1,18 +1,17 @@
-//
-// Created by jmeintrup on 10.05.18.
-//
+#ifndef SEALIB_SIMPLERANKSELECT_H
+#define SEALIB_SIMPLERANKSELECT_H
 
-#ifndef SEA_SIMPLERANKSELECT_H
-#define SEA_SIMPLERANKSELECT_H
-#include <boost/dynamic_bitset.hpp>
+#include <sealib/bitset.h>
+#include <sealib/rankselect.h>
+
 namespace Sealib {
 /**
  * Naive implementation of RankSelect, used to test the space efficient variant or for debugging
  * @author Johannes Meintrup
  */
-class SimpleRankSelect {
+class SimpleRankSelect : public RankSelect{
  private:
-    boost::dynamic_bitset<unsigned char> bitset;
+    Bitset<unsigned char> bitset;
 
  public:
     /**
@@ -29,7 +28,7 @@ class SimpleRankSelect {
      */
     unsigned long rank(unsigned long k) const;
 
-    SimpleRankSelect(const boost::dynamic_bitset<unsigned char> &bitset);
+    SimpleRankSelect(Bitset<unsigned char> bitset);
     SimpleRankSelect();
 };
 }

@@ -4,7 +4,7 @@
 #include "sealib/simplerankselect.h"
 
 unsigned long Sealib::SimpleRankSelect::select(unsigned long k) const {
-    if(k == 0)
+    /*if(k == 0)
         return boost::dynamic_bitset<>::npos;
 
     unsigned long i = bitset.find_first();
@@ -13,11 +13,12 @@ unsigned long Sealib::SimpleRankSelect::select(unsigned long k) const {
     while ((i = bitset.find_next(i)) != boost::dynamic_bitset<unsigned char>::npos) {
         if (++cnt == k) break;
     }
-    return i == boost::dynamic_bitset<unsigned char>::npos ? i : i + 1;
+    return i == boost::dynamic_bitset<unsigned char>::npos ? i : i + 1;*/
+    return k;
 }
 
 unsigned long Sealib::SimpleRankSelect::rank(unsigned long k) const {
-    if(k == 0) {
+    /*if(k == 0) {
         return boost::dynamic_bitset<>::npos;
     }
     if (bitset.size() < k) {
@@ -27,9 +28,9 @@ unsigned long Sealib::SimpleRankSelect::rank(unsigned long k) const {
     for (unsigned long i = 0; i < k; i++) {
         if (bitset[i]) rank++;
     }
-    return rank;
+    return rank;*/
+    return k;
 }
 
-Sealib::SimpleRankSelect::SimpleRankSelect(const boost::dynamic_bitset<unsigned char> &bitset_) : bitset(bitset_) {}
-
+Sealib::SimpleRankSelect::SimpleRankSelect(Bitset<unsigned char> bitset_) : bitset(bitset_) {}
 Sealib::SimpleRankSelect::SimpleRankSelect(){}
