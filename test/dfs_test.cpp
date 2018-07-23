@@ -37,16 +37,15 @@ unsigned *cnt;
 void incrCnt(unsigned u) { cnt[u]++; }
 
 std::random_device rnd;
-const unsigned GRAPHCOUNT = 10;  // how many random graphs to generate?
-unsigned order = 0;
+const unsigned GRAPHCOUNT = 100;  // how many random graphs to generate?
+const unsigned DEGREE = 5;       // how many outneighbours per node?
+const unsigned order = 20;
 std::vector<Graph *> makeGraphs() {
   std::vector<Graph *> g = std::vector<Graph *>();
   for (uint c = 0; c < GRAPHCOUNT; c++) {
-    order = 200;
     Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
-    c1 = c2 = c3 = c4 = 0;
     for (unsigned int a = 0; a < order; a++) {
-      int ai = 5;
+      int ai = DEGREE;
       Adjacency *ad =
           reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * ai));
       for (int b = 0; b < ai; b++) ad[b] = Adjacency(rnd() % order);
@@ -67,19 +66,19 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(graphs));
 TEST_P(DFSTest, StdUserproc) {
   Graph *g = GetParam();
   DFS::runStandardDFS(g, incr1, incr2, incr3, incr4);
-  // DFS::runStandardDFS(g, p0, e0, e1, p1);
+  DFS::runStandardDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
-  EXPECT_EQ(c3, 5 * order);
+  EXPECT_EQ(c2, DEGREE * order);  // every node has 5 edges
+  EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
 }
 // TODO(!!!): fix random test failures!
 TEST_P(DFSTest, EHKUserproc) {
   Graph *g = GetParam();
   DFS::runEHKDFS(g, incr1, incr2, incr3, incr4);
-  // DFS::runEHKDFS(g, p0, e0, e1, p1);
+  DFS::runEHKDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
-  EXPECT_EQ(c3, 5 * order);
+  EXPECT_EQ(c2, DEGREE * order);  // every node has 5 edges
+  EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
 }

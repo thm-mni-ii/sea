@@ -21,29 +21,33 @@ static void process_small(uint node, Graph *g, CompactArray *color,
 void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                       UserFunc2 postExplore, UserFunc1 postProcess,
                       unsigned *color, uint u0) {
-  std::stack<uint> *s = new std::stack<uint>;
-  s->push(u0);
+  std::stack<State> *s = new std::stack<State>;
+  s->push(std::make_tuple(u0, 0));
   while (!s->empty()) {
-    uint u = s->top();
+    State x = s->top();
     s->pop();
-    if (preProcess != DFS_NOP_PROCESS) preProcess(u);
-    color[u] = DFS_GRAY;
-
-    for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
+    uint u = std::get<0>(x);
+    uint k = std::get<1>(x);
+    if (color[u] == DFS_WHITE) {
+      if (preProcess != DFS_NOP_PROCESS) preProcess(u);
+      color[u] = DFS_GRAY;
+    }
+    if (k < g->getNode(u)->getDegree()) {
+      s->push(std::make_tuple(u,k+1));
       uint v = g->head(u, k);
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
-      if (color[v] == DFS_WHITE && !g->getNode(v)->hasParent) {
-        s->push(v);
+      if (color[v] == DFS_WHITE) {
+        s->push(std::make_tuple(v, 0));
         g->getNode(v)->parent = u;
-        g->getNode(v)->hasParent = true;
       } else {
         if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
       }
+    } else {
+      if (postExplore != DFS_NOP_EXPLORE && u != u0)
+        postExplore(g->getNode(u)->parent, u);
+      color[u] = DFS_BLACK;
+      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
     }
-    if (postExplore != DFS_NOP_EXPLORE && u != u0)
-      postExplore(g->getNode(u)->parent, u);
-    color[u] = DFS_BLACK;
-    if (postProcess != DFS_NOP_PROCESS) postProcess(u);
   }
   delete s;
 }
@@ -117,10 +121,12 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
       ceil(e / 6 * n) /
       (8 *
        sizeof(State))));  // 2q entries on S shall take up at most (e/3)n bits
-  if (q < 3) q = 3;       // stable segment size (?)
+  unsigned qs=static_cast<unsigned>(ceil(n/log(n)));       // stable segment size (?)
+  if(q<qs) q=qs;
   unsigned vpg = static_cast<unsigned>(ceil(3 / e));  // 3/e values per group,
                                                       // assume that 3/e is an
-  // integer that divides n
+                                                      // integer that divides n
+
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   SegmentStack *s = new SegmentStack(n, q, false);
   CompactArray *color = new CompactArray(n, vpg);
