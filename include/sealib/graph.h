@@ -1,8 +1,9 @@
-#ifndef SEA_GRAPH_H
-#define SEA_GRAPH_H
+#ifndef SEALIB_GRAPH_H_
+#define SEALIB_GRAPH_H_
 
 #include "sealib/node.h"
 
+namespace Sealib {
 /**
  * A undirected graph G = (V, E) with nodes V = [0, n - 1].
  * The graph stores its edges V inside adjacency arrays containing
@@ -43,5 +44,5 @@ class Graph {
     */
     unsigned int getOrder();
 };
-
-#endif //SEA_GRAPH_Hs
+}  // namespace Sealib
+#endif  // SEALIB_GRAPH_H_

@@ -1,6 +1,7 @@
-#ifndef SEA_ADJACENCY_H
-#define SEA_ADJACENCY_H
+#ifndef SEALIB_ADJACENCY_H_
+#define SEALIB_ADJACENCY_H_
 
+namespace Sealib {
 /**
  * An Adjacency object is used in the nodes class as a representation of an edges endpoint.
  * Also it contains a cross link to its incomming edge.
@@ -16,7 +17,7 @@ class Adjacency {
      * Note: The construction will leave the crossIndex uninitialized.
      * @param _vertex The vertex id
      */
-    Adjacency(unsigned int _vertex);
+    explicit Adjacency(unsigned int _vertex);
 };
-
-#endif //SEA_ADJACENCY_H
+}  // namespace Sealib
+#endif  // SEALIB_ADJACENCY_H_
