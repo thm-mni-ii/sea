@@ -143,11 +143,11 @@ class Bitset {
         return get(mbits[bit / bitsPerByte], bit % bitsPerByte);
     }
 
-    sizetype size() {
+    sizetype size() const {
         return bits;
     }
 
-    sizetype blocks() {
+    sizetype blocks() const {
         return mbits.size();
     }
 
@@ -168,6 +168,60 @@ class Bitset {
         assert(mbits.size() > idx);
         mbits[idx] = block;
     }
+
+    //  basic bitset operations
+    Bitset& operator&=(const Bitset& rhs) {
+        assert(size() == rhs.size());
+        for (sizetype i = 0; i < blocks(); i++) {
+            mbits[i] &= rhs.mbits[i];
+        }
+        return *this;
+    }
+
+    Bitset& operator|=(const Bitset& rhs) {
+        assert(size() == rhs.size());
+        for (sizetype i = 0; i < blocks(); i++) {
+            mbits[i] |= rhs.mbits[i];
+        }
+        return *this;
+    }
+
+    Bitset& operator^=(const Bitset& rhs) {
+        assert(size() == rhs.size());
+        for (sizetype i = 0; i < blocks(); i++) {
+            mbits[i] ^= rhs.mbits[i];
+        }
+        return *this;
+    }
+
+    Bitset& operator-=(const Bitset& rhs) {
+        assert(size() == rhs.size());
+        for (sizetype i = 0; i < blocks(); i++) {
+            mbits[i] &= ~rhs.mbits[i];
+        }
+        return *this;
+    }
+
+    Bitset operator&(Bitset& lhs, Bitset& rhs) {
+        Bitset b(lhs);
+        return b &= rhs;
+    }
+
+    Bitset operator|(Bitset& lhs, Bitset& rhs) {
+        Bitset b(lhs);
+        return b |= rhs;
+    }
+
+    Bitset operator^(Bitset& lhs, Bitset& rhs) {
+        Bitset b(lhs);
+        return b ^= rhs;
+    }
+
+    Bitset operator-(Bitset& lhs, Bitset& rhs) {
+        Bitset b(lhs);
+        return b -= rhs;
+    }
+
 };
 }  // namespace Sealib
 #endif  // SEALIB_BITSET_H_
