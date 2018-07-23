@@ -26,19 +26,30 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   while (!s->empty()) {
     uint u = s->top();
     s->pop();
-    if (preProcess != DFS_NOP_PROCESS) preProcess(u);
-    color[u] = DFS_GRAY;
-    for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
-      uint v = g->head(u, k);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
-      if (color[v] == DFS_WHITE) {
-        s->push(v);
-        color[v] = DFS_RESERVED;
+    if (color[u] == DFS_WHITE) {
+      s->push(u);
+      if (preProcess != DFS_NOP_PROCESS) preProcess(u);
+      color[u] = DFS_GRAY;
+      for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
+        uint v = g->head(u, k);
+        if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
+        if (color[v] == DFS_WHITE) {
+          s->push(v);
+          color[v] = DFS_RESERVED;
+        }
       }
-      if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
+      for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
+        uint v = g->head(u, k);
+        if (color[v] == DFS_RESERVED) color[v] = DFS_WHITE;
+      }
+    } else if (color[u] == DFS_GRAY) {
+      for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
+        uint v = g->head(u, k);
+        if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
+      }
+      color[u] = DFS_BLACK;
+      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
     }
-    color[u] = DFS_BLACK;
-    if (postProcess != DFS_NOP_PROCESS) postProcess(u);
   }
   delete s;
 }
@@ -71,21 +82,24 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
       if (preProcess != DFS_NOP_PROCESS) preProcess(u);
       color->insert(u, DFS_GRAY);
     }
-    if (k < g->getNode(u)->getDegree()) {
-      s->push(std::make_tuple(u, k + 1));
-      if (s->isAligned()) {
-        return;
+    if (color->get(u) == DFS_GRAY) {
+      if (k < g->getNode(u)->getDegree()) {
+        s->push(std::make_tuple(u, k + 1));
+        if (s->isAligned()) return;
+        uint v = g->head(u, k);
+        if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
+        if (color->get(v) == DFS_WHITE) {
+          s->push(std::make_tuple(v, 0));
+        }
+        if (s->isAligned()) return;
+      } else {
+        for (uint a = 0; a<k; a++) {
+          uint v = g->head(u, a);
+          if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
+        }
+        color->insert(u, DFS_BLACK);
+        if (postProcess != DFS_NOP_PROCESS) postProcess(u);
       }
-      uint v = g->head(u, k);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
-      if (color->get(v) == DFS_WHITE) s->push(std::make_tuple(v, 0));
-      if (s->isAligned()) {
-        return;
-      }
-      if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
-    } else {
-      color->insert(u, DFS_BLACK);
-      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
     }
   }
 }
@@ -113,7 +127,7 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   if (q < 3) q = 3;       // stable segment size (?)
   unsigned vpg = static_cast<unsigned>(ceil(3 / e));  // 3/e values per group,
                                                       // assume that 3/e is an
-                                                      // integer that divides n
+  // integer that divides n
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   SegmentStack *s = new SegmentStack(n, q, false);
   CompactArray *color = new CompactArray(n, vpg);
