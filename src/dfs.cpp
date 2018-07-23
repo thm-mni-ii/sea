@@ -54,11 +54,15 @@ class LinearTimeInplaceDFSRunner {
     unsigned int startVertex;
     unsigned int startPos;
 
+    // only for debugging
+    bool reachedEnd = false;
+
  public:
     LinearTimeInplaceDFSRunner(unsigned int *graph) {
         this->A = graph;
         this->n = A[0];
         this->N = A[n + 1] + n + 1;
+        std::cout << "this->N = " << this->N << std::endl;
     }
 
     void run(unsigned int startVertex) {
@@ -141,6 +145,11 @@ class LinearTimeInplaceDFSRunner {
         std::cout << "Visiting vertex: " << v << std::endl; // replace by preprocess
         printState();
 
+        if (reachedEnd) {
+            std::cout << "Reached end" << std::endl;
+            //return;
+        }
+
         nextNeighbor(p, true);
     };
 
@@ -159,12 +168,16 @@ class LinearTimeInplaceDFSRunner {
             }
             if (this->startPos == q) {
                 std::cout << "end DFS!" << std::endl;
+                printState();
                 return;
             }
             std::cout << "goToParent(" << q << ") from first check" << std::endl;
+
+            printState();
+
             if (p > this->N) {
                 std::cout << "Reached end of memory" << std::endl;
-                return;
+                this->reachedEnd = true;
             }
 
             goToParent(q);
@@ -195,25 +208,32 @@ class LinearTimeInplaceDFSRunner {
         }
     }
 
-    void goToParent(unsigned int q) {
+    void goToParent(unsigned int q) { // The root vertex does not get restored very well !!!
         std::cout << "goToParent(" << q << ")" << std::endl;
         unsigned int x = rA_(q + 1);
         unsigned int p = A[q + 1];
 
-        wA(q + 1, x); // Restore childs edge
-        wA(p, q); // Restore the pointer to the child
+        std::cout << "(x = " << x << ", p = " << p << ")" << std::endl;
+
+        wA(q + 1, x + 1); // Restore childs edge => Okay only if we have two vertices.
+
         if (name(p - 1) == 0) {
+            wA(p, q); // Restore the pointer to the child
             nextNeighbor(p + 1, false);
         } else {
+            wA(p - 1, q); // Restore the pointer to the child, because we never leave from the second position
+            // we left over the first whenever p points to the second.
+
             if (rA_(p - 1) < rA_(p)) {
-                unsigned int temp = rA_(p - 1);
-                wA_(p - 1, rA_(p));
-                wA_(p, temp);
                 nextNeighbor(p, false);
             } else {
+                std::cout << "swap(" << (p - 1) << ", " << p << ")" << std::endl;
+                printState();
                 unsigned int temp = rA_(p - 1);
+                std::cout << "- swap(" << temp << ", " << rA_(p) << ")" << std::endl;
                 wA_(p - 1, rA_(p));
                 wA_(p, temp);
+                printState();
                 nextNeighbor(p + 1, false);
             }
         }
