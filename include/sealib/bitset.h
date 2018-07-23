@@ -202,26 +202,31 @@ class Bitset {
         return *this;
     }
 
-    Bitset operator&(Bitset& lhs, Bitset& rhs) {
-        Bitset b(lhs);
-        return b &= rhs;
-    }
-
-    Bitset operator|(Bitset& lhs, Bitset& rhs) {
-        Bitset b(lhs);
-        return b |= rhs;
-    }
-
-    Bitset operator^(Bitset& lhs, Bitset& rhs) {
-        Bitset b(lhs);
-        return b ^= rhs;
-    }
-
-    Bitset operator-(Bitset& lhs, Bitset& rhs) {
-        Bitset b(lhs);
-        return b -= rhs;
-    }
-
+    friend bool operator==(const Bitset& lhs, const Bitset& rhs);
 };
+
+Bitset operator&(const Bitset& lhs, const Bitset& rhs) {
+    Bitset b(lhs);
+    return b &= rhs;
+}
+
+Bitset operator|(const Bitset& lhs, const Bitset& rhs) {
+    Bitset b(lhs);
+    return b |= rhs;
+}
+
+Bitset operator^(const Bitset& lhs, const Bitset& rhs) {
+    Bitset b(lhs);
+    return b ^= rhs;
+}
+
+Bitset operator-(const Bitset& lhs, const Bitset& rhs) {
+    Bitset b(lhs);
+    return b -= rhs;
+}
+
+bool operator==(const Bitset& lhs, const Bitset& rhs) {
+    return (lhs.size() == rhs.size()) && (lhs.mbits == rhs.mbits);
+}
 }  // namespace Sealib
 #endif  // SEALIB_BITSET_H_
