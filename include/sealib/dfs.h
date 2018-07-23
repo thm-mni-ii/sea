@@ -41,7 +41,7 @@ class DFS {
 			uint start;
 			void (*preProcess)(unsigned int v);
 			void (*postProcess)(unsigned int v);
-			uint& accessStar( uint p);
+			uint& redirectAccess( uint p);
 			void nextNeighbor(uint p, bool firstcheck);
 			bool isWhite(uint p);
 			void gotoChild(uint p);

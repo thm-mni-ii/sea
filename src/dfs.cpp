@@ -86,7 +86,7 @@ uint& DFS::Inplace::access(uint p){
 	}
 }
 
-uint& DFS::Inplace::accessStar(uint p){
+uint& DFS::Inplace::redirectAccess(uint p){
 	if(name(p - 1) == 0 || (0 < access(p) && access(p) <= g[0])){
 		return access(p);
 	}else if(name(p - 1) != 0){
@@ -103,7 +103,7 @@ void DFS::Inplace::visit(uint p){
 
 void DFS::Inplace::nextNeighbor(uint p,bool skipfirstcheck){
 	if((name(p) == 0 || skipfirstcheck) && p < 19){
-		if(isWhite(accessStar(p))){
+		if(isWhite(redirectAccess(p))){
 			gotoChild(p);
 		}else{
 			nextNeighbor(p+1,false);
@@ -125,9 +125,9 @@ bool DFS::Inplace::isWhite(uint p){
 }
 
 void DFS::Inplace::gotoChild(uint p){
-	uint q = accessStar(p);
+	uint q = redirectAccess(p);
 	uint x = access(q + 1);
-	accessStar(p) = x;
+	access(p) = x;
 	if(name(p) != 0){
 		access(q+1) = p + 1;
 	}else{
@@ -141,10 +141,10 @@ void DFS::Inplace::gotoParent(uint q){
 	access(q+1) = access(p)+1;
 	access(p) = q;
 	if(name(p-1)!= 0){
-		if(accessStar(p-1) < accessStar(p)){
-			uint temp = accessStar(p-1);
-			accessStar(p-1) = accessStar(p);
-			accessStar(p) = temp;
+		if(redirectAccess(p-1) < redirectAccess(p)){
+			uint temp = redirectAccess(p-1);
+			redirectAccess(p-1) = redirectAccess(p);
+			redirectAccess(p) = temp;
 			nextNeighbor(p,false);
 		}else{
 			nextNeighbor(p+1,false);
