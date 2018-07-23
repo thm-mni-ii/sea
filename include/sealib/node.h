@@ -31,6 +31,13 @@ class Node {
      * @return Returns the degree of the node.
      */
     unsigned int getDegree();
+
+    /**
+     * The name of this node's parent node.
+     * added by: Simon Heuser
+     */
+    unsigned int parent = 0;
+    bool hasParent = false;
 };
 }  // namespace Sealib
 #endif  // SEALIB_NODE_H_

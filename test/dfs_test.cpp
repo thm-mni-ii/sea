@@ -67,7 +67,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(graphs));
 TEST_P(DFSTest, StdUserproc) {
   Graph *g = GetParam();
   DFS::runStandardDFS(g, incr1, incr2, incr3, incr4);
-  //DFS::runStandardDFS(g, p0, e0, e1, p1);
+  // DFS::runStandardDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
   EXPECT_EQ(c3, 5 * order);
@@ -77,7 +77,7 @@ TEST_P(DFSTest, StdUserproc) {
 TEST_P(DFSTest, EHKUserproc) {
   Graph *g = GetParam();
   DFS::runEHKDFS(g, incr1, incr2, incr3, incr4);
-  //DFS::runEHKDFS(g, p0, e0, e1, p1);
+  // DFS::runEHKDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, 5 * order);  // every node has 5 edges
   EXPECT_EQ(c3, 5 * order);
