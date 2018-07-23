@@ -20,7 +20,7 @@ typename Bitset<Block>::BitReference Bitset<Block>::operator[](sizetype bit) {
 }
 
 template <typename Block>
-bool Bitset<Block>::operator[](sizetype bit) const { return Bitset<Block>::get(bit); }
+bool Bitset<Block>::operator[](sizetype bit) const { return get(bit); }
 
 template <typename Block>
 void Bitset<Block>::set() {
@@ -127,5 +127,6 @@ Bitset<Block> operator-(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
 
 template class Bitset<unsigned long>;
 template class Bitset<unsigned int>;
+template class Bitset<unsigned short>;
 template class Bitset<unsigned char>;
 }  // namespace Sealib
