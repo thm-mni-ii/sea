@@ -26,23 +26,13 @@ class Bitset {
     std::vector<blocktype> mbits;
 
     inline bittype get(const blocktype &i, sizetype b) const {
-        return i & (blocktype_one << b);
-    }
-
-    inline void set(blocktype &i, sizetype b) {
-        i |= (blocktype_one << b);
-    }
-
-    inline void clear(blocktype &i, sizetype b) {
-        i &= ~(blocktype_one << b);
-    }
-
-    inline void flip(blocktype &i, sizetype b) {
-        i ^= (blocktype_one << b);
+        return static_cast<bittype>(i & (blocktype_one << b));
     }
 
  public:
-    explicit Bitset(sizetype bits_) : bits(bits_), mbits(bits % bitsPerByte == 0 ? bits/bitsPerByte : bits/bitsPerByte + 1) {}
+    explicit Bitset(sizetype bits_) :
+            bits(bits_),
+            mbits(bits % bitsPerByte == 0 ? bits/bitsPerByte : bits/bitsPerByte + 1) {}
     Bitset() : Bitset(0) {}
     ~Bitset() = default;
 
@@ -53,23 +43,23 @@ class Bitset {
      class BitReference {
          friend class Bitset;
 
-         BitReference(blocktype &b, sizetype pos) :
+         BitReference(blocktype *b, sizetype pos) :
                  mblock(b),
                  mmask(blocktype(1) << pos)
          {}
 
       private:
-         blocktype &mblock;
+         blocktype *mblock;
          const blocktype mmask;
 
-         void doSet() { mblock |= mmask; }
-         void doReset() { mblock &= ~mmask; }
-         void doFlip() { mblock ^= mmask; }
+         void doSet() { *mblock |= mmask; }
+         void doReset() { *mblock &= ~mmask; }
+         void doFlip() { *mblock ^= mmask; }
          void doAssign(bool b) { b ? doSet() : doReset(); }
 
       public:
-         operator bool() const { return (mblock & mmask) != 0; }
-         bool operator~() const { return (mblock & mmask) == 0; }
+         operator bool() const { return (*mblock & mmask) != 0; }
+         bool operator~() const { return (*mblock & mmask) == 0; }
 
          BitReference& flip() {
              doFlip();
@@ -115,7 +105,8 @@ class Bitset {
       * @return BitReference referencing the block and index of the bit.
       */
      BitReference operator[](sizetype bit) {
-         return BitReference(mbits[bit / bitsPerByte], bit % bitsPerByte);
+         assert(bit < bits);
+         return BitReference(&mbits[bit / bitsPerByte], bit % bitsPerByte);
      }
 
      /**
@@ -129,8 +120,8 @@ class Bitset {
      * sets all bits to true
      */
     void set() {
-        for (sizetype i = 0; i < mbits.size(); i++) {
-            mbits[i] = std::numeric_limits<blocktype>::max();
+        for (unsigned long &mbit : mbits) {
+            mbit = std::numeric_limits<blocktype>::max();
         }
     }
 
@@ -138,8 +129,8 @@ class Bitset {
      * clears all bits
      */
     void clear() {
-        for (sizetype i = 0; i < mbits.size(); i++) {
-            mbits[i] = 0;
+        for (unsigned long &mbit : mbits) {
+            mbit = 0;
         }
     }
 
@@ -150,30 +141,6 @@ class Bitset {
     inline bittype get(sizetype bit) const {
         assert(bit < bits);
         return get(mbits[bit / bitsPerByte], bit % bitsPerByte);
-    }
-
-    /**
-     * @param bit idx of the bit to be set true
-     */
-    inline void set(sizetype bit) {
-        assert(bit < bits);
-        set(mbits[bit / bitsPerByte], bit % bitsPerByte);
-    }
-
-    /**
-     * @param bit idx of the bit to be set false
-     */
-    inline void unset(sizetype bit) {
-        assert(bit < bits);
-        clear(mbits[bit / bitsPerByte], bit % bitsPerByte);
-    }
-
-    /**
-     * @param bit to be flipped
-     */
-    inline void flip(sizetype bit) {
-        assert(bit < bits);
-        flip(mbits[bit / bitsPerByte], bit % bitsPerByte);
     }
 
     sizetype size() {
