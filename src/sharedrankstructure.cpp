@@ -1,9 +1,6 @@
-//
-// Created by jmeintrup on 03.05.18.
-//
-
 #include <iostream>
 #include <cmath>
+#include <utility>
 #include <include/sealib/localranktable.h>
 #include "sealib/sharedrankstructure.h"
 
@@ -18,7 +15,7 @@ unsigned long Sealib::SharedRankStructure::rank(unsigned long k) const{
 }
 
 Sealib::SharedRankStructure::SharedRankStructure(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_) :
-        bitset(bitset_),
+        bitset(std::move(bitset_)),
         segmentCount(static_cast<unsigned int>(bitset->size() / segmentLength)){
 
     auto lastSeg = static_cast<unsigned char>((bitset->size() % segmentLength));
