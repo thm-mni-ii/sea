@@ -11,9 +11,11 @@ void CompactArray::insert(uint i, unsigned int p) {
   Group a = *(group[groupOffset]);
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
-  Group b = Group(groupWidth, maxValue << gap);
+  Group b = Group(groupWidth);
+  b.setBlock(0,maxValue<<gap);
   Group c = a & ~b;
-  Group d = Group(groupWidth, p << gap);
+  Group d = Group(groupWidth);
+  d.setBlock(0,p<<gap);
   Group r = c | d;
   delete group[groupOffset];
   group[groupOffset] = new Group(r);
@@ -25,7 +27,7 @@ unsigned int CompactArray::get(uint i) {
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
-  unsigned a = static_cast<unsigned>(group[groupOffset]->to_ulong());
+  unsigned a = static_cast<unsigned>(group[groupOffset]->getBlock(0));
   unsigned b = maxValue << gap;
   unsigned c = a & b;
   unsigned d = c >> gap;
@@ -49,7 +51,7 @@ CompactArray::CompactArray(unsigned int count, unsigned int vpg) {
   groupCount =
       static_cast<unsigned>(ceil(count / static_cast<double>(valuesPerGroup)));
   group = new Group *[groupCount];
-  for (unsigned a = 0; a < groupCount; a++) group[a] = new Group(groupWidth, 0);
+  for (unsigned a = 0; a < groupCount; a++) group[a] = new Group(groupWidth);
 }
 
 CompactArray::~CompactArray() { delete[] group; }

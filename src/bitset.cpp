@@ -37,6 +37,13 @@ void Bitset<Block>::clear() {
 }
 
 template <typename Block>
+void Bitset<Block>::flip() {
+    for (sizetype i = 0; i < blocks(); ++i) {
+        mbits[i] = static_cast<Block>(~mbits[i]);
+    }
+}
+
+template <typename Block>
 typename Bitset<Block>::bittype Bitset<Block>::get(sizetype bit) const {
     assert(bit < bits);
     return get(mbits[bit / bitsPerByte], bit % bitsPerByte);
@@ -100,31 +107,16 @@ Bitset<Block>& Bitset<Block>::operator-=(const Bitset<Block>& rhs) {
     }
     return *this;
 }
+
+template<typename Block>
+Bitset<Block> Bitset<Block>::operator~() const {
+    Bitset b(*this);
+    b.flip();
+    return b;
+}
+
 namespace Sealib {
-template <typename Block>
-Bitset<Block> operator&(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
-    Bitset<Block> b(lhs);
-    return b &= rhs;
-}
-
-template <typename Block>
-Bitset<Block> operator|(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
-    Bitset<Block> b(lhs);
-    return b |= rhs;
-}
-
-template <typename Block>
-Bitset<Block> operator^(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
-    Bitset<Block> b(lhs);
-    return b ^= rhs;
-}
-
-template <typename Block>
-Bitset<Block> operator-(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
-    Bitset<Block> b(lhs);
-    return b -= rhs;
-}
-
+    
 template class Bitset<unsigned long>;
 template class Bitset<unsigned int>;
 template class Bitset<unsigned short>;

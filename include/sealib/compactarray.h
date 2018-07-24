@@ -2,10 +2,13 @@
 #define SEALIB_COMPACTARRAY_H_
 
 #include <math.h>
-#include <third-party/boost/include/boost/dynamic_bitset.hpp>
+#include <stdexcept>
+#include "sealib/bitset.h"
 #include "sealib/_types.h"
 
-typedef boost::dynamic_bitset<> Group;
+using Sealib::Bitset;
+
+typedef Bitset<> Group;
 
 namespace Sealib {
 /**
