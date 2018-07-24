@@ -11,23 +11,24 @@
 
 //	Generates a graph in standard representation with n nodes
 //	and ~p(n*(n-1)/2) edges
-unsigned int* Graphrepresentations::generateStandardGraph(unsigned int n, unsigned int p){
+unsigned int* Graphrepresentations::generateStandardGraph(unsigned int n, float p){
 	unsigned int m = 0;
 	unsigned int* edgesarray = new unsigned int[n];
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 	for(unsigned int i = 0; i < n; ++i){
-		 unsigned int edges = 0;
-		 for(unsigned int j = 1; j < n; ++j){
-			 unsigned int rnd = std::rand() % 100;
-			 if(rnd < p){
-				 ++edges;
-			 }
-		 }
-	if(edges < 3){
-		edges = 2;
-	}
-  m += edges;
-	edgesarray[i] = edges;
+		unsigned int edges = 0;
+		for(unsigned int j = 1; j < n; ++j){
+			float rnd = static_cast<float>(std::rand())/static_cast<float>(RAND_MAX);
+			if(rnd < p){
+				++edges;
+			}
+		}
+		//at least 2 egdes
+		if(edges < 3){
+			edges = 2;
+		}
+		m += edges;
+		edgesarray[i] = edges;
 	}
 	unsigned int* g = new unsigned int[n+m+2];
 	g[0] = n;
@@ -39,7 +40,7 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int n, unsign
 	}
 
 	std::vector<bool> bitvector(n,0);
-	
+
 	for(unsigned int i = 0; i < n; ++i){
 		unsigned int bitsset = 0;
 		//a[i] = number of edges from i
@@ -136,13 +137,13 @@ void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
 			a[i] = a[a[i]];
 		}
 	}
-	
+
 	for(unsigned int i = order + 2; i < asize; ++i){
 		if(a[i] > a[0]){
 			a[i] = a[a[i]];
 		}
 	}
-	
+
 	unsigned int v = a[0];
 	for(unsigned int i = asize-1; i> a[0]+1; --i){
 		if(a[i] == v){
@@ -152,7 +153,7 @@ void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
 		}
 	}
 
-	
+
 	return; 
 }
 
@@ -161,7 +162,7 @@ void Graphrepresentations::swapRepresentation(unsigned int* a){
 	unsigned int order = a[0];
 	for(unsigned int i = 1 ; i <= order; ++i){
 		unsigned int temp = a[a[i]];
-	  a[a[i]] = i;
+		a[a[i]] = i;
 		a[i] = temp;
 	}
 	return;
