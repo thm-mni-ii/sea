@@ -6,7 +6,7 @@ using Sealib::Bitset;
 TEST(BitsetTest, BitsetFunctionality_UnsignedLong) {
     typedef unsigned long block;
 
-    Bitset<block> bs;
+    Bitset<> bs;
     std::cout << bs.size() << std::endl;
     std::cout << bs.blocks() << std::endl;
     ASSERT_EQ(bs.size(), 0);
