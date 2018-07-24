@@ -5,7 +5,7 @@ using Sealib::SegmentStack;
 State *low, *high, *trailers;
 bool t = false;
 State last;
-unsigned lp = 0, hp = 0, tp = 0;
+unsigned lp, hp, tp;
 uint q;
 State savedTrailer;
 int alignTarget;
@@ -15,6 +15,7 @@ SegmentStack::SegmentStack(uint size, uint segmentSize, bool useTrailers) {
   t = useTrailers;
   low = new State[q];
   high = new State[q];
+  lp = hp = tp = 0;
   if (t) {
     trailers = new State[size / q + 1];
   } else {
@@ -30,18 +31,22 @@ SegmentStack::~SegmentStack() {
 int SegmentStack::push(State u) {
   if (lp < q) {
     low[lp++] = u;
-    if (lp == q) {
+    /*if (lp == q) {
       if (t) trailers[tp] = u;
       tp++;
-    }
+    }*/
   } else if (hp < q) {
     high[hp++] = u;
-    if (hp == q) {
+    /*if (hp == q) {
       if (t) trailers[tp] = u;
       tp++;
-    }
+    }*/
   } else {
-    if (!t) last = low[lp - 1];
+    if (t)
+      trailers[tp] = low[lp - 1];
+    else
+      last = low[lp - 1];
+    tp++;
     State *tmp = low;
     low = high;
     high = tmp;
@@ -52,14 +57,14 @@ int SegmentStack::push(State u) {
 }
 int SegmentStack::pop(State *r) {
   if (hp > 0) {
-    if (hp == q) {
+    /*if (hp == q) {
       tp--;
-    }
+    }*/
     *r = high[--hp];
   } else if (lp > 0) {
-    if (lp == q) {
+    /*if (lp == q) {
       tp--;
-    }
+    }*/
     *r = low[--lp];
   } else {
     if (tp > 0) {
@@ -81,12 +86,9 @@ void SegmentStack::dropAll() {
   tp = 0;
 }
 void SegmentStack::saveTrailer() {
-  if (tp == 1) {
+  if (tp > 0) {
     savedTrailer = t ? trailers[tp - 1] : last;
-    alignTarget = 1;
-  } else if (tp > 1) {
-    savedTrailer = t ? trailers[tp - 1] : last;
-    alignTarget = 2;
+    alignTarget = tp == 1 ? 1 : 2;
   } else {
     throw std::logic_error("segmentstack: cannot save from empty trailers");
   }
@@ -94,11 +96,11 @@ void SegmentStack::saveTrailer() {
 
 bool SegmentStack::isAligned() {
   bool r = false;
-  if ((alignTarget == 2 && hp == 0) || lp == 0 || tp == 0) {
+  if ((alignTarget == 2 && hp < q) || lp < q) {
     r = false;
   } else {
     unsigned lu = std::get<0>(low[lp - 1]), lk = std::get<1>(low[lp - 1]);
-    unsigned hu, hk;
+    unsigned hu = 0, hk = 0;
     if (alignTarget == 2)
       hu = std::get<0>(high[hp - 1]), hk = std::get<1>(high[hp - 1]);
     unsigned tu = std::get<0>(savedTrailer), tk = std::get<1>(savedTrailer);
