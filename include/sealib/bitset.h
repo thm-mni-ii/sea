@@ -30,6 +30,7 @@ class Bitset {
     }
 
  public:
+    static const sizetype npos = std::numeric_limits<sizetype>::max();
     explicit Bitset(sizetype bits_);
     Bitset();
     ~Bitset();
