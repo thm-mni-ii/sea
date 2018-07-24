@@ -41,6 +41,14 @@ class CompactArray {
    * @return the found value
    */
   unsigned int get(unsigned int i);
+
+ private:
+  unsigned valueWidth, maxValue, groupWidth, valuesPerGroup;
+  unsigned groupCount;
+
+  Group **group;
+  std::out_of_range OUTOFBOUNDS =
+      std::out_of_range("compactarray: index out of bounds");
 };
 }  // namespace Sealib
 #endif  // SEALIB_COMPACTARRAY_H_

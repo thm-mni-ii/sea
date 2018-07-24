@@ -3,19 +3,6 @@
 
 using Sealib::CompactArray;
 
-/**
- * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible
- * states)
- * group width: no. bits a group occupies (e.g. ceil(valueWidth*3/e) for 3
- * possible states)
- */
-unsigned valueWidth, maxValue, groupWidth, valuesPerGroup;
-unsigned groupCount;
-
-Group **group;
-std::out_of_range OUTOFBOUNDS =
-    std::out_of_range("compactarray: index out of bounds");
-
 void CompactArray::insert(unsigned int i, unsigned int p) {
   // values per group: 3/e, value width=ceil(log3) bits, group width
   unsigned groupOffset =
@@ -47,6 +34,13 @@ unsigned int CompactArray::get(unsigned int i) {
 }
 
 CompactArray::CompactArray(unsigned int count, unsigned int vpg) {
+  /**
+   * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible
+   * states)
+   * group width: no. bits a group occupies (e.g. ceil(valueWidth*3/e) for 3
+   * possible states)
+   */
+
   // the following is valid if the inserted values can have 3 states:
   valueWidth = static_cast<unsigned>(ceil(log(3) / log(2)));
   valuesPerGroup = vpg;

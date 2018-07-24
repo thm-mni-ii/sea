@@ -121,8 +121,7 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
       ceil(e / 6 * n) /
       (8 *
        sizeof(State))));  // 2q entries on S shall take up at most (e/3)n bits
-  unsigned qs =
-      static_cast<unsigned>(ceil(n / log(n)));  // stable segment size (?)
+  unsigned qs = 3;        // stable segment size (?)
   if (q < qs) q = qs;
   unsigned vpg = static_cast<unsigned>(ceil(3 / e));  // 3/e values per group,
                                                       // assume that 3/e is an

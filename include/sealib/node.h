@@ -37,7 +37,6 @@ class Node {
      * added by: Simon Heuser
      */
     unsigned int parent = 0;
-    bool hasParent = false;
 };
 }  // namespace Sealib
 #endif  // SEALIB_NODE_H_

@@ -48,6 +48,15 @@ class SegmentStack {
   /* is the restoration finished? (i.e. saved trailer and actual trailer are
    * aligned) */
   bool isAligned();
+
+ private:
+  State *low, *high, *trailers;
+  bool t = false;
+  State last;
+  unsigned lp=0, hp=0, tp=0;
+  uint q;
+  State savedTrailer;
+  int alignTarget;
 };
 }  // namespace Sealib
 #endif  // SRC_SEGMENTSTACK_H_

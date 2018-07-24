@@ -2,20 +2,11 @@
 
 using Sealib::SegmentStack;
 
-State *low, *high, *trailers;
-bool t = false;
-State last;
-unsigned lp, hp, tp;
-uint q;
-State savedTrailer;
-int alignTarget;
-
 SegmentStack::SegmentStack(uint size, uint segmentSize, bool useTrailers) {
   q = segmentSize;
   t = useTrailers;
   low = new State[q];
   high = new State[q];
-  lp = hp = tp = 0;
   if (t) {
     trailers = new State[size / q + 1];
   } else {
@@ -31,16 +22,8 @@ SegmentStack::~SegmentStack() {
 int SegmentStack::push(State u) {
   if (lp < q) {
     low[lp++] = u;
-    /*if (lp == q) {
-      if (t) trailers[tp] = u;
-      tp++;
-    }*/
   } else if (hp < q) {
     high[hp++] = u;
-    /*if (hp == q) {
-      if (t) trailers[tp] = u;
-      tp++;
-    }*/
   } else {
     if (t)
       trailers[tp] = low[lp - 1];
@@ -57,14 +40,8 @@ int SegmentStack::push(State u) {
 }
 int SegmentStack::pop(State *r) {
   if (hp > 0) {
-    /*if (hp == q) {
-      tp--;
-    }*/
     *r = high[--hp];
   } else if (lp > 0) {
-    /*if (lp == q) {
-      tp--;
-    }*/
     *r = low[--lp];
   } else {
     if (tp > 0) {
