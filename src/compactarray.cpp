@@ -1,9 +1,8 @@
 #include "sealib/compactarray.h"
-#include <stdio.h>
 
 using Sealib::CompactArray;
 
-void CompactArray::insert(unsigned int i, unsigned int p) {
+void CompactArray::insert(uint i, unsigned int p) {
   // values per group: 3/e, value width=ceil(log3) bits, group width
   unsigned groupOffset =
       static_cast<unsigned>(floor(i / static_cast<double>(valuesPerGroup)));
@@ -20,7 +19,7 @@ void CompactArray::insert(unsigned int i, unsigned int p) {
   group[groupOffset] = new Group(r);
 }
 
-unsigned int CompactArray::get(unsigned int i) {
+unsigned int CompactArray::get(uint i) {
   unsigned groupOffset = static_cast<unsigned>(floor(i / valuesPerGroup));
   if (groupOffset >= groupCount) throw OUTOFBOUNDS;
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));

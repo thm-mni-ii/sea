@@ -5,10 +5,10 @@ using Sealib::SegmentStack;
 SegmentStack::SegmentStack(uint size, unsigned segmentSize, bool useTrailers) {
   q = segmentSize;
   t = useTrailers;
-  low = new State[q];
-  high = new State[q];
+  low = new Pair[q];
+  high = new Pair[q];
   if (t) {
-    trailers = new State[size / q + 1];
+    trailers = new Pair[size / q + 1];
   } else {
     // use only the last trailer
   }
@@ -19,7 +19,7 @@ SegmentStack::~SegmentStack() {
   if (t) delete[] trailers;
 }
 
-int SegmentStack::push(State u) {
+int SegmentStack::push(Pair u) {
   if (lp < q) {
     low[lp++] = u;
   } else if (hp < q) {
@@ -30,7 +30,7 @@ int SegmentStack::push(State u) {
     else
       last = low[lp - 1];
     tp++;
-    State *tmp = low;
+    Pair *tmp = low;
     low = high;
     high = tmp;
     hp = 0;
@@ -38,7 +38,7 @@ int SegmentStack::push(State u) {
   }
   return 0;
 }
-int SegmentStack::pop(State *r) {
+int SegmentStack::pop(Pair *r) {
   if (hp > 0) {
     *r = high[--hp];
   } else if (lp > 0) {

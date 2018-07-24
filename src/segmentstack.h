@@ -8,7 +8,6 @@
 
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
-typedef std::tuple<uint, uint> State;
 
 namespace Sealib {
 /*
@@ -40,8 +39,8 @@ class SegmentStack {
   explicit SegmentStack(uint size, unsigned segmentSize, bool useTrailers);
   ~SegmentStack();
 
-  int push(State u);
-  int pop(State *r);
+  int push(Pair u);
+  int pop(Pair *r);
   bool empty();
   void dropAll();
   /* save a trailer to survive the restoration */
@@ -51,12 +50,12 @@ class SegmentStack {
   bool isAligned();
 
  private:
-  State *low, *high, *trailers;
+  Pair *low, *high, *trailers;
   bool t = false;
-  State last;
+  Pair last;
   unsigned lp = 0, hp = 0, tp = 0;
   unsigned q;
-  State savedTrailer;
+  Pair savedTrailer;
   int alignTarget;
 };
 }  // namespace Sealib

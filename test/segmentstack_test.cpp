@@ -4,12 +4,12 @@
 using Sealib::SegmentStack;
 
 #define pushn(i, n) \
-  for (int a = (i); a < (n); a++) s->push(std::make_tuple((a), 0))
+  for (int a = (i); a < (n); a++) s->push(Pair((a), 0))
 #define popexp(n, exp) \
   for (int a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 
 SegmentStack *s;
-State r;
+Pair r;
 class SegmentStackTest : public ::testing::TestWithParam<bool> {
  protected:
   virtual void SetUp() { s = new SegmentStack(20, 3, GetParam()); }
@@ -21,6 +21,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, SegmentStackTest,
 
 TEST_P(SegmentStackTest, empty) {
   EXPECT_TRUE(s->empty());
+  EXPECT_THROW(s->saveTrailer(),std::logic_error);
   pushn(0, 1);
   EXPECT_FALSE(s->empty());
   popexp(1, 0);

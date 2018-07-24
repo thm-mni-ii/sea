@@ -11,20 +11,11 @@ using Sealib::Node;
 
 static void process_standard(uint u0, Graph *g, uint *color,
                              UserFunc1 preProcess, UserFunc2 preExplore,
-                             UserFunc2 postExplore, UserFunc1 postProcess);
-
-static void process_small(uint u0, Graph *g, CompactArray *color,
-                          SegmentStack *s, UserFunc1 preProcess,
-                          UserFunc2 preExplore, UserFunc2 postExplore,
-                          UserFunc1 postProcess);
-
-static void process_standard(uint u0, Graph *g, uint *color,
-                             UserFunc1 preProcess, UserFunc2 preExplore,
                              UserFunc2 postExplore, UserFunc1 postProcess) {
-  std::stack<State> *s = new std::stack<State>;
+  std::stack<Pair> *s = new std::stack<Pair>;
   s->push(std::make_tuple(u0, 0));
   while (!s->empty()) {
-    State x = s->top();
+    Pair x = s->top();
     s->pop();
     uint u = std::get<0>(x);
     uint k = std::get<1>(x);
@@ -33,11 +24,11 @@ static void process_standard(uint u0, Graph *g, uint *color,
       color[u] = DFS_GRAY;
     }
     if (k < g->getNode(u)->getDegree()) {
-      s->push(std::make_tuple(u, k + 1));
+      s->push(Pair(u, k + 1));
       uint v = g->head(u, k);
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color[v] == DFS_WHITE) {
-        s->push(std::make_tuple(v, 0));
+        s->push(Pair(v, 0));
         g->getNode(v)->parent = u;
       } else {
         if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
@@ -52,11 +43,11 @@ static void process_standard(uint u0, Graph *g, uint *color,
   delete s;
 }
 
-void process_small(uint u0, Graph *g, CompactArray *color, SegmentStack *s,
+static void process_small(uint u0, Graph *g, CompactArray *color, SegmentStack *s,
                    UserFunc1 preProcess, UserFunc2 preExplore,
                    UserFunc2 postExplore, UserFunc1 postProcess) {
-  s->push(std::make_tuple(u0, 0));
-  State x;
+  s->push(Pair(u0, 0));
+  Pair x;
   while (!s->empty()) {
     int sr = s->pop(&x);
     if (sr == DFS_NO_MORE_NODES) {
@@ -81,12 +72,12 @@ void process_small(uint u0, Graph *g, CompactArray *color, SegmentStack *s,
       color->insert(u, DFS_GRAY);
     }
     if (k < g->getNode(u)->getDegree()) {
-      s->push(std::make_tuple(u, k + 1));
+      s->push(Pair(u, k + 1));
       if (s->isAligned()) return;
       uint v = g->head(u, k);
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color->get(v) == DFS_WHITE) {
-        s->push(std::make_tuple(v, 0));
+        s->push(Pair(v, 0));
         g->getNode(v)->parent = u;
       } else {
         if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
@@ -121,7 +112,7 @@ void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   unsigned q = static_cast<unsigned>(ceil(
       ceil(e / 6 * n) /
       (8 *
-       sizeof(State))));  // 2q entries on S shall take up at most (e/3)n bits
+       sizeof(Pair))));  // 2q entries on S shall take up at most (e/3)n bits
   unsigned qs = 3;        // stable segment size (?)
   if (q < qs) q = qs;
   unsigned vpg = static_cast<unsigned>(ceil(3 / e));  // 3/e values per group,

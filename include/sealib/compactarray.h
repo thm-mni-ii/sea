@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <third-party/boost/include/boost/dynamic_bitset.hpp>
+#include "sealib/_types.h"
 
 typedef boost::dynamic_bitset<> Group;
 
@@ -33,14 +34,14 @@ class CompactArray {
    * @param i the destination index
    * @param p the value to insert (in [0,3])
    */
-  void insert(unsigned int i, unsigned int p);
+  void insert(uint i, unsigned int p);
 
   /**
    * Get a value from the compact array.
    * @param i index to get the value from
    * @return the found value
    */
-  unsigned int get(unsigned int i);
+  unsigned int get(uint i);
 
  private:
   unsigned valueWidth, maxValue, groupWidth, valuesPerGroup;
