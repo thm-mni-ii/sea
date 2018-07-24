@@ -12,10 +12,10 @@ void CompactArray::insert(uint i, unsigned int p) {
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
   Group b = Group(groupWidth);
-  b.setBlock(0,maxValue<<gap);
+  b.setBlock(0, maxValue << gap);
   Group c = a & ~b;
   Group d = Group(groupWidth);
-  d.setBlock(0,p<<gap);
+  d.setBlock(0, p << gap);
   Group r = c | d;
   delete group[groupOffset];
   group[groupOffset] = new Group(r);

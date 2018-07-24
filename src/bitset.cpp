@@ -116,7 +116,7 @@ Bitset<Block> Bitset<Block>::operator~() const {
 }
 
 namespace Sealib {
-    
+
 template class Bitset<unsigned long>;
 template class Bitset<unsigned int>;
 template class Bitset<unsigned short>;

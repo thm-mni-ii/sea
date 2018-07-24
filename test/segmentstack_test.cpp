@@ -21,7 +21,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, SegmentStackTest,
 
 TEST_P(SegmentStackTest, empty) {
   EXPECT_TRUE(s->empty());
-  EXPECT_THROW(s->saveTrailer(),std::logic_error);
+  EXPECT_THROW(s->saveTrailer(), std::logic_error);
   pushn(0, 1);
   EXPECT_FALSE(s->empty());
   popexp(1, 0);

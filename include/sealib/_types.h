@@ -1,5 +1,6 @@
 #ifndef SEALIB__TYPES_H_
 #define SEALIB__TYPES_H_
+#include <tuple>
 
 // the standard numeric type (used mainly for node names)
 typedef unsigned int uint;

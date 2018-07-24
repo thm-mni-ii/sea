@@ -3,8 +3,8 @@
 
 #include <math.h>
 #include <stdexcept>
-#include "sealib/bitset.h"
 #include "sealib/_types.h"
+#include "sealib/bitset.h"
 
 using Sealib::Bitset;
 
