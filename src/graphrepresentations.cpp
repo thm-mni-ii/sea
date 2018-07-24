@@ -88,7 +88,7 @@ unsigned int* Graphrepresentations::graphToStandard(Graph *g){
 }
 
 // Transforms graph inplace from standard representation to crosspointer representation
-unsigned int* Graphrepresentations::standardToCrosspointer(unsigned int* a){
+void Graphrepresentations::standardToCrosspointer(unsigned int* a){
 	unsigned int n = a[0],v,u,pv,pu;	
 	//n = order of the graph
 	v = u = pv = pu = 0;
@@ -112,28 +112,57 @@ unsigned int* Graphrepresentations::standardToCrosspointer(unsigned int* a){
 		--v;
 	}
 	a[1] = n + 2;
-	return a;
+	return; 
 }
 
 // Transforms graph inplace from standard to beginpointer representation 
-unsigned int* Graphrepresentations::standardToBeginpointer(unsigned int* a){
+void Graphrepresentations::standardToBeginpointer(unsigned int* a){
 	unsigned int order = a[0];
 	unsigned int numedges = a[order + 1];
 	unsigned int asize = order + numedges + 2;
 	for(unsigned int i = order + 2; i < asize; ++i){
 		a[i] = a[a[i]];
 	}
-	return a;
+	return; 
+}
+
+// Transforms graph inplace from beginpointer to standard representation 
+void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
+	unsigned int order = a[0];
+	unsigned int numedges = a[order + 1];
+	unsigned int asize = order + numedges + 2;
+	for(unsigned int i = 1; i <= order; ++i){
+		if(a[i] > a[0]){
+			a[i] = a[a[i]];
+		}
+	}
+	
+	for(unsigned int i = order + 2; i < asize; ++i){
+		if(a[i] > a[0]){
+			a[i] = a[a[i]];
+		}
+	}
+	
+	unsigned int v = a[0];
+	for(unsigned int i = asize-1; i> a[0]+1; --i){
+		if(a[i] == v){
+			a[i] = a[v];
+			a[v]= i;
+			--v;
+		}
+	}
+
+	
+	return; 
 }
 
 //Transforms graph inplace from cross or beginpointer to swapped crossor beginpointer representation
-unsigned int* Graphrepresentations::swapRepresentation(unsigned int* a){
+void Graphrepresentations::swapRepresentation(unsigned int* a){
 	unsigned int order = a[0];
 	for(unsigned int i = 1 ; i <= order; ++i){
 		unsigned int temp = a[a[i]];
 	  a[a[i]] = i;
 		a[i] = temp;
 	}
-	return a;
+	return;
 }
-
