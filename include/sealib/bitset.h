@@ -13,7 +13,7 @@ namespace Sealib {
  * Partly based on dynamic_bitset from the boost library.
  * @author Johannes Meintrup
  */
-template<typename Block>
+template<typename Block = unsigned long>
 class Bitset {
     typedef unsigned long sizetype;
     typedef bool bittype;
