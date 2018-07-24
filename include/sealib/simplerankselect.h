@@ -3,6 +3,7 @@
 
 #include <sealib/bitset.h>
 #include <sealib/rankselect.h>
+#include <memory>
 
 namespace Sealib {
 /**
@@ -11,7 +12,7 @@ namespace Sealib {
  */
 class SimpleRankSelect : public RankSelect{
  private:
-    Bitset<unsigned char> bitset;
+    std::shared_ptr<Bitset<unsigned char>> bitset;
 
  public:
     /**
@@ -28,7 +29,7 @@ class SimpleRankSelect : public RankSelect{
      */
     unsigned long rank(unsigned long k) const;
 
-    SimpleRankSelect(Bitset<unsigned char> bitset);
+    SimpleRankSelect(std::shared_ptr<Bitset<unsigned char>> bitset);
     SimpleRankSelect();
 };
 }
