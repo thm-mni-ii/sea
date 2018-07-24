@@ -37,9 +37,9 @@ unsigned *cnt;
 void incrCnt(unsigned u) { cnt[u]++; }
 
 std::random_device rnd;
-const unsigned GRAPHCOUNT = 1;  // how many random graphs to generate?
-const unsigned DEGREE = 5;      // how many outneighbours per node?
-const unsigned order = 20;
+const unsigned GRAPHCOUNT = 10;  // how many random graphs to generate?
+const unsigned DEGREE = 5;       // how many outneighbours per node?
+const unsigned order = 200;
 std::vector<Graph *> makeGraphs() {
   std::vector<Graph *> g = std::vector<Graph *>();
   for (uint c = 0; c < GRAPHCOUNT; c++) {
@@ -61,7 +61,7 @@ class DFSTest : public ::testing::TestWithParam<Graph *> {
   virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
                                                    // TEST_P
 };
-// INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(graphs));
+INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(graphs));
 
 TEST_P(DFSTest, StdUserproc) {
   Graph *g = GetParam();
