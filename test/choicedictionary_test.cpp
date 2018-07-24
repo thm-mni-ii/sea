@@ -4,7 +4,7 @@
 using Sealib::ChoiceDictionary;
 
 TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
-    unsigned int size = 10;
+    unsigned long int size = 128;
     ChoiceDictionary c = ChoiceDictionary(size);
 
     // insert into Choice Dictionary and test if choice() returns the correct index

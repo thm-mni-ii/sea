@@ -1,30 +1,27 @@
 #include <stdlib.h>
+#include <vector>
+#include <iostream>
 #include "sealib/choicedictionary.h"
 
 using Sealib::ChoiceDictionary;
 
-// 4096 farben max?!
-
-ChoiceDictionary::ChoiceDictionary(unsigned long long int _length) : length(_length)
+ChoiceDictionary::ChoiceDictionary(unsigned long int length)
 {
-    referenceA = new unsigned int[BLOCK_SIZE];
-    referenceB = new unsigned int[BLOCK_SIZE];
     pointer = 0;
-    secondary = 0;
-    createPrimary();
+    createDataStructure(length);
 }
 
-void ChoiceDictionary::insert(unsigned long long int index)
+void ChoiceDictionary::insert(unsigned long int index)
 {
-    unsigned int blockId = (unsigned int) index / BLOCK_SIZE;
+    unsigned int blockIndex = (unsigned int)index / BLOCK_SIZE;
     unsigned int innerId = index % BLOCK_SIZE;
 
-    uint64_t value = primary[blockId];
-    uint64_t newColor = 1ULL << (BLOCK_SIZE - innerId);
+    unsigned long int value = primary[blockIndex];
+    unsigned long int newColor = 1ULL << (BLOCK_SIZE - innerId);
 
-    primary[blockId] = value | newColor;
+    primary[blockIndex] = value | newColor;
 
-    updateSecondary(blockId);
+    updateSecondary(blockIndex);
 
     // unsigned int linkedIndex;
     // linkedIndex = makeLink(index);
@@ -32,22 +29,22 @@ void ChoiceDictionary::insert(unsigned long long int index)
     // int test = __builtin_clzl(10);
 }
 
-bool ChoiceDictionary::get(unsigned long long int index)
+bool ChoiceDictionary::get(unsigned long int index)
 {
-    unsigned int referenceBlock = (unsigned int) index / BLOCK_SIZE;
-    unsigned int linkedBlock = referenceA[referenceBlock];
+    unsigned long int blockIndex = index / BLOCK_SIZE;
+    unsigned int linkedBlock = tertiary[blockIndex];
 
-    if (linkedBlock >= length || referenceB[linkedBlock != referenceBlock])
+    if (linkedBlock >= wordCount || validator[linkedBlock != blockIndex])
         return false;
 
-    uint64_t secondaryBlock = 1ULL << (BLOCK_SIZE - referenceBlock);
+    unsigned long int secondaryBlock = 1ULL << (BLOCK_SIZE - blockIndex);
 
-    if ((secondary & secondaryBlock) == 0)
+    if ((secondary[blockIndex] & secondaryBlock) == 0)
         return false;
 
     unsigned int innerId = index % BLOCK_SIZE;
-    uint64_t primaryValue = primary[referenceBlock];
-    uint64_t primaryPosition = 1ULL << (BLOCK_SIZE - innerId);
+    unsigned long int primaryValue = primary[blockIndex];
+    unsigned long int primaryPosition = 1ULL << (BLOCK_SIZE - innerId);
 
     if ((primaryValue & primaryPosition) == 0)
         return false;
@@ -58,59 +55,136 @@ bool ChoiceDictionary::get(unsigned long long int index)
     return true;
 }
 
-unsigned long long int ChoiceDictionary::choice()
+long int ChoiceDictionary::choice()
 {
-    bool found = false;
-    uint64_t innerIndex = 1ULL;
-    unsigned int shiftCount = 0;
+    // bool found = false;
+    // unsigned long int innerIndex = 1UL;
+    // unsigned int shiftCount = 0;
+    // std::cout << "hier";
+    unsigned long int blockId = validator[pointer - 1];
+    unsigned long int primaryValue = primary[blockId];
 
-    uint64_t blockId = referenceB[pointer-1];
-    uint64_t primaryValue = primary[blockId];
+    long int colorIndex = (long int)blockId * (long int)BLOCK_SIZE;
+    long int innerIndex = (long int)BLOCK_SIZE - 1 - __builtin_clzl(primaryValue);
+    colorIndex += innerIndex;
 
-    while(!found) {
-        if ((primaryValue & innerIndex) != 0){
-            found = true;
-        }
-        else {
-            innerIndex = innerIndex << 1;
-            shiftCount++;
+    // std::cout << "hier";
+
+
+    // logarithmus hier
+
+    // unsigned long int blockId = __builtin_clzl(primaryValue);
+    // while(!found) {
+    //     if ((primaryValue & innerIndex) != 0){
+    //         found = true;
+    //     }
+    //     else {
+    //         innerIndex = innerIndex << 1;
+    //         shiftCount++;
+    //     }
+    // }
+
+    // return blockId * BLOCK_SIZE + (BLOCK_SIZE - shiftCount);
+    return colorIndex;
+    // return B[pointer - 1];
+}
+
+std::vector<unsigned int> ChoiceDictionary::iterate()
+{
+    std::vector<unsigned int> indices;
+    for (unsigned int blockIndex = 0; blockIndex < wordCount; blockIndex++)
+    {
+        if (hasColor(blockIndex))
+        {
+            std::vector<unsigned int> blockIndices = getBlockColors(blockIndex);
+            indices.insert(indices.end(), blockIndices.begin(), blockIndices.end());
         }
     }
+    return indices;
+}
 
-    return blockId * BLOCK_SIZE + (BLOCK_SIZE - shiftCount);
-    // return B[pointer - 1];
+void ChoiceDictionary::createDataStructure(unsigned long int length)
+{
+    wordCount = length / BLOCK_SIZE;
+    if (length % BLOCK_SIZE != 0)
+        wordCount += 1;
+
+    unsigned int secondaryLength = (unsigned int)(wordCount / BLOCK_SIZE);
+    if (wordCount % BLOCK_SIZE != 0)
+        secondaryLength += 1;
+
+    createPrimary();
+    createSecondary(secondaryLength);
+    createTertiary(secondaryLength);
 }
 
 void ChoiceDictionary::createPrimary()
 {
-    unsigned long long int size = length / BLOCK_SIZE;
-    primary = new uint64_t[size];
+    primary = new unsigned long int[wordCount];
 }
 
-void ChoiceDictionary::updateSecondary(unsigned int blockId)
+void ChoiceDictionary::createSecondary(unsigned int secondaryLength)
 {
-    uint64_t updatedBlock = 1ULL << (BLOCK_SIZE - blockId);
-    secondary = secondary | updatedBlock;
-
-    updateReferences(blockId);
+    secondary = new unsigned long int[secondaryLength];
 }
 
-void ChoiceDictionary::updateReferences(unsigned int blockId)
+void ChoiceDictionary::createTertiary(unsigned int tertiaryLength)
 {
-    referenceA[blockId] = makeLink(blockId);
+    tertiary = new unsigned int[tertiaryLength * BLOCK_SIZE];
+    validator = new unsigned int[tertiaryLength * BLOCK_SIZE];
+}
+
+void ChoiceDictionary::updateSecondary(unsigned int blockIndex)
+{
+    unsigned int secondaryIndex = blockIndex / BLOCK_SIZE;
+    unsigned long int updatedBlock = 1ULL << (BLOCK_SIZE - blockIndex);
+    secondary[secondaryIndex] = secondary[secondaryIndex] | updatedBlock;
+
+    updateTertiary(blockIndex);
+}
+
+void ChoiceDictionary::updateTertiary(unsigned int blockId)
+{
+    tertiary[blockId] = makeLink(blockId);
 }
 
 unsigned int ChoiceDictionary::makeLink(unsigned int target)
 {
-    referenceB[pointer] = target;
-    if (pointer < target)
+    validator[pointer] = target;
+    if (pointer < target || pointer == 0)
         pointer++;
     return pointer;
 }
 
+bool ChoiceDictionary::hasColor(unsigned int blockIndex)
+{
+    if (validator[tertiary[blockIndex]] == blockIndex)
+        return true;
+    else
+        return false;
+}
+
+std::vector<unsigned int> ChoiceDictionary::getBlockColors(unsigned int blockIndex)
+{
+    std::vector<unsigned int> blockIndices;
+    unsigned long int blockValue = primary[blockIndex];
+    int targetBit;
+    unsigned long int operatorBit;
+
+    while (blockValue > 0)
+    {
+        targetBit = __builtin_clzl(blockValue);
+        operatorBit = 1UL << targetBit;
+        blockValue = blockValue & ~operatorBit;
+        blockIndices.push_back((unsigned int)targetBit);
+    }
+    return blockIndices;
+}
+
 ChoiceDictionary::~ChoiceDictionary()
 {
-    delete[] referenceA;
-    delete[] referenceB;
     delete[] primary;
+    delete[] secondary;
+    delete[] tertiary;
+    delete[] validator;
 }

@@ -5,7 +5,7 @@ namespace Sealib {
 
 class ChoiceDictionary {
  private:
-    #define BLOCK_SIZE 64
+    #define BLOCK_SIZE sizeof(unsigned long int) * 8
 
     /**
      * @param primary Array Structure with a word size of 64bits, where each bit represents a color
@@ -14,12 +14,13 @@ class ChoiceDictionary {
      * @param referenceB array stucture containing indicies of refernceA and stores the bit positions of secondary.
      */
     // unsigned int *A, *B;
-    uint64_t *primary, secondary;
-    unsigned long long int length;
-    unsigned int *referenceA, *referenceB;
-    unsigned int pointer;
+    unsigned long int *primary, *secondary, wordCount;
+    unsigned int *tertiary, *validator, pointer;
 
+    void createDataStructure(unsigned long int length);
     void createPrimary();
+    void createSecondary(unsigned int secondaryLength);
+    void createTertiary(unsigned int tertiaryLength);
 
     /**
      * Creates a link between A and B by setting and B[pointer-1]=a and
@@ -30,31 +31,40 @@ class ChoiceDictionary {
 
     void updateSecondary(unsigned int blockId);
 
-    void updateReferences(unsigned int updatedBlock);
+    void updateTertiary(unsigned int updatedBlock);
+
+    bool hasColor(unsigned int blockIndex);
+
+    std::vector<unsigned int> getBlockColors(unsigned int blockIndex);
 
  public:
     /**
      * Creates choice dictionary with given size
      * @param _size Size of choice dictionary
      */
-    explicit ChoiceDictionary(unsigned long long int _length);
+    explicit ChoiceDictionary(unsigned long int length);
 
     /**
      * Inserts a color into the specified index
      * @param index Index to insert into
      */
-    void insert(unsigned long long int index);
+    void insert(unsigned long int index);
 
     /**
      * Reads the color of A[index] and returns it
      * @param index Index to read from
      */
-    bool get(unsigned long long int index);
+    bool get(unsigned long int index);
 
     /**
      * Returns an index i=B[pointer-1] where A[index]=true
      */
-    unsigned long long int choice();
+    long int choice();
+
+    /**
+     * Returns a list of all indices containing a color
+     */
+    std::vector<unsigned int> iterate();
 
     ~ChoiceDictionary();
 };
