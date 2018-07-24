@@ -9,18 +9,18 @@ using Sealib::CompactArray;
 using Sealib::Graph;
 using Sealib::Node;
 
-static void process_standard(Graph *g, UserFunc1 preProcess,
-                             UserFunc2 preExplore, UserFunc2 postExplore,
-                             UserFunc1 postProcess, unsigned *color, uint u);
+static void process_standard(uint u0, Graph *g, uint *color,
+                             UserFunc1 preProcess, UserFunc2 preExplore,
+                             UserFunc2 postExplore, UserFunc1 postProcess);
 
-static void process_small(uint node, Graph *g, CompactArray *color,
+static void process_small(uint u0, Graph *g, CompactArray *color,
                           SegmentStack *s, UserFunc1 preProcess,
                           UserFunc2 preExplore, UserFunc2 postExplore,
                           UserFunc1 postProcess);
 
-void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
-                      UserFunc2 postExplore, UserFunc1 postProcess,
-                      unsigned *color, uint u0) {
+static void process_standard(uint u0, Graph *g, uint *color,
+                             UserFunc1 preProcess, UserFunc2 preExplore,
+                             UserFunc2 postExplore, UserFunc1 postProcess) {
   std::stack<State> *s = new std::stack<State>;
   s->push(std::make_tuple(u0, 0));
   while (!s->empty()) {
@@ -52,10 +52,10 @@ void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   delete s;
 }
 
-void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
+void process_small(uint u0, Graph *g, CompactArray *color, SegmentStack *s,
                    UserFunc1 preProcess, UserFunc2 preExplore,
                    UserFunc2 postExplore, UserFunc1 postProcess) {
-  s->push(std::make_tuple(node, 0));
+  s->push(std::make_tuple(u0, 0));
   State x;
   while (!s->empty()) {
     int sr = s->pop(&x);
@@ -69,7 +69,7 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
           color->insert(a, DFS_WHITE);
         }
       }
-      process_small(node, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+      process_small(u0, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
                     DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
       s->pop(&x);
     }
@@ -93,7 +93,7 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
       }
       if (s->isAligned()) return;
     } else {
-      if (postExplore != DFS_NOP_EXPLORE && u != node)
+      if (postExplore != DFS_NOP_EXPLORE && u != u0)
         postExplore(g->getNode(u)->parent, u);
       color->insert(u, DFS_BLACK);
       if (postProcess != DFS_NOP_PROCESS) postProcess(u);
@@ -103,16 +103,17 @@ void process_small(uint node, Graph *g, CompactArray *color, SegmentStack *s,
 
 void DFS::runStandardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                          UserFunc2 postExplore, UserFunc1 postProcess) {
-  unsigned *color = new unsigned[g->getOrder()];
+  uint *color = new uint[g->getOrder()];
   for (uint a = 0; a < g->getOrder(); a++) color[a] = DFS_WHITE;
   for (uint u = 0; u < g->getOrder(); u++) {
     if (color[u] == DFS_WHITE) {
-      process_standard(g, preProcess, preExplore, postExplore, postProcess,
-                       color, u);
+      process_standard(u, g, color, preProcess, preExplore, postExplore,
+                       postProcess);
     }
   }
   delete[] color;
 }
+
 void DFS::runEHKDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                     UserFunc2 postExplore, UserFunc1 postProcess) {
   unsigned int n = g->getOrder();

@@ -3,18 +3,18 @@
 
 #include <stack>
 #include <tuple>
+#include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
 #include "sealib/node.h"
-
-typedef unsigned int uint;
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
 
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
 #define DFS_RESERVED 3
+
+typedef void (*UserFunc1)(uint);
+typedef void (*UserFunc2)(uint, uint);
 
 /**
  * These two functions symbolize a NOP: you can call a DFS which accepts

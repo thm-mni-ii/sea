@@ -4,6 +4,7 @@
 #include <stack>
 #include <stdexcept>
 #include <tuple>
+#include "sealib/_types.h"
 
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
@@ -36,7 +37,7 @@ class SegmentStack {
  public:
   /* size: number of stored entries, useTrailers: if true, use stack of
    * trailers; if false, use last pushed entry*/
-  explicit SegmentStack(uint size, uint segmentSize, bool useTrailers);
+  explicit SegmentStack(uint size, unsigned segmentSize, bool useTrailers);
   ~SegmentStack();
 
   int push(State u);
@@ -54,7 +55,7 @@ class SegmentStack {
   bool t = false;
   State last;
   unsigned lp = 0, hp = 0, tp = 0;
-  uint q;
+  unsigned q;
   State savedTrailer;
   int alignTarget;
 };

@@ -2,7 +2,7 @@
 
 using Sealib::SegmentStack;
 
-SegmentStack::SegmentStack(uint size, uint segmentSize, bool useTrailers) {
+SegmentStack::SegmentStack(uint size, unsigned segmentSize, bool useTrailers) {
   q = segmentSize;
   t = useTrailers;
   low = new State[q];

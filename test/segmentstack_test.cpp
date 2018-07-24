@@ -9,6 +9,7 @@ using Sealib::SegmentStack;
   for (int a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 
 SegmentStack *s;
+State r;
 class SegmentStackTest : public ::testing::TestWithParam<bool> {
  protected:
   virtual void SetUp() { s = new SegmentStack(20, 3, GetParam()); }
@@ -19,7 +20,6 @@ INSTANTIATE_TEST_CASE_P(ParamTests, SegmentStackTest,
                         ::testing::Values(false, true));
 
 TEST_P(SegmentStackTest, empty) {
-  State r;
   EXPECT_TRUE(s->empty());
   pushn(0, 1);
   EXPECT_FALSE(s->empty());
@@ -28,7 +28,6 @@ TEST_P(SegmentStackTest, empty) {
   popexp(1, DFS_NO_MORE_NODES);
 }
 TEST_P(SegmentStackTest, lowAlign) {
-  State r;
   pushn(0, 7);
   popexp(4, 0);
   EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
@@ -37,9 +36,7 @@ TEST_P(SegmentStackTest, lowAlign) {
   pushn(0, 3);
   EXPECT_TRUE(s->isAligned());
 }
-
 TEST_P(SegmentStackTest, highAlign) {
-  State r;
   pushn(0, 10);
   popexp(4, 0);
   EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
