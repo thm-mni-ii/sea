@@ -32,11 +32,6 @@ class Node {
      */
     unsigned int getDegree();
 
-    /**
-     * The name of this node's parent node.
-     * added by: Simon Heuser
-     */
-    unsigned int parent = 0;
 };
 }  // namespace Sealib
 #endif  // SEALIB_NODE_H_

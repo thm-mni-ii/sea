@@ -29,19 +29,22 @@ static void process_standard(uint u0, Graph *g, uint *color,
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color[v] == DFS_WHITE) {
         s->push(Pair(v, 0));
-        g->getNode(v)->parent = u;
       } else {
         if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
       }
     } else {
-      if (postExplore != DFS_NOP_EXPLORE && u != u0)
-        postExplore(g->getNode(u)->parent, u);
+      if (postExplore != DFS_NOP_EXPLORE && u != u0) {
+        uint pu=std::get<0>(s->top());
+        postExplore(pu, u);
+      }
       color[u] = DFS_BLACK;
       if (postProcess != DFS_NOP_PROCESS) postProcess(u);
     }
   }
   delete s;
 }
+
+static void restore_small(uint,Graph*,CompactArray*,SegmentStack*);
 
 static void process_small(uint u0, Graph *g, CompactArray *color,
                           SegmentStack *s, UserFunc1 preProcess,
@@ -54,15 +57,7 @@ static void process_small(uint u0, Graph *g, CompactArray *color,
     if (sr == DFS_NO_MORE_NODES) {
       return;
     } else if (sr == DFS_DO_RESTORE) {
-      s->saveTrailer();
-      s->dropAll();
-      for (uint a = 0; a < g->getOrder(); a++) {
-        if (color->get(a) == DFS_GRAY) {
-          color->insert(a, DFS_WHITE);
-        }
-      }
-      process_small(u0, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+      restore_small(u0,g,color,s);
       s->pop(&x);
     }
     uint u, k;
@@ -79,18 +74,38 @@ static void process_small(uint u0, Graph *g, CompactArray *color,
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color->get(v) == DFS_WHITE) {
         s->push(Pair(v, 0));
-        g->getNode(v)->parent = u;
       } else {
         if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
       }
       if (s->isAligned()) return;
     } else {
-      if (postExplore != DFS_NOP_EXPLORE && u != u0)
-        postExplore(g->getNode(u)->parent, u);
+      if (postExplore != DFS_NOP_EXPLORE && u != u0) {
+        Pair px;
+        sr=s->pop(&px);
+        if(sr==DFS_DO_RESTORE) {
+          restore_small(u0,g,color,s);
+          s->pop(&px);
+        }
+        uint pu=std::get<0>(px);
+        postExplore(pu, u);
+        s->push(px);
+      }
       color->insert(u, DFS_BLACK);
       if (postProcess != DFS_NOP_PROCESS) postProcess(u);
     }
   }
+}
+
+static void restore_small(uint u0,Graph *g, CompactArray *color, SegmentStack *s) {
+      s->saveTrailer();
+      s->dropAll();
+      for (uint a = 0; a < g->getOrder(); a++) {
+        if (color->get(a) == DFS_GRAY) {
+          color->insert(a, DFS_WHITE);
+        }
+      }
+      process_small(u0, g, color, s, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
 }
 
 void DFS::runStandardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
