@@ -56,6 +56,7 @@ DFS::Inplace::Inplace(uint *graph,uint v, void(*pre)(unsigned int),void(*post)(u
 
 void DFS::Inplace::processInplace(){
 	uint v = findStartVertex();
+	startpos = v;
 	visit(v);
 }
 
@@ -106,18 +107,35 @@ void DFS::Inplace::nextNeighbor(uint p,bool skipfirstcheck){
 		if(isWhite(redirectAccess(p))){
 			gotoChild(p);
 		}else{
-			nextNeighbor(p+1,false);
-		}
-	}else{
-		uint q = p;
-		while(q > 1){
-			if(name(q)){
-				gotoParent(q);
+			if(name(p) && !isWhite(redirectAccess(p))){
+				if(!isWhite(redirectAccess(p+1))){
+							nextNeighbor(p+2,false);
+				}else{
+					uint temp = redirectAccess(p+1);
+					redirectAccess(p+1) = redirectAccess(p);
+					redirectAccess(p) = temp;
+					nextNeighbor(p,true);
+				}
 			}else{
-				--q;
+				nextNeighbor(p+1,false);
 			}
 		}
+	}else{
+		uint q = p - 1;
+		while(name(q) == 0){
+				--q;
+		}
+		if(startpos == q){
+			return;
+		}
+		uint pa = p - 1;
+		while(g[pa]>g[0]){
+			--pa;
+		}
+		postProcess(name(pa));
+		gotoParent(q);
 	}
+
 }
 
 bool DFS::Inplace::isWhite(uint p){
@@ -138,17 +156,21 @@ void DFS::Inplace::gotoChild(uint p){
 }
 
 void DFS::Inplace::gotoParent(uint q){
-	uint p = access(q+1);
-	access(q+1) = access(p)+1;
-	access(p) = q;
+	uint p = g[q+1];
+	access(q+1) = redirectAccess(q+1)+1;
+	
 	if(name(p-1)!= 0){
 		if(redirectAccess(p-1) < redirectAccess(p)){
+			nextNeighbor(p,false);
+		}else{
 			uint temp = redirectAccess(p-1);
 			redirectAccess(p-1) = redirectAccess(p);
 			redirectAccess(p) = temp;
-			nextNeighbor(p,false);
-		}else{
 			nextNeighbor(p+1,false);
 		}
+	}else{
+		access(p) = access(q);
+		nextNeighbor(p+1,false);
 	}
 }
+

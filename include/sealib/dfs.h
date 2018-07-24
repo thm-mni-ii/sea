@@ -39,6 +39,7 @@ class DFS {
 		private:
 			uint *g;
 			uint start;
+			uint startpos;
 			void (*preProcess)(unsigned int v);
 			void (*postProcess)(unsigned int v);
 			uint& redirectAccess( uint p);
