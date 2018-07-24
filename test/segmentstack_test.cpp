@@ -18,14 +18,14 @@ class SegmentStackTest : public ::testing::TestWithParam<bool> {
 INSTANTIATE_TEST_CASE_P(ParamTests, SegmentStackTest,
                         ::testing::Values(false, true));
 
-TEST_P(SegmentStackTest,empty) {
+TEST_P(SegmentStackTest, empty) {
   State r;
   EXPECT_TRUE(s->empty());
-  pushn(0,1);
+  pushn(0, 1);
   EXPECT_FALSE(s->empty());
-  popexp(1,0);
+  popexp(1, 0);
   EXPECT_TRUE(s->empty());
-  popexp(1,DFS_NO_MORE_NODES);
+  popexp(1, DFS_NO_MORE_NODES);
 }
 TEST_P(SegmentStackTest, lowAlign) {
   State r;

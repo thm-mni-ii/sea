@@ -33,8 +33,6 @@ void p0(uint u) { printf("preprocess %u\n", u); }
 void p1(uint u) { printf("postprocess %u\n", u); }
 void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
 void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }
-unsigned *cnt;
-void incrCnt(unsigned u) { cnt[u]++; }
 
 std::random_device rnd;
 const unsigned GRAPHCOUNT = 10;  // how many random graphs to generate?
@@ -66,19 +64,16 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(graphs));
 TEST_P(DFSTest, StdUserproc) {
   Graph *g = GetParam();
   DFS::runStandardDFS(g, incr1, incr2, incr3, incr4);
-  // DFS::runStandardDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, DEGREE * order);  // every node has 5 edges
+  EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
 }
-// TODO(!!!): fix random test failures!
 TEST_P(DFSTest, EHKUserproc) {
   Graph *g = GetParam();
   DFS::runEHKDFS(g, incr1, incr2, incr3, incr4);
-  // DFS::runEHKDFS(g, p0, e0, e1, p1);
   EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, DEGREE * order);  // every node has 5 edges
+  EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
 }
