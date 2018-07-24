@@ -12,11 +12,18 @@ This space-efficient variant
 * Time: O((n+m) log n)
 * Space: O((log(3)+ε) n) bits
 
-##Usage
+## Example
 ```cpp
 Graph *g=new Graph(nodes,order);
 
 DFS::nBitDFS(g,DFS_NOP_PROCESS,DFS_NOP_EXPLORE,DFS_NOP_EXPLORE,DFS_NOP_PROCESS);  // quiet run
 
 DFS::nBitDFS(g,p0,e0,e1,p1);  // supply procedures to do something with the current node or edge
+
+
+// example procedures:
+void p0(uint u) { printf("preprocess %u\n", u); }
+void p1(uint u) { printf("postprocess %u\n", u); }
+void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
+void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }
 ```
