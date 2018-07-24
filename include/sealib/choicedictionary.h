@@ -5,7 +5,8 @@ namespace Sealib {
 
 class ChoiceDictionary {
  private:
-    #define BLOCK_SIZE sizeof(unsigned long int) * 8
+    // #define BLOCK_SIZE sizeof(unsigned long int) * 8U
+    #define SHIFT_OFFSET 1UL
 
     /**
      * @param primary Array Structure with a word size of 64bits, where each bit represents a color
@@ -15,7 +16,7 @@ class ChoiceDictionary {
      */
     // unsigned int *A, *B;
     unsigned long int *primary, *secondary, wordCount;
-    unsigned int *tertiary, *validator, pointer;
+    unsigned int *tertiary, *validator, pointer, blockSize;
 
     void createDataStructure(unsigned long int length);
     void createPrimary();
@@ -29,11 +30,14 @@ class ChoiceDictionary {
      */
     unsigned int makeLink(unsigned int target);
 
+    bool isInitialized(unsigned long int blockIndex);
+
     void updateSecondary(unsigned int blockId);
 
     void updateTertiary(unsigned int updatedBlock);
 
-    bool hasColor(unsigned int blockIndex);
+    bool hasColor(unsigned long int blockIndex);
+
 
     std::vector<unsigned int> getBlockColors(unsigned int blockIndex);
 

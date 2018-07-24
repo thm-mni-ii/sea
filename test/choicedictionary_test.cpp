@@ -8,26 +8,27 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     ChoiceDictionary c = ChoiceDictionary(size);
 
     // insert into Choice Dictionary and test if choice() returns the correct index
-    c.insert(0);
-    ASSERT_EQ(c.choice(), 0);
-    c.insert(2);
-    ASSERT_EQ(c.choice(), 2);
-    c.insert(3);
-    ASSERT_EQ(c.choice(), 3);
-    c.insert(6);
-    ASSERT_EQ(c.choice(), 6);
-    c.insert(4);
-    ASSERT_EQ(c.choice(), 4);
-    c.insert(9);
-    ASSERT_EQ(c.choice(), 9);
+    c.insert(63UL);
+    ASSERT_EQ(c.choice(), 63);
+    c.insert(35UL);
+    ASSERT_EQ(c.choice(), 35);
+    c.insert(23UL);
+    ASSERT_EQ(c.choice(), 23);
+    c.insert(12UL);
+    ASSERT_EQ(c.choice(), 12);
+    c.insert(123UL);
+    ASSERT_EQ(c.choice(), 123);
+    c.insert(94UL);
+    ASSERT_EQ(c.choice(), 94);
+
 
     // verify inserted values
-    ASSERT_TRUE(c.get(0));
-    ASSERT_TRUE(c.get(2));
-    ASSERT_TRUE(c.get(3));
-    ASSERT_TRUE(c.get(6));
-    ASSERT_TRUE(c.get(4));
-    ASSERT_TRUE(c.get(9));
+    ASSERT_TRUE(c.get(63));
+    ASSERT_TRUE(c.get(35));
+    ASSERT_TRUE(c.get(23));
+    ASSERT_TRUE(c.get(12));
+    ASSERT_TRUE(c.get(123));
+    ASSERT_TRUE(c.get(94));
 
     // verify empty values don't return false positives
     ASSERT_FALSE(c.get(1));
