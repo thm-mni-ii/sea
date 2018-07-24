@@ -1,7 +1,67 @@
+//delete later
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
 #include "sealib/graphrepresentations.h"
 #include "sealib/graph.h"
 #include "sealib/node.h"
 #include "sealib/adjacency.h"
+
+//	Generates a graph in standard representation with n nodes
+//	and ~p(n*(n-1)/2) edges
+unsigned int* Graphrepresentations::generateStandardGraph(unsigned int n, unsigned int p){
+	unsigned int m = 0;
+	unsigned int* edgesarray = new unsigned int[n];
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+	for(unsigned int i = 0; i < n; ++i){
+		 unsigned int edges = 0;
+		 for(unsigned int j = 1; j < n; ++j){
+			 unsigned int rnd = std::rand() % 100;
+			 if(rnd < p){
+				 ++edges;
+			 }
+		 }
+	if(edges < 3){
+		edges = 2;
+	}
+  m += edges;
+	edgesarray[i] = edges;
+	}
+	unsigned int* g = new unsigned int[n+m+2];
+	g[0] = n;
+	g[n+1] = m;
+	//the first node always points one after the stored number of edges
+	g[1] = n+2;
+	for(unsigned int i = 2; i <= n; ++i){
+		g[i] = g[i-1] + edgesarray[i-2];
+	}
+
+	std::vector<bool> bitvector(n,0);
+	
+	for(unsigned int i = 0; i < n; ++i){
+		unsigned int bitsset = 0;
+		//a[i] = number of edges from i
+		while(edgesarray[i] > bitsset){
+			unsigned int rnd = std::rand() % n;
+			if(bitvector[rnd] == false && rnd != i){
+				bitvector[rnd] = true;
+				bitsset += 1;
+			}
+		}
+		unsigned int pos = g[i+1];
+		for(unsigned int j = 0; j < n; ++j){
+			if(bitvector[j] == true){
+				g[pos++] = j+1;
+				bitvector[j] = false;	
+			}
+		}
+	}
+	return g;
+}
+
+
 //	Transforms graph from graph.h object to standard representation
 //	as unsigned int array
 unsigned int* Graphrepresentations::graphToStandard(Graph *g){
