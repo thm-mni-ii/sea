@@ -31,7 +31,6 @@ class Node {
      * @return Returns the degree of the node.
      */
     unsigned int getDegree();
-
 };
 }  // namespace Sealib
 #endif  // SEALIB_NODE_H_

@@ -61,17 +61,17 @@ class DFSTest : public ::testing::TestWithParam<Graph *> {
 };
 INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(graphs));
 
-TEST_P(DFSTest, StdUserproc) {
+TEST_P(DFSTest, stdUserproc) {
   Graph *g = GetParam();
-  DFS::runStandardDFS(g, incr1, incr2, incr3, incr4);
+  DFS::standardDFS(g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
 }
-TEST_P(DFSTest, EHKUserproc) {
+TEST_P(DFSTest, nBitUserproc) {
   Graph *g = GetParam();
-  DFS::runEHKDFS(g, incr1, incr2, incr3, incr4);
+  DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);

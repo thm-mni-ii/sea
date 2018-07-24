@@ -34,8 +34,8 @@ namespace Sealib {
  * from white (initial) to gray (being processed) to black (finished processing)
  *
  * The following DFS variants are available:
- *  - StandardDFS: the normal DFS, uses implicit recursion stack
- *  - EHKDFS: space-efficient DFS, explicit stack
+ *  - standardDFS: the normal DFS, uses implicit recursion stack
+ *  - nBitDFS: space-efficient DFS, explicit segmented stack
  *
  * @author Simon Heuser
  */
@@ -50,9 +50,8 @@ class DFS {
    * @param postexplore to be executed after exploring an edge (u,v)
    * @param postprocess to be executed after processing a node u
    */
-  static void runStandardDFS(Graph *g, UserFunc1 preprocess,
-                             UserFunc2 preexplore, UserFunc2 postexplore,
-                             UserFunc1 postprocess);
+  static void standardDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
+                          UserFunc2 postexplore, UserFunc1 postprocess);
   /**
    * Run a space-efficient depth-first search over a given graph. (Elmasry,
    * Hagerup and Kammer; 2015) <br>
@@ -63,8 +62,8 @@ class DFS {
    * @param postexplore to be executed after exploring an edge (u,v)
    * @param postprocess to be executed after processing a node u
    */
-  static void runEHKDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
-                        UserFunc2 postexplore, UserFunc1 postprocess);
+  static void nBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
+                      UserFunc2 postexplore, UserFunc1 postprocess);
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_
