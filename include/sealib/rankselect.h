@@ -10,9 +10,8 @@ namespace Sealib {
  */
 class RankSelect : public RankStructure {
  public:
-    virtual ~RankSelect();
     virtual unsigned long select(unsigned long k) const = 0;
+    ~RankSelect() override = default;
 };
-RankSelect::~RankSelect() = default;
 }  // namespace Sealib
 #endif  // SEALIB_RANKSELECT_H_

@@ -15,9 +15,7 @@ class RankStructure {
      * @return rank of k-th idx
      */
     virtual unsigned long rank(unsigned long k) const = 0;
-
-    virtual ~RankStructure() = 0;
+    virtual ~RankStructure() = default;
 };
-RankStructure::~RankStructure() = default;
 }  // namespace Sealib
 #endif  // SEALIB_RANKSTRUCTURE_H_

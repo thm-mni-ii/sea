@@ -42,4 +42,7 @@ unsigned long Sealib::SimpleRankSelect::rank(unsigned long k) const {
 
 Sealib::SimpleRankSelect::SimpleRankSelect(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_) : bitset(std::move(
     bitset_)) {}
-Sealib::SimpleRankSelect::SimpleRankSelect() {}
+
+Sealib::SimpleRankSelect::SimpleRankSelect() = default;
+
+Sealib::SimpleRankSelect::~SimpleRankSelect() = default;

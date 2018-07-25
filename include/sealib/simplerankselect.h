@@ -31,6 +31,7 @@ class SimpleRankSelect : public RankSelect {
 
     explicit SimpleRankSelect(std::shared_ptr<Bitset<unsigned char>> bitset);
     SimpleRankSelect();
+    ~SimpleRankSelect() override;
 };
 }  // namespace Sealib
 #endif  // SEALIB_SIMPLERANKSELECT_H_

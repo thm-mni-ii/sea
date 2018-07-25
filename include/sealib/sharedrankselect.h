@@ -29,7 +29,7 @@ class SharedRankSelect : public RankSelect, public SharedRankStructure {
      */
     unsigned long select(unsigned long k) const override;
 
-    virtual ~SharedRankSelect();
+    ~SharedRankSelect() override;
 };
 }  // namespace Sealib
 #endif  // SEALIB_SHAREDRANKSELECT_H_

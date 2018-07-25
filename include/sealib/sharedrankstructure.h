@@ -53,7 +53,7 @@ class SharedRankStructure : public RankStructure {
      */
     unsigned int getSegmentCount() const;
 
-    virtual ~SharedRankStructure();
+    ~SharedRankStructure() override;
 };
 }  // namespace Sealib
 #endif  // SEALIB_SHAREDRANKSTRUCTURE_H_
