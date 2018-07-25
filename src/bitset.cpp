@@ -5,7 +5,7 @@ using Sealib::Bitset;
 template <typename Block>
 Bitset<Block>::Bitset(sizetype bits_) :
         bits(bits_),
-        mbits(bits % bitsPerByte == 0 ? bits/bitsPerByte : bits/bitsPerByte + 1) {}
+        mbits(bits % bitsPerBlock == 0 ? bits/bitsPerBlock : bits/bitsPerBlock + 1) {}
 
 template <typename Block>
 Bitset<Block>::Bitset() : Bitset(0) {}
@@ -16,7 +16,7 @@ Bitset<Block>::~Bitset() {}
 template <typename Block>
 typename Bitset<Block>::BitReference Bitset<Block>::operator[](sizetype bit) {
     assert(bit < bits);
-    return BitReference(&mbits[bit / bitsPerByte], bit % bitsPerByte);
+    return BitReference(&mbits[bit / bitsPerBlock], bit % bitsPerBlock);
 }
 
 template <typename Block>
@@ -46,7 +46,7 @@ void Bitset<Block>::flip() {
 template <typename Block>
 typename Bitset<Block>::bittype Bitset<Block>::get(sizetype bit) const {
     assert(bit < bits);
-    return get(mbits[bit / bitsPerByte], bit % bitsPerByte);
+    return get(mbits[bit / bitsPerBlock], bit % bitsPerBlock);
 }
 
 template <typename Block>
