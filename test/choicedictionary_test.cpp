@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <sealib/choicedictionary.h>
+#include <sealib/iterator.h>
 
 using Sealib::ChoiceDictionary;
 
@@ -7,7 +8,8 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     unsigned long int size = 128;
     ChoiceDictionary c = ChoiceDictionary(size);
 
-    // insert into Choice Dictionary and test if choice() returns the correct index
+    // insert into Choice Dictionary and test if choice() returns the correct
+    // index
     c.insert(63UL);
     ASSERT_EQ(c.choice(), 63);
     c.insert(35UL);
@@ -20,7 +22,6 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     ASSERT_EQ(c.choice(), 123);
     c.insert(94UL);
     ASSERT_EQ(c.choice(), 94);
-
 
     // verify inserted values
     ASSERT_TRUE(c.get(63));
@@ -35,4 +36,11 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     ASSERT_FALSE(c.get(7));
     ASSERT_FALSE(c.get(8));
     ASSERT_FALSE(c.get(5));
+
+    Sealib::Iterator iterator = Sealib::Iterator(&c);
+    iterator.init();
+    while (iterator.more()) {
+        std::cout << iterator.next();
+        std::cout << "\n";
+    }
 }

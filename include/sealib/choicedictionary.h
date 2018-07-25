@@ -4,15 +4,17 @@
 namespace Sealib {
 
 class ChoiceDictionary {
- private:
-    // #define BLOCK_SIZE sizeof(unsigned long int) * 8U
-    #define SHIFT_OFFSET 1UL
+#define SHIFT_OFFSET 1UL
 
+   private:
     /**
-     * @param primary Array Structure with a word size of 64bits, where each bit represents a color
-     * @param secondary Long Int(64bit) with each set bit pointing to a word in primary containing a color
+     * @param primary Array Structure with a word size of 64bits, where each bit
+     * represents a color
+     * @param secondary Long Int(64bit) with each set bit pointing to a word in
+     * primary containing a color
      * @param referanceA contains an array of indicies of refereneB.
-     * @param referenceB array stucture containing indicies of refernceA and stores the bit positions of secondary.
+     * @param referenceB array stucture containing indicies of refernceA and
+     * stores the bit positions of secondary.
      */
     // unsigned int *A, *B;
     unsigned long int *primary, *secondary, wordCount;
@@ -38,10 +40,7 @@ class ChoiceDictionary {
 
     bool hasColor(unsigned long int blockIndex);
 
-
-    std::vector<unsigned int> getBlockColors(unsigned int blockIndex);
-
- public:
+   public:
     /**
      * Creates choice dictionary with given size
      * @param _size Size of choice dictionary
@@ -65,10 +64,13 @@ class ChoiceDictionary {
      */
     long int choice();
 
-    /**
-     * Returns a list of all indices containing a color
-     */
-    std::vector<unsigned int> iterate();
+    unsigned long int getColoredBlock();
+
+    unsigned long int getColoredBlock(unsigned long int prevBlock);
+
+    unsigned long int getBlockValue(unsigned long int blockIndex);
+
+    unsigned int getBlockSize();
 
     ~ChoiceDictionary();
 };
