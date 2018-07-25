@@ -56,9 +56,6 @@ static void process_small(uint u0, Graph *g, CompactArray *color,
     int sr = s->pop(&x);
     if (sr == DFS_NO_MORE_NODES) {
       return;
-    } else if (sr == DFS_DO_RESTORE) {
-      restore_small(u0, g, color, s);
-      s->pop(&x);
     }
     uint u, k;
     u = std::get<0>(x);
