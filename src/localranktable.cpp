@@ -1,7 +1,3 @@
-//
-// Created by jmeintrup on 24.05.18.
-//
-
 #include <include/sealib/localranktable.h>
 #include <include/sealib/sharedrankstructure.h>
 

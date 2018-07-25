@@ -1,6 +1,3 @@
-//
-// Created by jmeintrup on 10.05.18.
-//
 #include "sealib/simplerankselect.h"
 
 unsigned long Sealib::SimpleRankSelect::select(unsigned long k) const {

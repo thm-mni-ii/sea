@@ -1,6 +1,3 @@
-//
-// Created by jmeintrup on 10.05.18.
-//
 #include <iostream>
 #include <include/sealib/localselecttable.h>
 #include <unordered_set>

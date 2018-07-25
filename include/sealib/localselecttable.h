@@ -1,7 +1,3 @@
-//
-// Created by jmeintrup on 24.05.18.
-//
-
 #ifndef SEA_LOCALSELECTTABLE_H
 #define SEA_LOCALSELECTTABLE_H
 #include <vector>

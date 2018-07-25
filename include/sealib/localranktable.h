@@ -1,7 +1,3 @@
-//
-// Created by jmeintrup on 24.05.18.
-//
-
 #ifndef SEA_LOCALRANKSELECTTABLE_H
 #define SEA_LOCALRANKSELECTTABLE_H
 
