@@ -62,3 +62,4 @@ unsigned int Sealib::SharedRankStructure::setBefore(unsigned long segment) const
 unsigned char Sealib::SharedRankStructure::getSegmentLength() const {
     return segmentLength;
 }
+Sealib::SharedRankStructure::~SharedRankStructure() {}

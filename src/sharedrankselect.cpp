@@ -41,3 +41,7 @@ unsigned long Sealib::SharedRankSelect::select(unsigned long k) const {
 }
 
 Sealib::SharedRankSelect::SharedRankSelect() : SharedRankStructure() {}
+
+Sealib::SharedRankSelect::~SharedRankSelect() {
+    delete firstInSegment;
+}

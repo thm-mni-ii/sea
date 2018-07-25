@@ -27,7 +27,9 @@ class SharedRankSelect : public RankSelect, public SharedRankStructure {
      * @param k idx
      * @return k-th set bit
      */
-    unsigned long select(unsigned long k) const;
+    unsigned long select(unsigned long k) const override;
+
+    virtual ~SharedRankSelect();
 };
 }  // namespace Sealib
 #endif  // SEALIB_SHAREDRANKSELECT_H_

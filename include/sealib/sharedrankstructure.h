@@ -31,7 +31,7 @@ class SharedRankStructure : public RankStructure {
      * @param k idx
      * @return rank of k-th idx
      */
-    unsigned long rank(unsigned long k) const;
+    unsigned long rank(unsigned long k) const override;
 
     /**
      * @param shared_ptr managing the Sealib::Bitset used for Rank
@@ -52,6 +52,8 @@ class SharedRankStructure : public RankStructure {
      * @return segment count
      */
     unsigned int getSegmentCount() const;
+
+    virtual ~SharedRankStructure();
 };
 }  // namespace Sealib
 #endif  // SEALIB_SHAREDRANKSTRUCTURE_H_
