@@ -19,4 +19,4 @@ unsigned char Sealib::LocalSelectTable::getLocalSelect(unsigned char segment, un
     return instance.localSelectLookupTable[segment][localIdx];
 }
 
-Sealib::LocalSelectTable::~LocalSelectTable() {}
+Sealib::LocalSelectTable::~LocalSelectTable() = default;

@@ -18,8 +18,6 @@ class LocalRankTable {
     LocalRankTable();
     ~LocalRankTable();
 
-    static LocalRankTable *instance;
-
  public:
     /**
     * Values are stored in a lookup table.
@@ -30,6 +28,7 @@ class LocalRankTable {
     */
     static unsigned char getLocalRank(unsigned char segment, unsigned char i);
 
+    //  singleton instance only in the function getLocalSelect, these should not be used
     LocalRankTable(LocalRankTable const &) = delete;
     void operator=(LocalRankTable const &) = delete;
 };

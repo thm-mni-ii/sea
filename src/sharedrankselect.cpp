@@ -1,11 +1,11 @@
 #include <sealib/sharedrankselect.h>
 #include <sealib/localselecttable.h>
 #include <iostream>
+#include <utility>
 
-
-
-Sealib::SharedRankSelect::SharedRankSelect(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_)
-    : Sealib::SharedRankStructure(bitset_), firstInSegment(nullptr) {
+Sealib::SharedRankSelect::SharedRankSelect(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_) :
+    Sealib::SharedRankStructure(std::move(bitset_)),
+    firstInSegment(nullptr) {
     // initialize rank structure for firstInBlock
     unsigned long size = SharedRankStructure::rank(bitset->size());
     if (size == (unsigned long) -1) {
