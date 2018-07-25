@@ -23,7 +23,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 #                   gtest library
 # --------------------------------------------------- #
 ExternalProject_Add(GTEST_PROJECT
-        GIT_REPOSITORY https://github.com/google/googletest.git
+        SOURCE_DIR third-party/gtest
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS "-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=OFF -DINSTALL_GMOCK=OFF"
         INSTALL_COMMAND ""
