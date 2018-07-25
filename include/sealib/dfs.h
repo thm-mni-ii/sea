@@ -40,13 +40,6 @@ namespace Sealib {
  * @author Simon Heuser
  */
 class DFS {
-	private:
-	/**
-     * @param u: vertex (in V) to be processed
-     */
-	static void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
-								 UserFunc2 postExplore, UserFunc1 postProcess, uint *color, uint u);
-
 public:
 	// TODO: write documentation!
 	static void runLinearTimeInplaceDFS(unsigned int* graph, unsigned int startVertex);
