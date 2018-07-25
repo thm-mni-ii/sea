@@ -123,6 +123,11 @@ class Bitset {
     void clear();
 
     /**
+     * flip bitset
+     */
+    void flip();
+
+    /**
      * @param bit idx of the bit
      * @return true if the bit is set, false otherwise
      */
@@ -157,6 +162,33 @@ class Bitset {
     Bitset<Block>& operator^=(const Bitset<Block>& rhs);
 
     Bitset<Block>& operator-=(const Bitset<Block>& rhs);
+
+    Bitset<Block> operator~() const;
 };
+
+template <typename Block>
+Bitset<Block> operator&(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
+    Bitset<Block> b(lhs);
+    return b &= rhs;
+}
+
+template <typename Block>
+Bitset<Block> operator|(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
+    Bitset<Block> b(lhs);
+    return b |= rhs;
+}
+
+template <typename Block>
+Bitset<Block> operator^(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
+    Bitset<Block> b(lhs);
+    return b ^= rhs;
+}
+
+template <typename Block>
+Bitset<Block> operator-(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
+    Bitset<Block> b(lhs);
+    return b -= rhs;
+}
+
 }  // namespace Sealib
 #endif  // SEALIB_BITSET_H_

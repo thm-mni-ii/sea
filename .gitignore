@@ -10,6 +10,7 @@ cmake_install.cmake
 sea.cbp
 sealib_main
 tests
+lib
 Makefile
 CMakeCache.txt
 DartConfiguration.tcl
@@ -96,7 +97,7 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 ### VisualStudioCode template
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
