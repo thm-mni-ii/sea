@@ -1,5 +1,4 @@
 #include "sealib/choicedictionary.h"
-#include <iostream>
 
 using Sealib::ChoiceDictionary;
 
@@ -10,7 +9,6 @@ ChoiceDictionary::ChoiceDictionary(unsigned long int length) {
 }
 
 void ChoiceDictionary::insert(unsigned long int index) {
-    std::cout << "\nINSERT";
     unsigned int blockIndex = (unsigned int)index / blockSize;
     unsigned int innerId = index % blockSize;
     unsigned long int value = 0;
@@ -20,12 +18,6 @@ void ChoiceDictionary::insert(unsigned long int index) {
 
     primary[blockIndex] = value | newColor;
 
-    std::cout << "\nINDEX: ";
-    std::cout << index;
-    std::cout << "\nblockIndex: ";
-    std::cout << blockIndex;
-    std::cout << "\ninnerId: ";
-    std::cout << innerId;
     updateSecondary(blockIndex);
 }
 
@@ -33,7 +25,6 @@ bool ChoiceDictionary::get(unsigned long int index) {
     unsigned long int blockIndex = index / blockSize;
     unsigned long int secondaryBlockIndex = blockIndex / blockSize;
     unsigned int linkedBlock = tertiary[blockIndex];
-
     if (linkedBlock >= wordCount || validator[linkedBlock] != (unsigned int)blockIndex)
         return false;
     unsigned long int secondaryBlock = 1UL << (blockSize - SHIFT_OFFSET - blockIndex);
@@ -98,47 +89,36 @@ void ChoiceDictionary::createDataStructure(unsigned long int length) {
 
 void ChoiceDictionary::createPrimary() { primary = new unsigned long int[wordCount]; }
 
-void ChoiceDictionary::createSecondary(unsigned int secondaryLength) {
+void ChoiceDictionary::createSecondary(unsigned long int secondaryLength) {
     secondary = new unsigned long int[secondaryLength];
 }
 
-void ChoiceDictionary::createTertiary(unsigned int tertiaryLength) {
-    unsigned int size = tertiaryLength * blockSize;
+void ChoiceDictionary::createTertiary(unsigned long int tertiaryLength) {
+    unsigned long int size = tertiaryLength * blockSize;
     tertiary = new unsigned int[size];
     validator = new unsigned int[size];
 }
 
-void ChoiceDictionary::updateSecondary(unsigned int blockIndex) {
+void ChoiceDictionary::updateSecondary(unsigned long int blockIndex) {
     unsigned long int secondaryValue = 0;
-    unsigned int secondaryIndex = blockIndex / blockSize;
+    unsigned long int secondaryIndex = blockIndex / blockSize;
     if (pointer > 0) secondaryValue = secondary[secondaryIndex];
 
     unsigned long int updatedBlock = 1ULL << (blockSize - SHIFT_OFFSET - blockIndex);
 
     secondary[secondaryIndex] = secondaryValue | updatedBlock;
-    std::cout << "\nsecondaryIndex: ";
-    std::cout << secondaryIndex;
 
     updateTertiary(blockIndex);
 }
 
-void ChoiceDictionary::updateTertiary(unsigned int blockId) {
-    unsigned int targetBlock = makeLink(blockId);
-    tertiary[blockId] = targetBlock;
-    std::cout << "\nblockId: ";
-    std::cout << blockId;
-    std::cout << "\nmakeLink(blockId): ";
-    std::cout << targetBlock;
-    std::cout << "\n___________\n";
+void ChoiceDictionary::updateTertiary(unsigned long int blockIndex) {
+    unsigned int targetBlock = makeLink(blockIndex);
+    tertiary[blockIndex] = targetBlock;
 }
 
-unsigned int ChoiceDictionary::makeLink(unsigned int target) {
-    std::cout << "\ntarget: ";
-    std::cout << target;
-    std::cout << "\npointer: ";
-    std::cout << pointer;
+unsigned int ChoiceDictionary::makeLink(unsigned long int target) {
     if (pointer <= target || pointer == 0) pointer++;
-    validator[pointer - 1] = target;
+    validator[pointer - 1] = (unsigned int)target;
     return pointer - 1;
 }
 
@@ -147,10 +127,15 @@ bool ChoiceDictionary::isInitialized(unsigned long int blockIndex) {
 }
 
 bool ChoiceDictionary::hasColor(unsigned long int blockIndex) {
-    if (validator[tertiary[blockIndex]] == blockIndex)
-        return true;
-    else
+    unsigned long int linkedBlock = tertiary[blockIndex];
+
+    if (linkedBlock >= wordCount * blockSize) {
         return false;
+    } else if (validator[linkedBlock] != blockIndex) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 ChoiceDictionary::~ChoiceDictionary() {

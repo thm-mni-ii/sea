@@ -22,21 +22,21 @@ class ChoiceDictionary {
 
     void createDataStructure(unsigned long int length);
     void createPrimary();
-    void createSecondary(unsigned int secondaryLength);
-    void createTertiary(unsigned int tertiaryLength);
+    void createSecondary(unsigned long int secondaryLength);
+    void createTertiary(unsigned long int tertiaryLength);
 
     /**
      * Creates a link between A and B by setting and B[pointer-1]=a and
      * returning b with a=index and b=pointer-1
      * @param target Index in A where B is being linked to
      */
-    unsigned int makeLink(unsigned int target);
+    unsigned int makeLink(unsigned long int target);
 
     bool isInitialized(unsigned long int blockIndex);
 
-    void updateSecondary(unsigned int blockId);
+    void updateSecondary(unsigned long int blockIndex);
 
-    void updateTertiary(unsigned int updatedBlock);
+    void updateTertiary(unsigned long int updatedBlock);
 
     bool hasColor(unsigned long int blockIndex);
 

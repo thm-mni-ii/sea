@@ -24,11 +24,9 @@ bool Iterator::more() {
 
 unsigned long int Iterator::next() {
     int nextColor = __builtin_clzl(blockValue);
-    if (nextColor > 0) {
         unsigned long int operatorBit =
             1UL << (choicedictionary->getBlockSize() - (unsigned long int)nextColor - SHIFT_OFFSET);
         blockValue = blockValue & ~operatorBit;
-    }
 
     return (activeBlock * choicedictionary->getBlockSize()) + (unsigned long int)nextColor;
 }
