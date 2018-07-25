@@ -65,12 +65,12 @@ class LinearTimeInplaceDFSRunner {
         std::cout << "this->N = " << this->N << std::endl;
     }
 
-    void run(unsigned int startVertex) {
-        this->startVertex = startVertex;
+    void run(unsigned int _startVertex) {
+        this->startVertex = _startVertex;
         unsigned int p = n + 2;
-        std::cout << "Start vertex: " << startVertex << std::endl;
+        std::cout << "Start vertex: " << _startVertex << std::endl;
         std::cout << "Start with position: " << p << std::endl;
-        while (A[p] != startVertex && p <= N) {
+        while (A[p] != _startVertex && p <= N) {
             p = p + 1;
         }
 
@@ -85,7 +85,7 @@ class LinearTimeInplaceDFSRunner {
     unsigned int name(unsigned int i) { if (A[i] <= n) return A[i]; else return 0u; }
 
     void printState() {
-        for (int i = 0; i <= this->N; i++) {
+        for (unsigned int i = 0; i <= this->N; i++) {
             std::cout << this->A[i] << "\t";
             if (i == 0 || i == this->n + 1) {
                 std::cout << " | ";
@@ -93,12 +93,12 @@ class LinearTimeInplaceDFSRunner {
         }
         std::cout << std::endl;
         std::cout << "\t\t\t\t\t\t   ";
-        for (int i = this->n + 2; i <= this->N; i++) {
+        for (unsigned int i = this->n + 2; i <= this->N; i++) {
             std::cout << rA(i) << "\t";
         }
         std::cout << std::endl;
         std::cout << "\t\t\t\t\t\t   ";
-        for (int i = this->n + 2; i <= this->N; i++) {
+        for (unsigned int i = this->n + 2; i <= this->N; i++) {
             std::cout << rA_(i) << "\t";
         }
         std::cout << std::endl;
@@ -241,7 +241,7 @@ class LinearTimeInplaceDFSRunner {
 
     void goToChild(unsigned int p) {
         unsigned int q = rA_(p); // First
-        unsigned int v = name(q); // Second
+        //unsigned int v = name(q); // Second
 
         // Is v discovered from the first position?
         bool fromFirstPosition = name(p) != 0;

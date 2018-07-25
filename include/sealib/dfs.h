@@ -38,6 +38,20 @@ class DFS {
 	static void process_standard(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 								 UserFunc2 postExplore, UserFunc1 postProcess, uint *color, uint u);
 
+public:
+   /**
+      * Run a standard depth-first search over a graph. <br>
+      * EFFICIENCY: O(n+m) time, O(n log n) bits
+      * @param g graph G=(V,E) to iterate over
+      * @param [pre|post][Process|Explore]: user-defined functions <br>
+      * to be executed before/after processing a node/exploring an edge
+      * @param preprocess to be executed before processing a node u
+      * @param preexplore to be executed before exploring an edge (u,v)
+      * @param postexplore to be executed after exploring an edge (u,v)
+      * @param postprocess to be executed after processing a node u
+      */
+   static void runStandardDFS(Graph *g, UserFunc1 preprocess,
+                  UserFunc2 preexplore, UserFunc2 postexplore, UserFunc1 postprocess);
 
 	// TODO: write documentation!
 	static void runLinearTimeInplaceDFS(unsigned int* graph, unsigned int startVertex);
