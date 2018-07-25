@@ -24,6 +24,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # --------------------------------------------------- #
 ExternalProject_Add(GTEST_PROJECT
         SOURCE_DIR third-party/gtest
+        TMP_DIR third-party/TEMP
+        STAMP_DIR third-party/TEMP
+        BINARY_DIR third-party/BIN
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS "-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=OFF -DINSTALL_GMOCK=OFF"
         INSTALL_COMMAND ""

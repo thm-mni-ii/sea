@@ -1,6 +1,5 @@
 # Downloaded Dependencies
-third-party/gtest/src
-third-party/gtest/tmp
+third-party
 # Files for Build System
 /.gradle
 compile_commands.json
