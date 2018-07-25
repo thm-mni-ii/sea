@@ -1,18 +1,20 @@
-#ifndef SEA_RANKSTRUCTURE_H
-#define SEA_RANKSTRUCTURE_H
+#ifndef SEALIB_RANKSTRUCTURE_H_
+#define SEALIB_RANKSTRUCTURE_H_
+
 /**
- * Space efficient RankStructure implementation.
+ * RankStructure Interface to be used by the various RankStructure implementations.
+ * Only provides a virtual function for rank.
  * @author Johannes Meintrup
  */
-namespace Sealib{
+namespace Sealib {
 class RankStructure {
-public:
- /**
-  * Rank of the k-th idx
-  * @param k idx
-  * @return rank of k-th idx
-  */
- virtual unsigned long rank(unsigned long k) const = 0;
+ public:
+    /**
+     * Rank of the k-th idx
+     * @param k idx
+     * @return rank of k-th idx
+     */
+    virtual unsigned long rank(unsigned long k) const = 0;
 };
 }  // namespace Sealib
-#endif //SEA_RANKSTRUCTURE_H
+#endif  // SEALIB_RANKSTRUCTURE_H_

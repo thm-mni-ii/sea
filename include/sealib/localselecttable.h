@@ -1,5 +1,5 @@
-#ifndef SEA_LOCALSELECTTABLE_H
-#define SEA_LOCALSELECTTABLE_H
+#ifndef SEALIB_LOCALSELECTTABLE_H_
+#define SEALIB_LOCALSELECTTABLE_H_
 #include <vector>
 
 namespace Sealib {
@@ -28,8 +28,8 @@ class LocalSelectTable {
     static unsigned char getLocalSelect(unsigned char segment, unsigned char i);
 
     //  singleton instance only in the function getLocalSelect, these should not be used
-    LocalSelectTable(LocalSelectTable const&) = delete;
-    void operator=(LocalSelectTable const&) = delete;
+    LocalSelectTable(LocalSelectTable const &) = delete;
+    void operator=(LocalSelectTable const &) = delete;
 };
 }  // namespace Sealib
-#endif //SEA_LOCALSELECTTABLE_H
+#endif  // SEALIB_LOCALSELECTTABLE_H_

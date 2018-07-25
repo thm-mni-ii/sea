@@ -1,27 +1,25 @@
-#ifndef SEALIB_SHAREDRANKSELECT_H
-#define SEALIB_SHAREDRANKSELECT_H
+#ifndef SEALIB_SHAREDRANKSELECT_H_
+#define SEALIB_SHAREDRANKSELECT_H_
 
 #include <sealib/sharedrankstructure.h>
 #include <sealib/rankselect.h>
 #include <sealib/bitset.h>
 
-namespace Sealib{
-
- /**
- * Space efficient RankSelect implementation.
- * Extends the RankStructure with the select function.
- * @author Johannes Meintrup
- */
+namespace Sealib {
+/**
+* Space efficient RankSelect implementation.
+* Uses a shared_ptr for the bitset, saves space if the bitset can be reused.
+* @author Johannes Meintrup
+*/
 class SharedRankSelect : public RankSelect, public SharedRankStructure {
  private:
     SharedRankStructure *firstInSegment;
 
  public:
-
     /**
-     * @param bitset for rankselect
+     * @param shared_ptr managing the Sealib::Bitset used for RankSelect
      */
-    explicit SharedRankSelect(std::shared_ptr<Bitset<unsigned char> >bitset);
+    explicit SharedRankSelect(std::shared_ptr<Bitset<unsigned char> > bitset);
     SharedRankSelect();
 
     /**
@@ -32,4 +30,4 @@ class SharedRankSelect : public RankSelect, public SharedRankStructure {
     unsigned long select(unsigned long k) const;
 };
 }  // namespace Sealib
-#endif //SEALIB_RANKSELECT_H
+#endif  // SEALIB_SHAREDRANKSELECT_H_

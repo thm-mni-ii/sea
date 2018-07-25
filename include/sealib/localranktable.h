@@ -1,5 +1,5 @@
-#ifndef SEA_LOCALRANKSELECTTABLE_H
-#define SEA_LOCALRANKSELECTTABLE_H
+#ifndef SEALIB_LOCALRANKTABLE_H_
+#define SEALIB_LOCALRANKTABLE_H_
 
 #include <vector>
 
@@ -18,7 +18,7 @@ class LocalRankTable {
     LocalRankTable();
     ~LocalRankTable();
 
-    static LocalRankTable* instance;
+    static LocalRankTable *instance;
 
  public:
     /**
@@ -30,8 +30,8 @@ class LocalRankTable {
     */
     static unsigned char getLocalRank(unsigned char segment, unsigned char i);
 
-    LocalRankTable(LocalRankTable const&) = delete;
-    void operator=(LocalRankTable const&) = delete;
+    LocalRankTable(LocalRankTable const &) = delete;
+    void operator=(LocalRankTable const &) = delete;
 };
 }  // namespace Sealib
-#endif //SEA_LOCALRANKSELECTTABLE_H
+#endif  // SEALIB_LOCALRANKTABLE_H_

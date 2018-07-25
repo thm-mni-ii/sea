@@ -1,12 +1,14 @@
+#include <sealib/sharedrankselect.h>
+#include <sealib/localselecttable.h>
 #include <iostream>
-#include <include/sealib/localselecttable.h>
-#include <unordered_set>
-#include "sealib/sharedrankselect.h"
 
-Sealib::SharedRankSelect::SharedRankSelect(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_) : Sealib::SharedRankStructure(bitset_), firstInSegment(nullptr){
-    //initialize rank structure for firstInBlock
+
+
+Sealib::SharedRankSelect::SharedRankSelect(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_)
+    : Sealib::SharedRankStructure(bitset_), firstInSegment(nullptr) {
+    // initialize rank structure for firstInBlock
     unsigned long size = SharedRankStructure::rank(bitset->size());
-    if(size == (unsigned long) - 1) {
+    if (size == (unsigned long) -1) {
         size = 0;
     }
     std::shared_ptr<Bitset<unsigned char>> firstInBlockBitSet(new Bitset<unsigned char>(size));
@@ -23,14 +25,13 @@ Sealib::SharedRankSelect::SharedRankSelect(std::shared_ptr<Sealib::Bitset<unsign
     firstInSegment = new SharedRankStructure(firstInBlockBitSet);
 }
 
-
 unsigned long Sealib::SharedRankSelect::select(unsigned long k) const {
     if (k == 0 || segmentCount == 0) {
-        return (unsigned long) - 1;
+        return (unsigned long) -1;
     }
     unsigned long firstInSegmentRank = firstInSegment->rank(k);
-    if (firstInSegmentRank == (unsigned long) - 1) {
-        return (unsigned long) - 1;
+    if (firstInSegmentRank == (unsigned long) -1) {
+        return (unsigned long) -1;
     }
     unsigned long h = nonEmptySegments[firstInSegmentRank - 1];
     unsigned char segment = bitset->getBlock(h);
@@ -39,6 +40,4 @@ unsigned long Sealib::SharedRankSelect::select(unsigned long k) const {
     return localSelect + segmentLength * h + 1;
 }
 
-Sealib::SharedRankSelect::SharedRankSelect() : SharedRankStructure(){
-
-}
+Sealib::SharedRankSelect::SharedRankSelect() : SharedRankStructure() {}

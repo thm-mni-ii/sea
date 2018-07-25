@@ -1,12 +1,13 @@
+#include <sealib/localranktable.h>
+#include <sealib/sharedrankstructure.h>
 #include <iostream>
 #include <cmath>
 #include <utility>
-#include <include/sealib/localranktable.h>
-#include "sealib/sharedrankstructure.h"
 
-unsigned long Sealib::SharedRankStructure::rank(unsigned long k) const{
+
+unsigned long Sealib::SharedRankStructure::rank(unsigned long k) const {
     if (k == 0 || k > maxRank) {
-        return (unsigned long) - 1;
+        return (unsigned long) -1;
     }
     unsigned long segmentIdx = (k - 1) / segmentLength;
     unsigned char segment = bitset->getBlock(segmentIdx);
@@ -15,16 +16,17 @@ unsigned long Sealib::SharedRankStructure::rank(unsigned long k) const{
 }
 
 Sealib::SharedRankStructure::SharedRankStructure(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_) :
-        bitset(std::move(bitset_)),
-        segmentCount(static_cast<unsigned int>(bitset->size() / segmentLength)){
-
+    bitset(std::move(bitset_)),
+    segmentCount(static_cast<unsigned int>(bitset->size() / segmentLength)) {
     auto lastSeg = static_cast<unsigned char>((bitset->size() % segmentLength));
 
     if ((lastSeg != 0) && bitset->size() != 0) {
         segmentCount++;
     }
 
-    maxRank = segmentCount == 0 ? 0 : segmentLength * (lastSeg == 0 ? segmentCount : segmentCount - 1) + lastSeg;
+    maxRank =
+        segmentCount == 0 ?
+        0 : segmentLength * (lastSeg == 0 ? segmentCount : segmentCount - 1) + lastSeg;
     nonEmptySegments.reserve(segmentCount);
 
     for (unsigned int i = 0; i < segmentCount; i++) {
@@ -35,7 +37,6 @@ Sealib::SharedRankStructure::SharedRankStructure(std::shared_ptr<Sealib::Bitset<
     }
 
     if (segmentCount != 0) {
-
         setCountTable.reserve(segmentCount);
         unsigned int cnt = 0;
         for (unsigned long i = 0; i < segmentCount - 1; i++) {
@@ -46,8 +47,7 @@ Sealib::SharedRankStructure::SharedRankStructure(std::shared_ptr<Sealib::Bitset<
     }
 }
 
-
-Sealib::SharedRankStructure::SharedRankStructure() : bitset(0){
+Sealib::SharedRankStructure::SharedRankStructure() : bitset(0) {
 }
 
 unsigned int Sealib::SharedRankStructure::getSegmentCount() const {
@@ -55,7 +55,7 @@ unsigned int Sealib::SharedRankStructure::getSegmentCount() const {
 }
 
 unsigned int Sealib::SharedRankStructure::setBefore(unsigned long segment) const {
-    if(segment == 0) return 0;
+    if (segment == 0) return 0;
     return setCountTable[segment - 1];
 }
 
