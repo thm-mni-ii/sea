@@ -15,23 +15,23 @@ namespace Sealib {
  */
 template<typename BlockType = unsigned long>
 class Bitset {
-    typedef unsigned long sizetype;
-    typedef bool bittype;
+    typedef unsigned long sizeType;
+    typedef bool bitType;
 
  private:
     static const unsigned int bitsPerBlock = sizeof(BlockType) * 8;
     static const BlockType BlockTypeOne = BlockType(1);
 
-    sizetype bits;
+    sizeType bits;
     std::vector<BlockType> mbits;
 
-    inline bittype get(const BlockType &i, sizetype b) const {
-        return static_cast<bittype>(i & (BlockTypeOne << b));
+    inline bitType get(const BlockType &i, sizeType b) const {
+        return static_cast<bitType>(i & (BlockTypeOne << b));
     }
 
  public:
-    static const sizetype npos = std::numeric_limits<sizetype>::max();
-    explicit Bitset(sizetype bits_);
+    static const sizeType npos = std::numeric_limits<sizeType>::max();
+    explicit Bitset(sizeType bits_);
     Bitset();
     ~Bitset();
 
@@ -103,14 +103,14 @@ class Bitset {
       * @param bit index of the bit
       * @return BitReference referencing the block and index of the bit.
       */
-     BitReference operator[](sizetype bit);
+     BitReference operator[](sizeType bit);
 
      /**
       * const version of the operator needs only a simple get instead of the BitReference wrapper class.
       * @param bit index of the bit
       * @return true if set, false otherwise
       */
-     bool operator[](sizetype bit) const;
+     bool operator[](sizeType bit) const;
 
     /**
      * sets all bits to true
@@ -131,28 +131,28 @@ class Bitset {
      * @param bit idx of the bit
      * @return true if the bit is set, false otherwise
      */
-    bittype get(sizetype bit) const;
+    bitType get(sizeType bit) const;
 
     /**
      * @return number of bits held by bitset
      */
-    sizetype size() const;
+    sizeType size() const;
     /**
      * @return number of blocks used to store bits
      */
-    sizetype blocks() const;
+    sizeType blocks() const;
 
     /**
      * @param idx of the block
      * @return const ref to the block
      */
-    const BlockType& getBlock(sizetype idx) const;
+    const BlockType& getBlock(sizeType idx) const;
 
     /**
      * @param idx of the block
      * @param block value to be set
      */
-    void setBlock(sizetype idx,  BlockType block);
+    void setBlock(sizeType idx,  BlockType block);
 
     //  basic bitset operations
     Bitset<BlockType>& operator&=(const Bitset<BlockType>& rhs);
