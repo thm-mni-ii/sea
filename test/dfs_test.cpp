@@ -3,6 +3,11 @@
 
 #define order 30
 
+using Sealib::Node;
+using Sealib::DFS;
+using Sealib::Graph;
+using Sealib::Adjacency;
+
 Node *s[order];
 int sp = 0;
 

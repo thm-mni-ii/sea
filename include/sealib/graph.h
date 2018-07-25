@@ -3,6 +3,7 @@
 
 #include "sealib/node.h"
 
+namespace Sealib {
 /**
  * A undirected graph G = (V, E) with nodes V = [0, n - 1].
  * The graph stores its edges V inside adjacency arrays containing
@@ -43,5 +44,5 @@ class Graph {
     */
     unsigned int getOrder();
 };
-
+}  // namespace Sealib
 #endif  // SEALIB_GRAPH_H_

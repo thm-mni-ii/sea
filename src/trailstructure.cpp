@@ -3,6 +3,7 @@
 #include "sealib/trailstructure.h"
 
 using std::vector;
+using Sealib::TrailStructure;
 
 TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree) {
     nextUnused = 1;

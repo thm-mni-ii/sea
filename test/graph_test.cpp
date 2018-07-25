@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <sealib/graphcreator.h>
 
+using Sealib::GraphCreator;
+using Sealib::Graph;
+
 TEST(GraphTest, graph_integrity) {
     unsigned int order = 4;
     unsigned int **adj_mtrx = new unsigned int *[order];

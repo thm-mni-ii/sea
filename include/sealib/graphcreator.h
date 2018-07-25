@@ -3,6 +3,7 @@
 
 #include "sealib/graph.h"
 
+namespace Sealib {
 /**
  * Static class that serves as a collection of functions to create graph objects from different inputs.
  * @author Johannes Meintrup
@@ -27,5 +28,5 @@ class GraphCreator {
      */
     static Graph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
 };
-
+}  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_

@@ -2,6 +2,9 @@
 #include <limits>
 #include "sealib/graphcreator.h"
 
+using Sealib::Graph;
+using Sealib::GraphCreator;
+
 Graph *GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order) {
     Node *nodes = static_cast<Node *>(malloc(sizeof(Node) * order));
 

@@ -40,6 +40,7 @@ class Bitset {
         mbits[idx] = block;
     }
 
+ public:
     /**
      * sets all bits to true
      */
@@ -91,12 +92,14 @@ class Bitset {
         flip(mbits[bit / bitsPerByte], bit % bitsPerByte);
     }
 
+ private:
     static unsigned int bitsPerByte = 8;
     static blocktype blocktype_one = blocktype(1);
 
     std::vector<blocktype> mbits;
     sizetype bits;
 
+ public:
     inline bittype get(const blocktype &i, sizetype b) {
         return i & (blocktype_one << b);
     }
