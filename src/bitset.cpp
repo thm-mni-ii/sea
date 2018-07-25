@@ -2,114 +2,114 @@
 
 using Sealib::Bitset;
 
-template <typename Block>
-Bitset<Block>::Bitset(sizetype bits_) :
+template <typename BlockType>
+Bitset<BlockType>::Bitset(sizeType bits_) :
         bits(bits_),
         mbits(bits % bitsPerBlock == 0 ? bits/bitsPerBlock : bits/bitsPerBlock + 1) {}
 
-template <typename Block>
-Bitset<Block>::Bitset() : Bitset(0) {}
+template <typename BlockType>
+Bitset<BlockType>::Bitset() : Bitset(0) {}
 
-template <typename Block>
-Bitset<Block>::~Bitset() {}
+template <typename BlockType>
+Bitset<BlockType>::~Bitset() {}
 
-template <typename Block>
-typename Bitset<Block>::BitReference Bitset<Block>::operator[](sizetype bit) {
+template <typename BlockType>
+typename Bitset<BlockType>::BitReference Bitset<BlockType>::operator[](sizeType bit) {
     assert(bit < bits);
     return BitReference(&mbits[bit / bitsPerBlock], bit % bitsPerBlock);
 }
 
-template <typename Block>
-bool Bitset<Block>::operator[](sizetype bit) const { return get(bit); }
+template <typename BlockType>
+bool Bitset<BlockType>::operator[](sizeType bit) const { return get(bit); }
 
-template <typename Block>
-void Bitset<Block>::set() {
-    for (Block &mbit : mbits) {
-        mbit = std::numeric_limits<Block>::max();
+template <typename BlockType>
+void Bitset<BlockType>::set() {
+    for (BlockType &mbit : mbits) {
+        mbit = std::numeric_limits<BlockType>::max();
     }
 }
 
-template <typename Block>
-void Bitset<Block>::clear() {
-    for (Block &mbit : mbits) {
+template <typename BlockType>
+void Bitset<BlockType>::clear() {
+    for (BlockType &mbit : mbits) {
         mbit = 0;
     }
 }
 
-template <typename Block>
-void Bitset<Block>::flip() {
-    for (sizetype i = 0; i < blocks(); ++i) {
-        mbits[i] = static_cast<Block>(~mbits[i]);
+template <typename BlockType>
+void Bitset<BlockType>::flip() {
+    for (sizeType i = 0; i < blocks(); ++i) {
+        mbits[i] = static_cast<BlockType>(~mbits[i]);
     }
 }
 
-template <typename Block>
-typename Bitset<Block>::bittype Bitset<Block>::get(sizetype bit) const {
+template <typename BlockType>
+typename Bitset<BlockType>::bitType Bitset<BlockType>::get(sizeType bit) const {
     assert(bit < bits);
     return get(mbits[bit / bitsPerBlock], bit % bitsPerBlock);
 }
 
-template <typename Block>
-typename Bitset<Block>::sizetype Bitset<Block>::size() const {
+template <typename BlockType>
+typename Bitset<BlockType>::sizeType Bitset<BlockType>::size() const {
     return bits;
 }
 
-template <typename Block>
-typename Bitset<Block>::sizetype Bitset<Block>::blocks() const {
+template <typename BlockType>
+typename Bitset<BlockType>::sizeType Bitset<BlockType>::blocks() const {
     return mbits.size();
 }
 
-template <typename Block>
-const Block& Bitset<Block>::getBlock(sizetype idx) const {
+template <typename BlockType>
+const BlockType& Bitset<BlockType>::getBlock(sizeType idx) const {
     assert(mbits.size() > idx);
     return mbits[idx];
 }
 
-template <typename Block>
-void Bitset<Block>::setBlock(sizetype idx,  Block block) {
+template <typename BlockType>
+void Bitset<BlockType>::setBlock(sizeType idx,  BlockType block) {
     assert(mbits.size() > idx);
     mbits[idx] = block;
 }
 
-template <typename Block>
-Bitset<Block>& Bitset<Block>::operator&=(const Bitset<Block>& rhs) {
+template <typename BlockType>
+Bitset<BlockType>& Bitset<BlockType>::operator&=(const Bitset<BlockType>& rhs) {
     assert(size() == rhs.size());
-    for (sizetype i = 0; i < blocks(); i++) {
+    for (sizeType i = 0; i < blocks(); i++) {
         mbits[i] = mbits[i] & rhs.mbits[i];
     }
     return *this;
 }
 
 
-template <typename Block>
-Bitset<Block>& Bitset<Block>::operator|=(const Bitset<Block>& rhs) {
+template <typename BlockType>
+Bitset<BlockType>& Bitset<BlockType>::operator|=(const Bitset<BlockType>& rhs) {
     assert(size() == rhs.size());
-    for (sizetype i = 0; i < blocks(); i++) {
+    for (sizeType i = 0; i < blocks(); i++) {
         mbits[i] = mbits[i] | rhs.mbits[i];
     }
     return *this;
 }
 
-template <typename Block>
-Bitset<Block>& Bitset<Block>::operator^=(const Bitset<Block>& rhs) {
+template <typename BlockType>
+Bitset<BlockType>& Bitset<BlockType>::operator^=(const Bitset<BlockType>& rhs) {
     assert(size() == rhs.size());
-    for (sizetype i = 0; i < blocks(); i++) {
+    for (sizeType i = 0; i < blocks(); i++) {
         mbits[i] = mbits[i] ^ rhs.mbits[i];
     }
     return *this;
 }
 
-template <typename Block>
-Bitset<Block>& Bitset<Block>::operator-=(const Bitset<Block>& rhs) {
+template <typename BlockType>
+Bitset<BlockType>& Bitset<BlockType>::operator-=(const Bitset<BlockType>& rhs) {
     assert(size() == rhs.size());
-    for (sizetype i = 0; i < blocks(); i++) {
-        mbits[i] = mbits[i] & static_cast<Block>(~rhs.mbits[i]);
+    for (sizeType i = 0; i < blocks(); i++) {
+        mbits[i] = mbits[i] & static_cast<BlockType>(~rhs.mbits[i]);
     }
     return *this;
 }
 
-template<typename Block>
-Bitset<Block> Bitset<Block>::operator~() const {
+template<typename BlockType>
+Bitset<BlockType> Bitset<BlockType>::operator~() const {
     Bitset b(*this);
     b.flip();
     return b;
