@@ -21,11 +21,9 @@ int main(){
 	std::cout << "standard representation:" << std::endl;
 	printGraph(a);
 	Graphrepresentations::standardToBeginpointer(a);
-	Graphrepresentations::swapRepresentation(a);
-	std::cout << "swapped beginpointer representation:" << std::endl;
+	std::cout << "beginpointer representation:" << std::endl;
 	printGraph(a);
-	DFS::runLinearTimeInplaceDFS(a,3);	
-	std::cout << "INPLACE DFS" << std::endl;
+	Graphrepresentations::swapRepresentation(a);
 	std::cout << "swapped beginpointer representation:" << std::endl;
 	printGraph(a);
 	Graphrepresentations::swappedBeginpointerToStandard(a);

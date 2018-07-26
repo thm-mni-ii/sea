@@ -33,10 +33,21 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes,
 	unsigned int* graph = new unsigned int[numNodes+numEdges+2];
 	graph[0] = numNodes;
 	graph[numNodes+1] = numEdges;
-	//the first node always points one after the stored number of edges
-	graph[1] = numNodes+2;
+	unsigned int lastPosition = numNodes+2;
+	if(edgeArray[0] == 0){
+		graph[1] = 1;
+	}else{
+		graph[1] = lastPosition;
+		lastPosition += edgeArray[0];
+	}
+
 	for(unsigned int i = 2; i <= numNodes; ++i){
-		graph[i] = graph[i-1] + edgeArray[i-2];
+		if(edgeArray[i-1] == 0){
+			graph[i] = i;
+		}else{
+			graph[i] = lastPosition;
+			lastPosition += edgeArray[i-1];
+		}
 	}
 	bool initialBit = 0;
 	if(p > 0.5){
@@ -95,6 +106,7 @@ unsigned int* Graphrepresentations::graphToStandard(Graph *g){
 }
 
 // Transforms graph inplace from standard representation to crosspointer representation
+// TODO: handle graphs with nodes of order 0 and 1
 void Graphrepresentations::standardToCrosspointer(unsigned int* a){
 	unsigned int n = a[0],v,u,pv,pu;	
 	//n = order of the graph
@@ -128,7 +140,10 @@ void Graphrepresentations::standardToBeginpointer(unsigned int* a){
 	unsigned int numEdges = a[order + 1];
 	unsigned int graphSize = order + numEdges + 2;
 	for(unsigned int i = order + 2; i < graphSize; ++i){
-		a[i] = a[a[i]];
+		//checks if a[i] is not a node of order 0
+		if(a[a[i]] != a[a[i]-1] || i == order + 2){
+			a[i] = a[a[i]];
+		}
 	}
 	return; 
 }
