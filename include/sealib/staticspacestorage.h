@@ -1,13 +1,11 @@
 #ifndef SEALIB_STATICSPACESTORAGE_H_
 #define SEALIB_STATICSPACESTORAGE_H_
+#include <cstdint>
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
 
 using Sealib::Bitset;
-
-#define Byte unsigned char
-typedef Bitset<Byte> Alloc;
 
 namespace Sealib {
 class StaticSpaceStorage {
@@ -20,7 +18,10 @@ class StaticSpaceStorage {
   void set(uint i, uint v);
 
  private:
-  Alloc **storage;
+  typedef uint_fast8_t Unit;
+  typedef Unit *Alloc;
+  Alloc storage;
+  static Unit bitsToUnit(const std::vector<bool>&);
 };
 }  // namespace Sealib
 #endif  // SEALIB_STATICSPACESTORAGE_H_
