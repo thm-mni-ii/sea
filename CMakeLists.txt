@@ -45,6 +45,20 @@ add_library(gtest STATIC IMPORTED)
 add_dependencies(gtest GTEST_PROJECT)
 set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemock/gtest/libgtest.a")
 
+
+# --- submodule management --- #
+
+add_custom_target(InstallSubmodules
+        COMMAND echo Installing submodules...
+        COMMAND git submodule update --init)
+IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest/.git")
+        add_custom_target(CleanGtest
+        COMMAND echo "Removing old 'gtest' folder..."
+        COMMAND rm -rf third-party/gtest)
+        add_dependencies(InstallSubmodules CleanGtest)
+ENDIF()
+add_dependencies(GTEST_PROJECT InstallSubmodules)
+
 # --------------------------------------------------- #
 #                   build library
 # --------------------------------------------------- #
