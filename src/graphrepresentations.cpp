@@ -14,7 +14,6 @@
 unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes, float p){
 	unsigned int numEdges = 0;
 	unsigned int* edgeArray = new unsigned int[numNodes];
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 	for(unsigned int i = 0; i < numNodes; ++i){
 		unsigned int edges = 0;
 		for(unsigned int j = 1; j < numNodes; ++j){
@@ -153,28 +152,29 @@ void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
 	unsigned int order = a[0];
 	unsigned int numEdges = a[order + 1];
 	unsigned int graphSize = order + numEdges + 2;
+	for(unsigned int i = order+2; i < graphSize ; ++i){
+		if(a[i] > order){
+			a[i] = a[a[i]];
+		}
+	}
 	for(unsigned int i = 1; i <= order; ++i){
-		if(a[i] > a[0]){
-			a[i] = a[a[i]];
-		}
+		a[i] = a[a[i]];
 	}
-
-	for(unsigned int i = order + 2; i < graphSize; ++i){
-		if(a[i] > a[0]){
-			a[i] = a[a[i]];
-		}
+	
+	unsigned int v = order;
+	while(a[v] == v){
+		--v;
 	}
-
-	unsigned int v = a[0];
-	for(unsigned int i = graphSize-1; i> a[0]+1; --i){
+	for(unsigned int i = graphSize - 1; i > order + 1; --i){
 		if(a[i] == v){
 			a[i] = a[v];
-			a[v]= i;
+			a[v] = i;
 			--v;
+			while(a[v] == v){
+				--v;
+			}
 		}
 	}
-
-
 	return; 
 }
 
