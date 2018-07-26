@@ -20,7 +20,10 @@ This section gives you a brief overview over the implemented algorithms and data
 For some data structure and algorithm we also provide a folklore implementation that we use to check the space efficient algorithm and to run runtime and space consumption tests.
 
 ## Algorithms
-* Depth First Search: Runs the folklore depth first search in O(n + m) time, using O((n + m) log n) bits.
+* Depth First Search
+    * A folklore depth first search that runs in O(n + m) time, using O((n + m) log n) bits.
+    * [Details](docs/n-bit-dfs) A depth first search that runs in O((n + m) log n) time, using O((log(3)+ε) n) bits.
+    
 
 ## Data Structures
 * Bitset(n): A bitset of n bits that supports access in O(1) time and occupies O(n) bits.
