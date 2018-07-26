@@ -48,9 +48,10 @@ set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemo
 
 # --- submodule management --- #
 
+set(Gtest_path "${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest") 
 add_custom_target(InstallSubmodules
         COMMAND git submodule update --init)
-IF((NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest/.git") AND EXISTS "${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest")
+IF(((NOT EXISTS "${Gtest_path}/.git") OR IS_DIRECTORY "${Gtest_path}/.git") AND EXISTS "${Gtest_path}")
         add_custom_target(CleanGtest
         COMMAND echo "Removing old 'gtest' folder..."
         COMMAND rm -rf third-party/gtest)
