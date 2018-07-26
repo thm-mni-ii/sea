@@ -152,7 +152,7 @@ class LinearTimeInplaceDFSRunner {
     unsigned int *A;
     unsigned int n;
     unsigned int N;
-    unsigned int startVertex;
+    unsigned int m_startVertex;
     unsigned int startPos;
 
     // only for debugging
@@ -165,12 +165,12 @@ class LinearTimeInplaceDFSRunner {
         std::cout << "this->N = " << this->N << std::endl;
     }
 
-    void run(unsigned int startVertex) {
-        this->startVertex = startVertex;
+    void run(const unsigned int t_startVertex) {
+        this->m_startVertex = t_startVertex;
         unsigned int p = n + 2;
-        std::cout << "Start vertex: " << startVertex << std::endl;
+        std::cout << "Start vertex: " << t_startVertex << std::endl;
         std::cout << "Start with position: " << p << std::endl;
-        while (A[p] != startVertex && p <= N) {
+        while (A[p] != t_startVertex && p <= N) {
             p = p + 1;
         }
 
@@ -205,7 +205,7 @@ class LinearTimeInplaceDFSRunner {
     }
 
     void printState() {
-        for (int i = 0; i <= this->N; i++) {
+        for (unsigned int i = 0; i <= this->N; i++) {
             std::cout << this->A[i] << "\t";
             if (i == 0 || i == this->n + 1) {
                 std::cout << " | ";
@@ -213,12 +213,12 @@ class LinearTimeInplaceDFSRunner {
         }
         std::cout << std::endl;
         std::cout << "\t\t\t\t\t\t   ";
-        for (int i = this->n + 2; i <= this->N; i++) {
+        for (unsigned int i = this->n + 2; i <= this->N; i++) {
             std::cout << rA(i) << "\t";
         }
         std::cout << std::endl;
         std::cout << "\t\t\t\t\t\t   ";
-        for (int i = this->n + 2; i <= this->N; i++) {
+        for (unsigned int i = this->n + 2; i <= this->N; i++) {
             std::cout << rA_(i) << "\t";
         }
         std::cout << std::endl;
@@ -247,11 +247,11 @@ class LinearTimeInplaceDFSRunner {
     }
 
     bool isWhite(unsigned int p) {
-        bool start = name(p) != this->startVertex;
+        bool start = name(p) != this->m_startVertex;
         unsigned int p1 = A[p + 1]; // where do I point to
 
         std::cout << "isWhite(" << p << ") == " << start << " && " << name(p1) << " | A[" << 7 << " + 1] = " << p1 <<  std::endl;
-        return name(p) != this->startVertex && name(A[p + 1]) != 0;
+        return name(p) != this->m_startVertex && name(A[p + 1]) != 0;
     }
 
     void visit(unsigned int p) {
@@ -361,7 +361,6 @@ class LinearTimeInplaceDFSRunner {
 
     void goToChild(unsigned int p) {
         unsigned int q = rA_(p); // First
-        unsigned int v = name(q); // Second
 
         // Is v discovered from the first position?
         bool fromFirstPosition = name(p) != 0;
@@ -380,6 +379,6 @@ class LinearTimeInplaceDFSRunner {
 };
 
 void DFS::runLinearTimeInplaceDFS(unsigned int *graph, unsigned int startVertex) {
-    LinearTimeInplaceDFSRunner *ilDFSRunner = new LinearTimeInplaceDFSRunner(graph);
+    auto *ilDFSRunner = new LinearTimeInplaceDFSRunner(graph);
     ilDFSRunner->run(startVertex);
 }
