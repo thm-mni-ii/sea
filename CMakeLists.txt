@@ -24,9 +24,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # --------------------------------------------------- #
 ExternalProject_Add(GTEST_PROJECT
         SOURCE_DIR third-party/gtest
-        TMP_DIR third-party/TEMP
-        STAMP_DIR third-party/TEMP
-        BINARY_DIR third-party/BIN
+        TMP_DIR third-party/TEMP/gtest
+        STAMP_DIR third-party/TEMP/gtest
+        BINARY_DIR third-party/BIN/gtest
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS "-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=OFF -DINSTALL_GMOCK=OFF"
         INSTALL_COMMAND ""
@@ -49,9 +49,8 @@ set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemo
 # --- submodule management --- #
 
 add_custom_target(InstallSubmodules
-        COMMAND echo Installing submodules...
         COMMAND git submodule update --init)
-IF(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest/.git")
+IF((NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest/.git") AND EXISTS "${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest")
         add_custom_target(CleanGtest
         COMMAND echo "Removing old 'gtest' folder..."
         COMMAND rm -rf third-party/gtest)
