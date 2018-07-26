@@ -23,9 +23,9 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes,
 				++edges;
 			}
 		}
-		//at least 2 egdes
-		if(edges < 3){
-			edges = 2;
+		//graph temporarily cant generate graphs with nodes of order 1
+		if(edges == 1){
+			edges = 0;
 		}
 		numEdges += edges;
 		edgeArray[i] = edges;
