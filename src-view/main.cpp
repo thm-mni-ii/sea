@@ -10,7 +10,7 @@ int main() {
     auto *graph = new unsigned int[19]{ 5, 9, 7, 9, 9, 7, 12, 1, 17, 2, 12, 14, 3, 14, 4, 12, 17, 5, 14 };
     auto *graph3 = new unsigned int[19]{ /*n*/ 3, 7, 5, 5, /*m*/ 6, 1, 9, 2, 9, 3, 7 };
 
-    DFS::runLinearTimeInplaceDFS(graph, 1);
+    DFS::runKamSDFS(graph, 1);
 
 //    unsigned int order = 4;
 //    unsigned int **adj_mtrx = new unsigned int *[order];

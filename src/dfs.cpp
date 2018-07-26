@@ -159,8 +159,7 @@ class LinearTimeInplaceDFSRunner {
     bool reachedEnd = false;
 
  public:
-    LinearTimeInplaceDFSRunner(unsigned int *graph) {
-        this->A = graph;
+    LinearTimeInplaceDFSRunner(unsigned int *graph) : A(graph) {
         this->n = A[0];
         this->N = A[n + 1] + n + 1;
         std::cout << "this->N = " << this->N << std::endl;
@@ -175,15 +174,35 @@ class LinearTimeInplaceDFSRunner {
             p = p + 1;
         }
 
-        // TODO: if p > N => not found => panic
+        // TODO(Andrej Sajenko): if p > N => not found => panic
         this->startPos = p;
         visit(p);
     }
 
  private:
-    unsigned int rA(unsigned int i) { if (A[i] == 0 || A[i] > n) return A[i]; else return A[A[i]]; }
-    void wA(unsigned int i, unsigned int v) { if (A[i] == 0 || A[i] > n) A[i] = v; else A[A[i]] = v; }
-    unsigned int name(unsigned int i) { if (A[i] <= n) return A[i]; else return 0u; }
+    unsigned int rA(unsigned int i) {
+        if (A[i] == 0 || A[i] > n) {
+            return A[i];
+        } else {
+            return A[A[i]];
+        }
+    }
+
+    void wA(unsigned int i, unsigned int v) {
+        if (A[i] == 0 || A[i] > n) {
+            A[i] = v;
+        } else {
+            A[A[i]] = v;
+        }
+    }
+
+    unsigned int name(unsigned int i) {
+        if (A[i] <= n) {
+            return A[i];
+        } else {
+            return 0u;
+        }
+    }
 
     void printState() {
         for (int i = 0; i <= this->N; i++) {
