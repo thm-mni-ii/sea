@@ -22,10 +22,6 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes,
 				++edges;
 			}
 		}
-		//graph temporarily cant generate graphs with nodes of order 1
-		if(edges == 1){
-			edges = 0;
-		}
 		numEdges += edges;
 		edgeArray[i] = edges;
 	}
