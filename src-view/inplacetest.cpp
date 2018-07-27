@@ -16,44 +16,17 @@ void printGraph(unsigned int* a){
 	std::cout << std::endl;
 }
 int main(){
-std::srand(static_cast<unsigned int>(std::time(nullptr)));
-  unsigned int n = 50;
+	std::srand(static_cast<unsigned int>(std::time(nullptr)));
+  unsigned int n = 30000;
   float p = 0.5;	
-  unsigned int error = 0;
-  for(unsigned int i = 0; i < 1000; ++i){
 	 unsigned int *a = Graphrepresentations::generateStandardGraph(n,p);
-  	 unsigned int size = a[0] + a[a[0] + 1] + 2;
-  	 unsigned int *b = new unsigned int[size];
-		for(unsigned int j = 0; j < size; j++){
-		  b[j] = a[j];
-		}
-	//std::cout << "standard representation:" << std::endl;
-	//printGraph(a);
-	Graphrepresentations::standardToBeginpointer(a);
-	//std::cout << "beginpointer representation:" << std::endl;
-	//printGraph(a);
-	Graphrepresentations::swapRepresentation(a);
-	//std::cout << "swapped beginpointer representation:" << std::endl;
-	//printGraph(a);
-	Graphrepresentations::swappedBeginpointerToStandard(a);
-	//std::cout << "a standard representation:" << std::endl;
-	//printGraph(a);
-   bool equal = true;
-   for(unsigned int j = 0; j < size; j++){
-	  if(b[j] != a[j]){
-		 equal = false;
-		 }
-	}
-	if(!equal){
-//	std::cout << "b standard representation:" << std::endl;
-//	printGraph(b);
-//	std::cout << std::endl;
-	  error++;
-	}
+	 std::cout << "standard representation:" << std::endl;
+	 printGraph(a);
+	 Graphrepresentations::standardToBeginpointer(a);
+	 Graphrepresentations::swapRepresentation(a);
+	 printGraph(a);
+	 DFS::runLinearTimeInplaceDFS(a,3);
   delete a;
-  delete b;
-  }
-  std::cout << error << std::endl;
 	return 0;
 }
 
