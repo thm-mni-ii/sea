@@ -1,4 +1,5 @@
 //delete later
+#include <stdlib.h>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -14,7 +15,6 @@
 unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes, float p){
 	unsigned int numEdges = 0;
 	unsigned int* edgeArray = new unsigned int[numNodes];
-	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 	for(unsigned int i = 0; i < numNodes; ++i){
 		unsigned int edges = 0;
 		for(unsigned int j = 1; j < numNodes; ++j){
@@ -23,20 +23,27 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes,
 				++edges;
 			}
 		}
-		//at least 2 egdes
-		if(edges < 3){
-			edges = 2;
-		}
 		numEdges += edges;
 		edgeArray[i] = edges;
 	}
 	unsigned int* graph = new unsigned int[numNodes+numEdges+2];
 	graph[0] = numNodes;
 	graph[numNodes+1] = numEdges;
-	//the first node always points one after the stored number of edges
-	graph[1] = numNodes+2;
+	unsigned int lastPosition = numNodes+2;
+	if(edgeArray[0] == 0){
+		graph[1] = 1;
+	}else{
+		graph[1] = lastPosition;
+		lastPosition += edgeArray[0];
+	}
+
 	for(unsigned int i = 2; i <= numNodes; ++i){
-		graph[i] = graph[i-1] + edgeArray[i-2];
+		if(edgeArray[i-1] == 0){
+			graph[i] = i;
+		}else{
+			graph[i] = lastPosition;
+			lastPosition += edgeArray[i-1];
+		}
 	}
 	bool initialBit = 0;
 	if(p > 0.5){
@@ -94,7 +101,41 @@ unsigned int* Graphrepresentations::graphToStandard(Graph *g){
 	return standardgraph;
 }
 
+
+Graph* Graphrepresentations::standardToGraph(unsigned int* a){
+	unsigned int order = a[0]; 
+	unsigned int numEdges = a[order+1];
+	//save the total number of edges in order+1 so we dont have to
+	//determine the last vertex in a special case
+	a[order+1] = numEdges + order + 2;
+  Node *nodes = static_cast<Node *>(malloc(sizeof(Node) * order));
+	for(unsigned int i = 0; i < order; ++i){
+		//vertex names in standard representations start at 1
+		unsigned int v = i+1;
+		//if a node points to itself it has no edges
+		if(a[v] == v){
+			nodes[i] = Node(nullptr,0);
+		}else{
+			//if the neighboring nodes are pointing on themself 
+			//we have to skip them to determine the degree
+			unsigned int pos = 1;	
+			while(a[v+pos] < order + 1){
+				++pos;
+			}
+			unsigned int degree = a[v+pos] - a[v];	
+			Adjacency* adj = static_cast<Adjacency *>(malloc(sizeof(Adjacency) * degree));
+			for(unsigned int j = 0; j < degree; ++j){
+				//a[a[v]] points to adj array of v
+				adj[j] = Adjacency(a[a[v]+j]-1);
+			}
+			nodes[i] = Node(adj,degree);
+		}
+	}
+	return new Graph(nodes,order);
+}
+
 // Transforms graph inplace from standard representation to crosspointer representation
+// TODO: handle graphs with nodes of order 0 and 1
 void Graphrepresentations::standardToCrosspointer(unsigned int* a){
 	unsigned int n = a[0],v,u,pv,pu;	
 	//n = order of the graph
@@ -128,7 +169,10 @@ void Graphrepresentations::standardToBeginpointer(unsigned int* a){
 	unsigned int numEdges = a[order + 1];
 	unsigned int graphSize = order + numEdges + 2;
 	for(unsigned int i = order + 2; i < graphSize; ++i){
-		a[i] = a[a[i]];
+		//checks if a[i] is not a node of order 0
+		if(a[a[i]] != a[a[i]-1] || i == order + 2){
+			a[i] = a[a[i]];
+		}
 	}
 	return; 
 }
@@ -138,28 +182,29 @@ void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
 	unsigned int order = a[0];
 	unsigned int numEdges = a[order + 1];
 	unsigned int graphSize = order + numEdges + 2;
+	for(unsigned int i = order+2; i < graphSize ; ++i){
+		if(a[i] > order){
+			a[i] = a[a[i]];
+		}
+	}
 	for(unsigned int i = 1; i <= order; ++i){
-		if(a[i] > a[0]){
-			a[i] = a[a[i]];
-		}
+		a[i] = a[a[i]];
 	}
 
-	for(unsigned int i = order + 2; i < graphSize; ++i){
-		if(a[i] > a[0]){
-			a[i] = a[a[i]];
-		}
+	unsigned int v = order;
+	while(a[v] == v){
+		--v;
 	}
-
-	unsigned int v = a[0];
-	for(unsigned int i = graphSize-1; i> a[0]+1; --i){
+	for(unsigned int i = graphSize - 1; i > order + 1; --i){
 		if(a[i] == v){
 			a[i] = a[v];
-			a[v]= i;
+			a[v] = i;
 			--v;
+			while(a[v] == v){
+				--v;
+			}
 		}
 	}
-
-
 	return; 
 }
 

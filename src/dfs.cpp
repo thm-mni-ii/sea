@@ -194,12 +194,12 @@ class LinearTimeInplaceDFSRunner {
             }
         }
         std::cout << std::endl;
-        std::cout << "\t\t\t\t\t\t   ";
+        std::cout << "\t\t\t\t\t\t\t\t   ";
         for (unsigned int i = this->n + 2; i <= this->N; i++) {
             std::cout << rA(i) << "\t";
         }
         std::cout << std::endl;
-        std::cout << "\t\t\t\t\t\t   ";
+        std::cout << "\t\t\t\t\t\t\t\t   ";
         for (unsigned int i = this->n + 2; i <= this->N; i++) {
             std::cout << rA_(i) << "\t";
         }
