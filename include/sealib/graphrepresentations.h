@@ -33,6 +33,7 @@ class Graphrepresentations{
 		 * @param g graph G(V,E) to transform
 		 */
 		static unsigned int* graphToStandard(Graph *g);
+		static Graph* standardToGraph(unsigned int* a);
 		/**
 		 * Transforms graph inplace from standard to 
 		 * crosspointer representation
