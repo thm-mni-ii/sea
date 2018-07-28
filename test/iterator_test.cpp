@@ -83,7 +83,6 @@ TEST(IteratorTest, iterator_integrity) {
         c->insert(number);
     }
 
-    std::cout << c->get(4092);
     iterator->init();
     while (iterator->more()) {
         unsigned long int index = iterator->next();
@@ -94,6 +93,7 @@ TEST(IteratorTest, iterator_integrity) {
             }
         }
     }
+
     ASSERT_EQ(count, 1024);
     delete iterator;
     delete c;

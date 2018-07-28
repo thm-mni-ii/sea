@@ -5,30 +5,58 @@ using Sealib::Iterator;
 Iterator::Iterator(ChoiceDictionary *_choicedictionary) { choicedictionary = _choicedictionary; }
 
 void Iterator::init() {
-    activeBlock = choicedictionary->getColoredBlock();
-    blockValue = choicedictionary->getBlockValue(activeBlock);
+    pointer = 0;
+    primaryWord = 0;
+    secondaryWord = 0;
+
+    if (hasNextSecondary()) {
+        setNextSecondaryWord();
+        setNextPrimaryWord();
+    }
 }
 
 bool Iterator::more() {
-    if (blockValue == 0) {
-        unsigned long int newBlock = choicedictionary->getColoredBlock(activeBlock);
-        if (newBlock > activeBlock) {
-            activeBlock = newBlock;
-            blockValue = choicedictionary->getBlockValue(activeBlock);
-        } else {
-            return false;
+    if (primaryWord == 0) {
+        if (secondaryWord == 0) {
+            if (hasNextSecondary())
+                setNextSecondaryWord();
+            else
+                return false;
         }
+        setNextPrimaryWord();
     }
     return true;
 }
 
 unsigned long int Iterator::next() {
-    int nextColor = __builtin_clzl(blockValue);
-        unsigned long int operatorBit =
-            1UL << (choicedictionary->getBlockSize() - (unsigned long int)nextColor - SHIFT_OFFSET);
-        blockValue = blockValue & ~operatorBit;
+    unsigned long int wordSize = choicedictionary->getWordSize();
+    int nextIndex = __builtin_clzl(primaryWord);
+    unsigned long int targetBit =
+        wordSize - (unsigned long int)nextIndex - SHIFT_OFFSET;
+    targetBit = 1UL << targetBit;
+    primaryWord = primaryWord & ~targetBit;
 
-    return (activeBlock * choicedictionary->getBlockSize()) + (unsigned long int)nextColor;
+    return (secondaryIndex * wordSize + primaryIndex * wordSize) +
+           (unsigned long int)nextIndex;
+}
+
+bool Iterator::hasNextSecondary() { return choicedictionary->pointerIsValid(pointer); }
+
+void Iterator::setNextSecondaryWord() {
+    secondaryIndex = choicedictionary->getPointerTarget(pointer);
+    secondaryWord = choicedictionary->getSecondaryWord(secondaryIndex);
+    pointer++;
+}
+
+void Iterator::setNextPrimaryWord() {
+    unsigned long int targetBit;
+
+    primaryIndex = (unsigned long int)__builtin_clzl(secondaryWord);
+    targetBit = choicedictionary->getWordSize() - primaryIndex - SHIFT_OFFSET;
+    targetBit = 1UL << targetBit;
+
+    secondaryWord = secondaryWord & ~targetBit;
+    primaryWord = choicedictionary->getPrimaryWord(primaryIndex);
 }
 
 // void Iterator::close() {}

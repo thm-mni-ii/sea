@@ -1,137 +1,163 @@
 #include "sealib/choicedictionary.h"
+#include <exception>
+#include <iostream>
 
 using Sealib::ChoiceDictionary;
 
 ChoiceDictionary::ChoiceDictionary(unsigned long int length) {
     pointer = 0;
-    blockSize = sizeof(unsigned long int) * 8;
+    wordSize = sizeof(unsigned long int) * 8;
     createDataStructure(length);
 }
 
 void ChoiceDictionary::insert(unsigned long int index) {
-    unsigned int blockIndex = (unsigned int)index / blockSize;
-    unsigned int innerId = index % blockSize;
-    unsigned long int value = 0;
+    unsigned long int primaryValue;
+    unsigned long int primaryBitPosition;
 
-    if (isInitialized(blockIndex)) value = primary[blockIndex];
-    unsigned long int newColor = 1ULL << (blockSize - SHIFT_OFFSET - innerId);
+    unsigned long int wordIndex = index / (unsigned long int)wordSize;
+    unsigned int innerId = index % wordSize;
 
-    primary[blockIndex] = value | newColor;
+    if (isInitialized(wordIndex))
+        primaryValue = primary[wordIndex];
+    else
+        primaryValue = 0;
 
-    updateSecondary(blockIndex);
+    primaryBitPosition = 1ULL << (wordSize - SHIFT_OFFSET - innerId);
+    primary[wordIndex] = primaryValue | primaryBitPosition;
+
+    updateSecondary(wordIndex);
 }
 
 bool ChoiceDictionary::get(unsigned long int index) {
-    unsigned long int blockIndex = index / blockSize;
-    unsigned long int secondaryBlockIndex = blockIndex / blockSize;
-    unsigned int linkedBlock = tertiary[blockIndex];
-    if (linkedBlock >= wordCount || validator[linkedBlock] != (unsigned int)blockIndex)
-        return false;
-    unsigned long int secondaryBlock = 1UL << (blockSize - SHIFT_OFFSET - blockIndex);
+    unsigned long int primaryValue;
+    unsigned long int primaryBitPosition;
 
-    if ((secondary[secondaryBlockIndex] & secondaryBlock) == 0) return false;
+    unsigned long int wordIndex = index / wordSize;
+    unsigned int innerId = index % wordSize;
 
-    unsigned int innerId = index % blockSize;
-    unsigned long int primaryValue = primary[blockIndex];
-    unsigned long int primaryPosition = 1UL << (blockSize - SHIFT_OFFSET - innerId);
+    primaryValue = primary[wordIndex];
+    primaryBitPosition = 1UL << (wordSize - SHIFT_OFFSET - innerId);
 
-    if ((primaryValue & primaryPosition) == 0) return false;
-
-    return true;
+    return (primaryValue & primaryBitPosition) != 0;
 }
 
-long int ChoiceDictionary::choice() {
-    unsigned long int blockId = validator[pointer - 1];
-    unsigned long int primaryValue = primary[blockId];
+unsigned long int ChoiceDictionary::choice() {
+    unsigned long int colorIndex;
+    unsigned long int primaryValue;
+    unsigned long int primaryIndex;
+    unsigned long int secondaryValue;
+    int innerIndex;
 
-    long int colorIndex = (long int)blockId * (long int)blockSize;
-    long int innerIndex = __builtin_clzl(primaryValue);
-    colorIndex += innerIndex;
+    try {
+        unsigned long int secondaryIndex = validator[pointer - POINTER_OFFSET] - TUPEL_OFFSET;
+        secondaryValue = secondary[secondaryIndex * TUPEL_FACTOR];
 
+        primaryIndex = (unsigned long int)__builtin_clzl(secondaryValue);
+        primaryValue = primary[primaryIndex];
+    } catch (const std::exception &e) {
+        std::cerr << e.what();
+    }
+
+    colorIndex = primaryIndex * (unsigned long int)wordSize;
+    innerIndex = __builtin_clzl(primaryValue);
+
+    colorIndex += (unsigned long int)innerIndex;
     return colorIndex;
 }
 
-unsigned long int ChoiceDictionary::getColoredBlock() {
-    if (pointer - 1 > 0 && isInitialized(0))
-        return validator[0];
+bool ChoiceDictionary::pointerIsValid(unsigned long int nextPointer) {
+    if (nextPointer >= pointer) return false;
+
+    unsigned long int secondaryWordIndex = validator[nextPointer];
+    if (secondaryWordIndex > (wordCount / wordSize + 1) * TUPEL_FACTOR) return false;
+
+    if (nextPointer == secondary[secondaryWordIndex])
+        return true;
     else
-        return 0;
+        return false;
 }
 
-unsigned long int ChoiceDictionary::getColoredBlock(unsigned long int prevBlock) {
-    unsigned int prevValidatorPos = tertiary[prevBlock];
-    if (prevValidatorPos + 1 < pointer)
-        return validator[prevValidatorPos + 1];
-    else
-        return 0;
+unsigned long int ChoiceDictionary::getPointerTarget(unsigned long int nextPointer) {
+    return validator[nextPointer] - TUPEL_OFFSET;
 }
 
-unsigned long int ChoiceDictionary::getBlockValue(unsigned long int blockIndex) {
-    if (isInitialized(blockIndex))
-        return primary[blockIndex];
-    else
-        return 0;
+unsigned long int ChoiceDictionary::getPrimaryWord(unsigned long int primaryIndex) {
+    return primary[primaryIndex];
 }
 
-unsigned int ChoiceDictionary::getBlockSize() { return blockSize; }
+unsigned long int ChoiceDictionary::getSecondaryWord(unsigned long int secondaryIndex) {
+    return secondary[secondaryIndex];
+}
+
+unsigned int ChoiceDictionary::getWordSize() { return wordSize; }
+
+unsigned long int ChoiceDictionary::getSecondarySize() {
+    return wordCount / (unsigned long int)wordSize + 1;
+}
 
 void ChoiceDictionary::createDataStructure(unsigned long int length) {
-    wordCount = length / blockSize;
-    if (length % blockSize != 0) wordCount += 1;
+    unsigned long int secondaryLength;
 
-    unsigned int secondaryLength = (unsigned int)(wordCount / blockSize);
-    if (wordCount % blockSize != 0) secondaryLength += 1;
+    wordCount = length / wordSize + 1;
+    secondaryLength = wordCount / (unsigned long int)wordSize + 1;
 
     createPrimary();
     createSecondary(secondaryLength);
-    createTertiary(secondaryLength);
+    createValidator(secondaryLength);
 }
 
 void ChoiceDictionary::createPrimary() { primary = new unsigned long int[wordCount]; }
 
 void ChoiceDictionary::createSecondary(unsigned long int secondaryLength) {
-    secondary = new unsigned long int[secondaryLength];
+    secondary = new unsigned long int[secondaryLength * TUPEL_FACTOR];
 }
 
-void ChoiceDictionary::createTertiary(unsigned long int tertiaryLength) {
-    unsigned long int size = tertiaryLength * blockSize;
-    tertiary = new unsigned int[size];
-    validator = new unsigned int[size];
+void ChoiceDictionary::createValidator(unsigned long int validatorLength) {
+    validator = new unsigned long int[validatorLength];
 }
 
-void ChoiceDictionary::updateSecondary(unsigned long int blockIndex) {
-    unsigned long int secondaryValue = 0;
-    unsigned long int secondaryIndex = blockIndex / blockSize;
-    if (pointer > 0) secondaryValue = secondary[secondaryIndex];
+void ChoiceDictionary::updateSecondary(unsigned long int wordIndex) {
+    unsigned long int secondaryBitPosition;
+    unsigned long int secondaryValue;
+    unsigned long int secondaryIndex = (wordIndex / wordSize) * TUPEL_FACTOR;
 
-    unsigned long int updatedBlock = 1ULL << (blockSize - SHIFT_OFFSET - blockIndex);
+    if (pointer > secondaryIndex)
+        secondaryValue = secondary[secondaryIndex];
+    else
+        secondaryValue = 0;
 
-    secondary[secondaryIndex] = secondaryValue | updatedBlock;
+    secondaryBitPosition = 1ULL << (wordSize - SHIFT_OFFSET - wordIndex);
 
-    updateTertiary(blockIndex);
+    secondary[secondaryIndex] = secondaryValue | secondaryBitPosition;
+    secondary[secondaryIndex + TUPEL_OFFSET] = makeLink(secondaryIndex);
 }
 
-void ChoiceDictionary::updateTertiary(unsigned long int blockIndex) {
-    unsigned int targetBlock = makeLink(blockIndex);
-    tertiary[blockIndex] = targetBlock;
+unsigned long int ChoiceDictionary::makeLink(unsigned long int secondaryIndex) {
+    unsigned long int validatorIndex;
+
+    if (pointer <= secondaryIndex || pointer == 0) pointer++;
+
+    validatorIndex = pointer - POINTER_OFFSET;
+    validator[validatorIndex] = secondaryIndex + TUPEL_OFFSET;
+
+    return validatorIndex;
 }
 
-unsigned int ChoiceDictionary::makeLink(unsigned long int target) {
-    if (pointer <= target || pointer == 0) pointer++;
-    validator[pointer - 1] = (unsigned int)target;
-    return pointer - 1;
+bool ChoiceDictionary::isInitialized(unsigned long int wordIndex) {
+    unsigned long int secondaryIndex = (wordIndex / wordSize) * TUPEL_FACTOR;
+    unsigned long int secondaryValue = secondary[secondaryIndex];
+    unsigned long int secondaryBitPosition = 1ULL << (wordSize - SHIFT_OFFSET - wordIndex);
+
+    return (secondaryValue & secondaryBitPosition) != 0 && hasColor(wordIndex) && pointer > 0;
 }
 
-bool ChoiceDictionary::isInitialized(unsigned long int blockIndex) {
-    return hasColor(blockIndex) && pointer > 0;
-}
+bool ChoiceDictionary::hasColor(unsigned long int wordIndex) {
+    unsigned long int secondaryWordIndex = (wordIndex / wordSize) * TUPEL_FACTOR;
+    unsigned long int link = secondary[secondaryWordIndex + TUPEL_OFFSET];
 
-bool ChoiceDictionary::hasColor(unsigned long int blockIndex) {
-    unsigned long int linkedBlock = tertiary[blockIndex];
-
-    if (linkedBlock >= wordCount * blockSize) {
+    if (link > wordCount / wordSize) {
         return false;
-    } else if (validator[linkedBlock] != blockIndex) {
+    } else if (validator[link] != secondaryWordIndex + TUPEL_OFFSET) {
         return false;
     } else {
         return true;
@@ -141,6 +167,5 @@ bool ChoiceDictionary::hasColor(unsigned long int blockIndex) {
 ChoiceDictionary::~ChoiceDictionary() {
     delete[] primary;
     delete[] secondary;
-    delete[] tertiary;
     delete[] validator;
 }

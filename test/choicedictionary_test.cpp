@@ -8,6 +8,10 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     ChoiceDictionary *c = new ChoiceDictionary(size);
 
     // insert into Choice Dictionary and test if choice() returns the correct
+    c->insert(123UL);
+    ASSERT_EQ(c->choice(), 123);
+    c->insert(94UL);
+    ASSERT_EQ(c->choice(), 94);
     c->insert(63UL);
     ASSERT_EQ(c->choice(), 63);
     c->insert(35UL);
@@ -16,10 +20,7 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     ASSERT_EQ(c->choice(), 23);
     c->insert(12UL);
     ASSERT_EQ(c->choice(), 12);
-    c->insert(123UL);
-    ASSERT_EQ(c->choice(), 123);
-    c->insert(94UL);
-    ASSERT_EQ(c->choice(), 94);
+
 
     // verify inserted values
     ASSERT_TRUE(c->get(63));
