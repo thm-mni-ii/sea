@@ -27,7 +27,7 @@ class Graphrepresentations{
 		 * @param p = probability of an edge from one node
 		 * to another in percent 0 <= p <= 10
 		 */
-		static unsigned int* generateStandardGraph(unsigned int n,float p);
+		static unsigned int* generateStandardGraph(unsigned int n,double p,std::default_random_engine* gen);
 		/**
 		 * Transforms graph object to standard representation
 		 * @param g graph G(V,E) to transform
