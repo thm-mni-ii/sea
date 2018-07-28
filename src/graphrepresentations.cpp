@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include <random>
 #include "sealib/graphrepresentations.h"
 #include "sealib/graph.h"
 #include "sealib/node.h"
@@ -12,14 +13,15 @@
 
 //	Generates a graph in standard representation with n nodes
 //	and ~p(n*(n-1)/2) edges
-unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes, float p){
+unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes, double p,std::default_random_engine* gen){
 	unsigned int numEdges = 0;
 	unsigned int* edgeArray = new unsigned int[numNodes];
+	std::bernoulli_distribution dist(p);
 	for(unsigned int i = 0; i < numNodes; ++i){
 		unsigned int edges = 0;
+		dist.reset();
 		for(unsigned int j = 1; j < numNodes; ++j){
-			float rnd = static_cast<float>(std::rand())/static_cast<float>(RAND_MAX);
-			if(rnd < p){
+			if(dist(*gen)){
 				++edges;
 			}
 		}
@@ -27,17 +29,12 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes,
 		edgeArray[i] = edges;
 	}
 	unsigned int* graph = new unsigned int[numNodes+numEdges+2];
+
 	graph[0] = numNodes;
 	graph[numNodes+1] = numEdges;
-	unsigned int lastPosition = numNodes+2;
-	if(edgeArray[0] == 0){
-		graph[1] = 1;
-	}else{
-		graph[1] = lastPosition;
-		lastPosition += edgeArray[0];
-	}
 
-	for(unsigned int i = 2; i <= numNodes; ++i){
+	unsigned int lastPosition = numNodes+2;
+	for(unsigned int i = 1; i <= numNodes; ++i){
 		if(edgeArray[i-1] == 0){
 			graph[i] = i;
 		}else{
