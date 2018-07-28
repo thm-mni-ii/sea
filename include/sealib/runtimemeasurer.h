@@ -17,7 +17,7 @@ class RuntimeMeasurer{
 		void printResults();	
 };
 
-RuntimeMeasurer(std::string s){
+RuntimeMeasurer::RuntimeMeasurer(std::string s){
 	path = s;
 };
 
