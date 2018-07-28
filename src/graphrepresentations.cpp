@@ -1,4 +1,5 @@
 //delete later
+#include <stdlib.h>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -100,6 +101,39 @@ unsigned int* Graphrepresentations::graphToStandard(Graph *g){
 	return standardgraph;
 }
 
+
+Graph* Graphrepresentations::standardToGraph(unsigned int* a){
+	unsigned int order = a[0]; 
+	unsigned int numEdges = a[order+1];
+	//save the total number of edges in order+1 so we dont have to
+	//determine the last vertex in a special case
+	a[order+1] = numEdges + order + 2;
+  Node *nodes = static_cast<Node *>(malloc(sizeof(Node) * order));
+	for(unsigned int i = 0; i < order; ++i){
+		//vertex names in standard representations start at 1
+		unsigned int v = i+1;
+		//if a node points to itself it has no edges
+		if(a[v] == v){
+			nodes[i] = Node(nullptr,0);
+		}else{
+			//if the neighboring nodes are pointing on themself 
+			//we have to skip them to determine the degree
+			unsigned int pos = 1;	
+			while(a[v+pos] < order + 1){
+				++pos;
+			}
+			unsigned int degree = a[v+pos] - a[v];	
+			Adjacency* adj = static_cast<Adjacency *>(malloc(sizeof(Adjacency) * degree));
+			for(unsigned int j = 0; j < degree; ++j){
+				//a[a[v]] points to adj array of v
+				adj[j] = Adjacency(a[a[v]+j]-1);
+			}
+			nodes[i] = Node(adj,degree);
+		}
+	}
+	return new Graph(nodes,order);
+}
+
 // Transforms graph inplace from standard representation to crosspointer representation
 // TODO: handle graphs with nodes of order 0 and 1
 void Graphrepresentations::standardToCrosspointer(unsigned int* a){
@@ -156,7 +190,7 @@ void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
 	for(unsigned int i = 1; i <= order; ++i){
 		a[i] = a[a[i]];
 	}
-	
+
 	unsigned int v = order;
 	while(a[v] == v){
 		--v;
