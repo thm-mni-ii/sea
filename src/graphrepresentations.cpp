@@ -1,6 +1,3 @@
-//delete later
-#include <stdlib.h>
-#include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -11,9 +8,7 @@
 #include "sealib/node.h"
 #include "sealib/adjacency.h"
 
-//	Generates a graph in standard representation with n nodes
-//	and ~p(n*(n-1)/2) edges
-unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes, double p,std::default_random_engine* gen){
+unsigned int* Graphrepresentations::generateGilbertGraph(unsigned int numNodes, double p,std::default_random_engine* gen){
 	unsigned int numEdges = 0;
 	unsigned int* edgeArray = new unsigned int[numNodes];
 	std::bernoulli_distribution dist(p);
@@ -72,9 +67,6 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes,
 	return graph;
 }
 
-
-//	Transforms graph from graph.h object to standard representation
-//	as unsigned int array
 unsigned int* Graphrepresentations::graphToStandard(Graph *g){
 	unsigned int order = g->getOrder();
 	unsigned int numEdges = 0;
@@ -98,13 +90,12 @@ unsigned int* Graphrepresentations::graphToStandard(Graph *g){
 	return standardgraph;
 }
 
-
 Graph* Graphrepresentations::standardToGraph(unsigned int* a){
 	unsigned int order = a[0]; 
-	unsigned int numEdges = a[order+1];
-	//save the total number of edges in order+1 so we dont have to
+	unsigned int size = a[order+1];
+	//save the total number of size of the array so we dont have to
 	//determine the last vertex in a special case
-	a[order+1] = numEdges + order + 2;
+	a[order+1] = order + size + 2;
   Node *nodes = static_cast<Node *>(malloc(sizeof(Node) * order));
 	for(unsigned int i = 0; i < order; ++i){
 		//vertex names in standard representations start at 1
@@ -131,8 +122,6 @@ Graph* Graphrepresentations::standardToGraph(unsigned int* a){
 	return new Graph(nodes,order);
 }
 
-// Transforms graph inplace from standard representation to crosspointer representation
-// TODO: handle graphs with nodes of order 0 and 1
 void Graphrepresentations::standardToCrosspointer(unsigned int* a){
 	unsigned int n = a[0],v,u,pv,pu;	
 	//n = order of the graph
@@ -160,7 +149,6 @@ void Graphrepresentations::standardToCrosspointer(unsigned int* a){
 	return; 
 }
 
-// Transforms graph inplace from standard to beginpointer representation 
 void Graphrepresentations::standardToBeginpointer(unsigned int* a){
 	unsigned int order = a[0];
 	unsigned int numEdges = a[order + 1];
@@ -174,7 +162,6 @@ void Graphrepresentations::standardToBeginpointer(unsigned int* a){
 	return; 
 }
 
-// Transforms graph inplace from beginpointer to standard representation 
 void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
 	unsigned int order = a[0];
 	unsigned int numEdges = a[order + 1];
@@ -205,7 +192,11 @@ void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
 	return; 
 }
 
-//Transforms graph inplace from cross or beginpointer to swapped crossor beginpointer representation
+/**
+ * Transforms a graph from cross or beginpointer representation to
+ * swapped cross or beginpointer representation
+ * @param a graph in cross or beginpointer representation
+ */ 
 void Graphrepresentations::swapRepresentation(unsigned int* a){
 	unsigned int order = a[0];
 	for(unsigned int i = 1 ; i <= order; ++i){
