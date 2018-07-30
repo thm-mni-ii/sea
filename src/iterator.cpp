@@ -1,4 +1,5 @@
 #include "sealib/iterator.h"
+#include <iostream>
 
 using Sealib::Iterator;
 
@@ -29,15 +30,17 @@ bool Iterator::more() {
 }
 
 unsigned long int Iterator::next() {
+    unsigned long int newPrimaryValue;
     unsigned long int wordSize = choicedictionary->getWordSize();
-    int nextIndex = __builtin_clzl(primaryWord);
-    unsigned long int targetBit =
-        wordSize - (unsigned long int)nextIndex - SHIFT_OFFSET;
-    targetBit = 1UL << targetBit;
-    primaryWord = primaryWord & ~targetBit;
 
-    return (secondaryIndex * wordSize + primaryIndex * wordSize) +
-           (unsigned long int)nextIndex;
+    unsigned long int nextIndex = (unsigned long int)__builtin_clzl(primaryWord);
+
+    unsigned long int targetBit = wordSize - nextIndex - SHIFT_OFFSET;
+
+    newPrimaryValue = 1UL << targetBit;
+    primaryWord = primaryWord & ~newPrimaryValue;
+
+    return primaryIndex * wordSize + nextIndex;
 }
 
 bool Iterator::hasNextSecondary() { return choicedictionary->pointerIsValid(pointer); }
@@ -50,9 +53,12 @@ void Iterator::setNextSecondaryWord() {
 
 void Iterator::setNextPrimaryWord() {
     unsigned long int targetBit;
+    unsigned long int wordSize = choicedictionary->getWordSize();
+    unsigned long int primaryInnerIndex = (unsigned long int)__builtin_clzl(secondaryWord);
 
-    primaryIndex = (unsigned long int)__builtin_clzl(secondaryWord);
-    targetBit = choicedictionary->getWordSize() - primaryIndex - SHIFT_OFFSET;
+    primaryIndex = (secondaryIndex / 2) * wordSize + primaryInnerIndex;
+
+    targetBit = wordSize - primaryInnerIndex - SHIFT_OFFSET;
     targetBit = 1UL << targetBit;
 
     secondaryWord = secondaryWord & ~targetBit;

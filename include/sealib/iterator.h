@@ -5,16 +5,19 @@
 
 namespace Sealib {
 /**
- * Iteration class to return indices of colors within a choice dictionary.
+ * Iteration class to return all bit positions of a choice dictionary that
+ * are set to 1.
  */
 class Iterator {
 #define SHIFT_OFFSET 1UL
 
-   private:
+ private:
     /**
-     * @param activeBlock Index of the currently read block of the choice
-     * dictionary.
-     * @param blockValue Value of given block.
+     * @param primaryWord Value of the currently used word in primary.
+     * @param secondaryWord Value of the currently used word in secondary.
+     * @param primaryIndex Index of the currently used word in primary.
+     * @param secondaryIndex Index of the currently used word in secondary.
+     * @param pointer currently used pointer Position.
      * @param choicedictionary Pointer to an existing choice dictionary.
      */
     unsigned long int primaryWord, secondaryWord, pointer, primaryIndex, secondaryIndex;
@@ -26,8 +29,7 @@ class Iterator {
 
     void setNextPrimaryWord();
 
-
-   public:
+ public:
     /**
      * Creates an Iterator for a choice dictionary.
      * @param _choicedictionary Pointer to an existing choice dictionary.
@@ -35,20 +37,18 @@ class Iterator {
     explicit Iterator(ChoiceDictionary *_choicedictionary);
 
     /**
-     * Initializes the iterator by getting the value of the first block with
-     * a color of the choice dictionary.
+     * Initializes the iterator.
      */
     void init();
 
     /**
-     * Returns true when there are more indices with a color in the choice
-     * dictionary.
+     * Returns true when there are more bits that are set to 1 in the choice
+     * dictionary and updates the used words if neccessary.
      */
     bool more();
 
     /**
-     * Returns the next index of a color and changes blockValue
-     * accordingly.
+     * Returns the next index of a bit set to 1.
      */
     unsigned long int next();
 
