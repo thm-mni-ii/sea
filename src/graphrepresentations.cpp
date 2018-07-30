@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -8,7 +9,7 @@
 #include "sealib/node.h"
 #include "sealib/adjacency.h"
 
-unsigned int* Graphrepresentations::generateGilbertGraph(unsigned int numNodes, double p,std::default_random_engine* gen){
+unsigned int* Graphrepresentations::generateGilbertGraph(unsigned int numNodes, double p,std::mt19937_64* gen){
 	unsigned int numEdges = 0;
 	unsigned int* edgeArray = new unsigned int[numNodes];
 	std::bernoulli_distribution dist(p);

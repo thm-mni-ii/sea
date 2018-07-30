@@ -29,7 +29,7 @@ class Graphrepresentations{
 		 *	@param p probability of an edge
 		 *	@param gen engine to generate a pseudo random sequence of numbers
 		 */
-		static unsigned int* generateGilbertGraph(unsigned int n,double p,std::default_random_engine* gen);
+		static unsigned int* generateGilbertGraph(unsigned int n,double p,std::mt19937_64* gen);
 		/**
 		 * Copies a graph object declared in graph.h into the standard
 		 * representation used for inplace DFS and BFS
