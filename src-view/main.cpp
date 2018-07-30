@@ -6,7 +6,7 @@
 #include "sealib/graph.h"
 #include "sealib/graphcreator.h"
 #include "sealib/dfs.h"
-#include "sealib/runtimemeasurer.h"
+#include "sealib/runtimetest.h"
 
 int main(){
 	unsigned int n[4] = {1000,3000,10000,30000};
@@ -18,20 +18,20 @@ int main(){
 		p[i*4+3] =  0.02; 
 	}
 	std::default_random_engine gen(std::time(0));
-	RuntimeMeasurer runner;
+	RuntimeTest runner;
 	for(unsigned int i = 0; i < 4; ++i){
 		for(unsigned int j = 0; j < 4; ++j){
 			for(unsigned int k = 0; k< 10; ++k){
 				unsigned int* a = Graphrepresentations::generateGilbertGraph(n[i],p[i*4+j],&gen);
-				//w = num edges
+				//w = size of graph
 				unsigned int w = a[a[0]+1];
 				Graph* g = Graphrepresentations::standardToGraph(a);
 				delete a;
-				runner.runFunction([g](){DFS::standardDFS(g,nullptr,nullptr,nullptr,nullptr);},n[i],w);
+				runner.runTest([g](){DFS::standardDFS(g,nullptr,nullptr,nullptr,nullptr);},n[i],w);
 			}
 		}
 	}
-	runner.printToCSV("/home/simon/runtimeresults.csv");
+	runner.saveCSV("/home/simon/runtimeresults.csv");
 	return 0;
 }
 
