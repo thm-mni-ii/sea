@@ -11,13 +11,13 @@
 
 //	Generates a graph in standard representation with n nodes
 //	and ~p(n*(n-1)/2) edges
-unsigned int* Graphrepresentations::generateStandardGraph(unsigned int n, float p){
-	unsigned int m = 0;
-	unsigned int* edgesarray = new unsigned int[n];
+unsigned int* Graphrepresentations::generateStandardGraph(unsigned int numNodes, float p){
+	unsigned int numEdges = 0;
+	unsigned int* edgeArray = new unsigned int[numNodes];
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
-	for(unsigned int i = 0; i < n; ++i){
+	for(unsigned int i = 0; i < numNodes; ++i){
 		unsigned int edges = 0;
-		for(unsigned int j = 1; j < n; ++j){
+		for(unsigned int j = 1; j < numNodes; ++j){
 			float rnd = static_cast<float>(std::rand())/static_cast<float>(RAND_MAX);
 			if(rnd < p){
 				++edges;
@@ -27,39 +27,45 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int n, float 
 		if(edges < 3){
 			edges = 2;
 		}
-		m += edges;
-		edgesarray[i] = edges;
+		numEdges += edges;
+		edgeArray[i] = edges;
 	}
-	unsigned int* g = new unsigned int[n+m+2];
-	g[0] = n;
-	g[n+1] = m;
+	unsigned int* graph = new unsigned int[numNodes+numEdges+2];
+	graph[0] = numNodes;
+	graph[numNodes+1] = numEdges;
 	//the first node always points one after the stored number of edges
-	g[1] = n+2;
-	for(unsigned int i = 2; i <= n; ++i){
-		g[i] = g[i-1] + edgesarray[i-2];
+	graph[1] = numNodes+2;
+	for(unsigned int i = 2; i <= numNodes; ++i){
+		graph[i] = graph[i-1] + edgeArray[i-2];
 	}
-
-	std::vector<bool> bitvector(n,0);
-
-	for(unsigned int i = 0; i < n; ++i){
-		unsigned int bitsset = 0;
+	bool initialBit = 0;
+	if(p > 0.5){
+		initialBit = 1;
+	}
+	std::vector<bool> bitVector(numNodes,initialBit);
+	for(unsigned int i = 0; i < numNodes; ++i){
+		unsigned int numBitsSet = 0;
 		//a[i] = number of edges from i
-		while(edgesarray[i] > bitsset){
-			unsigned int rnd = std::rand() % n;
-			if(bitvector[rnd] == false && rnd != i){
-				bitvector[rnd] = true;
-				bitsset += 1;
+		unsigned int bitsToSet = edgeArray[i];
+		if(initialBit == 1){
+			bitsToSet = numNodes - bitsToSet;
+		}
+		while(edgeArray[i] > numBitsSet){
+			unsigned int rnd = std::rand() % numNodes;
+			if(bitVector[rnd] == initialBit && rnd != i){
+				bitVector[rnd] = !initialBit;
+				numBitsSet += 1;
 			}
 		}
-		unsigned int pos = g[i+1];
-		for(unsigned int j = 0; j < n; ++j){
-			if(bitvector[j] == true){
-				g[pos++] = j+1;
-				bitvector[j] = false;	
+		unsigned int pos = graph[i+1];
+		for(unsigned int j = 0; j < numNodes; ++j){
+			if(bitVector[j] == !initialBit){
+				graph[pos++] = j+1;
+				bitVector[j] = initialBit;	
 			}
 		}
 	}
-	return g;
+	return graph;
 }
 
 
@@ -67,13 +73,13 @@ unsigned int* Graphrepresentations::generateStandardGraph(unsigned int n, float 
 //	as unsigned int array
 unsigned int* Graphrepresentations::graphToStandard(Graph *g){
 	unsigned int order = g->getOrder();
-	unsigned int numedges = 0;
+	unsigned int numEdges = 0;
 	for(unsigned int i = 0; i < order; ++i){
-		numedges += g->getNode(i)->getDegree();
+		numEdges += g->getNode(i)->getDegree();
 	}
-	unsigned int* standardgraph = new unsigned int[order + 2 + numedges];
+	unsigned int* standardgraph = new unsigned int[order + 2 + numEdges];
 	standardgraph[0] = order;
-	standardgraph[order + 1] = numedges;
+	standardgraph[order + 1] = numEdges;
 	unsigned int adjptr = order + 2;
 	for(unsigned int i = 1; i <= order; ++i){
 		Node *node = g->getNode(i-1);
@@ -119,9 +125,9 @@ void Graphrepresentations::standardToCrosspointer(unsigned int* a){
 // Transforms graph inplace from standard to beginpointer representation 
 void Graphrepresentations::standardToBeginpointer(unsigned int* a){
 	unsigned int order = a[0];
-	unsigned int numedges = a[order + 1];
-	unsigned int asize = order + numedges + 2;
-	for(unsigned int i = order + 2; i < asize; ++i){
+	unsigned int numEdges = a[order + 1];
+	unsigned int graphSize = order + numEdges + 2;
+	for(unsigned int i = order + 2; i < graphSize; ++i){
 		a[i] = a[a[i]];
 	}
 	return; 
@@ -130,22 +136,22 @@ void Graphrepresentations::standardToBeginpointer(unsigned int* a){
 // Transforms graph inplace from beginpointer to standard representation 
 void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a){
 	unsigned int order = a[0];
-	unsigned int numedges = a[order + 1];
-	unsigned int asize = order + numedges + 2;
+	unsigned int numEdges = a[order + 1];
+	unsigned int graphSize = order + numEdges + 2;
 	for(unsigned int i = 1; i <= order; ++i){
 		if(a[i] > a[0]){
 			a[i] = a[a[i]];
 		}
 	}
 
-	for(unsigned int i = order + 2; i < asize; ++i){
+	for(unsigned int i = order + 2; i < graphSize; ++i){
 		if(a[i] > a[0]){
 			a[i] = a[a[i]];
 		}
 	}
 
 	unsigned int v = a[0];
-	for(unsigned int i = asize-1; i> a[0]+1; --i){
+	for(unsigned int i = graphSize-1; i> a[0]+1; --i){
 		if(a[i] == v){
 			a[i] = a[v];
 			a[v]= i;
