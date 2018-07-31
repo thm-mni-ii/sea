@@ -15,7 +15,7 @@
 class RuntimeTest{
 	private:
 		std::vector<std::tuple<unsigned int,unsigned int> > parameters;
-		std::vector<double> runtimes; ///<runtime in seconds
+		std::vector<double> runtimes; ///< runtime in seconds
 	public:
 		/**
 		 * Runs a test with a given function and saves the results
@@ -25,7 +25,7 @@ class RuntimeTest{
 		 * @param size size of the tested graph used for running the test
 		 */
 		template<typename Testfunction>
-		void runTest(Testfunction testfunction,unsigned int order, unsigned int size);
+			void runTest(Testfunction testfunction,unsigned int order, unsigned int size);
 		/**
 		 * Prints the testresults to standard output
 		 */
@@ -49,7 +49,7 @@ void RuntimeTest::runTest(Testfunction testfunction, unsigned int order, unsigne
 	testfunction();
 	times(&after);
 	double elapsedTime = ((double)((after.tms_utime + after.tms_stime)
-			- (before.tms_utime + before.tms_stime))) / sysconf(_SC_CLK_TCK);
+				- (before.tms_utime + before.tms_stime))) / sysconf(_SC_CLK_TCK);
 	runtimes.push_back(elapsedTime); 
 } 
 
