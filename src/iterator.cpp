@@ -65,6 +65,4 @@ void Iterator::setNextPrimaryWord() {
     primaryWord = choicedictionary->getPrimaryWord(primaryIndex);
 }
 
-// void Iterator::close() {}
-
 Iterator::~Iterator() {}

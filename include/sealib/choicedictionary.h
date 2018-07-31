@@ -1,19 +1,21 @@
 #ifndef SEALIB_CHOICEDICTIONARY_H_
 #define SEALIB_CHOICEDICTIONARY_H_
 
+#define SHIFT_OFFSET 1UL
+#define POINTER_OFFSET 1UL
+#define TUPEL_OFFSET 1UL
+#define TUPEL_FACTOR 2UL
+
 namespace Sealib {
 /**
  * A choice dictionary is a bitset containing n elements that supports reading
  * and setting a bit in constant time and additionally a so-called choice
  * operation that returns the position of an arbitrary bit that is set to 1
  * in constant time.
+ *
+ * @author Dennis Appel
  */
 class ChoiceDictionary {
-#define SHIFT_OFFSET 1UL
-#define POINTER_OFFSET 1UL
-#define TUPEL_OFFSET 1UL
-#define TUPEL_FACTOR 2UL
-
  private:
     /**
      * @param primary Array Structure where each word represents a subset of

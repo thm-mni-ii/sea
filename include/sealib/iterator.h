@@ -3,14 +3,16 @@
 
 #include "sealib/choicedictionary.h"
 
+#define SHIFT_OFFSET 1UL
+
 namespace Sealib {
 /**
  * Iteration class to return all bit positions of a choice dictionary that
  * are set to 1.
+ *
+ * @author Dennis Appel
  */
 class Iterator {
-#define SHIFT_OFFSET 1UL
-
  private:
     /**
      * @param primaryWord Value of the currently used word in primary.
@@ -51,11 +53,6 @@ class Iterator {
      * Returns the next index of a bit set to 1.
      */
     unsigned long int next();
-
-    /**
-     *
-     */
-    // void close();
 
     ~Iterator();
 };
