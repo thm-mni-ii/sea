@@ -19,7 +19,7 @@ void ChoiceDictionary::insert(unsigned long int index) {
     unsigned long int targetBit;
 
     unsigned long int primaryIndex = index / (unsigned long int)wordSize;
-    unsigned int primaryInnerIndex = index % wordSize;
+    unsigned long int primaryInnerIndex = index % (unsigned long int)wordSize;
 
     if (isInitialized(primaryIndex))
         primaryWord = primary[primaryIndex];
@@ -36,8 +36,8 @@ bool ChoiceDictionary::get(unsigned long int index) {
     unsigned long int primaryWord;
     unsigned long int targetBit;
 
-    unsigned long int primaryIndex = index / wordSize;
-    unsigned int primaryInnerIndex = index % wordSize;
+    unsigned long int primaryIndex = index / (unsigned long int)wordSize;
+    unsigned long int primaryInnerIndex = index % (unsigned long int)wordSize;
 
     primaryWord = primary[primaryIndex];
     targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryInnerIndex);
