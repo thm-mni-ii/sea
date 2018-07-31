@@ -1,5 +1,6 @@
 #ifndef SEA_LIBS_REPS_H
 #define SEA_LIBS_REPS_H
+#include <random>
 #include "sealib/graph.h"
 /**
  * This class contains static functions to change the
