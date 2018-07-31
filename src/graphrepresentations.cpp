@@ -9,28 +9,23 @@
 #include "sealib/node.h"
 #include "sealib/adjacency.h"
 
-unsigned int* Graphrepresentations::generateGilbertGraph(unsigned int numNodes, double p,std::mt19937_64* gen){
-	unsigned int numEdges = 0;
-	unsigned int* edgeArray = new unsigned int[numNodes];
-	std::bernoulli_distribution dist(p);
-	for(unsigned int i = 0; i < numNodes; ++i){
-		unsigned int edges = 0;
+unsigned int* Graphrepresentations::generateGilbertGraph(unsigned int order, double p,std::mt19937_64* gen){
+	unsigned int size = 0;
+	unsigned int* edgeArray = new unsigned int[order];
+	std::binomial_distribution<unsigned int> dist(order-1,p);
+	for(unsigned int i = 0; i < order; ++i){
+		unsigned int edges = dist(*gen);
 		dist.reset();
-		for(unsigned int j = 1; j < numNodes; ++j){
-			if(dist(*gen)){
-				++edges;
-			}
-		}
-		numEdges += edges;
+		size += edges;
 		edgeArray[i] = edges;
 	}
-	unsigned int* graph = new unsigned int[numNodes+numEdges+2];
+	unsigned int* graph = new unsigned int[order+size+2];
 
-	graph[0] = numNodes;
-	graph[numNodes+1] = numEdges;
+	graph[0] = order;
+	graph[order+1] = size;
 
-	unsigned int lastPosition = numNodes+2;
-	for(unsigned int i = 1; i <= numNodes; ++i){
+	unsigned int lastPosition = order+2;
+	for(unsigned int i = 1; i <= order; ++i){
 		if(edgeArray[i-1] == 0){
 			graph[i] = i;
 		}else{
@@ -42,23 +37,23 @@ unsigned int* Graphrepresentations::generateGilbertGraph(unsigned int numNodes, 
 	if(p > 0.5){
 		initialBit = 1;
 	}
-	std::vector<bool> bitVector(numNodes,initialBit);
-	for(unsigned int i = 0; i < numNodes; ++i){
+	std::vector<bool> bitVector(order,initialBit);
+	for(unsigned int i = 0; i < order; ++i){
 		unsigned int numBitsSet = 0;
 		//a[i] = number of edges from i
 		unsigned int bitsToSet = edgeArray[i];
 		if(initialBit == 1){
-			bitsToSet = numNodes - bitsToSet;
+			bitsToSet = order - bitsToSet;
 		}
 		while(edgeArray[i] > numBitsSet){
-			unsigned int rnd = std::rand() % numNodes;
+			unsigned int rnd = std::rand() % order;
 			if(bitVector[rnd] == initialBit && rnd != i){
 				bitVector[rnd] = !initialBit;
 				numBitsSet += 1;
 			}
 		}
 		unsigned int pos = graph[i+1];
-		for(unsigned int j = 0; j < numNodes; ++j){
+		for(unsigned int j = 0; j < order; ++j){
 			if(bitVector[j] == !initialBit){
 				graph[pos++] = j+1;
 				bitVector[j] = initialBit;	
