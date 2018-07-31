@@ -40,7 +40,9 @@ namespace Sealib {
  * @author Simon Heuser
  */
 class DFS {
- public:
+public:
+	// TODO: write documentation!
+	static void runLinearTimeInplaceDFS(unsigned int* graph, unsigned int startVertex);
   /**
    * Run a standard depth-first search over a given graph. <br>
    * EFFICIENCY: O(n+m) time, O(n log n) bits
