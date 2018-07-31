@@ -17,6 +17,7 @@
  *
  * @author Simon Schniedenharn
  */
+using namespace Sealib;
 
 class Graphrepresentations{
 	public:
