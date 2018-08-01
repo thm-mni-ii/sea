@@ -36,6 +36,10 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     ASSERT_EQ(c->choice(), 23);
     c->insert(12UL);
     ASSERT_EQ(c->choice(), 12);
+    c->insert(12000);
+    c->insert(20000);
+    c->remove(12000);
+    ASSERT_FALSE(c->get(12000));
 
 
     // verify inserted values

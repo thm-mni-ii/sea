@@ -52,9 +52,7 @@ unsigned long int ChoiceDictionary::choice() {
     unsigned long int secondaryWord;
     unsigned long int primaryInnerIndex;
 
-    if (pointer == 0) {
-        throw emptyChoiceDictionary();
-    }
+    if (pointer == 0) throw emptyChoiceDictionary();
 
     unsigned long int secondaryIndex = validator[pointer - POINTER_OFFSET] - TUPEL_OFFSET;
     secondaryWord = secondary[secondaryIndex];
@@ -69,6 +67,27 @@ unsigned long int ChoiceDictionary::choice() {
 
     colorIndex += primaryInnerIndex;
     return colorIndex;
+}
+
+void ChoiceDictionary::remove(unsigned long int index) {
+    unsigned long int primaryWord;
+    unsigned long int newPrimaryWord;
+    unsigned long int targetBit;
+
+    unsigned long int primaryIndex = index / (unsigned long int)wordSize;
+    unsigned long int primaryInnerIndex = index % (unsigned long int)wordSize;
+
+    if (!isInitialized(primaryIndex)) return;
+
+    primaryWord = primary[primaryIndex];
+    targetBit = 1ULL << (wordSize - SHIFT_OFFSET - primaryInnerIndex);
+    newPrimaryWord = primaryWord & ~targetBit;
+
+    primary[primaryIndex] = newPrimaryWord;
+
+    if (newPrimaryWord == 0) {
+        removeFromSecondary(primaryIndex);
+    }
 }
 
 unsigned long int ChoiceDictionary::getPrimaryWord(unsigned long int primaryIndex) {
@@ -123,7 +142,7 @@ void ChoiceDictionary::createValidator(unsigned long int validatorSize) {
 }
 
 void ChoiceDictionary::updateSecondary(unsigned long int primaryIndex) {
-    unsigned long int secondaryBitPosition;
+    unsigned long int targetBit;
     unsigned long int secondaryWord;
     unsigned long int secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
     unsigned long int linkTarget = secondary[secondaryIndex + TUPEL_OFFSET];
@@ -136,8 +155,23 @@ void ChoiceDictionary::updateSecondary(unsigned long int primaryIndex) {
         secondary[secondaryIndex + TUPEL_OFFSET] = makeLink(secondaryIndex);
     }
 
-    secondaryBitPosition = 1ULL << (wordSize - SHIFT_OFFSET - primaryIndex);
-    secondary[secondaryIndex] = secondaryWord | secondaryBitPosition;
+    targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryIndex);
+    secondary[secondaryIndex] = secondaryWord | targetBit;
+}
+
+void ChoiceDictionary::removeFromSecondary(unsigned long int primaryIndex) {
+    unsigned long int targetBit;
+    unsigned long int secondaryWord;
+    unsigned long int newSecondaryWord;
+
+    unsigned long int secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
+
+    secondaryWord = secondary[secondaryIndex];
+    targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryIndex);
+    newSecondaryWord = secondaryWord & ~targetBit;
+    secondary[secondaryIndex] = newSecondaryWord;
+
+    if (newSecondaryWord == 0) breakLink(secondaryIndex);
 }
 
 unsigned long int ChoiceDictionary::makeLink(unsigned long int secondaryIndex) {
@@ -151,12 +185,29 @@ unsigned long int ChoiceDictionary::makeLink(unsigned long int secondaryIndex) {
     return validatorIndex;
 }
 
+void ChoiceDictionary::breakLink(unsigned long int secondaryIndex) {
+    unsigned long int validatorIndex = secondary[secondaryIndex + TUPEL_OFFSET];
+    secondary[secondaryIndex + TUPEL_OFFSET] = 0;
+    validator[validatorIndex] = 0;
+    pointer--;
+    if (validatorIndex != pointer) shrinkValidator(validatorIndex);
+}
+
+void ChoiceDictionary::shrinkValidator(unsigned long int startIndex) {
+    unsigned long int secondaryTarget;
+    for (unsigned long int index = startIndex; index < pointer; index++) {
+        secondaryTarget = validator[index + 1];
+        secondary[secondaryTarget] = index;
+        validator[index] = secondaryTarget;
+    }
+}
+
 bool ChoiceDictionary::isInitialized(unsigned long int primaryIndex) {
     unsigned long int secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
     unsigned long int secondaryWord = secondary[secondaryIndex];
-    unsigned long int secondaryBitPosition = 1ULL << (wordSize - SHIFT_OFFSET - primaryIndex);
+    unsigned long int targetBit = 1ULL << (wordSize - SHIFT_OFFSET - primaryIndex);
 
-    return (secondaryWord & secondaryBitPosition) != 0 && hasColor(primaryIndex) && pointer > 0;
+    return (secondaryWord & targetBit) != 0 && hasColor(primaryIndex) && pointer > 0;
 }
 
 bool ChoiceDictionary::hasColor(unsigned long int primaryIndex) {
