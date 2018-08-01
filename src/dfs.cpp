@@ -23,7 +23,7 @@ static void process_standard(uint u0, Graph *g, uint *color,
       if (preProcess != DFS_NOP_PROCESS) preProcess(u);
       color[u] = DFS_GRAY;
     }
-    if (k < g->getNode(u)->getDegree()) {
+    if (k < g->getNodeDegree(u)) {
       s->push(Pair(u, k + 1));
       uint v = g->head(u, k);
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
@@ -64,7 +64,7 @@ static void process_small(uint u0, Graph *g, CompactArray *color,
       if (preProcess != DFS_NOP_PROCESS) preProcess(u);
       color->insert(u, DFS_GRAY);
     }
-    if (k < g->getNode(u)->getDegree()) {
+    if (k < g->getNodeDegree(u)) {
       s->push(Pair(u, k + 1));
       if (s->isAligned()) return;
       uint v = g->head(u, k);
