@@ -1,6 +1,7 @@
 #ifndef SEALIB_BASICGRAPH_H_
 #define SEALIB_BASICGRAPH_H_
 
+#include "sealib/graph.h"
 #include "sealib/node.h"
 
 namespace Sealib {
@@ -11,7 +12,7 @@ namespace Sealib {
  * @complexity (O((n + m) log n)) bits Stores a undirected graph with n vertices and m edges using (n + 4m) log n bits.
  * @author Johannes Meintrup
  */
-class Basicgraph : Graph {
+class Basicgraph : public Graph {
  private:
     Node *nodes;
     unsigned int order;
