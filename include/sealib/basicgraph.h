@@ -32,11 +32,11 @@ class Basicgraph : Graph {
     Node *getNode(unsigned int u);
 
     /**
-    * Returns the degree of the node that v points at.
-    * @param v Vertex v
+    * Returns the degree of the node that u points at.
+    * @param u Vertex u 
     * @return Returns d that is the degree of node v.
     */
-		unsigned int getNodeDegree(unsigned int v) override;
+		unsigned int getNodeDegree(unsigned int u) override;
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
