@@ -8,15 +8,28 @@ Compactgraph::Compactgraph(unsigned int _A[]){
 }
 
 unsigned int Compactgraph::getNodeDegree(unsigned int u){
-	if(u+1 != A[0]){
-		return A[u+1] - A[u+1];
+	//fix index u = u+1
+	++u;
+	//following node
+	if(A[u] == u){return 0;}
+	unsigned int v = u + 1;
+	if(u != getOrder()){
+		unsigned int skip = 0;
+		while(A[v+skip] <= getOrder() && v+skip <= getOrder()){
+			++skip;
+		}
+		v += skip;
+		if(v > getOrder()){
+			return (A[0] + A[A[0]+1] + 2) - A[u];	
+		}
+		return A[v] - A[u];
 	}else{
-		return (A[0] + A[A[0]+1] + 2) - A[u+1];
+		return (A[0] + A[A[0]+1] + 2) - A[u];
 	}
 }
 
 unsigned int Compactgraph::head(unsigned int u, unsigned int k){
-	return A[A[u]+k];
+	return A[A[u+1]+k];
 }
 
 unsigned int Compactgraph::getOrder(){
