@@ -2,9 +2,9 @@
 #define SEALIB_COMPACTGRAPH_H_
 
 #include <memory>
-#include "include/sealib/graph.h"
+#include "sealib/graph.h"
 
-namespace sealib{
+namespace Sealib {
 /**
  * A undirected graph G = (V, E) with nodes V = [0, n - 1].
  * The graph stores its Nodes and Edges inside one coherent array
@@ -17,14 +17,14 @@ namespace sealib{
  */
 class Compactgraph : public Graph{
 	private:
-		std::unique_ptr<unsigned int> A;
+		std::unique_ptr<unsigned int[]> A;
 
 	public:
 		/**
 		 * Creates a compactgraph object out of a pointer to an unsigned int array
 		 * @param A pointer to a graph array in standard representation
 		 */
-		Compactgraph(unsigned int* A);
+		Compactgraph(unsigned int _A[]);
 
     /**
     * Returns the degree of the node that v points at.
