@@ -6,10 +6,10 @@
 #include <random>
 #include <vector>
 #include "sealib/adjacency.h"
-#include "sealib/graph.h"
+#include "sealib/compactgraph.h"
 #include "sealib/node.h"
 
-unsigned int* Graphrepresentations::generateGilbertGraph(unsigned int order,
+Compactgraph* Graphrepresentations::generateGilbertGraph(unsigned int order,
                                                          double p,
                                                          std::mt19937_64* gen) {
   unsigned int size = 0;
@@ -62,9 +62,9 @@ unsigned int* Graphrepresentations::generateGilbertGraph(unsigned int order,
       }
     }
   }
-  return graph;
+  return new Compactgraph(graph);
 }
-
+/*
 unsigned int* Graphrepresentations::graphToStandard(Graph* g) {
   unsigned int order = g->getOrder();
   unsigned int numEdges = 0;
@@ -120,6 +120,7 @@ Graph* Graphrepresentations::standardToGraph(unsigned int* a) {
   }
   return new Graph(nodes, order);
 }
+*/
 
 void Graphrepresentations::standardToCrosspointer(unsigned int* a) {
   unsigned int n = a[0], v, u, pv, pu;

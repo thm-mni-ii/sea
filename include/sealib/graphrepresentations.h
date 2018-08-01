@@ -1,7 +1,7 @@
 #ifndef SEA_LIBS_REPS_H
 #define SEA_LIBS_REPS_H
 #include <random>
-#include "sealib/graph.h"
+#include "sealib/compactgraph.h"
 /**
  * This class contains static functions to change the
  * representation of graph structures and to generate
@@ -30,20 +30,20 @@ class Graphrepresentations {
    *	@param p probability of an edge
    *	@param gen engine to generate a pseudo random sequence of numbers
    */
-  static unsigned int* generateGilbertGraph(unsigned int n, double p,
+  static Compactgraph* generateGilbertGraph(unsigned int n, double p,
                                             std::mt19937_64* gen);
   /**
    * Copies a graph object declared in graph.h into the standard
    * representation used for inplace DFS and BFS
    * @param g Graph to be transformed.
    */
-  static unsigned int* graphToStandard(Graph* g);
+//  static unsigned int* graphToStandard(Graph* g);
   /**
    * Copies a graph from standard representation to a graph object
    * declared in graph.h
    * @param g graph in standard representation
    */
-  static Graph* standardToGraph(unsigned int* g);
+ // static Graph* standardToGraph(unsigned int* g);
   /**
    * Transforms a graph inplace from standard to crosspointer representation
    * @param g graph in standard representation
