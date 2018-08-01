@@ -1,5 +1,5 @@
-#ifndef SEALIB_GRAPH_H_
-#define SEALIB_GRAPH_H_
+#ifndef SEALIB_BASICGRAPH_H_
+#define SEALIB_BASICGRAPH_H_
 
 #include "sealib/node.h"
 
@@ -22,7 +22,7 @@ class Basicgraph : Graph {
      * @param _nodes Array of nodes.
      * @param _order Order of the graph (equals the length of the nodes array).
      */
-    Graph(Node *_nodes, unsigned int _order);
+    Basicgraph(Node *_nodes, unsigned int _order);
 
     /**
      * Getter for a specific node in the nodes array.
@@ -52,4 +52,4 @@ class Basicgraph : Graph {
     unsigned int getOrder() override;
 };
 }  // namespace Sealib
-#endif  // SEALIB_GRAPH_H_
+#endif  // SEALIB_BASICGRAPH_H_
