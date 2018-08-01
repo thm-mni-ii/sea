@@ -2,6 +2,7 @@
 #define SEALIB_COMPACTGRAPH_H_
 
 #include <memory>
+#include "include/sealib/graph.h"
 
 namespace sealib{
 /**
@@ -14,8 +15,7 @@ namespace sealib{
  * @complexity A graph with n nodes and m edges is stored in O(n + m + 2) words
  * @author Simon Schniedenharn 
  */
-
-class Compactgraph : Graph {
+class Compactgraph : public Graph{
 	private:
 		std::unique_ptr<unsigned int> A;
 
@@ -24,7 +24,7 @@ class Compactgraph : Graph {
 		 * Creates a compactgraph object out of a pointer to an unsigned int array
 		 * @param A pointer to a graph array in standard representation
 		 */
-		Compactgraph(unsigned int A*);
+		Compactgraph(unsigned int* A);
 
     /**
     * Returns the degree of the node that v points at.
