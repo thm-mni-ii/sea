@@ -9,7 +9,7 @@ unsigned int Compactgraph::getNodeDegree(unsigned int u){
 	if(u != A[0]){
 		return A[u+1] - A[u];
 	}else{
-		return (A[0] + A[[0]+1] + 2) - A[u];
+		return (A[0] + A[A[0]+1] + 2) - A[u];
 }
 
 unsigned int Compactgraph::head(unsigned int u, unsigned int k){
