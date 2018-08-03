@@ -1,8 +1,13 @@
+#include <sstream>
 #include <iostream>
 #include "sealib/dfs.h"
 #include <stdio.h>
 #include <stack>
 #include "./segmentstack.h"
+
+#define GRADE_ZERO 0
+#define GRADE_ONE 1
+#define GRADE_AT_LEAST_TWO 2
 
 using Sealib::DFS;
 using Sealib::SegmentStack;
@@ -154,6 +159,8 @@ class LinearTimeInplaceDFSRunner {
     unsigned int N;
     unsigned int m_startVertex;
     unsigned int startPos;
+    unsigned int qNext = 0;
+    unsigned int pBar = 0;
 
     // only for debugging
     bool reachedEnd = false;
@@ -180,28 +187,29 @@ class LinearTimeInplaceDFSRunner {
     }
 
  private:
-    unsigned int rA(unsigned int i) {
+    unsigned int& As(unsigned int i) {
         if (A[i] == 0 || A[i] > n) {
             return A[i];
-        } else {
-            return A[A[i]];
         }
-    }
 
-    void wA(unsigned int i, unsigned int v) {
-        if (A[i] == 0 || A[i] > n) {
-            A[i] = v;
-        } else {
-            A[A[i]] = v;
+        if (A[i] == A[A[i]] || A[A[i]] == 0) {
+            return A[i];
         }
+
+        return A[A[i]];
     }
 
     unsigned int name(unsigned int i) {
-        if (A[i] <= n) {
-            return A[i];
-        } else {
-            return 0u;
+        unsigned int x = A[i];
+
+        if (i == x) {
+            return x;
         }
+
+        if (x <= n && A[x] != x && A[x] != 0) {
+            return A[i];
+        }
+        return 0u;
     }
 
     void printState() {
@@ -214,7 +222,7 @@ class LinearTimeInplaceDFSRunner {
         std::cout << std::endl;
         std::cout << "\t\t\t\t\t\t   ";
         for (unsigned int i = this->n + 2; i <= this->N; i++) {
-            std::cout << rA(i) << "\t";
+            std::cout << As(i) << "\t";
         }
         std::cout << std::endl;
         std::cout << "\t\t\t\t\t\t   ";
@@ -225,156 +233,258 @@ class LinearTimeInplaceDFSRunner {
     }
 
     unsigned int rA_(unsigned int i) {
-        unsigned int Ai = rA(i);
-        if (name(i) > 0 || name(Ai) > 0) {
-            return Ai;
-        } else if (name(Ai - 1) > 0) {
-            return rA(Ai - 1);
-        } else {
-            return rA(Ai);
+        if (name(i) == 0) {
+            return As(i);
         }
+
+        auto p = As(i);
+        if (A[p] == p || A[p] == 0) {
+            return p;
+        }
+
+        if (name(p - 1) != 0) {
+            return As(p - 1);
+        }
+
+        return p;
     }
 
     void wA_(unsigned int i, unsigned int v) {
-        unsigned int Ai = rA(i);
-        if (name(i) > 0 || name(Ai) > 0) {
-            return wA(i, v);
-        } else if (name(Ai - 1) > 0) {
-            return wA(Ai - 1, v);
-        } else {
-            return wA(Ai, v);
+        if (name(i) == 0) {
+            As(i) = v;
+            return;
         }
+
+        auto p = As(i);
+        if (A[p] == p) {
+            As(i) = v; // TODO(Andrej) Test
+            return;
+        }
+
+        if (name(p - 1) != 0) {
+            As(p - 1) = v;
+            return;
+        }
+
+        As(p) = v;
     }
 
-    bool isWhite(unsigned int p) {
-        bool start = name(p) != this->m_startVertex;
-        unsigned int p1 = A[p + 1]; // where do I point to
+    bool isWhite(unsigned int vertex) {
+        auto isVisited = A[A[vertex]] > n || A[vertex] == 0 || (A[vertex] <= n && A[vertex] != vertex);
+        auto temp = vertex != this->m_startVertex && !isVisited; // new gray definition
+        std::cout << "isWhite(" << vertex << ") = " << temp << std::endl;
+        return temp;
+        //return name(p) != this->m_startVertex && name(A[p + 1]) != 0;
+    }
 
-        std::cout << "isWhite(" << p << ") == " << start << " && " << name(p1) << " | A[" << 7 << " + 1] = " << p1 <<  std::endl;
-        return name(p) != this->m_startVertex && name(A[p + 1]) != 0;
+    int pointsAtNodeOfGrade(unsigned int p) {
+        unsigned int x = As(p);
+        if (A[x] == x) {
+            return GRADE_ZERO;
+        }
+        // At this point x is a pointer to an adjcency array
+
+        unsigned int ax1 = A[x + 1];
+        if (this->n >= A[x] && ax1 <= this->n && ax1 != As(ax1)) {
+            return GRADE_ONE;
+        }
+        return GRADE_AT_LEAST_TWO;
     }
 
     void visit(unsigned int p) {
         unsigned int v = name(p);
         if (v == 0) {
-            std::cout << "visiting a position that does not store a vertex name" << std::endl;
-            exit(1);
+            std::stringstream ostr;
+            ostr << "Position p: " << p << " does not contain a vertex name, it contains the value: " << A[p];
+            throw std::invalid_argument(ostr.str());
         }
-        // TODO: if v == 0 => panic
 
         std::cout << "Visiting vertex: " << v << std::endl; // replace by preprocess
         printState();
 
         if (reachedEnd) {
             std::cout << "Reached end" << std::endl;
-            //return;
         }
+
+        std::cout << name(6) << name(7) << name(8) << std::endl;
+        std::cout << rA_(6) << rA_(7) << rA_(8) << std::endl;
+        std::cout << name(rA_(6)) << name(rA_(7)) << name(rA_(8)) << std::endl;
 
         nextNeighbor(p, true);
     };
 
-    void nextNeighbor(unsigned int p, bool ignoreFirstCheck) {
-        // First Check
-        //std::cout << "enter nextNeighbor(" << p << ")" << std::endl;
-        bool namedPos = name(p) != 0;
-        if (p > this->N || (namedPos && !ignoreFirstCheck)) {  // Backtracking required
-            if (p > this->N) {
-                std::cout << "Reached end of memory" << std::endl;
-            }
+    void swap(unsigned int a, unsigned int b) {
+        unsigned int temp = rA_(b);
+        wA_(b, rA_(a));
+        wA_(a, temp);
+    }
 
+    void nextNeighbor(unsigned int p, bool ignoreFirstCheck) {
+        std::cout << "enter nextNeighbor(" << p << ")" << std::endl;
+        printState();
+
+        // Check if we reached the next adjacency list or the end -> must backtrack
+        bool namedPos = name(p) != 0;
+
+        // We ignore this check for visiting the first adjacency entry.
+        if (p > this->N || (namedPos && !ignoreFirstCheck)) {  // Backtracking required
+            std::cout << "Backtracking required" << std::endl;
             unsigned int q = p - 1;
             while (name(q) == 0) {
                 q = q - 1;
             }
+
+            // If we lookup the startposition of the startvertex again the dfs wants to backtrack from the start vertex
+            // and we can end the algorithm.
             if (this->startPos == q) {
                 std::cout << "end DFS!" << std::endl;
                 printState();
                 return;
             }
-            std::cout << "goToParent(" << q << ") from first check" << std::endl;
 
+            std::cout << "goToParent(" << q << ") from first check" << std::endl;
             printState();
 
-            if (p > this->N) {
+            if (p > this->N) { // Just for debugging!
                 std::cout << "Reached end of memory" << std::endl;
                 this->reachedEnd = true;
             }
 
-            goToParent(q);
+            return goToParent(q);
         } else {
-            unsigned int rap = rA_(p);
-            std::cout << "rap(" << rap << ")" << std::endl;
-            if (isWhite(rap)) {
-                std::cout << "goToChild(" << p << ")" << std::endl;
-                goToChild(p);
-            } else {
-                if (namedPos && !isWhite(rA_(p))) {
-                    if (!isWhite(rA_(p + 1))) {
-                        nextNeighbor(p + 2, false);
-                    } else {
-                        unsigned int temp = rA_(p + 1);
-                        wA_(p + 1, rA_(p));
-                        wA_(p, temp);
-                        std::cout << "swap(" << p + 1 << ", " << p << ")" << std::endl;
-                        printState();
+            // Otherwise p points at a vertex of at least grade 2
+            if (name(p) != 0) { // Leaving from first position
+                if (isWhite(name(rA_(p)))) {
+                    std::cout << "swap(" << p << ", " << (p + 1) << ") = (" << rA_(p) << ", " << rA_(p + 1) << ")" << std::endl;
+                    swap(p, p + 1);
+                    printState();
+                }
+                return nextNeighbor(p + 1, false);
+            }
 
-                        nextNeighbor(p, true);
+            if (name(p - 1) != 0) { // Leaving from second position
+                if (isWhite(name(rA_(p)))) {
+                    return goToChild(p);
+                }
+                if (isWhite(name(rA_(p - 1)))) {
+                    std::cout << "swap(" << (p - 1) << ", " << p << ")" << std::endl;
+                    swap(p - 1, p);
+                    printState();
+                    return nextNeighbor(p, false);
+                }
+                return nextNeighbor(p + 1, false);
+            }
+
+            // p points at a white vertex and p is not the first or second position
+            if (isWhite(name(As(p)))) {
+                std::cout << "goToChild(" << p << ")" << std::endl;
+                return goToChild(p);
+            }
+
+            return nextNeighbor(p + 1, false);
+        }
+    }
+
+    void goToParent(unsigned int q) {
+        std::cout << "goToParent(" << q << ")" << std::endl;
+
+        // If q is of grade 0
+        // Will never happen because we can never go into the adjacency array of a node of grade 0, we only peek inside
+
+        // If q is of grade 1
+        int grade = pointsAtNodeOfGrade(q);
+        switch (grade) {
+            case GRADE_ONE: {
+
+            }
+            case GRADE_AT_LEAST_TWO: {
+                // Otherwise, q is of grade at least two
+                unsigned int x = rA_(q); // Value that was stored originaly at q
+                unsigned int p = As(q); // Reverse pointer that is stored now at q
+
+                As(q) = x + 1; // Change?
+                As(p) = q; // Restore childs edge => Okay only if we have two vertices.
+
+                return nextNeighbor(p + 1, false);
+            }
+            default: {
+                std::stringstream ostr;
+                ostr << "Grade type calculation gone wrong, grade type: " << grade << " found, only {0, 1, 2} allowed";
+                throw std::invalid_argument(ostr.str());
+            }
+        }
+    }
+
+    // Never call this method with p pointing at a vertex of grade zero!
+    void goToChild(unsigned int p) {
+        std::cout << "goToChild(" << p << ")" << std::endl;
+
+        unsigned int q = this->qNext == 0 ? rA_(p) : this->qNext;
+
+        int grade = pointsAtNodeOfGrade(p);
+        switch (grade) {
+            case GRADE_ZERO: {
+                std::cout << "next of grade zero" << std::endl;
+                // Check if p points at a dead end
+                // peek inside, print the node, mark it as visited and continue with the adjacency list
+
+                std::cout << "Visiting vertex: " << q << std::endl; // replace by preprocess
+                A[q] = 0; // Mark it as visited with 0.
+
+                printState();
+
+                return nextNeighbor(p, false);
+            }
+            case GRADE_ONE: {
+                std::cout << "next of grade one" << std::endl;
+                // Check if p points at a vertex of grade 1
+                if (isWhite(name(q))) {
+                    if (pBar == 0) {
+                        // In this case we are leaving from a node with grade at least two
+                        this->pBar = p;
+                        this->qNext = q;
+
+                        // Create a reverse pointer and at the same time mark it as visited.
+                        As(p) = As(q);
+                        As(q) = p;
+                        return visit(q);
+                    } else {
+                        // In this case we are leaving from a node of grade one to a node of grade one.
+                        unsigned int u = name(p);
+                        this->qNext = As(q); // Next
+                        As(q) = u;
+
+                        return visit(q);
                     }
+                }
+
+                return nextNeighbor(p + 1, false);
+            }
+            case GRADE_AT_LEAST_TWO: {
+                std::cout << "next of grade at least two" << std::endl;
+                if (pBar == 0) {
+                    // Create a reverse pointer and at the same time mark it as visited.
+                    As(p) = As(q);
+                    As(q) = p;
+
+                    return visit(q);
                 } else {
-                    std::cout << "nextNeighbor(" <<  p + 1 << ", false)" << std::endl;
-                    nextNeighbor(p + 1, false);
+                    // We are currently at a one degree vertex and pointing at a vertex of degree at least two
+                    auto u = name(p);
+                    unsigned int temp = As(q);
+                    As(this->pBar) = temp; // TODO
+                    As(q) = u;
+
+                    this->qNext = 0;
+                    this->pBar = 0;
                 }
             }
-        }
-    }
-
-    void goToParent(unsigned int q) { // The root vertex does not get restored very well !!!
-        std::cout << "goToParent(" << q << ")" << std::endl;
-        unsigned int x = rA_(q + 1);
-        unsigned int p = A[q + 1];
-
-        std::cout << "(x = " << x << ", p = " << p << ")" << std::endl;
-
-        wA(q + 1, x + 1); // Restore childs edge => Okay only if we have two vertices.
-
-        if (name(p - 1) == 0) {
-            wA(p, q); // Restore the pointer to the child
-            nextNeighbor(p + 1, false);
-        } else {
-            wA(p - 1, q); // Restore the pointer to the child, because we never leave from the second position
-            // we left over the first whenever p points to the second.
-
-            if (rA_(p - 1) < rA_(p)) {
-                nextNeighbor(p, false);
-            } else {
-                std::cout << "swap(" << (p - 1) << ", " << p << ")" << std::endl;
-                printState();
-                unsigned int temp = rA_(p - 1);
-                std::cout << "- swap(" << temp << ", " << rA_(p) << ")" << std::endl;
-                wA_(p - 1, rA_(p));
-                wA_(p, temp);
-                printState();
-                nextNeighbor(p + 1, false);
+            default: {
+                std::stringstream ostr;
+                ostr << "Grade type calculation gone wrong, grade type: " << grade << " found, only {0, 1, 2} allowed";
+                throw std::invalid_argument(ostr.str());
             }
         }
-    }
-
-    void goToChild(unsigned int p) {
-        unsigned int q = rA_(p); // First
-
-        // Is v discovered from the first position?
-        bool fromFirstPosition = name(p) != 0;
-
-        // Third: Create a pointer for later backtrack operation.
-        wA(p, rA(q + 1));
-
-        if (fromFirstPosition) {
-            wA(q + 1, p + 1);
-        } else {
-            wA(q + 1, p);
-        }
-
-        visit(q);
     };
 };
 
