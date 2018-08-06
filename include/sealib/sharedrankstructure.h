@@ -2,7 +2,6 @@
 #define SEALIB_SHAREDRANKSTRUCTURE_H_
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 
-#include <sealib/rankstructure.h>
 #include <sealib/bitset.h>
 #include <memory>
 #include <vector>
@@ -13,7 +12,7 @@
  * @author Johannes Meintrup
  */
 namespace Sealib {
-class SharedRankStructure : public RankStructure {
+class SharedRankStructure {
  protected:
     static const unsigned char segmentLength = 8;
     std::shared_ptr<Sealib::Bitset<unsigned char>> bitset;
@@ -23,15 +22,17 @@ class SharedRankStructure : public RankStructure {
     std::vector<unsigned int> setCountTable;
     std::vector<unsigned int> nonEmptySegments;
 
-    unsigned int setBefore(unsigned long segment) const;
-
  public:
+    unsigned int getMaxRank() const;
+    const std::vector<unsigned int> &getSetCountTable() const;
+    const std::vector<unsigned int> &getNonEmptySegments() const;
+
     /**
      * Rank of the k-th idx
      * @param k idx
      * @return rank of k-th idx
      */
-    unsigned long rank(unsigned long k) const override;
+    unsigned long rank(unsigned long k) const;
 
     /**
      * @param shared_ptr managing the Sealib::Bitset used for Rank
@@ -53,7 +54,18 @@ class SharedRankStructure : public RankStructure {
      */
     unsigned int getSegmentCount() const;
 
-    ~SharedRankStructure() override;
+    /**
+     * @return size of bitset
+     */
+    unsigned long size() const;
+
+    /**
+     * @return segment of the bitset
+     */
+    const Sealib::Bitset<unsigned char>& getBitset() const;
+
+    ~SharedRankStructure();
+    unsigned int setBefore(unsigned long segment) const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_SHAREDRANKSTRUCTURE_H_

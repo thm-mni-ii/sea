@@ -2,7 +2,6 @@
 #define SEALIB_SIMPLERANKSELECT_H_
 
 #include <sealib/bitset.h>
-#include <sealib/rankselect.h>
 #include <memory>
 
 namespace Sealib {
@@ -10,7 +9,7 @@ namespace Sealib {
  * Naive implementation of RankSelect, used to test the space efficient variant or for debugging
  * @author Johannes Meintrup
  */
-class SimpleRankSelect : public RankSelect {
+class SimpleRankSelect {
  private:
     std::shared_ptr<Bitset<unsigned char>> bitset;
 
@@ -31,7 +30,7 @@ class SimpleRankSelect : public RankSelect {
 
     explicit SimpleRankSelect(std::shared_ptr<Bitset<unsigned char>> bitset);
     SimpleRankSelect();
-    ~SimpleRankSelect() override;
+    ~SimpleRankSelect();
 };
 }  // namespace Sealib
 #endif  // SEALIB_SIMPLERANKSELECT_H_

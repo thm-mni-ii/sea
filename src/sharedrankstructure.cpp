@@ -62,4 +62,19 @@ unsigned int Sealib::SharedRankStructure::setBefore(unsigned long segment) const
 unsigned char Sealib::SharedRankStructure::getSegmentLength() const {
     return segmentLength;
 }
+unsigned long Sealib::SharedRankStructure::size() const {
+    return bitset->size();
+}
+const Sealib::Bitset<unsigned char> &Sealib::SharedRankStructure::getBitset() const {
+    return (*bitset.get());
+}
+unsigned int Sealib::SharedRankStructure::getMaxRank() const {
+    return maxRank;
+}
+const std::vector<unsigned int> &Sealib::SharedRankStructure::getSetCountTable() const {
+    return setCountTable;
+}
+const std::vector<unsigned int> &Sealib::SharedRankStructure::getNonEmptySegments() const {
+    return nonEmptySegments;
+}
 Sealib::SharedRankStructure::~SharedRankStructure() = default;
