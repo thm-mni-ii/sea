@@ -193,8 +193,6 @@ void ChoiceDictionary::breakLink(unsigned long int secondaryIndex) {
     unsigned long int validatorIndex = secondary[secondaryIndex + TUPEL_OFFSET];
     secondary[secondaryIndex + TUPEL_OFFSET] = 0;
     validator[validatorIndex] = 0;
-    // pointer--;
-    // if (validatorIndex < pointer) shrinkValidator(validatorIndex);
     shrinkValidator(validatorIndex);
 }
 
@@ -205,11 +203,6 @@ void ChoiceDictionary::shrinkValidator(unsigned long int validatorIndex) {
         secondary[secondaryTarget] = validatorIndex;
     }
     pointer--;
-    // for (unsigned long int index = validatorIndex; index < pointer; index++) {
-    //     secondaryTarget = validator[index + TUPEL_OFFSET];
-    //     secondary[secondaryTarget] = index;
-    //     validator[index] = secondaryTarget;
-    // }
 }
 
 bool ChoiceDictionary::isInitialized(unsigned long int primaryIndex) {
