@@ -9,7 +9,6 @@ namespace Sealib {
 /**
  * Iteration class to return all bit positions of a choice dictionary that
  * are set to 1.
- *
  * @author Dennis Appel
  */
 class Iterator {

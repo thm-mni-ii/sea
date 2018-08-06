@@ -5,7 +5,9 @@
 using Sealib::ChoiceDictionary;
 
 struct emptyChoiceDictionary : public std::exception {
-    const char* what() const throw() { return "Choice Dictionary is empty!"; }
+    const char* what() const throw() {
+        return "Choice dictionary is empty. Operations \'choice()\' and \'remove()\' are not possible";
+    }
 };
 
 ChoiceDictionary::ChoiceDictionary(unsigned long int size) {
@@ -26,7 +28,7 @@ void ChoiceDictionary::insert(unsigned long int index) {
     else
         primaryWord = 0;
 
-    targetBit = 1ULL << (wordSize - SHIFT_OFFSET - primaryInnerIndex);
+    targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryInnerIndex);
     primary[primaryIndex] = primaryWord | targetBit;
 
     updateSecondary(primaryIndex);
@@ -74,13 +76,15 @@ void ChoiceDictionary::remove(unsigned long int index) {
     unsigned long int newPrimaryWord;
     unsigned long int targetBit;
 
+    if (pointer == 0) throw emptyChoiceDictionary();
+
     unsigned long int primaryIndex = index / (unsigned long int)wordSize;
     unsigned long int primaryInnerIndex = index % (unsigned long int)wordSize;
 
     if (!isInitialized(primaryIndex)) return;
 
     primaryWord = primary[primaryIndex];
-    targetBit = 1ULL << (wordSize - SHIFT_OFFSET - primaryInnerIndex);
+    targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryInnerIndex);
     newPrimaryWord = primaryWord & ~targetBit;
 
     primary[primaryIndex] = newPrimaryWord;
@@ -189,23 +193,29 @@ void ChoiceDictionary::breakLink(unsigned long int secondaryIndex) {
     unsigned long int validatorIndex = secondary[secondaryIndex + TUPEL_OFFSET];
     secondary[secondaryIndex + TUPEL_OFFSET] = 0;
     validator[validatorIndex] = 0;
-    pointer--;
-    if (validatorIndex != pointer) shrinkValidator(validatorIndex);
+    // pointer--;
+    // if (validatorIndex < pointer) shrinkValidator(validatorIndex);
+    shrinkValidator(validatorIndex);
 }
 
-void ChoiceDictionary::shrinkValidator(unsigned long int startIndex) {
-    unsigned long int secondaryTarget;
-    for (unsigned long int index = startIndex; index < pointer; index++) {
-        secondaryTarget = validator[index + 1];
-        secondary[secondaryTarget] = index;
-        validator[index] = secondaryTarget;
+void ChoiceDictionary::shrinkValidator(unsigned long int validatorIndex) {
+    if (validatorIndex < pointer - 1) {
+        unsigned long int secondaryTarget = validator[pointer - 1];
+        validator[validatorIndex] = secondaryTarget;
+        secondary[secondaryTarget] = validatorIndex;
     }
+    pointer--;
+    // for (unsigned long int index = validatorIndex; index < pointer; index++) {
+    //     secondaryTarget = validator[index + TUPEL_OFFSET];
+    //     secondary[secondaryTarget] = index;
+    //     validator[index] = secondaryTarget;
+    // }
 }
 
 bool ChoiceDictionary::isInitialized(unsigned long int primaryIndex) {
     unsigned long int secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
     unsigned long int secondaryWord = secondary[secondaryIndex];
-    unsigned long int targetBit = 1ULL << (wordSize - SHIFT_OFFSET - primaryIndex);
+    unsigned long int targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryIndex);
 
     return (secondaryWord & targetBit) != 0 && hasColor(primaryIndex) && pointer > 0;
 }

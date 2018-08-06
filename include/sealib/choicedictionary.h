@@ -12,7 +12,6 @@ namespace Sealib {
  * and setting a bit in constant time and additionally a so-called choice
  * operation that returns the position of an arbitrary bit that is set to 1
  * in constant time.
- *
  * @author Dennis Appel
  */
 class ChoiceDictionary {
