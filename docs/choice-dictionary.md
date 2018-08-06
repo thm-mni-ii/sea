@@ -4,12 +4,12 @@ A choice dictionary is a bitset containing n elements that supports reading and 
 
 ## Operations
 * get(i): Returns the bit at index i.
-* insert(i): Set a the bit an index i to 1.
+* insert(i): Set a the bit at index i to 1.
 * choice: Returns an arbitrary bit position that is set to 1.
 
 ## Efficiency
 * Time: O(1) (all operations)
-* Space: O(n log n)
+* Space: O(n + n/w + 3n/(w^2))
 
 ## Example
 
@@ -18,7 +18,7 @@ ChoiceDictionary* cd = new ChoiceDictionary(12);
 cd.insert(0); // Indexing beginns with 0
 cd.insert(4);
 cd.insert(7);
-cd.isnert(11);
+cd.insert(11);
 
 cd.get(0); // Returns 1
 cd.get(2); // Returns 0
@@ -28,3 +28,36 @@ cd.choice(); // May return 0, 4, 7 or 11.
 delete cd;
 ```
 
+Iterator
+===
+
+An Iterator is used to iterate through all bits set to 1 in a choice dictionary.
+It supports the so-called *more* operation that returns true if the choice dictionary contains more bits set to 1, aswell as the *next* operation that returns the index of the next arbitrary bit.
+
+## Operations
+* init: Initializes the Iterator.
+* more: Returns true if there are more bits set to 1.
+* next: Returns the next arbitrary bit position that is set to 1.
+
+## Efficiency
+* Time: O(1) (all operations)
+
+## Example
+
+```cpp
+ChoiceDictionary* cd = new ChoiceDictionary(12);
+Iterator* it = new Iterator(cd);
+cd->insert(0); // Indexing beginns with 0
+cd->insert(4);
+cd->insert(7);
+cd->insert(11);
+
+it->init();
+
+while (it->more()) { // Returns true if more bits are set to 1
+    it->next(); // May return the next arbitrary bit 0, 4, 7 or 11.
+}
+
+delete it;
+delete cd;
+```
