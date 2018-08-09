@@ -35,3 +35,7 @@ unsigned int Compactgraph::head(unsigned int u, unsigned int k){
 unsigned int Compactgraph::getOrder(){
 	return A[0]; 
 } 
+
+unsigned int* getData(){
+	return A.get();
+}
