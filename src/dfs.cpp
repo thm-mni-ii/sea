@@ -175,8 +175,8 @@ public:
     void run(const uint t_startVertex) {
         this->m_startVertex = t_startVertex;
         auto p = n + 2;
-        std::cout << "Start vertex: " << t_startVertex << std::endl;
-        std::cout << "Start with position: " << p << std::endl;
+        // std::cout << "Start vertex: " << t_startVertex << std::endl;
+        // std::cout << "Start with position: " << p << std::endl;
         while (A[p] != t_startVertex && p <= N) {
             p = p + 1;
         }
@@ -184,8 +184,10 @@ public:
         // TODO(Andrej): if p > N => not found => panic
 
         this->startPos = p;
+        printState();
         visit(p);
-        restore();
+        //restore();
+        printState();
     }
 
 private:
@@ -251,23 +253,23 @@ private:
 
     uint &R(uint i) {
         if (name(i) == 0 || A[i] == A[A[i]]) {
-            std::cout << ":";
+            // std::cout << ":";
             return U(i);
         }
 
-        auto p = U(i);
+        auto& p = U(i);
         if (name(p) > 0 /*&& p > this->n || A[p] == p*/) {
-            std::cout << ";";
+            // std::cout << ";";
             return U(i);
         }
 
         // TODO(Andrej): Check that it works for the start vertex.
         if (p <= this->n && A[p] != p) {
-            auto next = p;
+            auto& next = p;
             while (next <= this->n && A[next] != next) {
                 next = U(next);
             }
-            std::cout << "|" << p << "|";
+            // std::cout << "|" << p << "|";
             return next;
         }
 
@@ -280,20 +282,20 @@ private:
         }
 
         if (vertex == this->m_startVertex) {
-            std::cout << "isWhite(" << vertex << ") = false" << std::endl;
+            // std::cout << "isWhite(" << vertex << ") = false" << std::endl;
             return false;
         }
         auto v = A[vertex];
         if (v == vertex) {
-            std::cout << "isWhite(" << vertex << ") = true" << std::endl;
+            // std::cout << "isWhite(" << vertex << ") = true" << std::endl;
             return true;
         }
 
         if (A[vertex] <= n && A[A[vertex]] == vertex) {
-            std::cout << "isWhite(" << vertex << ") = false" << std::endl;
+            // std::cout << "isWhite(" << vertex << ") = false" << std::endl;
             return false;
         }
-        std::cout << "isWhite(" << vertex << ") = " << (v != 0 && A[v] <= n) << std::endl;
+        // std::cout << "isWhite(" << vertex << ") = " << (v != 0 && A[v] <= n) << std::endl;
         return v != 0 && A[v] <= n;
     }
 
@@ -330,7 +332,7 @@ private:
             throw std::invalid_argument(ostr.str());
         }
         this->m_preProcess(v);
-        printState();
+        // printState();
 
         if (reachedEnd) {
             std::cout << "Reached end" << std::endl;
@@ -342,21 +344,21 @@ private:
     void swap(uint a, uint b) {
         auto rA = R(a);
         auto rB = R(b);
-        std::cout << "swap(" << a << ", " << b << ")" << "swap_(" << rA << ", " << rB << ")" << std::endl;
+        // std::cout << "swap(" << a << ", " << b << ")" << "swap_(" << rA << ", " << rB << ")" << std::endl;
         R(b) = rA;
         R(a) = rB;
-        printState();
+        // printState();
     }
 
     void nextNeighbor(uint p, bool ignoreCheck) {
-        std::cout << "enter nextNeighbor(" << p << ", " << ignoreCheck << ")" << std::endl;
-        printState();
+        // std::cout << "enter nextNeighbor(" << p << ", " << ignoreCheck << ")" << std::endl;
+        // printState();
         // Check if we reached the next adjacency list or the end -> must backtrack
 
         // We ignore this check for visiting the first adjacency entry.
         if (p > this->N /* Out of Index */
             || (name(p) != 0 && !ignoreCheck) /* Reached next adjacency array */) {  // Backtracking required
-            std::cout << "Backtracking required" << std::endl;
+            // std::cout << "Backtracking required" << std::endl;
             auto q = p - 1;
             while (name(q) == 0) {
                 q = q - 1;
@@ -365,40 +367,40 @@ private:
             // If we lookup the startposition of the startvertex again the dfs wants to backtrack from the start vertex
             // and we can end the algorithm.
             if (this->startPos == q) {
-                std::cout << "end DFS!" << std::endl;
+                // std::cout << "end DFS!" << std::endl;
                 this->m_postProcess(this->m_startVertex);
-                printState();
+                // printState();
                 return;
             }
 
-            std::cout << "goToParent(" << q << ") from first check" << std::endl;
-            printState();
+            // std::cout << "goToParent(" << q << ") from first check" << std::endl;
+            // printState();
 
             if (p > this->N) { // Just for debugging!
-                std::cout << "Reached end of memory" << std::endl;
+                // std::cout << "Reached end of memory" << std::endl;
                 this->reachedEnd = true;
             }
 
             return goToParent(q);
         } else {
-            std::cout << "continue with nextNeighbor(" << p << ")" << std::endl;
+            // std::cout << "continue with nextNeighbor(" << p << ")" << std::endl;
             // Otherwise p points at a vertex of at least grade 2
             auto p1 = 0u, p2 = 0u;
             auto swapped = false;
             if (name(p) != 0) {
-                std::cout << "name(p)" << std::endl;
+                // std::cout << "name(p)" << std::endl;
                 p1 = p;
                 p2 = p + 1;
                 swapped = R(p2) < R(p1);
-                std::cout << "check for swapped" << std::endl;
-                std::cout << "swapped (" << R(p1) << ", " << R(p2) << ")= " << swapped << std::endl;
+                // std::cout << "check for swapped" << std::endl;
+                // std::cout << "swapped (" << R(p1) << ", " << R(p2) << ")= " << swapped << std::endl;
             } else if (name(p - 1) != 0) {
-                std::cout << "name(p - 1) != 0" << std::endl;
+                // std::cout << "name(p - 1) != 0" << std::endl;
                 p1 = p - 1;
                 p2 = p;
                 swapped = R(p2) < R(p1);
-                std::cout << "check for swapped" << std::endl;
-                std::cout << "swapped (" << R(p1) << ", " << R(p2) << ")= " << swapped << std::endl;
+                // std::cout << "check for swapped" << std::endl;
+                // std::cout << "swapped (" << R(p1) << ", " << R(p2) << ")= " << swapped << std::endl;
             }
 
             if (p == p1) {
@@ -420,8 +422,8 @@ private:
     }
 
     void goToParent(uint q) {
-        std::cout << "goToParent(" << q << ")" << std::endl;
-        printState();
+        // std::cout << "goToParent(" << q << ")" << std::endl;
+        // printState();
 
         // If q is of grade 0
         // Will never happen because we can never go into the adjacency array of a node of grade 0, we only peek inside
@@ -431,13 +433,13 @@ private:
         switch (grade) {
             case GRADE_ONE: {
                 auto p = A[name(q)];
-                std::cout << "back to " << p << std::endl;
+                // std::cout << "back to " << p << std::endl;
                 while (p <= this->n) {
-                    std::cout << "back to " << p << "from " << q << std::endl;
-                    printState();
+                    // std::cout << "back to " << p << "from " << q << std::endl;
+                    // printState();
                     // TODO(Andrej): Postprocess vertices
                     this->m_postProcess(p);
-                    std::cout << "endless loop" << std::endl;
+                    // std::cout << "endless loop" << std::endl;
                     p = A[name(q)];
                 }
                 nextNeighbor(p, false);
@@ -463,7 +465,7 @@ private:
 
     // Never call this method with p pointing at a vertex of grade zero!
     void goToChild(uint p) {
-        std::cout << "goToChild(" << p << ")" << std::endl;
+        // std::cout << "goToChild(" << p << ")" << std::endl;
 
         auto q = R(p);
 
@@ -476,20 +478,20 @@ private:
                 this->m_postProcess(q);
                 A[q] = p; // Set the reverse pointer for a later restoration.
 
-                printState();
+                // printState();
                 return nextNeighbor(p, false); // p + 1?
             }
             case GRADE_ONE: {
-                std::cout << "next of grade one" << std::endl;
+                // std::cout << "next of grade one" << std::endl;
 
                 auto current = p;
                 auto next = q;
                 while (true) {
-                    std::cout << "next: " << next << std::endl;
+                    // std::cout << "next: " << next << std::endl;
                     if (isWhite(name(next))) {
                         switch (grade) {
                             case GRADE_ZERO: {
-                                std::cout << "about to discover grade zero" << std::endl;
+                                // std::cout << "about to discover grade zero" << std::endl;
                                 // At this pointer q is not a pointer but a vertex name (can be used only in A[1 ... n])
                                 this->m_preProcess(next);
                                 this->m_postProcess(next);
@@ -505,9 +507,9 @@ private:
                                 return goToParent(current);
                             }
                             case GRADE_ONE: {
-                                std::cout << "about to discover grade one" << std::endl;
+                                // std::cout << "about to discover grade one" << std::endl;
                                 if (pBar == 0) {
-                                    std::cout << "pbar = 0" << std::endl;
+                                    // std::cout << "pbar = 0" << std::endl;
                                     // In this case we are leaving from a node with grade at least two
                                     auto v = name(next);
                                     this->m_preProcess(v);
@@ -516,10 +518,10 @@ private:
 
                                     // Create a reverse pointer and at the same time mark it as visited.
                                     auto temp = U(next);
-                                    std::cout << "current: " << current << std::endl;
+                                    // std::cout << "current: " << current << std::endl;
                                     A[v] = current;
-                                    std::cout << "after U(next)" << std::endl;
-                                    printState();
+                                    // std::cout << "after U(next)" << std::endl;
+                                    // printState();
 
                                     current = next;
                                     next = temp;
@@ -563,7 +565,7 @@ private:
                 }
             }
             case GRADE_AT_LEAST_TWO: {
-                std::cout << "next of grade at least two" << std::endl;
+                // std::cout << "next of grade at least two" << std::endl;
                 // Create a reverse pointer and at the same time mark it as visited.
                 U(p) = U(q);
                 U(q) = p;
@@ -578,15 +580,15 @@ private:
     };
 
     void restore() {
-//        std::cout << "start restoration" << std::endl;
-//        // Solution for degree one only nodes
-//        for (uint v = 1; v <= this->n; v++) {
-//            if (v != m_startVertex && !isWhite(v)) {
-//                A[v] = A[v] - 1;
-//            }
-//        }
-//        std::cout << "restored state" << std::endl;
-//        printState();
+        // std::cout << "start restoration" << std::endl;
+        // Solution for degree one only nodes
+        for (uint v = 1; v <= this->n; v++) {
+            if (v != m_startVertex && !isWhite(v)) {
+                A[v] = A[v] - 1;
+            }
+        }
+        //std::cout << "restored state" << std::endl;
+        // printState();
     }
 };
 

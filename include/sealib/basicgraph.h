@@ -37,7 +37,7 @@ class Basicgraph : public Graph {
     * @param u Vertex u 
     * @return Returns d that is the degree of node v.
     */
-		unsigned int getNodeDegree(unsigned int u) override;
+    unsigned int getNodeDegree(unsigned int u) override;
 
     /**
     * Returns the vertex v that u points at with its k-th edge.

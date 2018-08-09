@@ -9,7 +9,15 @@
 #include "sealib/compactgraph.h"
 #include "sealib/node.h"
 
+using namespace Sealib;
+
 Compactgraph* Graphrepresentations::generateGilbertGraph(unsigned int order,
+                                                    double p,
+                                                    std::mt19937_64* gen) {
+  return new Compactgraph(generateRawGilbertGraph(order, p, gen));
+}
+
+uint* Graphrepresentations::generateRawGilbertGraph(unsigned int order,
                                                          double p,
                                                          std::mt19937_64* gen) {
   unsigned int size = 0;
@@ -62,8 +70,10 @@ Compactgraph* Graphrepresentations::generateGilbertGraph(unsigned int order,
       }
     }
   }
-  return new Compactgraph(graph);
+  delete[] edgeArray;
+  return graph;
 }
+
 /*
 unsigned int* Graphrepresentations::graphToStandard(Graph* g) {
   unsigned int order = g->getOrder();

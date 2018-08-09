@@ -14,7 +14,8 @@ class Graph {
     * @param v Vertex v
     * @return Returns d that is the degree of node v.
     */
-		virtual unsigned int getNodeDegree(unsigned int v) = 0;
+    virtual unsigned int getNodeDegree(unsigned int v) = 0;
+
     /**
     * Returns the vertex v that u points at with its k-th edge.
     * @param u Vertex u

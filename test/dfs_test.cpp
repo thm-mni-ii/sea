@@ -111,7 +111,6 @@ void postTwo(unsigned int a) {
 }
 
 TEST(DFSTest, inplace_dfs_all_of_grade_ge_2) {
-  auto *graph = new unsigned int[19]{ 5, 9, 7, 9, 9, 7, 12, 1, 17, 2, 12, 14, 3, 14, 4, 12, 17, 5, 14 };
   DFS::runLinearTimeInplaceDFS(graph, preTwo, postTwo, 1);
   EXPECT_EQ(0, controllSum);
 }
