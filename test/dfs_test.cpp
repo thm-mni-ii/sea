@@ -3,6 +3,7 @@
 #include <vector>
 #include "sealib/dfs.h"
 #include "sealib/basicgraph.h"
+#include <stack>
 
 using Sealib::DFS;
 using Sealib::CompactArray;
@@ -10,6 +11,7 @@ using Sealib::Graph;
 using Sealib::Basicgraph;
 using Sealib::Node;
 using Sealib::Adjacency;
+using namespace std;
 
 unsigned c1 = 0, c2 = 0, c3 = 0, c4 = 0;
 unsigned tmp = 0;
@@ -88,4 +90,28 @@ TEST_P(DFSTest, nBitUserproc) {
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
+}
+
+auto *graph = new unsigned int[19]{ 5, 9, 7, 9, 9, 7, 12, 1, 17, 2, 12, 14, 3, 14, 4, 12, 17, 5, 14 };
+unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
+stack <unsigned int> controllStack;
+void preTwo(unsigned int a) {
+  std::cout << "PRE-PROCESS(" << a << ")" << std::endl;
+  controllSum = controllSum - a;
+  controllStack.push(a);
+  std::cout << "newSum: " << controllSum << std::endl;
+}
+void postTwo(unsigned int a) {
+  std::cout << "POST-PROCESS(" << a << ")" << std::endl;
+  controllSum = controllSum - a;
+  unsigned int ex = controllStack.top();
+  controllStack.pop();
+  EXPECT_EQ(ex, a);
+  std::cout << "newSum: " << controllSum << std::endl;
+}
+
+TEST(DFSTest, inplace_dfs_all_of_grade_ge_2) {
+  auto *graph = new unsigned int[19]{ 5, 9, 7, 9, 9, 7, 12, 1, 17, 2, 12, 14, 3, 14, 4, 12, 17, 5, 14 };
+  DFS::runLinearTimeInplaceDFS(graph, preTwo, postTwo, 1);
+  EXPECT_EQ(0, controllSum);
 }

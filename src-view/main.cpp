@@ -2,9 +2,52 @@
 #include <chrono>
 #include "sealib/graphcreator.h"
 #include "sealib/dfs.h"
+#include <stack>
 
 using std::cout;
+using namespace std;
 using Sealib::DFS;
+
+unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
+stack <unsigned int> controllStack;
+void preTwo(unsigned int a) {
+    std::cout << "PRE-PROCESS(" << a << ")" << std::endl;
+    controllSum = controllSum - a;
+    controllStack.push(a);
+    std::cout << "newSum: " << controllSum << std::endl;
+}
+void postTwo(unsigned int a) {
+    std::cout << "POST-PROCESS(" << a << ")" << std::endl;
+    controllSum = controllSum - a;
+    unsigned int ex = controllStack.top();
+    controllStack.pop();
+    if (ex != a) {
+        std::cout << "panic expected " << a << " on stack, got " << ex << std::endl;
+        exit(100);
+    }
+    std::cout << "newSum: " << controllSum << std::endl;
+}
+
+unsigned int controllSumZero = (2 * (1 + 2 + 3 + 4));
+stack <unsigned int> controllStack2;
+void preZero(unsigned int a) {
+    std::cout << "PRE-PROCESS(" << a << ")" << std::endl;
+    controllStack2.push(a);
+    controllSumZero = controllSumZero - a;
+    std::cout << "newSum: " << controllSum << std::endl;
+}
+void postZero(unsigned int a) {
+    std::cout << "POST-PROCESS(" << a << ")" << std::endl;
+    unsigned int ex = controllStack2.top();
+    controllSumZero = controllSumZero - a;
+    controllStack2.pop();
+    if (ex != a) {
+        std::cout << "panic expected " << a << " on stack, got " << ex << std::endl;
+        exit(100);
+    }
+    std::cout << "newSum: " << controllSum << std::endl;
+}
+
 
 int main() {
     // Graph in the swapped begin pointer representation
@@ -13,11 +56,27 @@ int main() {
     auto *graph4 = new unsigned int[10]{3, 7,8,5, 5, 1,9, 2, 3,7};
     auto *graph5 = new unsigned int[15]{5, 9,10,7,13,7, 8, 1,12, 2, 3,9, 4, 5,12};
 
+    auto *gr = new unsigned int[9]{4, 8,2,3,3, 3, 1,2, 4};
+
     // Grade zero
     auto *graph0 = new unsigned int[9]{4,2,2,3,4,3,1,3,4};
 
     auto wcts = std::chrono::system_clock::now();
-    DFS::runLinearTimeInplaceDFS(graph0, 1);
+
+    DFS::runLinearTimeInplaceDFS(graph, preTwo, postTwo, 1);
+
+    if (controllSum != 0) {
+        std::cout << "PANIC!" << std::endl;
+        exit(controllSum);
+    }
+
+    DFS::runLinearTimeInplaceDFS(graph0, preZero, postZero, 1);
+
+    if (controllSumZero != 0) {
+        std::cout << "PANIC!" << std::endl;
+        exit(controllSumZero);
+    }
+
     std::chrono::duration<double> wctduration = (std::chrono::system_clock::now() - wcts);
     std::cout << "Finished in " << wctduration.count() << " seconds [Wall Clock]" << std::endl;
 

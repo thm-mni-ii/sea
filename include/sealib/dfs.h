@@ -71,7 +71,7 @@ class DFS {
      * @param graph Graph A graph in a swapped begin pointer representation.
      * @param startVertex startVertex The begin of the DFS tree.
      */
-    static void runLinearTimeInplaceDFS(unsigned int* graph, unsigned int startVertex);
+    static void runLinearTimeInplaceDFS(unsigned int* graph, UserFunc1 preProcess, UserFunc1 postProcess, unsigned int startVertex);
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_
