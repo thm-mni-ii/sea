@@ -45,6 +45,11 @@ class Compactgraph : public Graph{
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
     unsigned int getOrder() override;
+
+		/**
+		 * @return Returns the underlying array
+		 */
+		unsigned int* getData();
 };
 } // namespace Sealib
 #endif // SEALIB_COMPACTGRAPH_H_ 
