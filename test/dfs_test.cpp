@@ -1,11 +1,13 @@
-#include "sealib/dfs.h"
 #include <gtest/gtest.h>
 #include <random>
 #include <vector>
+#include "sealib/dfs.h"
+#include "sealib/basicgraph.h"
 
 using Sealib::DFS;
 using Sealib::CompactArray;
 using Sealib::Graph;
+using Sealib::Basicgraph;
 using Sealib::Node;
 using Sealib::Adjacency;
 
@@ -56,7 +58,7 @@ std::vector<Graph *> makeGraphs() {
       }
       n[a] = Node(ad, ai);
     }
-    g.push_back(new Graph(n, order));
+    g.push_back(new Basicgraph(n, order));
   }
   return g;
 }

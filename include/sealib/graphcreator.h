@@ -1,7 +1,7 @@
 #ifndef SEALIB_GRAPHCREATOR_H_
 #define SEALIB_GRAPHCREATOR_H_
 
-#include "sealib/graph.h"
+#include "sealib/basicgraph.h"
 
 namespace Sealib {
 /**
@@ -26,7 +26,7 @@ class GraphCreator {
      * @param adj_matrix NxN adjacency matrix representation of the graph.
      * @param _order Order of the graph, order equals the number of nodes.
      */
-    static Graph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
+    static Basicgraph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_
