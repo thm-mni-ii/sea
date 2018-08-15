@@ -10,7 +10,8 @@ unsigned long Sealib::SimpleRankSelect::rank(unsigned long k) const {
     return ranks[k - 1];
 }
 
-Sealib::SimpleRankSelect::SimpleRankSelect(std::shared_ptr<const Sealib::Bitset<unsigned char>> bitset_) :
+Sealib::SimpleRankSelect::SimpleRankSelect(
+    std::shared_ptr<const Sealib::Bitset<unsigned char>> bitset_) :
     bitset(std::move(bitset_)),
     ranks(bitset->size()),
     selects(bitset->size(), (unsigned long) -1) {

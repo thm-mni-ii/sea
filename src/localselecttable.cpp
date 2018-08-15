@@ -14,7 +14,8 @@ Sealib::LocalSelectTable::LocalSelectTable() : localSelectLookupTable(256) {
     }
 }
 
-unsigned char Sealib::LocalSelectTable::getLocalSelect(unsigned char segment, unsigned char localIdx) {
+unsigned char Sealib::LocalSelectTable::getLocalSelect(unsigned char segment,
+                                                       unsigned char localIdx) {
     static LocalSelectTable instance;
     return instance.localSelectLookupTable[segment][localIdx];
 }
