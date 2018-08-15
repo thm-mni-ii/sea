@@ -3,6 +3,7 @@
 
 #include <sealib/bitset.h>
 #include <memory>
+#include <vector>
 
 namespace Sealib {
 /**

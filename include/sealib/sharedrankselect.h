@@ -14,10 +14,9 @@ class SharedRankSelect {
  private:
     SharedRankStructure rankStructure;
     SharedRankStructure firstInSegment;
+    static std::shared_ptr<const Bitset<unsigned char>> generateFirstInBlockBitSet(const SharedRankStructure &sharedRankStructure);
 
-    static std::shared_ptr<const Bitset < unsigned char>> generateFirstInBlockBitSet(const SharedRankStructure &sharedRankStructure);
  public:
-
     /**
      * @param shared_ptr managing the Sealib::Bitset used for RankSelect
      */

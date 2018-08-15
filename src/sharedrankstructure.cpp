@@ -4,7 +4,6 @@
 #include <cmath>
 #include <utility>
 
-
 unsigned long Sealib::SharedRankStructure::rank(unsigned long k) const {
     if (k == 0 || k > maxRank) {
         return (unsigned long) -1;
