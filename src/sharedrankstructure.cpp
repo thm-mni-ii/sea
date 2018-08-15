@@ -15,7 +15,7 @@ unsigned long Sealib::SharedRankStructure::rank(unsigned long k) const {
     return setBefore(segmentIdx) + LocalRankTable::getLocalRank(segment, localIdx);
 }
 
-Sealib::SharedRankStructure::SharedRankStructure(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_) :
+Sealib::SharedRankStructure::SharedRankStructure(std::shared_ptr<const Sealib::Bitset<unsigned char>> bitset_) :
     bitset(std::move(bitset_)),
     segmentCount(static_cast<unsigned int>(bitset->size() / segmentLength)) {
     auto lastSeg = static_cast<unsigned char>((bitset->size() % segmentLength));

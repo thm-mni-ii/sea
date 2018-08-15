@@ -15,7 +15,7 @@ namespace Sealib {
 class SharedRankStructure {
  protected:
     static const unsigned char segmentLength = 8;
-    std::shared_ptr<Sealib::Bitset<unsigned char>> bitset;
+    std::shared_ptr<const Sealib::Bitset<unsigned char>> bitset;
     unsigned int segmentCount;
     unsigned int maxRank;
 
@@ -37,7 +37,7 @@ class SharedRankStructure {
     /**
      * @param shared_ptr managing the Sealib::Bitset used for Rank
      */
-    explicit SharedRankStructure(std::shared_ptr<Sealib::Bitset<unsigned char> > bitset);
+    explicit SharedRankStructure(std::shared_ptr<const Sealib::Bitset<unsigned char> > bitset);
 
     /**
      * default empty constructor

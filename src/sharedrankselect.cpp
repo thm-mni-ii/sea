@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 
-Sealib::SharedRankSelect::SharedRankSelect(std::shared_ptr<Sealib::Bitset<unsigned char>> bitset_) :
+Sealib::SharedRankSelect::SharedRankSelect(std::shared_ptr<const Sealib::Bitset<unsigned char>> bitset_) :
     rankStructure(std::move(bitset_)),
     firstInSegment(generateFirstInBlockBitSet(rankStructure)) {
 }
@@ -23,9 +23,9 @@ unsigned long Sealib::SharedRankSelect::select(unsigned long k) const {
     return localSelect + rankStructure.getSegmentLength() * h + 1;
 }
 
-Sealib::SharedRankSelect::SharedRankSelect(){}
+Sealib::SharedRankSelect::SharedRankSelect() = default;
 
-std::shared_ptr<Sealib::Bitset<unsigned char>> Sealib::SharedRankSelect::generateFirstInBlockBitSet(const SharedRankStructure &rs) {
+std::shared_ptr<const Sealib::Bitset<unsigned char>> Sealib::SharedRankSelect::generateFirstInBlockBitSet(const SharedRankStructure &rs) {
     unsigned long size = rs.rank(rs.size());
     if (size == (unsigned long) -1) {
         size = 0;
@@ -45,4 +45,8 @@ std::shared_ptr<Sealib::Bitset<unsigned char>> Sealib::SharedRankSelect::generat
     return firstInBlockBitSet;
 }
 
-Sealib::SharedRankSelect::~SharedRankSelect() {}
+Sealib::SharedRankSelect::~SharedRankSelect() = default;
+
+unsigned long Sealib::SharedRankSelect::rank(unsigned long k) const {
+    return rankStructure.rank(k);
+}

@@ -15,13 +15,13 @@ class SharedRankSelect {
     SharedRankStructure rankStructure;
     SharedRankStructure firstInSegment;
 
-    static std::shared_ptr<Bitset < unsigned char>> generateFirstInBlockBitSet(const SharedRankStructure &sharedRankStructure);
+    static std::shared_ptr<const Bitset < unsigned char>> generateFirstInBlockBitSet(const SharedRankStructure &sharedRankStructure);
  public:
 
     /**
      * @param shared_ptr managing the Sealib::Bitset used for RankSelect
      */
-    explicit SharedRankSelect(std::shared_ptr<Bitset<unsigned char> > bitset);
+    explicit SharedRankSelect(std::shared_ptr<const Bitset<unsigned char> > bitset);
     SharedRankSelect();
 
     /**
@@ -30,6 +30,13 @@ class SharedRankSelect {
      * @return k-th set bit
      */
     unsigned long select(unsigned long k) const;
+
+    /**
+     * Rank of the k-th idx
+     * @param k idx
+     * @return rank of k-th idx
+     */
+    unsigned long rank(unsigned long k) const;
 
     ~SharedRankSelect();
 };
