@@ -19,7 +19,8 @@ TEST(RankSelectTest, rankSelect) {
         unsigned char c2 = 0;
         do {
             for (unsigned int e = 0; e < 8; e++) {
-                std::shared_ptr<Sealib::Bitset<unsigned char>> bits(new Sealib::Bitset<unsigned char>(16 + e));
+                std::shared_ptr<Sealib::Bitset<unsigned char>> bits(
+                    new Sealib::Bitset<unsigned char>(16 + e));
                 bits->setBlock(0, c1);
                 bits->setBlock(1, c2);
                 for (unsigned int i = 0; i < e; i++) {
@@ -34,7 +35,8 @@ TEST(RankSelectTest, rankSelect) {
                 }
             }
             for (unsigned int e = 0; e < 8; e++) {
-                std::shared_ptr<Sealib::Bitset<unsigned char>> bits(new Sealib::Bitset<unsigned char>(16 + e));
+                std::shared_ptr<Sealib::Bitset<unsigned char>> bits(
+                    new Sealib::Bitset<unsigned char>(16 + e));
                 bits->setBlock(0, c1);
                 bits->setBlock(1, c2);
                 for (unsigned int i = 0; i < e; i++) {
