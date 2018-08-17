@@ -55,7 +55,7 @@ target_compile_options(sealib PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpeda
 #                   build tests
 # --------------------------------------------------- #
 file(GLOB TESTS "test/*.cpp")                                   # all test files
-add_executable(tests ${LIB_SOURCES} ${TESTS})
+add_executable(tests ${LIB_SOURCES} ${TESTS} test/sharedrankselect_test.cpp)
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})

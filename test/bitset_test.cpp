@@ -7,8 +7,6 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedLong) {
     typedef unsigned long block;
 
     Bitset<> bs;
-    std::cout << bs.size() << std::endl;
-    std::cout << bs.blocks() << std::endl;
     ASSERT_EQ(bs.size(), 0);
     ASSERT_EQ(bs.blocks(), 0);
 
@@ -78,8 +76,6 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedInt) {
     typedef unsigned int block;
 
     Bitset<block> bs;
-    std::cout << bs.size() << std::endl;
-    std::cout << bs.blocks() << std::endl;
     ASSERT_EQ(bs.size(), 0);
     ASSERT_EQ(bs.blocks(), 0);
 
@@ -148,8 +144,6 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedShort) {
     typedef unsigned short block;
 
     Bitset<block> bs;
-    std::cout << bs.size() << std::endl;
-    std::cout << bs.blocks() << std::endl;
     ASSERT_EQ(bs.size(), 0);
     ASSERT_EQ(bs.blocks(), 0);
 
@@ -218,8 +212,6 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedChar) {
     typedef unsigned char block;
 
     Bitset<block> bs;
-    std::cout << bs.size() << std::endl;
-    std::cout << bs.blocks() << std::endl;
     ASSERT_EQ(bs.size(), 0);
     ASSERT_EQ(bs.blocks(), 0);
 
