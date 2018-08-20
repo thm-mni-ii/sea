@@ -1,5 +1,5 @@
-#ifndef SEA_LIBS_REPS_H
-#define SEA_LIBS_REPS_H
+#ifndef SEALIB_GRAPHREPRESENTATIONS_H_
+#define SEALIB_GRAPHREPRESENTATIONS_H_
 #include <random>
 #include "sealib/compactgraph.h"
 /**
@@ -21,6 +21,8 @@ namespace Sealib {
 
 class Graphrepresentations {
  public:
+    static uint* fastGraphGeneration(uint n, uint mPern);
+
     /**	Generates a Gilbert graph G(n,p) in standard representation with n nodes
      *  and an occurence of every possible edge with a probability of
      *  0 < p < 1
@@ -84,5 +86,5 @@ class Graphrepresentations {
      */
     static void swapRepresentation(unsigned int *g);
 };
-}
-#endif  // SEA_LIBS_REPS_H
+}  // namespace Sealib
+#endif  // SEALIB_GRAPHREPRESENTATIONS_H_

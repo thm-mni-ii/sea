@@ -5,7 +5,8 @@
 using Sealib::Basicgraph;
 using Sealib::GraphCreator;
 
-Basicgraph *GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order) {
+Basicgraph *GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
+                                                         unsigned int order) {
     Node *nodes = static_cast<Node *>(malloc(sizeof(Node) * order));
 
     for (unsigned int i = 0; i < order; i++) {

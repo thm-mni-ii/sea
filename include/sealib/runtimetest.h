@@ -1,6 +1,9 @@
+#ifndef SEALIB_RUNTIMETEST_H_
+#define SEALIB_RUNTIMETEST_H_
 #include <sys/times.h>
 #include <unistd.h>
-#include <ctime>
+#include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -12,11 +15,11 @@
  * be printed into the standard output or into a 
  * CSV (comma seperated values) file.
  */
-class RuntimeTest{
-private:
-    std::vector<std::tuple<unsigned int,unsigned int>> parameters;
-    std::vector<double> runtimes; ///< runtime in seconds
-public:
+class RuntimeTest {
+ private:
+    std::vector<std::tuple<unsigned int, unsigned int>> parameters;
+    std::vector<unsigned int> runtimes;  // Runtime in seconds
+ public:
     /**
      * Runs a test with a given function and saves the results
      * @param testfunction a template type to be used with a lambda to specify
@@ -25,7 +28,7 @@ public:
      * @param size size of the tested graph used for running the test
      */
     template<typename Testfunction>
-    void runTest(Testfunction testfunction,unsigned int order, unsigned int size);
+    void runTest(Testfunction testfunction, unsigned int order, unsigned int size);
     /**
      * Prints the testresults to standard output
      */
@@ -39,38 +42,42 @@ public:
 };
 
 template<typename Testfunction>
-void RuntimeTest::runTest(Testfunction testfunction, unsigned int order, unsigned int size){
-    std::tuple<unsigned int,unsigned int> funcParameters(order,size);
+void RuntimeTest::runTest(Testfunction testfunction, unsigned int order, unsigned int size) {
+    using clk = std::chrono::high_resolution_clock;
+
+    std::tuple<unsigned int, unsigned int> funcParameters(order, size);
     parameters.push_back(funcParameters);
-    struct tms before;
-    struct tms after;
-    std::cout << "Running test: "<< parameters.size() << " n: "<< order << " w: "<< size << std::endl;
-    times(&before);
+    const clk::time_point runStart = clk::now();
+    std::cout << "Running test: "<< parameters.size()
+              << " n: "<< order << " w: "<< size << std::endl;
     testfunction();
-    return;
-    times(&after);
-    double elapsedTime = ((double)((after.tms_utime + after.tms_stime)
-                                   - (before.tms_utime + before.tms_stime))) / sysconf(_SC_CLK_TCK);
-    runtimes.push_back(elapsedTime);
+    const auto runTime = std::chrono::duration_cast<std::chrono::milliseconds>
+                         (clk::now() - runStart).count();
+
+    runtimes.push_back(runTime);
 }
 
-void RuntimeTest::printResults(){
-    for(unsigned int i = 0; i < parameters.size(); ++i){
-        std::cout <<"Nodes: " << std::get<0>(parameters[i]) << std::endl;
-        std::cout <<"Edges: " << std::get<1>(parameters[i]) << std::endl;
-        std::cout <<"Runtime: " << runtimes[i] << std::endl;
+void RuntimeTest::printResults() {
+    std::cout << "order,size,runtime" << std::endl;
+    for (unsigned int i = 0; i < parameters.size(); ++i) {
+        std::cout << std::get<0>(parameters[i]) << ",";
+        std::cout << std::get<1>(parameters[i]) << ",";
+        std::cout << runtimes[i] << std::endl;
     }
 }
 
-void RuntimeTest::saveCSV(std::string filepath){
+void RuntimeTest::saveCSV(std::string filepath) {
     std::ofstream output;
-    output.open(filepath,std::ofstream::out | std::ofstream::trunc);
-    output << "order,size,runtime" << std::endl;
-    for(unsigned int i = 0; i < parameters.size(); ++i){
-        output<<std::get<0>(parameters[i])<<",";
-        output<<std::get<1>(parameters[i])<<",";
-        output<<runtimes[i];
-        output<<std::endl;
+    output.open(filepath, std::ofstream::in | std::ofstream::out | std::ofstream::trunc);
+    if (output.is_open()) {
+        output << "order,size,runtime" << std::endl;
+        for (unsigned int i = 0; i < parameters.size(); ++i) {
+            output << std::get<0>(parameters[i]) << ",";
+            output << std::get<1>(parameters[i]) << ",";
+            output << runtimes[i];
+            output << std::endl;
+        }
     }
-    output.close();
 }
+
+#endif  // SEALIB_RUNTIMETEST_H_

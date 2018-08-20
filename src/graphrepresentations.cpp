@@ -5,11 +5,52 @@
 #include <ctime>
 #include <random>
 #include <vector>
+#include <algorithm>
+#include <set>
 #include "sealib/adjacency.h"
 #include "sealib/compactgraph.h"
 #include "sealib/node.h"
 
-using namespace Sealib;
+using Sealib::Graphrepresentations;
+using Sealib::Compactgraph;
+
+uint* Graphrepresentations::fastGraphGeneration(uint n, uint mPern) {
+  uint M = n * mPern;
+  uint N = n + M + 2;
+
+  unsigned int *A = new unsigned int[N];
+  A[0] = n;
+  A[n + 1] = M;
+  std::random_device rd;
+  std::mt19937_64 mt(rd());
+  mt.seed(std::mt19937_64::default_seed);
+
+  A[1] = n + 2;
+
+  for (uint v = 1; v <= n; ++v) {
+    // First: Create Pointer!
+    if (v != n) {
+      A[v + 1] = A[v] + mPern;
+    }
+    std::set<uint> generated;
+    for (uint p = A[v]; p < N && (v == n || p < A[v + 1]); p++) {
+      std::uniform_int_distribution<uint> dist(1, n);
+      uint rn = dist(mt);
+      if (generated.find(rn) != generated.end()) {
+        --p;
+      } else {
+        A[p] = rn;
+        generated.insert(rn);
+      }
+    }
+    generated.clear();
+    if (v != n) {
+      std::sort(A + (A[v]), A + (A[v + 1]));
+    }
+  }
+  std::sort(A + (A[n]), A + N);
+  return A;
+}
 
 Compactgraph* Graphrepresentations::generateGilbertGraph(unsigned int order,
                                                     double p,

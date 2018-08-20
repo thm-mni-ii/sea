@@ -3,7 +3,7 @@
 #include <stack>
 #include <random>
 #include <string>
-#include <random>
+#include <sstream>
 #include <memory>
 #include <ctime>
 #include <cmath>
@@ -12,15 +12,16 @@
 #include "sealib/graphrepresentations.h"
 #include "sealib/compactgraph.h"
 #include "sealib/runtimetest.h"
+#include "sealib/_types.h"
 
 using std::cout;
-using namespace std;
+using std::stack;
 using Sealib::Compactgraph;
 using Sealib::DFS;
 using Sealib::Graphrepresentations;
 
-#define VERY_SLIM   ([](double n) { return (5. * n) / (n * (n - 1.)); })
-#define SLIM        ([](double n) { return (n * std::log2(n)) / (n * (n - 1.)); })
+#define VERY_SPARSE ([](double n) { return (5. * n) / (n * (n - 1.)); })
+#define SPARSE      ([](double n) { return (n * std::log2(n)) / (n * (n - 1.)); })
 #define MODERATE    ([](double n) { return (n * std::sqrt(n)) / (n * (n - 1.)); })
 #define DENSE       ([](double n) { return (std::pow(n, 2.) / std::log2(n)) / (n * (n - 1.)); })
 
@@ -74,54 +75,50 @@ void dummy(uint v) {}
 void dummy2(uint u, uint v) {}
 
 void runTests(double(*p)(double), std::string filename) {
-    RuntimeTest test;
-    for (unsigned int i = 1; i <= 1; ++i) {
+    RuntimeTest test1, test2;
+    for (unsigned int i = 1; i <= 2; ++i) {
         double n = 20000 * i;
-        for (unsigned int j = 0; j <= 10; ++j) {
-            std::unique_ptr<Compactgraph> g(Graphrepresentations::generateGilbertGraph(n, p(n), &gen));
-            test.runTest([&g]() { DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy); }, n, n * (n - 1) * p(n));
+        for (unsigned int j = 0; j < 2; ++j) {
+            double pN = p(n);
+            double m =  n * (n-1) * pN;
+            auto A = Graphrepresentations::generateRawGilbertGraph(n, pN, &gen);
+            std::unique_ptr<Compactgraph> g(new Compactgraph(A));
+            test1.runTest([&g]() { DFS::standardDFS(g.get(), dummy,
+                                                    dummy2, dummy2, dummy); }, n, m);
+            test2.runTest([&A]() {
+                Graphrepresentations::standardToBeginpointer(A);
+                Graphrepresentations::swapRepresentation(A);
+                DFS::runLinearTimeInplaceDFS(A, dummy, dummy, 1);
+            }, n, m);
         }
     }
-    //test.saveCSV("~/" + filename);
-    test.printResults();
+
+    test1.printResults();
+    test2.printResults();
 }
 
-double verySlim(double n){
-    return (5. * n) / (n * (n - 1.));
+void runTest(uint n, uint (*fm)(uint n)) {
+    RuntimeTest test1, test2;
+    auto _n = n;
+    for (uint i = 1; i <= 1; i++) {
+        for (unsigned int j = 0; j < 1; ++j) {
+            auto A = Graphrepresentations::fastGraphGeneration(_n, fm(_n));
+            std::unique_ptr<Compactgraph> g(new Compactgraph(A));
+            test1.runTest([&g]() {
+                DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy);
+            }, _n, fm(_n));
+//            test2.runTest([&A]() {
+//                Graphrepresentations::standardToBeginpointer(A);
+//                Graphrepresentations::swapRepresentation(A);
+//                DFS::runLinearTimeInplaceDFS(A, dummy, dummy, 1);
+//            }, _n, fm(_n));
+        }
+        _n = n * 2 * i;
+    }
+    test1.printResults();
+    test2.printResults();
 }
 
 int main() {
-    gen.seed(std::mt19937_64::default_seed);
-    runTests(verySlim, "verySlim.csv");
-    // runTests(SLIM, "slim.csv");
-    // runTests(MODERATE, "moderate.csv");
-    // runTests(DENSE, "thick.csv");
     return 0;
-
-//    // Graph in the swapped begin pointer representation
-//    auto *graph = new unsigned int[19]{ 5, 9, 7, 9, 9, 7, 12, 1, 17, 2, 12, 14, 3, 14, 4, 12, 17, 5, 14 };
-//    auto *graph3 = new unsigned int[19]{ /*n*/ 3, 7, 5, 5, /*m*/ 6, 1, 9, 2, 9, 3, 7 };
-//    auto *graph4 = new unsigned int[10]{3, 7,8,5, 5, 1,9, 2, 3,7};
-//    auto *graph = new unsigned int[15]{5, 9,10,7,13,7, 8, 1,12, 2, 3,9, 4, 5,12};
-//
-//    auto *graph = new unsigned int[9]{4, 8,2,3,3, 3, 1,2, 4};
-//
-//    // Grade zero
-//    auto *graph = new unsigned int[9]{4, 2, 2, 3, 4, 3, 1, 3, 4};
-//
-//    auto wcts = std::chrono::system_clock::now();
-
-//    std::mt19937_64 rng;
-//    rng.seed(std::mt19937_64::default_seed);
-
-    //uint* graph = Graphrepresentations::generateRawGilbertGraph(500, 0.5, &rng); // TODO(Andrej)
-
-    //Graphrepresentations::standardToBeginpointer(graph);
-    //Graphrepresentations::swapRepresentation(graph);
-
-//    DFS::runLinearTimeInplaceDFS(graph, [](uint v) { std::cout << "" << std::endl; },
-//                                 [](uint v) { std::cout << "" << std::endl; }, 1);
-//
-//    std::chrono::duration<double> wctduration = (std::chrono::system_clock::now() - wcts);
-//    std::cout << "Finished in " << wctduration.count() << " seconds [Wall Clock]" << std::endl;
 }
