@@ -9,7 +9,6 @@ set(LIBRARY_OUTPUT_PATH lib)                                    # generated libr
 set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated binary files
 set(CMAKE_INCLUDE_PATH include/)
 
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # --------------------------------------------------- #
@@ -55,7 +54,7 @@ target_compile_options(sealib PRIVATE -std=c++11 -g -O3 -Wall -Werror -Wextra -W
 #                   build tests
 # --------------------------------------------------- #
 file(GLOB TESTS "test/*.cpp")                                   # all test files
-add_executable(tests ${LIB_SOURCES} ${TESTS} test/sharedrankselect_test.cpp)
+add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
