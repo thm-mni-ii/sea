@@ -1,5 +1,5 @@
-#include "sealib/iterator.h"
 #include <iostream>
+#include "sealib/iterator.h"
 
 using Sealib::Iterator;
 
