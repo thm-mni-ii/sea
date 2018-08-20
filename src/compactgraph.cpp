@@ -16,8 +16,11 @@ unsigned int Compactgraph::getNodeDegree(unsigned int u) {
 	}
 	unsigned int v = u + 1;
 	if (u != getOrder()) {
+		return A[v] - A[u];
+
+		/*
 		unsigned int skip = 0;
-		while (A[v+skip] <= getOrder() && v+skip <= getOrder()) {
+		while (A[v + skip] <= getOrder() && (v + skip) <= getOrder()) {
 			++skip;
 		}
 		v += skip;
@@ -25,6 +28,7 @@ unsigned int Compactgraph::getNodeDegree(unsigned int u) {
 			return (A[0] + A[A[0]+1] + 2) - A[u];
 		}
 		return A[v] - A[u];
+		*/
 	} else {
 		return (A[0] + A[A[0]+1] + 2) - A[u];
 	}
