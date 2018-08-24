@@ -22,13 +22,13 @@ For some data structure and algorithm we also provide a folklore implementation 
 ## Algorithms
 * Depth First Search
     * A folklore depth first search that runs in O(n + m) time, using O((n + m) log n) bits.
-    * [Details](docs/n-bit-dfs.md) A depth first search that runs in O((n + m) log n) time, using O((log(3)+ε) n) bits.
+    * A depth first search that runs in O((n + m) log n) time, using O((log(3)+ε) n) bits. [Read more ...](docs/n-bit-dfs.md) 
     
 
 ## Data Structures
 * Bitset(n): A bitset of n bits that supports access in O(1) time and occupies O(n) bits.
 * Graph(G = {V, E}): A adjacency list graph representation that occupies O((n + m) log n) bits.
-* [ChoiceDictionary](docs/choice-dictionary.md): A bitset that supports a choice operation in O(1) time that returns the position of a bit set to 1. (Currently occupying O(n \log n) bits.)
+* [ChoiceDictionary](docs/choice-dictionary.md): A bitset that supports a choice operation in O(1) time that returns the position of a bit set to 1. The total representation requires O(n + n/w + 3n/(w^2)) bits of memory.
 
 # Build
 1. Install CMake and a C++ compiler for your specific operating system.

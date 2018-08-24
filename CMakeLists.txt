@@ -9,7 +9,6 @@ set(LIBRARY_OUTPUT_PATH lib)                                    # generated libr
 set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated binary files
 set(CMAKE_INCLUDE_PATH include/)
 
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # --------------------------------------------------- #
@@ -49,7 +48,7 @@ include_directories(${CMAKE_INCLUDE_PATH})
 file(GLOB LIB_SOURCES "src/*.cpp")
 
 add_library(sealib SHARED ${LIB_SOURCES})
-target_compile_options(sealib PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpedantic -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
+target_compile_options(sealib PRIVATE -std=c++11 -g -O3 -Wall -Werror -Wextra -Wpedantic -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 # --------------------------------------------------- #
 #                   build tests
@@ -59,10 +58,18 @@ add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(tests PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
+target_compile_options(tests PRIVATE -std=c++11 -g -O3 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")
         target_compile_options(tests PRIVATE --coverage)
         target_link_libraries(tests --coverage)
 endif ()
+
+# --------------------------------------------------- #
+#                   build main
+# --------------------------------------------------- #
+file(GLOB MAIN "src-view/*.cpp")                                   # all test files
+add_executable(main ${LIB_SOURCES} ${MAIN})
+find_package(Threads)
+target_compile_options(main PRIVATE -std=c++11 -O3)

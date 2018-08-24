@@ -13,25 +13,25 @@ namespace Sealib {
  * Partly based on dynamic_bitset from the boost library.
  * @author Johannes Meintrup
  */
-template<typename Block = unsigned long>
+template<typename BlockType = unsigned long>
 class Bitset {
-    typedef unsigned long sizetype;
-    typedef bool bittype;
+    typedef unsigned long sizeType;
+    typedef bool bitType;
 
  private:
-    static const unsigned int bitsPerByte = sizeof(Block) * 8;
-    static const Block blocktype_one = Block(1);
+    static const unsigned int bitsPerBlock = sizeof(BlockType) * 8;
+    static const BlockType BlockTypeOne = BlockType(1);
 
-    sizetype bits;
-    std::vector<Block> mbits;
+    sizeType bits;
+    std::vector<BlockType> mbits;
 
-    inline bittype get(const Block &i, sizetype b) const {
-        return static_cast<bittype>(i & (blocktype_one << b));
+    inline bitType get(const BlockType &i, sizeType b) const {
+        return static_cast<bitType>(i & (BlockTypeOne << b));
     }
 
  public:
-    static const sizetype npos = std::numeric_limits<sizetype>::max();
-    explicit Bitset(sizetype bits_);
+    static const sizeType npos = std::numeric_limits<sizeType>::max();
+    explicit Bitset(sizeType bits_);
     Bitset();
     ~Bitset();
 
@@ -40,19 +40,19 @@ class Bitset {
      * Implementation taken from boost dynamic_bitset.
      */
      class BitReference {
-         friend class Bitset<Block>;
+         friend class Bitset<BlockType>;
 
-         BitReference(Block *b, Block pos) :
+         BitReference(BlockType *b, BlockType pos) :
                  mblock(b),
-                 mmask(static_cast<Block>(Block(1) << pos))
+                 mmask(static_cast<BlockType>(BlockType(1) << pos))
          {}
 
       private:
-         Block *mblock;
-         const Block mmask;
+         BlockType *mblock;
+         const BlockType mmask;
 
          inline void doSet() { *mblock = *mblock | mmask; }
-         inline void doReset() { *mblock = *mblock & static_cast<Block>(~mmask); }
+         inline void doReset() { *mblock = *mblock & static_cast<BlockType>(~mmask); }
          inline void doFlip() { *mblock = *mblock ^ mmask; }
          inline void doAssign(bool b) { b ? doSet() : doReset(); }
 
@@ -103,14 +103,14 @@ class Bitset {
       * @param bit index of the bit
       * @return BitReference referencing the block and index of the bit.
       */
-     BitReference operator[](sizetype bit);
+     BitReference operator[](sizeType bit);
 
      /**
       * const version of the operator needs only a simple get instead of the BitReference wrapper class.
       * @param bit index of the bit
       * @return true if set, false otherwise
       */
-     bool operator[](sizetype bit) const;
+     bool operator[](sizeType bit) const;
 
     /**
      * sets all bits to true
@@ -131,39 +131,39 @@ class Bitset {
      * @param bit idx of the bit
      * @return true if the bit is set, false otherwise
      */
-    bittype get(sizetype bit) const;
+    bitType get(sizeType bit) const;
 
     /**
      * @return number of bits held by bitset
      */
-    sizetype size() const;
+    sizeType size() const;
     /**
      * @return number of blocks used to store bits
      */
-    sizetype blocks() const;
+    sizeType blocks() const;
 
     /**
      * @param idx of the block
      * @return const ref to the block
      */
-    const Block& getBlock(sizetype idx) const;
+    const BlockType& getBlock(sizeType idx) const;
 
     /**
      * @param idx of the block
      * @param block value to be set
      */
-    void setBlock(sizetype idx,  Block block);
+    void setBlock(sizeType idx,  BlockType block);
 
     //  basic bitset operations
-    Bitset<Block>& operator&=(const Bitset<Block>& rhs);
+    Bitset<BlockType>& operator&=(const Bitset<BlockType>& rhs);
 
-    Bitset<Block>& operator|=(const Bitset<Block>& rhs);
+    Bitset<BlockType>& operator|=(const Bitset<BlockType>& rhs);
 
-    Bitset<Block>& operator^=(const Bitset<Block>& rhs);
+    Bitset<BlockType>& operator^=(const Bitset<BlockType>& rhs);
 
-    Bitset<Block>& operator-=(const Bitset<Block>& rhs);
+    Bitset<BlockType>& operator-=(const Bitset<BlockType>& rhs);
 
-    Bitset<Block> operator~() const;
+    Bitset<BlockType> operator~() const;
 };
 
 template <typename Block>
