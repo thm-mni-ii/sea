@@ -7,6 +7,7 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
+#include <include/sealib/dyckwordlexicon.h>
 #include "sealib/graphcreator.h"
 #include "sealib/dfs.h"
 #include "sealib/graphrepresentations.h"

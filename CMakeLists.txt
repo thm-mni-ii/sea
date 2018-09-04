@@ -54,7 +54,7 @@ target_compile_options(sealib PRIVATE -std=c++11 -g -O3 -Wall -Werror -Wextra -W
 #                   build tests
 # --------------------------------------------------- #
 file(GLOB TESTS "test/*.cpp")                                   # all test files
-add_executable(tests ${LIB_SOURCES} ${TESTS} test/dycktable_test.cpp)
+add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
