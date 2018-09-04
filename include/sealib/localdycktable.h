@@ -1,5 +1,5 @@
-#ifndef SEA_LOCALDYCKTABLE_H
-#define SEA_LOCALDYCKTABLE_H
+#ifndef SEALIB_LOCALDYCKTABLE_H_
+#define SEALIB_LOCALDYCKTABLE_H_
 
 #include <vector>
 
@@ -10,14 +10,14 @@ namespace Sealib {
  */
 class LocalDyckTable {
  public:
-    static const unsigned int segmentLength = 7;
+    static constexpr const unsigned int kSegLen = 7;
     /**
      * Capsules the Data we want to lookup in the table in a single class.
      */
     class Data {
      public:
-        unsigned char localMatches[segmentLength];  // array of local matches
-        char localDepths[segmentLength];  // array of local depths
+        unsigned char localMatches[kSegLen];  // array of local matches
+        char localDepths[kSegLen];  // array of local depths
         unsigned char leftPioneer;  // left pioneer, if there is one
         unsigned char rightPioneer;  // right pioneer, if there is one
 
@@ -40,6 +40,7 @@ class LocalDyckTable {
     //  singleton instance only in the function getLocalSelect, these should not be used
     LocalDyckTable(LocalDyckTable const &) = delete;
     void operator=(LocalDyckTable const &) = delete;
+
  private:
     std::vector<Data> table;
 
@@ -47,4 +48,4 @@ class LocalDyckTable {
     ~LocalDyckTable() = default;
 };
 }  // namespace Sealib
-#endif  // SEA_LOCALDYCKTABLE_H
+#endif  // SEALIB_LOCALDYCKTABLE_H_
