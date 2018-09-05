@@ -1,5 +1,4 @@
 #include <sealib/bitset.h>
-#include <iostream>
 
 using Sealib::Bitset;
 
@@ -53,12 +52,6 @@ typename Bitset<BlockType>::bitType Bitset<BlockType>::get(sizeType bit) const {
 template<typename BlockType>
 typename Bitset<BlockType>::sizeType Bitset<BlockType>::size() const {
     return bits;
-}
-
-template<typename BlockType>
-void Bitset<BlockType>::resize(unsigned long size) {
-    bits = size;
-    mbits.resize((size / bitsPerBlock) + 1);
 }
 
 template<typename BlockType>
@@ -119,18 +112,6 @@ Bitset<BlockType> Bitset<BlockType>::operator~() const {
     Bitset b(*this);
     b.flip();
     return b;
-}
-
-template<typename BlockType>
-BlockType Sealib::Bitset<BlockType>::getShiftedBlock(Bitset::sizeType idx) const {
-    BlockType len = Sealib::Bitset<BlockType>::bitsPerBlock;
-    BlockType b1 = mbits[idx/len];
-    BlockType b2 = mbits[(idx+len-1)/len];
-
-    BlockType bitIdx = idx % len;
-    BlockType bitMask = (BlockType(1) << len) - BlockType(1);
-
-    return (b1 >> bitIdx | b2 << (len - bitIdx)) & bitMask;
 }
 
 namespace Sealib {

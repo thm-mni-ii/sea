@@ -19,15 +19,11 @@ class DyckWordLexicon {
     std::vector<Sealib::Bitset<unsigned char>> lexicon;
 
     unsigned int wordLength;
-    void generateWords(Sealib::Bitset<unsigned char> word,
-                       unsigned int i,
-                       unsigned int mOpen,
-                       unsigned int mClosed);
+    void generateWords(Sealib::Bitset<unsigned char> word, int i, int mOpen, int mClosed);
 
  public:
     /**
-     * @param wordLength_ Length of the dyckwords to be created,
-     * the object will hold all words of the specified length.
+     * @param wordLength_ Length of the dyckwords to be created, the object will hold all words of the specified length.
      * wordLength_ has to be even, or it will be decremented by one.
      * If wordLength_ is smaller than two, it will be set to two.
      */
