@@ -17,20 +17,26 @@ void Sealib::DyckWordLexicon::generateWords(Sealib::Bitset<unsigned char> word,
                                             int i,
                                             int mOpen,
                                             int mClosed) {
-    if (mOpen < wordLength / 2 && mClosed < wordLength / 2 && mOpen > mClosed) {  // can add "(" or ")"
+    if (mOpen < wordLength / 2
+        && mClosed < wordLength / 2
+        && mOpen > mClosed) {  // can add "(" or ")"
         word[i] = 1;
         generateWords(word, i + 1, mOpen + 1, mClosed);
 
         word[i] = 0;
         generateWords(word, i + 1, mOpen, mClosed + 1);
-    } else if ((mOpen < wordLength / 2 && mClosed < wordLength / 2 && mOpen == mClosed)  // can add "("
+    } else if ((mOpen < wordLength / 2
+        && mClosed < wordLength / 2
+        && mOpen == mClosed)  // can add "("
         || (mOpen < wordLength / 2 && mClosed == wordLength / 2)) {
         word[i] = 1;
         generateWords(word, i + 1, mOpen + 1, mClosed);
-    } else if (mOpen == wordLength / 2 && mClosed < wordLength / 2) {  // can add ")"
+    } else if (mOpen == wordLength / 2
+        && mClosed < wordLength / 2) {  // can add ")"
         word[i] = 0;
         generateWords(word, i + 1, mOpen, mClosed + 1);
-    } else if (mOpen == mClosed && (mOpen + mClosed) == wordLength) {  // we have a dyckword!
+    } else if (mOpen == mClosed
+        && (mOpen + mClosed) == wordLength) {  // we have a dyckword!
         lexicon.push_back(word);
     }
 }
