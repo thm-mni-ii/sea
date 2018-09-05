@@ -1,7 +1,6 @@
 #ifndef SEALIB_DYCKWORDLEXICON_H_
 #define SEALIB_DYCKWORDLEXICON_H_
 
-
 #include <sealib/bitset.h>
 #include <vector>
 #include <ostream>
@@ -20,7 +19,7 @@ class DyckWordLexicon {
     std::vector<Sealib::Bitset<unsigned char>> lexicon;
 
     unsigned int wordLength;
-    void generateWords(Sealib::Bitset<unsigned char> x, int i, int n0, int n1);
+    void generateWords(Sealib::Bitset<unsigned char> word, int i, int mOpen, int mClosed);
 
  public:
     /**
@@ -33,7 +32,7 @@ class DyckWordLexicon {
     /**
      * @return const ref to the lexicon
      */
-    const std::vector<Sealib::Bitset<unsigned char>>& getLexicon();
+    const std::vector<Sealib::Bitset<unsigned char>> &getLexicon();
 
     /**
      * @return length of the generated words

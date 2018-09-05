@@ -2,40 +2,42 @@
 #include <iostream>
 
 Sealib::DyckWordLexicon::DyckWordLexicon(unsigned int wordLength_) : wordLength(wordLength_) {
-  if (wordLength < 2) {
-    wordLength = 2;
-  } else if (wordLength % 2 != 0) {
-    wordLength--;
-  }
+    if (wordLength < 2) {
+        wordLength = 2;
+    } else if (wordLength % 2 != 0) {
+        wordLength--;
+    }
 
-  generateWords(Sealib::Bitset<unsigned char>(wordLength), 1, 1, 0);
+    Sealib::Bitset<unsigned char> baseWord(wordLength);
+    baseWord[0] = 1;  // "("
+    generateWords(baseWord, 1, 1, 0);
 }
 
-void Sealib::DyckWordLexicon::generateWords(Sealib::Bitset<unsigned char> x,
+void Sealib::DyckWordLexicon::generateWords(Sealib::Bitset<unsigned char> word,
                                             int i,
-                                            int n0,
-                                            int n1) {
-  if (n0 < wordLength / 2 && n1 < wordLength / 2 && n0 > n1) {  // can add "(" or ")"
-    x[i] = 0;
-    generateWords(x, i + 1, n0 + 1, n1);
+                                            int mOpen,
+                                            int mClosed) {
+    if (mOpen < wordLength / 2 && mClosed < wordLength / 2 && mOpen > mClosed) {  // can add "(" or ")"
+        word[i] = 1;
+        generateWords(word, i + 1, mOpen + 1, mClosed);
 
-    x[i] = 1;
-    generateWords(x, i + 1, n0, n1 + 1);
-  } else if ((n0 < wordLength / 2 && n1 < wordLength / 2 && n0 == n1)  // can add "("
-      || (n0 < wordLength / 2 && n1 == wordLength / 2)) {
-    x[i] = 0;
-    generateWords(x, i + 1, n0 + 1, n1);
-  } else if (n0 == wordLength / 2 && n1 < wordLength / 2) {  // can add ")"
-    x[i] = 1;
-    generateWords(x, i + 1, n0, n1 + 1);
-  } else if (n0 == n1 && (n0 + n1) == wordLength) {  // we have a dyckword!
-    lexicon.push_back(x);
-  }
+        word[i] = 0;
+        generateWords(word, i + 1, mOpen, mClosed + 1);
+    } else if ((mOpen < wordLength / 2 && mClosed < wordLength / 2 && mOpen == mClosed)  // can add "("
+        || (mOpen < wordLength / 2 && mClosed == wordLength / 2)) {
+        word[i] = 1;
+        generateWords(word, i + 1, mOpen + 1, mClosed);
+    } else if (mOpen == wordLength / 2 && mClosed < wordLength / 2) {  // can add ")"
+        word[i] = 0;
+        generateWords(word, i + 1, mOpen, mClosed + 1);
+    } else if (mOpen == mClosed && (mOpen + mClosed) == wordLength) {  // we have a dyckword!
+        lexicon.push_back(word);
+    }
 }
 
 const std::vector<Sealib::Bitset<unsigned char>> &Sealib::DyckWordLexicon::getLexicon() {
-  return lexicon;
+    return lexicon;
 }
 unsigned int Sealib::DyckWordLexicon::getWordLength() {
-  return wordLength;
+    return wordLength;
 }
