@@ -7,13 +7,7 @@
 namespace Sealib {
 class DyckMatchingStructure {
  public:
-    static unsigned long getMatchNaive(
-        const Sealib::Bitset<unsigned char> &word_,
-        unsigned long idx);
-
-    static unsigned long getMatchNaive(
-        const Sealib::Bitset<unsigned char> &word,
-        unsigned long idx, unsigned long skip);
+    unsigned long getMatchNaive(unsigned long idx);
 
     virtual unsigned long getMatch(unsigned long idx);
 
@@ -26,6 +20,7 @@ class DyckMatchingStructure {
  protected:
     const Sealib::Bitset<unsigned char> word;
     static constexpr const unsigned char mSegmentLength = 7;
+
 };
 }  // namespace Sealib
 #endif  // SEALIB_DYCKMATCHINGSTRUCTURE_H_
