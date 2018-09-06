@@ -2,31 +2,34 @@
 #include <cmath>
 #include <iostream>
 
-Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_, unsigned char recursions) :
+Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_,
+                                                                       unsigned char recursions) :
     DyckMatchingStructure(word_),
     segments(static_cast<unsigned int>(word.size() / mSegmentLength)),
     lastSegment(static_cast<unsigned char>(word.size() % mSegmentLength)),
     pioneerMatchingStructure(nullptr),
-    pioneerRankSelect(createPioneerRankSelectBitset()){
+    pioneerRankSelect(createPioneerRankSelectBitset()) {
 
     unsigned long size = pioneerRankSelect.size();
 
     unsigned long maxRank = pioneerRankSelect.rank(size);
-        if(maxRank > 0) {
-            Sealib::Bitset<unsigned char> pioneerWord(maxRank);
-            for(unsigned long i = 0; i < maxRank; i++) {
-                unsigned long idx = pioneerRankSelect.select(i+1);
-                pioneerWord[i] = word[idx - 1];
-            }
-            if(recursions > 0) {
-                pioneerMatchingStructure = new Sealib::RecursiveDyckMatchingStructure(pioneerWord, static_cast<unsigned char>(recursions - 1));
-            } else {
-                pioneerMatchingStructure = new Sealib::DyckMatchingStructure(pioneerWord);
-            }
+    if (maxRank > 0) {
+        Sealib::Bitset<unsigned char> pioneerWord(maxRank);
+        for (unsigned long i = 0; i < maxRank; i++) {
+            unsigned long idx = pioneerRankSelect.select(i + 1);
+            pioneerWord[i] = word[idx - 1];
+        }
+        if (recursions > 0) {
+            pioneerMatchingStructure =
+                new Sealib::RecursiveDyckMatchingStructure(pioneerWord, static_cast<unsigned char>(recursions - 1));
+        } else {
+            pioneerMatchingStructure = new Sealib::DyckMatchingStructure(pioneerWord);
+        }
     }
 }
 
-Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_) : RecursiveDyckMatchingStructure(word_, 0) {
+Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_)
+    : RecursiveDyckMatchingStructure(word_, 0) {
 }
 
 Sealib::Bitset<unsigned char> Sealib::RecursiveDyckMatchingStructure::createPioneerRankSelectBitset() {
@@ -39,7 +42,7 @@ Sealib::Bitset<unsigned char> Sealib::RecursiveDyckMatchingStructure::createPion
         unsigned long leftPioneer = LocalDyckTable::getLocalData(segment).leftPioneer;
         unsigned long rightPioneer = LocalDyckTable::getLocalData(segment).rightPioneer;
 
-        if (leftPioneer != (unsigned char) - 1) {
+        if (leftPioneer != (unsigned char) -1) {
             if (!pioneerRankSelectBitset[mSegmentLength * i + leftPioneer]) {
                 pioneerRankSelectBitset[mSegmentLength * i + leftPioneer].flip();
 
@@ -50,7 +53,7 @@ Sealib::Bitset<unsigned char> Sealib::RecursiveDyckMatchingStructure::createPion
                 }
             }
         }
-        if (rightPioneer != (unsigned char) - 1) {
+        if (rightPioneer != (unsigned char) -1) {
             if (!pioneerRankSelectBitset[mSegmentLength * i + rightPioneer]) {
                 pioneerRankSelectBitset[mSegmentLength * i + rightPioneer].flip();
 
@@ -65,17 +68,18 @@ Sealib::Bitset<unsigned char> Sealib::RecursiveDyckMatchingStructure::createPion
     if (lastSegment != 0) {
         unsigned char segment = word.getBlock(segments);
 
-        for(unsigned int c = lastSegment; c < mSegmentLength; c+=2) {
+        for (unsigned int c = lastSegment; c < mSegmentLength; c += 2) {
             segment |= static_cast<unsigned char>(1 << c);
         }
 
         unsigned long rightPioneer = LocalDyckTable::getLocalData(segment).rightPioneer;
 
-        if (rightPioneer != (unsigned char) - 1) {
+        if (rightPioneer != (unsigned char) -1) {
             if (!pioneerRankSelectBitset[mSegmentLength * segments + rightPioneer]) {
                 pioneerRankSelectBitset[mSegmentLength * segments + rightPioneer].flip();
 
-                unsigned long matchedPioneer = DyckMatchingStructure::getMatch(mSegmentLength * segments + rightPioneer);
+                unsigned long
+                    matchedPioneer = DyckMatchingStructure::getMatch(mSegmentLength * segments + rightPioneer);
 
                 if (!pioneerRankSelectBitset[matchedPioneer]) {
                     pioneerRankSelectBitset[matchedPioneer].flip();
@@ -90,7 +94,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
     unsigned long segmentId = idx / mSegmentLength;
     auto bSegmentIdx = static_cast<unsigned char>(idx % mSegmentLength);
 
-    if(segmentId != segments || lastSegment == 0) {
+    if (segmentId != segments || lastSegment == 0) {
         unsigned char segment = word.getBlock(segmentId);
         unsigned long beg = segmentId * mSegmentLength;
 
@@ -115,7 +119,6 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
         unsigned long pMatch_wp = pioneerMatchingStructure->getMatch(p_wp - 1);
         long pMatch = pioneerRankSelect.select(pMatch_wp + 1) - 1;
 
-
         unsigned long pSegment = p / mSegmentLength;
         unsigned long pSegmentIdx = p % mSegmentLength;
 
@@ -126,12 +129,12 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
 
         int depthDiff = bDepth - pDepth;
 
-
         unsigned long pMatchSegment = static_cast<unsigned long>(pMatch / mSegmentLength);
         unsigned long matchSegmentIdx = static_cast<unsigned long>(pMatch % mSegmentLength);
         unsigned char pMatchSeg = word.getBlock(pMatchSegment);
 
-        if (pMatch < mSegmentLength * segments) {  // not last segment or last segment has normal size, it is certain we can get a subword of length segmentLength
+        if (pMatch < mSegmentLength
+            * segments) {  // not last segment or last segment has normal size, it is certain we can get a subword of length segmentLength
             int pMatchDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
             for (long i = matchSegmentIdx; i >= 0; i--) {
                 int candidateDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[i];
@@ -141,7 +144,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
                 }
             }
         } else {
-            for(unsigned int c = lastSegment; c < mSegmentLength; c+=2) {
+            for (unsigned int c = lastSegment; c < mSegmentLength; c += 2) {
                 pMatchSeg |= static_cast<unsigned char>(1 << c);
             }
 
@@ -150,7 +153,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
                 int candidateDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[i];
                 int candidateDepthDifference = pMatchDepth - candidateDepth;
                 if (candidateDepthDifference == depthDiff) {  // i is match
-                    return  (pMatchSegment * mSegmentLength) + i;
+                    return (pMatchSegment * mSegmentLength) + i;
                 }
             }
         }
@@ -185,7 +188,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
 
             pSeg = word.getBlock(segments);
 
-            for(unsigned int c = lastSegment; c < mSegmentLength; c+=2) {
+            for (unsigned int c = lastSegment; c < mSegmentLength; c += 2) {
                 pSeg |= static_cast<unsigned char>(1 << c);
             }
 
@@ -204,7 +207,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
             int candidateDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[i];
             int candidateDepthDifference = candidateDepth - pMatchDepth;
             if (candidateDepthDifference == depthDiff) {  // i is match
-                return  (pMatchSegment * mSegmentLength) + i;
+                return (pMatchSegment * mSegmentLength) + i;
             }
         }
     }

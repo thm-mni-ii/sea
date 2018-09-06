@@ -21,7 +21,6 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
     RankSelect pioneerRankSelect;
 
     Sealib::Bitset<unsigned char> createPioneerRankSelectBitset();
-
 };
 }  // namespace Sealib
-#endif //SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
+#endif  // SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
