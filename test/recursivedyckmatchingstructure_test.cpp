@@ -13,23 +13,22 @@
 }*/
 
 TEST(RecursiveDyckMatchingStructureTest, testWords) {
-    Sealib::Bitset<unsigned char> word(25);
+    Sealib::Bitset<unsigned char> word(16);
     word.setBlock(0, (unsigned char) -1);
-    word.setBlock(1, (unsigned char) -1);
-    word.setBlock(2, (unsigned char) -1);
-    word.setBlock(3, (unsigned char) -1);
-
-    for (unsigned int i = 0; i < word.size(); i++) {
-        std::cout << (unsigned int) word[i];
-    }
-    std::cout << std::endl;
 
     Sealib::Bitset<unsigned char> segmentizedWord = Sealib::DyckMatchingStructure::segmentizeWord(word);
 
-    for (unsigned int i = 0; i < segmentizedWord.size(); i++) {
-        std::cout << (unsigned int) segmentizedWord[i];
+    Sealib::DyckMatchingStructure::getMatchNaive(segmentizedWord, 8, 7);
+
+
+    for(unsigned int i = 0; i < 16; i++) {
+        unsigned long match = Sealib::DyckMatchingStructure::getMatchNaive(word, i);
+        unsigned long segMatch = Sealib::DyckMatchingStructure::getMatchNaive(segmentizedWord, i, 7);
+        if (match != segMatch) {
+            std::cout << "match " << i << ": " << match << std::endl;
+            std::cout << "seg match " << i << ": " << segMatch << std::endl;
+        }
     }
-    std::cout << std::endl;
 
     Sealib::Bitset<unsigned char> word1(2);
     word1[0] = 1;
