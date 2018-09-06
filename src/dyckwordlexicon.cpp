@@ -14,9 +14,9 @@ Sealib::DyckWordLexicon::DyckWordLexicon(unsigned int wordLength_) : wordLength(
 }
 
 void Sealib::DyckWordLexicon::generateWords(Sealib::Bitset<unsigned char> word,
-                                            int i,
-                                            int mOpen,
-                                            int mClosed) {
+                                            unsigned int i,
+                                            unsigned int mOpen,
+                                            unsigned int mClosed) {
     if (mOpen < wordLength / 2
         && mClosed < wordLength / 2
         && mOpen > mClosed) {  // can add "(" or ")"
