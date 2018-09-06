@@ -19,7 +19,7 @@ class DyckWordLexicon {
     std::vector<Sealib::Bitset<unsigned char>> lexicon;
 
     unsigned int wordLength;
-    void generateWords(Sealib::Bitset<unsigned char> word, int i, int mOpen, int mClosed);
+    void generateWords(Sealib::Bitset<unsigned char> word, unsigned int i, unsigned int mOpen, unsigned int mClosed);
 
  public:
     /**
