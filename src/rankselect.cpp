@@ -26,7 +26,8 @@ unsigned long Sealib::RankSelect::select(unsigned long k) const {
 
 Sealib::RankSelect::RankSelect() = default;
 
-const Sealib::Bitset<unsigned char> Sealib::RankSelect::generateFirstInBlockBitSet(const RankStructure &rs) {
+const Sealib::Bitset<unsigned char> Sealib::RankSelect::generateFirstInBlockBitSet(
+    const RankStructure &rs) {
     unsigned long size = rs.rank(rs.size());
     if (size == (unsigned long) -1) {
         size = 0;
@@ -51,6 +52,6 @@ Sealib::RankSelect::~RankSelect() = default;
 unsigned long Sealib::RankSelect::rank(unsigned long k) const {
     return rankStructure.rank(k);
 }
-unsigned long Sealib::RankSelect::size() const{
+unsigned long Sealib::RankSelect::size() const {
     return rankStructure.size();
 }
