@@ -3,12 +3,12 @@
 //
 
 #include <gtest/gtest.h>
-#include <sealib/trailstructure.h>
+#include <sealib/simpletrailstructure.h>
 
-using Sealib::TrailStructure;
+using Sealib::SimpleTrailStructure;
 
 TEST(TrailStructureTest, enter) {
-    TrailStructure ts = TrailStructure(5);
+    SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ASSERT_EQ(ts.enter(2), 3);
     ASSERT_EQ(ts.enter(4), 0);
@@ -16,11 +16,11 @@ TEST(TrailStructureTest, enter) {
 }
 
 TEST(TrailStructureTest, leave) {
-    TrailStructure ts = TrailStructure(5);
+    SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ASSERT_EQ(ts.leave(), 0);
 
-    ts = TrailStructure(5);
+    ts = SimpleTrailStructure(5);
 
     ASSERT_EQ(ts.leave(), 0);
     ASSERT_EQ(ts.leave(), 1);
@@ -30,7 +30,7 @@ TEST(TrailStructureTest, leave) {
 }
 
 TEST(TrailStructureTest, matches) {
-    TrailStructure ts = TrailStructure(5);
+    SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ts.enter(2);
     ts.enter(4);
@@ -44,7 +44,7 @@ TEST(TrailStructureTest, matches) {
 }
 
 TEST(TrailStructureTest, marry) {
-    TrailStructure ts = TrailStructure(5);
+    SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ts.enter(2);
     ts.enter(4);
@@ -60,7 +60,7 @@ TEST(TrailStructureTest, marry) {
 }
 
 TEST(TrailStructureTest, enterLeaveCombination) {
-    TrailStructure ts = TrailStructure(5);
+    SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ASSERT_EQ(ts.enter(0), 1);
     ASSERT_EQ(ts.enter(4), 2);

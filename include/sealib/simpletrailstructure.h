@@ -1,7 +1,9 @@
-#ifndef SEALIB_TRAILSTRUCTURE_H_
-#define SEALIB_TRAILSTRUCTURE_H_
+#ifndef SEALIB_SIMPLETRAILSTRUCTURE_H_
+#define SEALIB_SIMPLETRAILSTRUCTURE_H_
 
+#include <sealib/bitset.h>
 #include <vector>
+
 
 namespace Sealib {
 /**
@@ -9,20 +11,19 @@ namespace Sealib {
  * Each vertex in a graph has an object of this type to store trail information.
  * @author Johannes Meintrup
  */
-class TrailStructure {
+class SimpleTrailStructure {
  private:
     unsigned int degree;
     unsigned int nextUnused;
     unsigned int lastClosed;
 
-    std::vector<bool> inAndOut;
-    std::vector<bool> matched;
+    Sealib::Bitset<unsigned char> inAndOut;
+    Sealib::Bitset<unsigned char> matched;
 
-    // at(0) flipped == grey, at(1)
-    // flipped == black,
+    // at(0) flipped == grey,
+    // at(1) flipped == black,
     // at(2) flipped = uneven,
-    // at(3) reserved for errors during function call
-    std::vector<bool> flags;
+    Sealib::Bitset<unsigned char> flags;
 
     unsigned int *married;
 
@@ -39,7 +40,7 @@ class TrailStructure {
      * Creates a trailsture object.
      * @param _degree Degree of the node, equals the number of outgoing arcs.
      */
-    explicit TrailStructure(unsigned int _degree);
+    explicit SimpleTrailStructure(unsigned int _degree);
 
     /**
      * Checks if the TrailStructure is currently grey.
@@ -95,14 +96,6 @@ class TrailStructure {
      * @param o second element to be matched
      */
     void marry(unsigned int i, unsigned int o);
-
-    /**
-     * Checks if the error flag was set in the last function call.
-     * @return true if there was an error, false otherwise
-     */
-    bool checkError() {
-        return flags.at(3);
-    }
 };
 }  // namespace Sealib
-#endif  // SEALIB_TRAILSTRUCTURE_H_
+#endif  // SEALIB_SIMPLETRAILSTRUCTURE_H_
