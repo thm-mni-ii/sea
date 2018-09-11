@@ -1,12 +1,9 @@
 #include <gtest/gtest.h>
 #include <sealib/simpletrailstructure.h>
-#include <include/sealib/dyckwordlexicon.h>
-#include <include/sealib/dyckmatchingstructure.h>
-#include <include/sealib/trailstructure.h>
 
 using Sealib::SimpleTrailStructure;
 
-TEST(SimpleTrailStructureTest, enter) {
+TEST(TrailStructureTest, enter) {
     SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ASSERT_EQ(ts.enter(2), 3);
@@ -14,7 +11,7 @@ TEST(SimpleTrailStructureTest, enter) {
     ASSERT_EQ(ts.enter(1), (unsigned int) -1);  // last element
 }
 
-TEST(SimpleTrailStructureTest, leave) {
+TEST(TrailStructureTest, leave) {
     SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ASSERT_EQ(ts.leave(), 0);
@@ -28,7 +25,7 @@ TEST(SimpleTrailStructureTest, leave) {
     ASSERT_EQ(ts.leave(), 4);
 }
 
-TEST(SimpleTrailStructureTest, matches) {
+TEST(TrailStructureTest, matches) {
     SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ts.enter(2);
@@ -42,7 +39,7 @@ TEST(SimpleTrailStructureTest, matches) {
     ASSERT_EQ(ts.getMatched(4), 0);
 }
 
-TEST(SimpleTrailStructureTest, marry) {
+TEST(TrailStructureTest, marry) {
     SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ts.enter(2);
@@ -58,7 +55,7 @@ TEST(SimpleTrailStructureTest, marry) {
     ASSERT_EQ(ts.getMatched(4), 4);  // unmatched now
 }
 
-TEST(SimpleTrailStructureTest, enterLeaveCombination) {
+TEST(TrailStructureTest, enterLeaveCombination) {
     SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ASSERT_EQ(ts.enter(0), 1);
