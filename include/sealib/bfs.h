@@ -1,5 +1,6 @@
 #ifndef SEALIB_BFS_H_
 #define SEALIB_BFS_H_
+#include <stdexcept>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
@@ -21,7 +22,7 @@ class ConnectedComponent {
   std::vector<Pair> v;
 
  public:
-  ConnectedComponent() : v(std::vector<Pair>(1)) {}
+  ConnectedComponent() {}
   void push(Pair p) { v.push_back(p); }
   Pair get(int p) { return v.at(p); }
   size_t length() { return v.size(); }
@@ -39,7 +40,7 @@ class BFS {
    * @param preexplore to be executed before exploring an edge (u,v)
    * @return a vector of CC sequences; each sequence is {(u1,d1),...,(un,dn)}
    * where
-   * ui is the node name and di is the distance from the node to the starting
+   * ui is the node name and di is the distance from ui to the starting
    * node of the connected component.
    */
   static std::vector<ConnectedComponent> run(Graph *g, UserFunc1 preprocess,
