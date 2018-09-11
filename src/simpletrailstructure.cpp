@@ -1,25 +1,25 @@
+#include <sealib/simpletrailstructure.h>
 #include <cstdlib>
 #include <iostream>
-#include "sealib/trailstructure.h"
 
-using std::vector;
-using Sealib::TrailStructure;
-
-TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree) {
+Sealib::SimpleTrailStructure::SimpleTrailStructure(unsigned int _degree) :
+    degree(_degree),
+    nextUnused(1),
+    lastClosed((unsigned int) -1),
+    inAndOut(degree),
+    matched(degree),
+    flags(3),
+    married(static_cast<unsigned int *>(malloc(sizeof(unsigned int) * 4))),
+    unused(static_cast<unsigned int *>(malloc(sizeof(unsigned int) * degree * 3))) {
     nextUnused = 1;
     lastClosed = (unsigned int) -1;
 
-    inAndOut = vector<bool>(degree);
-    matched = vector<bool>(degree);
+    if (degree % 2 != 0) flags[2] = 1;  // set it to grey if uneven
+    if (degree == 0) flags[1] = 1;  // node with no edges is possible, set black
 
-    flags = std::vector<bool>(4);
-    if (degree % 2 != 0) flags.at(2).flip();  // set it to grey if uneven
-    if (degree == 0) flags.at(1).flip();  // node with no edges is possible, set black
-
-    married = static_cast<unsigned int *>(malloc(sizeof(unsigned int) * 4));
-    for (unsigned int i = 0; i < 4; i++) married[i] = (unsigned int) -1;
-
-    unused = static_cast<unsigned int *>(malloc(sizeof(unsigned int) * degree * 3));
+    for (unsigned int i = 0; i < 4; i++) {
+        married[i] = (unsigned int) -1;
+    }
     // [1][0][1] [1][1][1] [1][2][1] ... [1][degree-1][1]
     for (unsigned int i = 0; i < degree; i++) {
         unused[i * 3] = 1;
@@ -28,17 +28,14 @@ TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree) {
     }
 }
 
-inline unsigned int TrailStructure::getNextUnused() {
-    if (flags.at(3)) flags.at(3).flip();  // reset error
-
-    if (flags.at(1)) {  // black node
-        flags.at(3).flip();
+inline unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
+    if (flags[1]) {  // black node
         return (unsigned int) -1;
     }
 
-    if (!flags.at(0)) {
+    if (!flags[0]) {
         // cout << "Set to grey\n";
-        flags.at(0).flip();
+        flags[0] = 1;
     }
     // set to grey
     unsigned int prevLink = unused[nextUnused - 1];
@@ -54,7 +51,7 @@ inline unsigned int TrailStructure::getNextUnused() {
     if (temp == nextUnused) {  // no other element, this is last
         unsigned int retVal = nextUnused;
         nextUnused = 0;
-        flags.at(1).flip();
+        flags[1] = !flags[1];
         return retVal;
     }
     unused[temp + 1] += nextLink;
@@ -67,13 +64,13 @@ inline unsigned int TrailStructure::getNextUnused() {
     unused[temp - 1] += prevLink;
     unsigned int retVal = nextUnused;
     nextUnused = temp;
-    flags.at(2).flip();  // taking an arc flips the parity
+    // taking an arc flips the parity
+    flags[2] = !flags[2];
 
     return retVal;
 }
 
-unsigned int TrailStructure::getMatched(unsigned int idx) {
-    if (flags.at(3)) flags.at(3).flip();   // reset error
+unsigned int Sealib::SimpleTrailStructure::getMatched(unsigned int idx) {
     // check if the idx is present in the married structure
     if (married[0] == idx) return married[1];
     if (married[1] == idx) return married[0];
@@ -85,7 +82,7 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
     // get start idx for the dyck word
     unsigned int start = lastClosed + 1 == degree ? 0 : lastClosed + 1;
 
-    while (!matched.at(start)) {  // start is the first opening bracket after the last one closed.
+    while (!matched[start]) {  // start is the first opening bracket after the last one closed.
         if (start == degree - 1) {
             start = 0;
         } else {
@@ -95,7 +92,7 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
 
     unsigned int j = start;
     unsigned int p = 0;
-    unsigned int *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * degree / 2)));
+    std::vector<unsigned int> stack(degree / 2);
     do {
         if (matched[j]) {  // only push matched index
             if (inAndOut[j]) {  // '('
@@ -114,22 +111,19 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
     return idx;
 }
 
-unsigned int TrailStructure::leave() {
+unsigned int Sealib::SimpleTrailStructure::leave() {
     unsigned int u = getNextUnused();
     return u == 0 ? (unsigned int) -1 : unused[u];
 }
 
-unsigned int TrailStructure::enter(unsigned int i) {
-    if (flags.at(3)) flags.at(3).flip();  // reset error
-
+unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
     i = i * 3 + 1;  // multiply index so it works with the actual array.
 
-    if (flags.at(1)) {  // black node, should not be called here. something went wrong
-        flags.at(3).flip();  // set error
+    if (flags[1]) {  // black node, should not be called here. something went wrong
         return (unsigned int) -1;
     }
 
-    if (!flags.at(0)) flags.at(0).flip();  // set to grey
+    if (!flags[0]) flags[0] = 1;  // set to grey
 
     unsigned int prevLink = unused[i - 1];
     unsigned int nextLink = unused[i + 1];
@@ -142,9 +136,9 @@ unsigned int TrailStructure::enter(unsigned int i) {
         temp = i - prevLink * 3;
     }
 
-    inAndOut.at(unused[i]).flip();
+    inAndOut[unused[i]] = 1;
     if (temp == i) {  // no other element, this is last
-        flags.at(1).flip();  // blacken it
+        flags[1] = 1;
         // black now, unused is not needed anymore
         nextUnused = 0;
         free(unused);
@@ -162,8 +156,8 @@ unsigned int TrailStructure::enter(unsigned int i) {
     // flags.at(2).flip(); //taking an arc flips the parity
 
     // not empty yet, continue
-    matched.at(unused[i]).flip();
-    matched.at(unused[temp]).flip();
+    matched[unused[i]] = 1;
+    matched[unused[unused[temp]]] = 1;
     lastClosed = unused[temp];  // lastClosed element
 
     i = temp;
@@ -177,7 +171,7 @@ unsigned int TrailStructure::enter(unsigned int i) {
     }
 
     if (temp == i) {  // no other element, this is last
-        flags.at(1).flip();  // should be 0 now
+        flags[1] = 0;
         nextUnused = 0;
 
         // unused is not needed anymore
@@ -212,21 +206,19 @@ unsigned int TrailStructure::enter(unsigned int i) {
     return lastClosed;  // returns the leaver element.
 }
 
-bool TrailStructure::isBlack() {
-    return flags.at(1);
+bool Sealib::SimpleTrailStructure::isBlack() {
+    return flags[1];
 }
 
-bool TrailStructure::isGrey() {
-    return flags.at(0);
+bool Sealib::SimpleTrailStructure::isGrey() {
+    return flags[0];
 }
 
-bool TrailStructure::isEven() {
-    return flags.at(2);
+bool Sealib::SimpleTrailStructure::isEven() {
+    return flags[2];
 }
 
-void TrailStructure::marry(unsigned int i, unsigned int o) {
-    if (flags.at(3)) flags.at(3).flip();  // reset error
-
+void Sealib::SimpleTrailStructure::marry(unsigned int i, unsigned int o) {
     if (married[0] == (unsigned int) -1) {  // first call of marry
         // unmatch previous matches
         unsigned int iMatch = getMatched(i);
@@ -238,7 +230,7 @@ void TrailStructure::marry(unsigned int i, unsigned int o) {
 
         married[0] = i;
         married[1] = o;
-    } else if (married[2] == (unsigned int) -1) {  // second call of marry, should be maximum
+    } else {  // second call of marry, should be maximum
         // unmatch previous matches
         unsigned int iMatch = getMatched(i);
         unsigned int oMatch = getMatched(o);
@@ -249,7 +241,5 @@ void TrailStructure::marry(unsigned int i, unsigned int o) {
 
         married[2] = i;
         married[3] = o;
-    } else {
-        flags.at(3).flip();  // something went wrong
     }
 }
