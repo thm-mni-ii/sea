@@ -1,7 +1,3 @@
-//
-// Created by jmeintrup on 11.03.18.
-//
-
 #include <gtest/gtest.h>
 #include <sealib/simpletrailstructure.h>
 
