@@ -7,7 +7,7 @@ using Sealib::TrailStructure;
 
 TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree) {
     nextUnused = 1;
-    lastClosed = (unsigned int) - 1;
+    lastClosed = (unsigned int) -1;
 
     inAndOut = vector<bool>(degree);
     matched = vector<bool>(degree);
@@ -16,8 +16,8 @@ TrailStructure::TrailStructure(unsigned int _degree) : degree(_degree) {
     if (degree % 2 != 0) flags.at(2).flip();  // set it to grey if uneven
     if (degree == 0) flags.at(1).flip();  // node with no edges is possible, set black
 
-    married = static_cast<unsigned int  *>(malloc(sizeof(unsigned int) * 4));
-    for (unsigned int i = 0; i < 4; i++) married[i] = (unsigned int) - 1;
+    married = static_cast<unsigned int *>(malloc(sizeof(unsigned int) * 4));
+    for (unsigned int i = 0; i < 4; i++) married[i] = (unsigned int) -1;
 
     unused = static_cast<unsigned int *>(malloc(sizeof(unsigned int) * degree * 3));
     // [1][0][1] [1][1][1] [1][2][1] ... [1][degree-1][1]
@@ -33,7 +33,7 @@ inline unsigned int TrailStructure::getNextUnused() {
 
     if (flags.at(1)) {  // black node
         flags.at(3).flip();
-        return (unsigned int) - 1;
+        return (unsigned int) -1;
     }
 
     if (!flags.at(0)) {
@@ -41,12 +41,12 @@ inline unsigned int TrailStructure::getNextUnused() {
         flags.at(0).flip();
     }
     // set to grey
-    unsigned int prevLink = unused[nextUnused-1];
-    unsigned int nextLink = unused[nextUnused+1];
+    unsigned int prevLink = unused[nextUnused - 1];
+    unsigned int nextLink = unused[nextUnused + 1];
 
     unsigned int temp;
 
-    if (prevLink*3 > nextUnused) {  // circle around
+    if (prevLink * 3 > nextUnused) {  // circle around
         temp = (degree * 3) - (prevLink * 3) + nextUnused;
     } else {
         temp = nextUnused - prevLink * 3;
@@ -57,14 +57,14 @@ inline unsigned int TrailStructure::getNextUnused() {
         flags.at(1).flip();
         return retVal;
     }
-    unused[temp+1] += nextLink;
+    unused[temp + 1] += nextLink;
 
-    if (nextLink*3 + nextUnused > degree * 3) {  // circle around
-        temp = (nextLink * 3) - (degree * 3)  + nextUnused;
+    if (nextLink * 3 + nextUnused > degree * 3) {  // circle around
+        temp = (nextLink * 3) - (degree * 3) + nextUnused;
     } else {
         temp = nextUnused + nextLink * 3;
     }
-    unused[temp-1] += prevLink;
+    unused[temp - 1] += prevLink;
     unsigned int retVal = nextUnused;
     nextUnused = temp;
     flags.at(2).flip();  // taking an arc flips the parity
@@ -89,7 +89,7 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
         if (start == degree - 1) {
             start = 0;
         } else {
-            start+=1;
+            start += 1;
         }
     }
 
@@ -116,27 +116,27 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
 
 unsigned int TrailStructure::leave() {
     unsigned int u = getNextUnused();
-    return u == 0 ? (unsigned int) - 1 : unused[u];
+    return u == 0 ? (unsigned int) -1 : unused[u];
 }
 
 unsigned int TrailStructure::enter(unsigned int i) {
     if (flags.at(3)) flags.at(3).flip();  // reset error
 
-    i = i*3+1;  // multiply index so it works with the actual array.
+    i = i * 3 + 1;  // multiply index so it works with the actual array.
 
     if (flags.at(1)) {  // black node, should not be called here. something went wrong
         flags.at(3).flip();  // set error
-        return (unsigned int) - 1;
+        return (unsigned int) -1;
     }
 
     if (!flags.at(0)) flags.at(0).flip();  // set to grey
 
-    unsigned int prevLink = unused[i-1];
-    unsigned int nextLink = unused[i+1];
+    unsigned int prevLink = unused[i - 1];
+    unsigned int nextLink = unused[i + 1];
 
     unsigned int temp;
 
-    if (prevLink*3 > i) {  // circle around
+    if (prevLink * 3 > i) {  // circle around
         temp = (degree * 3) - (prevLink * 3) + i;
     } else {
         temp = i - prevLink * 3;
@@ -148,16 +148,16 @@ unsigned int TrailStructure::enter(unsigned int i) {
         // black now, unused is not needed anymore
         nextUnused = 0;
         free(unused);
-        return (unsigned int) - 1;  // returns non-value
+        return (unsigned int) -1;  // returns non-value
     }
-    unused[temp+1] += nextLink;
+    unused[temp + 1] += nextLink;
 
-    if (nextLink*3 + i > degree * 3) {  // circle around
-        temp = (nextLink * 3) - (degree * 3)   + i;
+    if (nextLink * 3 + i > degree * 3) {  // circle around
+        temp = (nextLink * 3) - (degree * 3) + i;
     } else {
         temp = i + nextLink * 3;
     }
-    unused[temp-1] += prevLink;
+    unused[temp - 1] += prevLink;
     // not needed, we flip twice since we take another edge out now
     // flags.at(2).flip(); //taking an arc flips the parity
 
@@ -167,10 +167,10 @@ unsigned int TrailStructure::enter(unsigned int i) {
     lastClosed = unused[temp];  // lastClosed element
 
     i = temp;
-    prevLink = unused[i-1];
-    nextLink = unused[i+1];
+    prevLink = unused[i - 1];
+    nextLink = unused[i + 1];
 
-    if (prevLink*3 > i) {  // circle around
+    if (prevLink * 3 > i) {  // circle around
         temp = (degree * 3) - (prevLink * 3) + i;
     } else {
         temp = i - prevLink * 3;
@@ -185,23 +185,23 @@ unsigned int TrailStructure::enter(unsigned int i) {
         return lastClosed;  // returns the leaver element, lastClosed
     }
 
-    unused[temp+1] += nextLink;
+    unused[temp + 1] += nextLink;
 
-    if (nextLink*3 + i > degree * 3) {  // circle around
-        temp = (nextLink * 3) - (degree * 3)   + i;
+    if (nextLink * 3 + i > degree * 3) {  // circle around
+        temp = (nextLink * 3) - (degree * 3) + i;
     } else {
         temp = i + nextLink * 3;
     }
 
-    unused[temp-1] += prevLink;
+    unused[temp - 1] += prevLink;
 
 
 
     // update nextUnused
     i = temp;
-    prevLink = unused[i-1];
+    prevLink = unused[i - 1];
 
-    if (prevLink*3 > i) {  // circle around
+    if (prevLink * 3 > i) {  // circle around
         temp = (degree * 3) - (prevLink * 3) + i;
     } else {
         temp = i - prevLink * 3;
@@ -238,7 +238,7 @@ void TrailStructure::marry(unsigned int i, unsigned int o) {
 
         married[0] = i;
         married[1] = o;
-    } else if (married[2] == (unsigned int) - 1) {  // second call of marry, should be maximum
+    } else if (married[2] == (unsigned int) -1) {  // second call of marry, should be maximum
         // unmatch previous matches
         unsigned int iMatch = getMatched(i);
         unsigned int oMatch = getMatched(o);

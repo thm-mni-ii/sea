@@ -1,7 +1,3 @@
-//
-// Created by jmeintrup on 06.03.18.
-//
-
 #ifndef SEALIB_TRAILSTRUCTURE_H_
 #define SEALIB_TRAILSTRUCTURE_H_
 
