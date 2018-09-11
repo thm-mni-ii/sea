@@ -1,98 +1,53 @@
 #include "sealib/bfs.h"
-#include <stdexcept>
-#include <vector>
-
 using Sealib::BFS;
-using Sealib::CompactArray;
+using Sealib::ConnectedComponent;
 using Sealib::Graph;
+using Sealib::CompactArray;
 
-void BFS::init() {
-  u = 0;
-  dist = 0;
-  innerGray = BFS_GRAY1;
-  outerGray = BFS_GRAY2;
-  if (preprocess != BFS_NOP_PROCESS) preprocess(0);
-  color->insert(0, innerGray);
-}
-
-bool BFS::nextComponent() {
-  bool found = false;
-  for (uint a = 0; a < n; a++) {
-    if (color->get(a) == BFS_WHITE) {
-      u = a;
-      found = true;
-      dist = 0;
-      if (preprocess != BFS_NOP_PROCESS) preprocess(u);
-      color->insert(u, innerGray);
-      break;
+static void makeSequence(Graph *g, CompactArray *color, ConnectedComponent *s,
+                         UserFunc1 preprocess, UserFunc2 preexplore) {
+  uint c = 0, dist = 0;
+  uint innerGray = BFS_GRAY1, outerGray = BFS_GRAY2;
+  while (c < s->length()) {
+    Pair h = s->get(c);
+    uint u = std::get<0>(h);
+    if (color->get(u) == innerGray) {
+      for (uint k = 0; k < g->getNode(u)->getDegree(); k++) {
+        uint v = g->head(u, k);
+        if (color->get(v) == BFS_WHITE) {
+          preexplore(u, v);
+          preprocess(v);
+          color->insert(v, outerGray);
+          s->push(std::make_tuple(v, dist + 1));
+        }
+      }
+      Pair th = s->get(c + 1);
+      uint tu = std::get<0>(th);
+      if (color->get(tu) == outerGray) {
+        innerGray = innerGray == BFS_GRAY1 ? BFS_GRAY2 : BFS_GRAY1;
+        outerGray = outerGray == BFS_GRAY2 ? BFS_GRAY1 : BFS_GRAY2;
+        dist++;
+      }
+      c++;
     }
   }
-  return found;
 }
 
-bool BFS::hasGrayNode() {
-  // needs 4-color CD:
-  // try {
-  //   c.choice();
-  //   return true;
-  // } catch(std::exception) {
-  //   return false;
-  // }
-
-  // TEMPORARY solution:
-  for (uint a = 0; a < n; a++) {
-    if (color->get(a) == BFS_GRAY1 || color->get(a) == BFS_GRAY2) return true;
-  }
-  return false;
-}
-uint BFS::getGrayNode() {
-  // return choice();
-
-  // TEMPORARY solution:
-  for (uint a = 0; a < n; a++) {
-    if (color->get(a) == innerGray) {
-      return a;
+std::vector<ConnectedComponent> BFS::run(Graph *g, UserFunc1 preprocess,
+                                         UserFunc2 preexplore) {
+  uint n = g->getOrder();
+  std::vector<ConnectedComponent> r(1);
+  CompactArray color(n, 4);
+  for (uint a = 0; a < n; a++) color.insert(a, BFS_WHITE);
+  for (uint u = 0; u < n; u++) {
+    if (color.get(u) == BFS_WHITE) {
+      ConnectedComponent s;
+      preprocess(u);
+      color.insert(u, BFS_GRAY1);
+      s.push(std::make_tuple(u, 0));
+      makeSequence(g, &color, &s, preprocess, preexplore);
+      r.push_back(s);
     }
   }
-  for (uint a = 0; a < n; a++) {
-    if (color->get(a) == outerGray) {
-      return a;
-    }
-  }
-  throw std::logic_error(
-      "BFS: no more gray nodes found; did you forget to call "
-      "nextComponent()?");
+  return r;
 }
-
-bool BFS::more() { return hasGrayNode(); }
-
-Pair BFS::next() {
-  u = getGrayNode();
-  if (color->get(u) == outerGray) {
-    unsigned tmp = innerGray;
-    innerGray = outerGray;
-    outerGray = tmp;
-    dist++;
-  }
-  for (uint k = 0; k < g->getNodeDegree(u); k++) {
-    uint v = g->head(u, k);
-    if (preexplore != BFS_NOP_EXPLORE) preexplore(u, v);
-    if (color->get(v) == BFS_WHITE) {
-      if (preprocess != BFS_NOP_PROCESS) preprocess(v);
-      color->insert(v, outerGray);
-    }
-  }
-  color->insert(u, BFS_BLACK);
-  return Pair(u, dist);
-}
-
-BFS::BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe)
-    : g(graph),
-      n(g->getOrder()),
-      color(new CompactArray(n, 10)),
-      preprocess(pp),
-      preexplore(pe) {
-  for (uint a = 0; a < n; a++) color->insert(a, BFS_WHITE);
-}
-
-BFS::~BFS() { delete color; }
