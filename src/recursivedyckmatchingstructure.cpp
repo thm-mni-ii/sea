@@ -6,8 +6,8 @@ Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(
     const Sealib::Bitset<unsigned char> &word_,
     unsigned int recursions) :
     DyckMatchingStructure(word_),
-    segments(static_cast<unsigned int>(word.size() / segmentLength)),
-    lastSegment(static_cast<unsigned char>(word.size() % segmentLength)),
+    segments(static_cast<unsigned int>(word_.size() / segmentLength)),
+    lastSegment(static_cast<unsigned char>(word_.size() % segmentLength)),
     pioneerRankSelect(initializePioneerRankSelectBitset()),
     pioneerMatchingStructure(nullptr) {
     unsigned long maxRank = pioneerRankSelect.rank(pioneerRankSelect.size());
@@ -29,7 +29,7 @@ Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(
 
 Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(
     const Sealib::Bitset<unsigned char> &word_)
-    : RecursiveDyckMatchingStructure(word_, 0) {
+    : RecursiveDyckMatchingStructure(word_, 2) {
 }
 
 const Sealib::Bitset<unsigned char>
@@ -91,6 +91,8 @@ const Sealib::Bitset<unsigned char>
             }
         }
     }
+
+    return pioneerRankSelectBitset;
 }
 
 unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx) {
