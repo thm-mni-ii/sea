@@ -18,3 +18,7 @@ unsigned int Basicgraph::getOrder() {
 }
 
 Basicgraph::Basicgraph(Node *_nodes, unsigned int _order) : nodes(_nodes), order(_order) { }
+
+Basicgraph::~Basicgraph() {
+    delete nodes;
+}
