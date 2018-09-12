@@ -76,11 +76,10 @@ bool SegmentStack::isAligned() {
   if ((alignTarget == 2 && hp < q) || lp < q) {
     r = false;
   } else {
-    unsigned lu = std::get<0>(low[lp - 1]), lk = std::get<1>(low[lp - 1]);
+    unsigned lu = low[lp - 1].head(), lk = low[lp - 1].tail();
     unsigned hu = 0, hk = 0;
-    if (alignTarget == 2)
-      hu = std::get<0>(high[hp - 1]), hk = std::get<1>(high[hp - 1]);
-    unsigned tu = std::get<0>(savedTrailer), tk = std::get<1>(savedTrailer);
+    if (alignTarget == 2) hu = high[hp - 1].head(), hk = high[hp - 1].tail();
+    unsigned tu = savedTrailer.head(), tk = savedTrailer.tail();
     r = (alignTarget == 2 && hu == tu && hk == tk) ||
         (alignTarget == 1 && lu == tu && lk == tk);
   }
