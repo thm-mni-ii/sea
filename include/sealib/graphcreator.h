@@ -41,6 +41,14 @@ class GraphCreator {
    */
   static Basicgraph *createRandomFixed(unsigned int order,
                                        unsigned int degreePerNode);
+
+    /**
+     * Create a completely random graph with a given number of nodes.
+     * @param order the number of nodes the graph should contain
+     * @return the resulting graph
+     * @author Simon Heuser
+     */
+    static Basicgraph *createRandomGenerated(unsigned int order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_
