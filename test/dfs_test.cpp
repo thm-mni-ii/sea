@@ -83,6 +83,7 @@ TEST_P(DFSTest, nBitUserproc) {
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
+  delete g;
 }
 
 auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
