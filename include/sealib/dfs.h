@@ -1,6 +1,11 @@
 #ifndef SEALIB_DFS_H_
 #define SEALIB_DFS_H_
 
+<<<<<<< HEAD
+=======
+#include <sstream>
+#include <stack>
+>>>>>>> use custom Pair type, reorganize imports
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
@@ -66,6 +71,7 @@ class DFS {
                       UserFunc2 postexplore, UserFunc1 postprocess);
 
   /**
+<<<<<<< HEAD
    * Run a linear-time space-efficient depth-first search. (Elmasry, Hagerup and
    * Kammer; 2015) <br>
    * EFFICIENCY: O(n+m) time, O(n log log n) bits
@@ -80,12 +86,17 @@ class DFS {
                              UserFunc1 postprocess);
 
   /**
+=======
+>>>>>>> use custom Pair type, reorganize imports
    * Runs an inplace DFS in linear time over a graph that is given in a special
    * representation. <br>
    * EFFICIENCY: O(n+m) time, O(log n) bits
    * @param graph Graph A graph in a swapped begin pointer representation.
    * @param startVertex startVertex The begin of the DFS tree.
+<<<<<<< HEAD
    * @author Simon Schniedenharn
+=======
+>>>>>>> use custom Pair type, reorganize imports
    */
   static void runLinearTimeInplaceDFS(unsigned int *graph, UserFunc1 preProcess,
                                       UserFunc1 postProcess,
