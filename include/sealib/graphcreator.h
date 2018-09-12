@@ -43,9 +43,9 @@ class GraphCreator {
                                        unsigned int degreePerNode);
 
     /**
-     * Create a completely random graph with a given number of nodes.
+     * Create a completely random graph with a given number of nodes. Each node will have outgoing edges to at most n other nodes.
      * @param order the number of nodes the graph should contain
-     * @return the resulting graph
+     * @return the resulting graph: n = order, m = O(n^2)
      * @author Simon Heuser
      */
     static Basicgraph *createRandomGenerated(unsigned int order);
