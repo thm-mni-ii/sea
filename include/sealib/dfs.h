@@ -37,7 +37,6 @@ namespace Sealib {
  *  - standardDFS: the normal DFS, uses implicit recursion stack
  *  - nBitDFS: space-efficient DFS, explicit segmented stack
  *
- * @author Simon Heuser
  */
 class DFS {
  public:
@@ -49,6 +48,7 @@ class DFS {
    * @param preexplore to be executed before exploring an edge (u,v)
    * @param postexplore to be executed after exploring an edge (u,v)
    * @param postprocess to be executed after processing a node u
+   * @author Simon Heuser
    */
   static void standardDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
                           UserFunc2 postexplore, UserFunc1 postprocess);
@@ -61,6 +61,7 @@ class DFS {
    * @param preexplore to be executed before exploring an edge (u,v)
    * @param postexplore to be executed after exploring an edge (u,v)
    * @param postprocess to be executed after processing a node u
+   * @author Simon Heuser
    */
   static void nBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
                       UserFunc2 postexplore, UserFunc1 postprocess);
@@ -71,6 +72,7 @@ class DFS {
    * EFFICIENCY: O(n+m) time, O(log n) bits
    * @param graph Graph A graph in a swapped begin pointer representation.
    * @param startVertex startVertex The begin of the DFS tree.
+   * @author Simon Schniedenharn
    */
   static void runLinearTimeInplaceDFS(unsigned int *graph, UserFunc1 preProcess,
                                       UserFunc1 postProcess,
