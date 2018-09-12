@@ -58,6 +58,8 @@ class BasicGraph : public Graph {
      */
     const Node &getNode(unsigned int u) const;
 
+    ~Basicgraph();
+
     /**
      * Getter for a specific node in the nodes array.
      * @param u index in the nodes array.

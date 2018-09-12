@@ -41,4 +41,5 @@ TEST_P(BFSTest, userProc) {
   BFS::run(g, incr1, incr2);
   ASSERT_EQ(c1, order);
   ASSERT_EQ(c2, order * degree);
+  delete g;
 }
