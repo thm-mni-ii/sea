@@ -36,7 +36,7 @@ class GraphCreator {
    * @param order number of nodes the graph should contain
    * @param degreePerNode the degree of each node; the edges will go to any
    * random node
-   * @return the resulting graph G: n = order, m = degreePerNode * order
+   * @return the resulting graph G (n = order, m = degreePerNode*order)
    * @author Simon Heuser
    */
   static Basicgraph *createRandomFixed(unsigned int order,

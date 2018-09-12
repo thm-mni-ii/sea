@@ -1,8 +1,8 @@
 #ifndef SEALIB_DFS_H_
 #define SEALIB_DFS_H_
 
+#include <sstream>
 #include <stack>
-#include <tuple>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
@@ -65,14 +65,16 @@ class DFS {
   static void nBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
                       UserFunc2 postexplore, UserFunc1 postprocess);
 
-    /**
-     * Runs an inplace DFS in linear time over a graph that is given in a special representation. <br>
-     * EFFICIENCY: O(n+m) time, O(log n) bits
-     * @param graph Graph A graph in a swapped begin pointer representation.
-     * @param startVertex startVertex The begin of the DFS tree.
-     */
-    static void runLinearTimeInplaceDFS(unsigned int* graph, UserFunc1 preProcess,
-                                        UserFunc1 postProcess, unsigned int startVertex);
+  /**
+   * Runs an inplace DFS in linear time over a graph that is given in a special
+   * representation. <br>
+   * EFFICIENCY: O(n+m) time, O(log n) bits
+   * @param graph Graph A graph in a swapped begin pointer representation.
+   * @param startVertex startVertex The begin of the DFS tree.
+   */
+  static void runLinearTimeInplaceDFS(unsigned int *graph, UserFunc1 preProcess,
+                                      UserFunc1 postProcess,
+                                      unsigned int startVertex);
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_
