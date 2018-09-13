@@ -17,9 +17,9 @@ static ConnectedComponent makeSequence(Graph *g, CompactArray *color, Pair u0,
     if (color->get(u) == innerGray) {
       for (uint k = 0; k < g->getNodeDegree(u); k++) {
         uint v = g->head(u, k);
-        preexplore(u, v);
+        if (preexplore != BFS_NOP_EXPLORE) preexplore(u, v);
         if (color->get(v) == BFS_WHITE) {
-          preprocess(v);
+          if (preprocess != BFS_NOP_PROCESS) preprocess(v);
           color->insert(v, outerGray);
           s.push(Pair(v, dist + 1));
         }
@@ -45,7 +45,7 @@ std::vector<ConnectedComponent> BFS::run(Graph *g, UserFunc1 preprocess,
   for (uint a = 0; a < n; a++) color.insert(a, BFS_WHITE);
   for (uint u = 0; u < n; u++) {
     if (color.get(u) == BFS_WHITE) {
-      preprocess(u);
+      if (preprocess != BFS_NOP_PROCESS) preprocess(u);
       color.insert(u, BFS_GRAY1);
       Pair u0(u, 0);
       ConnectedComponent s =
