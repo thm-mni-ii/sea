@@ -14,8 +14,8 @@ namespace Sealib {
  */
 class Basicgraph : public Graph {
  private:
-    Node *nodes;
-    unsigned int order;
+    Basicgraph(Node *nodes_, unsigned int order_);
+    std::vector<Sealib::Node> nodes;
 
  public:
     /**
@@ -23,7 +23,7 @@ class Basicgraph : public Graph {
      * @param _nodes Array of nodes.
      * @param _order Order of the graph (equals the length of the nodes array).
      */
-    Basicgraph(Node *_nodes, unsigned int _order);
+    explicit Basicgraph(const std::vector<Sealib::Node> &nodes_);
 
     ~Basicgraph();
 
@@ -32,7 +32,7 @@ class Basicgraph : public Graph {
      * @param u index in the nodes array.
      * @return Pointer to the Node in the nodes array.
      */
-    Node *getNode(unsigned int u);
+    const Node &getNode(unsigned int u);
 
     /**
     * Returns the degree of the node that u points at.
