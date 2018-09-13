@@ -1,8 +1,9 @@
 #ifndef SEALIB_BASICGRAPH_H_
 #define SEALIB_BASICGRAPH_H_
 
-#include "sealib/graph.h"
-#include "sealib/node.h"
+#include <sealib/graph.h>
+#include <sealib/node.h>
+#include <vector>
 
 namespace Sealib {
 /**
