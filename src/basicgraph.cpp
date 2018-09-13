@@ -17,7 +17,7 @@ unsigned int Sealib::Basicgraph::getOrder() {
 Sealib::Sealib::Basicgraph::Basicgraph(const std::vector<Sealib::Node> &nodes_) : nodes(nodes_) {}
 
 Sealib::Basicgraph::Basicgraph(Sealib::Node *nodes_, unsigned int order_) : nodes(order_) {
-    for (int i = 0; i < order_; ++i) {
+    for (unsigned int i = 0; i < order_; ++i) {
         nodes[i] = nodes_[i];
     }
 }
