@@ -4,7 +4,6 @@
 #include <sealib/bitset.h>
 #include <vector>
 
-
 namespace Sealib {
 /**
  * Space efficient TrailStructure.
@@ -20,14 +19,12 @@ class SimpleTrailStructure {
     Sealib::Bitset<unsigned char> inAndOut;
     Sealib::Bitset<unsigned char> matched;
 
-    // at(0) flipped == grey,
-    // at(1) flipped == black,
-    // at(2) flipped = uneven,
     Sealib::Bitset<unsigned char> flags;
 
-    unsigned int *married;
+    unsigned int married[4];
 
-    unsigned int *unused;
+    std::vector<unsigned int> unused;
+
     /**
      * Removes nextUnused from the double linked unused array.
      * Updates links and returns nextUnused.
