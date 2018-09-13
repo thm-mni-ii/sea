@@ -9,16 +9,15 @@ Sealib::SimpleTrailStructure::SimpleTrailStructure(unsigned int _degree) :
     inAndOut(degree),
     matched(degree),
     flags(3),
-    married(static_cast<unsigned int *>(malloc(sizeof(unsigned int) * 4))),
-    unused(static_cast<unsigned int *>(malloc(sizeof(unsigned int) * degree * 3))) {
+    unused(degree * 3) {
     nextUnused = 1;
     lastClosed = (unsigned int) -1;
 
     if (degree % 2 != 0) flags[2] = 1;  // set it to grey if uneven
     if (degree == 0) flags[1] = 1;  // node with no edges is possible, set black
 
-    for (unsigned int i = 0; i < 4; i++) {
-        married[i] = (unsigned int) -1;
+    for (unsigned int &i : married) {
+        i = (unsigned int) -1;
     }
     // [1][0][1] [1][1][1] [1][2][1] ... [1][degree-1][1]
     for (unsigned int i = 0; i < degree; i++) {
@@ -28,7 +27,7 @@ Sealib::SimpleTrailStructure::SimpleTrailStructure(unsigned int _degree) :
     }
 }
 
-inline unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
+unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
     if (flags[1]) {  // black node
         return (unsigned int) -1;
     }
@@ -54,7 +53,7 @@ inline unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
         flags[1] = !flags[1];
         return retVal;
     }
-    unused[temp + 1] += nextLink;
+unused[temp + 1] += nextLink;
 
     if (nextLink * 3 + nextUnused > degree * 3) {  // circle around
         temp = (nextLink * 3) - (degree * 3) + nextUnused;
@@ -141,7 +140,8 @@ unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
         flags[1] = 1;
         // black now, unused is not needed anymore
         nextUnused = 0;
-        free(unused);
+        unused.resize(0);
+        unused.shrink_to_fit();
         return (unsigned int) -1;  // returns non-value
     }
     unused[temp + 1] += nextLink;
@@ -157,7 +157,7 @@ unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
 
     // not empty yet, continue
     matched[unused[i]] = 1;
-    matched[unused[unused[temp]]] = 1;
+    matched[unused[temp]] = 1;
     lastClosed = unused[temp];  // lastClosed element
 
     i = temp;
@@ -175,7 +175,8 @@ unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
         nextUnused = 0;
 
         // unused is not needed anymore
-        free(unused);
+        unused.resize(0);
+        unused.shrink_to_fit();
         return lastClosed;  // returns the leaver element, lastClosed
     }
 
