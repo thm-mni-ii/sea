@@ -27,15 +27,17 @@ class Node {
     */
     explicit Node(const std::vector<Sealib::Adjacency> &adj_);
 
+    Node() = default;
+
     /**
      * @return Returns a pointer to the adjacency array.
      */
-    const std::vector<Adjacency> &getAdj();
+    const std::vector<Adjacency> &getAdj() const;
 
     /**
      * @return Returns the degree of the node.
      */
-    unsigned int getDegree();
+    unsigned int getDegree() const;
 
     /**
      * Sets the crossindex in the adjacency
