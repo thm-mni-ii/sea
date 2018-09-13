@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <tuple>
 #include "sealib/_types.h"
+#include "sealib/compactarray.h"
 
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
@@ -42,19 +43,21 @@ class SegmentStack {
   int push(Pair u);
   int pop(Pair *r);
   bool empty();
+  /* empty the entire stack - needed for a full restoration */
   void dropAll();
-  /* save a trailer to survive the restoration */
+  /* save a trailer to survive a full restoration */
   void saveTrailer();
   /* is the restoration finished? (i.e. saved trailer and actual trailer are
    * aligned) */
   bool isAligned();
+  std::vector<uint> getTrunk();
 
  private:
-  Pair *low, *high, *trailers;
+  unsigned q;
   bool t = false;
+  Pair *low, *high, *trailers, *trunk;
   Pair last;
   unsigned lp = 0, hp = 0, tp = 0;
-  unsigned q;
   Pair savedTrailer;
   int alignTarget;
 };
