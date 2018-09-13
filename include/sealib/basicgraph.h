@@ -1,8 +1,9 @@
 #ifndef SEALIB_BASICGRAPH_H_
 #define SEALIB_BASICGRAPH_H_
 
-#include "sealib/graph.h"
-#include "sealib/node.h"
+#include <sealib/graph.h>
+#include <sealib/node.h>
+#include <vector>
 
 namespace Sealib {
 /**
@@ -14,7 +15,6 @@ namespace Sealib {
  */
 class Basicgraph : public Graph {
  private:
-    Basicgraph(Node *nodes_, unsigned int order_);
     std::vector<Sealib::Node> nodes;
 
  public:
@@ -22,6 +22,12 @@ class Basicgraph : public Graph {
      * Creates a graph out of its nodes.
      * @param _nodes Array of nodes.
      * @param _order Order of the graph (equals the length of the nodes array).
+     */
+    Basicgraph(Node *nodes_, unsigned int order_);
+
+    /**
+     * Created a new graph object with the nodes provided by the nodes_ vector
+     * @param nodes_ vector of nodes (ref)
      */
     explicit Basicgraph(const std::vector<Sealib::Node> &nodes_);
 

@@ -9,8 +9,8 @@
 #include <cmath>
 
 Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
-    dyckStart((unsigned int) -1),
     lastClosed((unsigned int) -1),
+    dyckStart((unsigned int) -1),
     inAndOut(_degree),
     matched(_degree),
     flags(4),
