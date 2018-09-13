@@ -2,8 +2,8 @@
 #include <sealib/graphcreator.h>
 
 Sealib::Basicgraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
-                                                         unsigned int order) {
-    std::vector<Node> nodes(order);
+                                                                                         unsigned int order) {
+    std::vector<Node> nodes;
 
     for (unsigned int i = 0; i < order; i++) {
         unsigned int deg = 0;
@@ -20,7 +20,7 @@ Sealib::Basicgraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(unsigned
                 adj[idx++] = Adjacency(j);
             }
         }
-        nodes[i] = Node(adj);
+        nodes.emplace_back(adj);
     }
 
     for (unsigned int i = 0; i < order; i++) {

@@ -2,6 +2,7 @@
 #define SEALIB_GRAPHCREATOR_H_
 
 #include "sealib/basicgraph.h"
+#include <memory>
 
 namespace Sealib {
 /**
