@@ -3,6 +3,7 @@
 
 #include <random>
 #include "sealib/basicgraph.h"
+#include <memory>
 
 namespace Sealib {
 /**
