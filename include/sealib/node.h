@@ -1,8 +1,8 @@
 #ifndef SEALIB_NODE_H_
 #define SEALIB_NODE_H_
 
-#include <vector>
 #include <sealib/adjacency.h>
+#include <vector>
 
 namespace Sealib {
 /**
@@ -25,7 +25,7 @@ class Node {
      * Creates a node out of its adjacencies.
      * @param _adj vector of adjacencies.
     */
-    Node(const std::vector<Sealib::Adjacency> &adj_);
+    explicit Node(const std::vector<Sealib::Adjacency> &adj_);
 
     /**
      * @return Returns a pointer to the adjacency array.
