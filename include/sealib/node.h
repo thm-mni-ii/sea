@@ -1,8 +1,8 @@
 #ifndef SEALIB_NODE_H_
 #define SEALIB_NODE_H_
 
-#include <sealib/adjacency.h>
 #include <vector>
+#include <sealib/adjacency.h>
 
 namespace Sealib {
 /**
@@ -25,19 +25,17 @@ class Node {
      * Creates a node out of its adjacencies.
      * @param _adj vector of adjacencies.
     */
-    explicit Node(const std::vector<Sealib::Adjacency> &adj_);
-
-    Node() = default;
+    Node(const std::vector<Sealib::Adjacency> &adj_);
 
     /**
      * @return Returns a pointer to the adjacency array.
      */
-    const std::vector<Adjacency> &getAdj() const;
+    const std::vector<Adjacency> &getAdj();
 
     /**
      * @return Returns the degree of the node.
      */
-    unsigned int getDegree() const;
+    unsigned int getDegree();
 
     /**
      * Sets the crossindex in the adjacency
