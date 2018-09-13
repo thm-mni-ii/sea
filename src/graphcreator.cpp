@@ -1,8 +1,9 @@
-#include <limits>
 #include <sealib/graphcreator.h>
+#include <limits>
 
-Sealib::Basicgraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
-                                                                                         unsigned int order) {
+Sealib::Basicgraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
+    unsigned int **adjMatrix,
+    unsigned int order) {
     std::vector<Node> nodes;
 
   for (unsigned int i = 0; i < order; i++) {
