@@ -13,7 +13,7 @@ class SmallDoubleLinkedList : public DoubleLinkedList {
 
  public:
     explicit SmallDoubleLinkedList(unsigned char size);
-    ~SmallDoubleLinkedList() override = default;
+    ~SmallDoubleLinkedList() override = default;;
     unsigned int get() override;
     unsigned int remove(unsigned int idx) override;
     bool isEmpty() override;
