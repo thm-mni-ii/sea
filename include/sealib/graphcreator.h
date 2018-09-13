@@ -26,7 +26,7 @@ class GraphCreator {
      * @param adj_matrix NxN adjacency matrix representation of the graph.
      * @param _order Order of the graph, order equals the number of nodes.
      */
-    static Basicgraph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
+    static Basicgraph createGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_

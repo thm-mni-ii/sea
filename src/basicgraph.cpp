@@ -3,9 +3,9 @@
 using Sealib::Basicgraph;
 using Sealib::Node;
 
-Node *Basicgraph::getNode(unsigned int u) { return &nodes[u]; }
+const Node &Basicgraph::getNode(unsigned int u) { return nodes[u]; }
 
-unsigned int Basicgraph::getNodeDegree(unsigned int  u) {
+unsigned int Basicgraph::getNodeDegree(unsigned int u) {
     return nodes[u].getDegree();
 }
 
@@ -14,7 +14,15 @@ unsigned int Basicgraph::head(unsigned int u, unsigned int k) {
 }
 
 unsigned int Basicgraph::getOrder() {
-    return order;
+    return static_cast<unsigned int>(nodes.size());
 }
 
-Basicgraph::Basicgraph(Node *_nodes, unsigned int _order) : nodes(_nodes), order(_order) { }
+Sealib::Basicgraph::Basicgraph(const std::vector<Sealib::Node> &nodes_) : nodes(nodes_){
+
+}
+
+Basicgraph::Basicgraph(Node *nodes_, unsigned int order_) : nodes(order_) {
+    for (int i = 0; i < order_; ++i) {
+        nodes[i] = nodes_[i];
+    }
+}
