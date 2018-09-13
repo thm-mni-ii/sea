@@ -1,8 +1,8 @@
+#include "sealib/dfs.h"
 #include <gtest/gtest.h>
 #include <random>
-#include <vector>
 #include <stack>
-#include "sealib/dfs.h"
+#include <vector>
 #include "sealib/basicgraph.h"
 
 using Sealib::DFS;
@@ -55,7 +55,8 @@ std::vector<Graph *> makeGraphs() {
     Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
     for (unsigned int a = 0; a < order; a++) {
       unsigned int ai = DEGREE;
-      Adjacency *ad = reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * ai));
+      Adjacency *ad =
+          reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * ai));
       for (unsigned int b = 0; b < ai; b++) {
         ad[b] = Adjacency(rnd() % order);
       }
@@ -93,10 +94,10 @@ TEST_P(DFSTest, nBitUserproc) {
   EXPECT_EQ(c4, order);
 }
 
-auto *graph = new unsigned int[19]{ 5, 9, 7, 9, 9, 7, 12, 1, 17, 2, 12,
-                                   14, 3, 14, 4, 12, 17, 5, 14 };
+auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
+                                   12, 14, 3, 14, 4, 12, 17, 5, 14};
 unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
-stack <unsigned int> controllStack;
+stack<unsigned int> controllStack;
 void preTwo(unsigned int a) {
   controllSum = controllSum - a;
   controllStack.push(a);

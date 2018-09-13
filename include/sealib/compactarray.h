@@ -8,8 +8,6 @@
 
 using Sealib::Bitset;
 
-typedef Bitset<> Group;
-
 namespace Sealib {
 /**
  * This compact array stores a given number of values in as low space as
@@ -20,6 +18,8 @@ namespace Sealib {
  * @author Simon Heuser
  */
 class CompactArray {
+  typedef Bitset<uint> Group;
+
  public:
   /**
    * Create a new compact array.

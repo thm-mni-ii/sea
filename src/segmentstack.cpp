@@ -1,7 +1,6 @@
 #include "src/segmentstack.h"
 
 using Sealib::SegmentStack;
-using Sealib::CompactArray;
 
 SegmentStack::SegmentStack(uint size, unsigned segmentSize, bool useTrailers)
     : q(segmentSize), t(useTrailers), low(new Pair[q]), high(new Pair[q]) {
