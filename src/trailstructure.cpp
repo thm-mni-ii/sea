@@ -13,14 +13,14 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
     lastClosed((unsigned int) -1),
     inAndOut(_degree),
     matched(_degree),
-    flags(3),
+    flags(4),
     dyckMatchingStructure(nullptr),
     married(nullptr),
-    dl(nullptr) {
+    unused(nullptr) {
     if (_degree < 255) {
-        dl.reset(new SmallDoubleLinkedList(static_cast<unsigned char>(_degree)));
+        unused.reset(new SmallDoubleLinkedList(static_cast<unsigned char>(_degree)));
     } else {
-        dl.reset(new LargeDoubleLinkedList(_degree));
+        unused.reset(new LargeDoubleLinkedList(_degree));
     }
     if (_degree % 2 == 0) {
         flags[2] = 1;
@@ -39,8 +39,8 @@ inline unsigned int Sealib::TrailStructure::getNextUnused() {
         flags[0].flip();
     }  // set to grey
 
-    unsigned int next = dl->get();
-    if (dl->isEmpty()) {
+    unsigned int next = unused->get();
+    if (unused->isEmpty()) {
         flags[1].flip();
         flags[2] = 1;
     } else {
@@ -56,7 +56,7 @@ unsigned int Sealib::TrailStructure::leave() {
         flags[3] = 1;
     }
     if (flags[1]) {
-        delete dl;
+        unused.release();
         initDyckStructure();
     }
     return u;
@@ -66,7 +66,7 @@ unsigned int Sealib::TrailStructure::enter(unsigned int i) {
     if (flags[1]) {
         return (unsigned int) -1;
     }
-    unsigned int next = dl->remove(i);
+    unsigned int next = unused->remove(i);
     inAndOut[i] = 1;
     flags[2].flip();
     if (next == i) {  //  no elements left
@@ -74,8 +74,7 @@ unsigned int Sealib::TrailStructure::enter(unsigned int i) {
         flags[1] = 1;  //  blacken it
         flags[2] = 1;
         //  black now, unused is not needed anymore
-        delete dl;
-        dl = nullptr;
+        unused.release();
         initDyckStructure();
         return (unsigned int) -1;
     }
@@ -107,12 +106,29 @@ bool Sealib::TrailStructure::isEven() {
 void Sealib::TrailStructure::marry(unsigned int i, unsigned int o) {
     // initialize married table if it's the first call
     if (married == nullptr) {
-        married.reset(new std::vector<unsigned int>(4));
+        married.reset(new std::vector<unsigned int>(4, (unsigned int) -1));
+
+        unsigned int iMatch = getMatched(i);
+        unsigned int oMatch = getMatched(o);
+        matched[iMatch].flip();
+        matched[i].flip();
+
+        matched[oMatch].flip();
+        matched[o].flip();
+
         (*married)[0] = i;
         (*married)[1] = o;
         (*married)[2] = (unsigned int) -1;
         (*married)[3] = (unsigned int) -1;
     } else {  // second call of marry, should be maximum
+        unsigned int iMatch = getMatched(i);
+        unsigned int oMatch = getMatched(o);
+
+        matched[iMatch].flip();
+        matched[i].flip();
+        matched[oMatch].flip();
+        matched[o].flip();
+
         (*married)[2] = i;
         (*married)[3] = o;
     }
@@ -162,7 +178,7 @@ inline void Sealib::TrailStructure::initDyckStructure() {
             // increment circular
             j = j == inAndOut.size() - 1 ? 0 : j + 1;
         } while (j != dyckStart);
-        dyckMatchingStructure = new RecursiveDyckMatchingStructure(dyckWord);
+        dyckMatchingStructure.reset(new RecursiveDyckMatchingStructure(dyckWord));
     }
 }
 
@@ -237,6 +253,7 @@ unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) {
         }
         s = (s == (inAndOut.size() - 1)) ? 0 : s + 1;
     }
+
     unsigned long match = dyckMatchingStructure->getMatch(dyckIdx);
     if (match == dyckIdx) {
         return idx;
