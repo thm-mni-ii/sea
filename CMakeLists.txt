@@ -59,7 +59,7 @@ add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(tests PRIVATE -std=c++11 -g -O3 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
+target_compile_options(tests PRIVATE -std=c++11 -g -O0 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")
