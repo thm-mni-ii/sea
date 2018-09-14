@@ -95,7 +95,7 @@ TEST(SimpleTrailStructureTest, allEvenPossibilities) {
                 Sealib::SimpleTrailStructure simpleTrailStructure(len);
                 Sealib::TrailStructure trailStructure(len);
 
-                for (std::vector<unsigned long> &depthVector: shiftedDepths) {
+                for (std::vector<unsigned long> &depthVector : shiftedDepths) {
                     if (!depthVector.empty()) {
                         for (unsigned long &idx : depthVector) {
                             simpleTrailStructure.enter(static_cast<unsigned int>(idx));
