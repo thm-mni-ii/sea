@@ -8,7 +8,7 @@
 using Sealib::DFS;
 using Sealib::CompactArray;
 using Sealib::Graph;
-using Sealib::Basicgraph;
+using Sealib::BasicGraph;
 using Sealib::Node;
 using Sealib::Adjacency;
 using std::vector;
@@ -61,7 +61,7 @@ std::vector<Graph *> makeGraphs() {
       }
       n[a] = Node(ad, ai);
     }
-    g.push_back(new Basicgraph(n, order));
+    g.push_back(new BasicGraph(n, order));
   }
   return g;
 }
