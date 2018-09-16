@@ -93,8 +93,6 @@ class SimpleTrailStructure {
      * @param o second element to be matched
      */
     void marry(unsigned int i, unsigned int o);
-
-
 };
 }  // namespace Sealib
 #endif  // SEALIB_SIMPLETRAILSTRUCTURE_H_
