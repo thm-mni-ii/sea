@@ -64,3 +64,33 @@ Sealib::Basicgraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
     }
     return new Basicgraph(n);
 }
+
+std::unique_ptr<Sealib::BasicGraph> Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
+                                                                                            unsigned int order2,
+                                                                                            double p,
+                                                                                            unsigned int seed) {
+    std::unique_ptr<Sealib::BasicGraph> graph(new Sealib::BasicGraph(order1+order2));
+
+    std::mt19937_64 rng(seed);
+    std::uniform_real_distribution<double> unif(0.0, 1.0);
+
+    for (unsigned int n1 = 0; n1 < order1; n1++) {
+        for (unsigned int n2 = order1; n2 < order2; n2++) {
+            if (unif(rng) < p) {
+                Sealib::Node &node1 = graph->getNode(n1);
+                Sealib::Node &node2 = graph->getNode(n2);
+
+                unsigned int n1idx = node1.getDegree();
+                unsigned int n2idx = node2.getDegree();
+
+                node1.addAdjacency(n2);
+                node1.setCrossIndex(n1idx, n2idx);
+
+                node2.addAdjacency(n1);
+                node2.setCrossIndex(n2idx, n1idx);
+            }
+        }
+    }
+
+    return graph;
+}
