@@ -1,12 +1,12 @@
 #ifndef SEALIB_LARGEDOUBLELINKEDLIST_H_
 #define SEALIB_LARGEDOUBLELINKEDLIST_H_
 
-#include <sealib/abstractdoublelinkedlist.h>
+#include <sealib/doublelinkedlist.h>
 #include <vector>
 #include <ostream>
 
 namespace Sealib {
-class LargeDoubleLinkedList : public AbstractDoubleLinkedList {
+class LargeDoubleLinkedList : public DoubleLinkedList {
  private:
     std::vector<unsigned int> links;
     unsigned int current;
