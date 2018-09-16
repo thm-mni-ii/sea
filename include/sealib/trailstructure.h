@@ -24,7 +24,7 @@ class TrailStructure {
 
     std::unique_ptr<DyckMatchingStructure> dyckMatchingStructure;
     std::unique_ptr<std::vector<unsigned int>> married;
-    std::unique_ptr<AbstractDoubleLinkedList> unused;
+    std::unique_ptr<DoubleLinkedList> unused;
 
     /**
      * Removes nextUnused from the double linked unused array.

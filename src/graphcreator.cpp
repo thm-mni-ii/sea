@@ -50,10 +50,10 @@ Sealib::BasicGraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
     return BasicGraph(nodes);
 }
 
-std::unique_ptr<Sealib::BasicGraph> Sealib::GraphCreator::generateRandomBasicGraph(
-    unsigned int order,
-    double p,
-    unsigned int seed) {
+std::unique_ptr<Sealib::BasicGraph>
+Sealib::GraphCreator::generateRandomBasicGraph(unsigned int order,
+                                               double p,
+                                               unsigned int seed) {
     std::unique_ptr<Sealib::BasicGraph> graph(new Sealib::BasicGraph(order));
 
     std::mt19937_64 rng(seed);
@@ -89,10 +89,11 @@ std::unique_ptr<Sealib::BasicGraph> Sealib::GraphCreator::generateRandomBasicGra
     return graph;
 }
 
-std::unique_ptr<Sealib::BasicGraph> Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
-                                                                                            unsigned int order2,
-                                                                                            double p,
-                                                                                            unsigned int seed) {
+std::unique_ptr<Sealib::BasicGraph>
+Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
+                                                        unsigned int order2,
+                                                        double p,
+                                                        unsigned int seed) {
     std::unique_ptr<Sealib::BasicGraph> graph(new Sealib::BasicGraph(order1+order2));
 
     std::mt19937_64 rng(seed);

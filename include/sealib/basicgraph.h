@@ -67,7 +67,7 @@ class BasicGraph : public Graph {
     * @param u Vertex u 
     * @return Returns d that is the degree of node v.
     */
-    unsigned int getNodeDegree(unsigned int u) override;
+    unsigned int getNodeDegree(unsigned int u) const override;
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
@@ -75,12 +75,12 @@ class BasicGraph : public Graph {
     * @param k index in the adjacency vector of node u
     * @return Returns v that is the k-th neighbor of u.
     */
-    unsigned int head(unsigned int u, unsigned int k) override;
+    unsigned int head(unsigned int u, unsigned int k) const override;
 
     /**
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
-    unsigned int getOrder() override;
+    unsigned int getOrder() const override;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BASICGRAPH_H_

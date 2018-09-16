@@ -4,15 +4,15 @@ const Sealib::Node &Sealib::BasicGraph::getNode(unsigned int u) const { return n
 
 Sealib::Node &Sealib::BasicGraph::getNode(unsigned int u) { return nodes[u]; }
 
-unsigned int Sealib::BasicGraph::getNodeDegree(unsigned int u) {
+unsigned int Sealib::BasicGraph::getNodeDegree(unsigned int u) const {
     return nodes[u].getDegree();
 }
 
-unsigned int Sealib::BasicGraph::head(unsigned int u, unsigned int k) {
+unsigned int Sealib::BasicGraph::head(unsigned int u, unsigned int k) const {
     return nodes[u].getAdj()[k].vertex;
 }
 
-unsigned int Sealib::BasicGraph::getOrder() {
+unsigned int Sealib::BasicGraph::getOrder() const {
     return static_cast<unsigned int>(nodes.size());
 }
 

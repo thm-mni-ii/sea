@@ -6,12 +6,13 @@
 #include <sealib/basicgraph.h>
 #include <sealib/trailstructure.h>
 #include <memory>
+#include <vector>
 
 namespace Sealib {
 class GraphAlgorithm {
  public:
     template<typename TrailStructureType>
-    std::unique_ptr<std::vector<TrailStructureType>> hierholzer(BasicGraph &graph);
+    std::unique_ptr<std::vector<TrailStructureType>> hierholzer(const BasicGraph &graph);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHALGORITHM_H_
