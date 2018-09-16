@@ -10,14 +10,8 @@
 namespace Sealib {
 class GraphAlgorithm {
  public:
-    static std::unique_ptr<std::vector<SimpleTrailStructure>>
-    hierholzerSimple(BasicGraph &graph);
-
-    static std::unique_ptr<std::vector<TrailStructure>>
-    hierholzer(BasicGraph &graph);
-
-    static std::unique_ptr<NaiveTrail>
-    hierholzerNaive(BasicGraph &graph);
+    template<typename TrailStructureType>
+    std::unique_ptr<std::vector<TrailStructureType>> hierholzer(BasicGraph &graph);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHALGORITHM_H_
