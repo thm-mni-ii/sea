@@ -40,6 +40,20 @@ class GraphCreator {
         unsigned int order,
         double p,
         unsigned int seed);
+
+    /**
+    * Creates a random bipartite graph with every possible edge occuring with a chance of p.
+    * @param n1 - number of nodes in the first part of the graph
+    * @param n2 - number of nodes in the second part of the graph
+    * @param p chance that an edge occurs, 0.0 < p < 1.0
+    * @param seed for the rng
+    * @return unique_ptr to the graph
+    */
+    std::unique_ptr<Sealib::BasicGraph> generateRandomBipartiteBasicGraph(
+        unsigned int n1,
+        unsigned int n2,
+        double p,
+        unsigned int seed);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_
