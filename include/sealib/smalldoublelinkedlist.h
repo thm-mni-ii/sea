@@ -1,12 +1,12 @@
 #ifndef SEALIB_SMALLDOUBLELINKEDLIST_H_
 #define SEALIB_SMALLDOUBLELINKEDLIST_H_
 
-#include <sealib/doublelinkedlist.h>
+#include <sealib/abstractdoublelinkedlist.h>
 #include <vector>
 #include <ostream>
 
 namespace Sealib {
-class SmallDoubleLinkedList : public DoubleLinkedList {
+class SmallDoubleLinkedList : public AbstractDoubleLinkedList {
  private:
     std::vector<unsigned char> links;
     unsigned char current;
