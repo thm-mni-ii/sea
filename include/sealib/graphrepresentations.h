@@ -20,10 +20,9 @@
  * @author Simon Schniedenharn
  */
 namespace Sealib {
-
 class Graphrepresentations {
  public:
-    static uint* fastGraphGeneration(uint n, uint mPern);
+    static uint *fastGraphGeneration(uint n, uint mPern);
 
     /**	Generates a Gilbert graph G(n,p) in standard representation with n nodes
      *  and an occurence of every possible edge with a probability of
@@ -37,16 +36,6 @@ class Graphrepresentations {
     static Compactgraph *generateGilbertGraph(unsigned int n, double p,
                                               std::mt19937_64 *gen);
 
-    /**	Generates a random graph G(n,p) with n nodes
-     *  and an occurence of every possible edge with a probability of
-     *  0 < p < 1
-     *
-     *	@param order - order of the graph
-     *	@param p - probability of an edge
-     *	@param seed - seed used for rng
-     */
-    static std::unique_ptr<BasicGraph> generateRandomBasicGraph(unsigned int order, double p,
-                                                                 unsigned int seed);
 
     /**	Generates a Gilbert graph G(n,p) in standard representation with n nodes
      *  and an occurence of every possible edge with a probability of
@@ -57,7 +46,7 @@ class Graphrepresentations {
      *	@param p probability of an edge
      *	@param gen engine to generate a pseudo random sequence of numbers
      */
-    static uint* generateRawGilbertGraph(unsigned int n, double p,
+    static uint *generateRawGilbertGraph(unsigned int n, double p,
                                          std::mt19937_64 *gen);
 
     /**
