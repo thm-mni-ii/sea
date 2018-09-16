@@ -2,10 +2,10 @@
 #define SEALIB_DOUBLELINKEDLIST_H_
 
 namespace Sealib {
-class DoubleLinkedList {
+class AbstractDoubleLinkedList {
  public:
-    DoubleLinkedList() = default;
-    virtual ~DoubleLinkedList() = default;
+    AbstractDoubleLinkedList() = default;
+    virtual ~AbstractDoubleLinkedList() = default;
     virtual unsigned int get() = 0;
     virtual unsigned int remove(unsigned int idx) = 0;
     virtual bool isEmpty() = 0;
