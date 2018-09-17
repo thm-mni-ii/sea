@@ -5,6 +5,7 @@
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
+#include "sealib/iterator.h"
 
 #define BFS_WHITE 0
 #define BFS_GRAY1 1
@@ -30,7 +31,7 @@ class ConnectedComponent {
   std::vector<Pair> getSequence() { return v; }
 };
 
-class BFS {
+class BFS : Iterator<Pair> {
  public:
   /**
    * Run a breadth-first search over a given graph, while executing the two
@@ -46,6 +47,27 @@ class BFS {
    */
   static std::vector<ConnectedComponent> run(Graph *g, UserFunc1 preprocess,
                                              UserFunc2 preexplore);
+
+  void init() override;
+
+  bool reinit();
+
+  bool more() override;
+
+  Pair next() override;
+
+  BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe);
+
+  ~BFS();
+
+ private:
+  Graph *g;
+  uint n;
+  CompactArray *color;
+  uint u, dist;
+  unsigned innerGray, outerGray;
+  UserFunc1 preprocess;
+  UserFunc2 preexplore;
 };
 
 }  // namespace Sealib

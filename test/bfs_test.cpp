@@ -39,36 +39,23 @@ INSTANTIATE_TEST_CASE_P(ParamTests, BFSTest, ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
 TEST_P(BFSTest, userproc) {
-  Graph *g = GetParam();
-  BFS::run(g, incr1, incr2);
+  BFS bfs(GetParam(), incr1, incr2);
+  bfs.init();
+  while (bfs.reinit())
+    while (bfs.more()) bfs.next();
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, order * degree);
-  delete g;
 }
 
-TEST(BFSTest, connectedComponents1) {
-  Graph *g = GraphCreator::createRandomFixed(order, 0);
-  std::vector<ConnectedComponent> c =
-      BFS::run(g, BFS_NOP_PROCESS, BFS_NOP_EXPLORE);
-  ASSERT_EQ(c.size(), order);
-  uint b = 0;
-  for (ConnectedComponent a : c) {
-    EXPECT_EQ(a.get(0).head(), b);
-    b++;
+TEST(BFSTest, reinit) {
+  c1 = c2 = 0;
+  BFS bfs(GraphCreator::createRandomFixed(order, 0), incr1, incr2);
+  uint rc = 0;
+  while (bfs.reinit()) {
+    rc++;
+    while (bfs.more()) bfs.next();
   }
-  delete g;
-}
-
-TEST(BFSTest, connectedComponents2) {
-  Graph *g = GraphCreator::createRandomFixed(order, 1);
-  std::vector<ConnectedComponent> c =
-      BFS::run(g, BFS_NOP_PROCESS, BFS_NOP_EXPLORE);
-  std::set<uint> u;
-  for (ConnectedComponent a : c) {
-    for (Pair b : a.getSequence()) {
-      std::pair<std::set<uint>::iterator, bool> r = u.insert(b.head());
-      EXPECT_TRUE(std::get<1>(r));
-    }
-  }
-  delete g;
+  EXPECT_EQ(rc, order);
+  EXPECT_EQ(c1, order);
+  EXPECT_EQ(c2, 0);
 }
