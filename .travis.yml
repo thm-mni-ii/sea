@@ -10,6 +10,7 @@ addons:
     packages:
       - g++-6
       - clang-5.0
+      - cppcheck
 
 cache:
   directories:
@@ -24,6 +25,7 @@ script:
   - cpplint ./include/*/*.*
   - cpplint ./src-view/*.*
   - cpplint ./test/*.*
+  - cppcheck --std=c++11 --error-exitcode=1 --quiet -Iinclude src/ src-view/
   - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 . && make && ./bin/tests
 
 after_success:
