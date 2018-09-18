@@ -49,7 +49,7 @@ TEST(IteratorTest, iterator_integrity) {
             }
         }
     }
-    ASSERT_EQ(count, setSize - 18); // setSize - number of removed indices
+    ASSERT_EQ(count, setSize - 18);
     delete iterator;
     delete c;
 }
