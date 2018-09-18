@@ -30,6 +30,14 @@ TEST(IteratorTest, iterator_integrity) {
     for (unsigned long int number : set) {
         c->insert(number);
     }
+    for (unsigned long int i = 0; i < 64; i+=5) {
+        c->remove(i);
+    }
+    c->remove(12000);
+    c->remove(12005);
+    c->remove(15000);
+    c->remove(16000);
+    c->remove(16500);
 
     iterator->init();
     while (iterator->more()) {
@@ -41,7 +49,7 @@ TEST(IteratorTest, iterator_integrity) {
             }
         }
     }
-    // ASSERT_EQ(count, setSize);
+    ASSERT_EQ(count, setSize - 18);
     delete iterator;
     delete c;
 }
