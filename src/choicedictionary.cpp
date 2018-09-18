@@ -6,7 +6,8 @@ using Sealib::ChoiceDictionary;
 
 struct emptyChoiceDictionary : public std::exception {
     const char* what() const throw() {
-        return "Choice dictionary is empty. Operations \'choice()\' and \'remove()\' are not possible";
+        return "Choice dictionary is empty. Operations \'choice()\'"
+               " and \'remove()\' are not possible";
     }
 };
 
