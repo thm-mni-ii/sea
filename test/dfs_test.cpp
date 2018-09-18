@@ -1,9 +1,10 @@
+#include "sealib/dfs.h"
 #include <gtest/gtest.h>
 #include <random>
-#include <vector>
 #include <stack>
-#include "sealib/dfs.h"
+#include <vector>
 #include "sealib/basicgraph.h"
+#include "sealib/graphcreator.h"
 
 using Sealib::DFS;
 using Sealib::CompactArray;
@@ -52,16 +53,7 @@ const unsigned order = 200;
 std::vector<Graph *> makeGraphs() {
   std::vector<Graph *> g = std::vector<Graph *>();
   for (uint c = 0; c < GRAPHCOUNT; c++) {
-    Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
-    for (unsigned int a = 0; a < order; a++) {
-      unsigned int ai = DEGREE;
-      Adjacency *ad = reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * ai));
-      for (unsigned int b = 0; b < ai; b++) {
-        ad[b] = Adjacency(rnd() % order);
-      }
-      n[a] = Node(ad, ai);
-    }
-    g.push_back(new Basicgraph(n, order));
+    g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
   }
   return g;
 }
@@ -93,10 +85,10 @@ TEST_P(DFSTest, nBitUserproc) {
   EXPECT_EQ(c4, order);
 }
 
-auto *graph = new unsigned int[19]{ 5, 9, 7, 9, 9, 7, 12, 1, 17, 2, 12,
-                                   14, 3, 14, 4, 12, 17, 5, 14 };
+auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
+                                   12, 14, 3, 14, 4, 12, 17, 5, 14};
 unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
-stack <unsigned int> controllStack;
+stack<unsigned int> controllStack;
 void preTwo(unsigned int a) {
   controllSum = controllSum - a;
   controllStack.push(a);
