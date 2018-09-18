@@ -1,6 +1,6 @@
 #include "sealib/dfs.h"
-#include "./segmentstack.h"
 #include "./inplacerunner.h"
+#include "./segmentstack.h"
 
 using Sealib::DFS;
 using Sealib::SegmentStack;
@@ -144,7 +144,6 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   delete color;
   delete s;
 }
-
 
 void DFS::runLinearTimeInplaceDFS(uint *graph, UserFunc1 preProcess,
                                   UserFunc1 postProcess, uint startVertex) {

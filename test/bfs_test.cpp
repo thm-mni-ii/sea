@@ -5,7 +5,6 @@
 #include "sealib/graphcreator.h"
 
 using Sealib::BFS;
-using Sealib::ConnectedComponent;
 using Sealib::Graph;
 using Sealib::GraphCreator;
 
@@ -41,17 +40,17 @@ INSTANTIATE_TEST_CASE_P(ParamTests, BFSTest, ::testing::ValuesIn(makeGraphs()),
 TEST_P(BFSTest, userproc) {
   BFS bfs(GetParam(), incr1, incr2);
   bfs.init();
-  while (bfs.reinit())
+  while (bfs.nextComponent())
     while (bfs.more()) bfs.next();
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, order * degree);
 }
 
-TEST(BFSTest, reinit) {
+TEST(BFSTest, nextComponent) {
   c1 = c2 = 0;
   BFS bfs(GraphCreator::createRandomFixed(order, 0), incr1, incr2);
   uint rc = 0;
-  while (bfs.reinit()) {
+  while (bfs.nextComponent()) {
     rc++;
     while (bfs.more()) bfs.next();
   }

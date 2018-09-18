@@ -16,7 +16,9 @@ class SegmentStackTest : public ::testing::TestWithParam<bool> {
   virtual void TearDown() { delete s; }
 };
 
-INSTANTIATE_TEST_CASE_P(ParamTests, SegmentStackTest, ::testing::Values(false, true), /**/);
+INSTANTIATE_TEST_CASE_P(ParamTests, SegmentStackTest,
+                        ::testing::Values(false, true),
+                        /**/);
 
 TEST_P(SegmentStackTest, empty) {
   EXPECT_TRUE(s->empty());
