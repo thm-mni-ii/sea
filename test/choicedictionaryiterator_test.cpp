@@ -25,7 +25,7 @@ TEST(ChoiceDictionaryIteratorTest, iterator_integrity) {
         num += 5;
     }
 
-    std::shuffle(set.begin(), set.end(), std::default_random_engine(seed));
+    //std::shuffle(set.begin(), set.end(), std::default_random_engine(seed));
 
     for (unsigned long int number : set) {
         c->insert(number);
