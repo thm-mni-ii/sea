@@ -106,12 +106,11 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
                 DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
 }
 
-static void restore_top(uint u0, Graph *g, CompactArray *color,
+/*static void restore_top(uint u0, Graph *g, CompactArray *color,
                         SegmentStack *s) {
   u0 += g->getOrder();
-  std::vector<uint> t = s->getTrunk();
-  for (uint a : t) color->insert(a, DFS_WHITE);
-}
+  if(s->isAligned()) color->insert(u0, DFS_WHITE);
+}*/
 
 void DFS::standardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                       UserFunc2 postExplore, UserFunc1 postProcess) {
@@ -142,7 +141,7 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   SegmentStack s(n, q, false);
-  CompactArray color(n, vpg);
+  CompactArray color(n, vpg,3);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
     if (color.get(a) == DFS_WHITE)
@@ -163,12 +162,11 @@ void DFS::nloglognBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   SegmentStack s(n, q, false);
-  CompactArray color(n, vpg);
+  CompactArray color(n, vpg,3);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
     if (color.get(a) == DFS_WHITE)
-      process_small(a, g, &color, &s, restore_top, preProcess, preExplore,
-                    postExplore, postProcess);
+      process_small(a, g, &color, &s, /*restore_top*/ restore_full, preProcess, preExplore, postExplore, postProcess);
   }
 }
 
