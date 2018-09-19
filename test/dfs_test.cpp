@@ -4,6 +4,7 @@
 #include <stack>
 #include <vector>
 #include "sealib/basicgraph.h"
+#include "sealib/graphcreator.h"
 
 using Sealib::DFS;
 using Sealib::CompactArray;
@@ -52,17 +53,7 @@ const unsigned order = 200;
 std::vector<Graph *> makeGraphs() {
   std::vector<Graph *> g = std::vector<Graph *>();
   for (uint c = 0; c < GRAPHCOUNT; c++) {
-    Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
-    for (unsigned int a = 0; a < order; a++) {
-      unsigned int ai = DEGREE;
-      Adjacency *ad =
-          reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * ai));
-      for (unsigned int b = 0; b < ai; b++) {
-        ad[b] = Adjacency(rnd() % order);
-      }
-      n[a] = Node(ad, ai);
-    }
-    g.push_back(new Basicgraph(n, order));
+    g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
   }
   return g;
 }
