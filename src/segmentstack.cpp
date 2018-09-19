@@ -2,12 +2,15 @@
 
 using Sealib::SegmentStack;
 
-SegmentStack::SegmentStack(uint size, unsigned segmentSize, bool useTrailers)
-    : q(segmentSize), t(useTrailers), low(new Pair[q]), high(new Pair[q]) {
+SegmentStack::SegmentStack(uint size, unsigned segmentSize, bool extendedMode)
+    : q(segmentSize),
+      t(extendedMode),
+      low(new Pair[q]),
+      high(new Pair[q]),
+      l(static_cast<unsigned>(log(size))) {
   if (t) {
     trailers = new Pair[size / q + 1];
-    trunk =
-        new Pair[q];  // store the segment below `low` (for partial recoloring)
+    table = new CompactArray(size, q, l);
   } else {
     // use only the last trailer
   }
@@ -15,10 +18,14 @@ SegmentStack::SegmentStack(uint size, unsigned segmentSize, bool useTrailers)
 SegmentStack::~SegmentStack() {
   delete[] low;
   delete[] high;
-  if (t) delete[] trailers;
+  if (t) {
+    delete[] trailers;
+    delete table;
+  }
 }
 
 int SegmentStack::push(Pair u) {
+  // if(t) table[u.head()]=tp;
   if (lp < q) {
     low[lp++] = u;
   } else if (hp < q) {
@@ -26,7 +33,6 @@ int SegmentStack::push(Pair u) {
   } else {
     if (t) {
       trailers[tp] = low[lp - 1];
-      for (unsigned a = 0; a < q; a++) trunk[a] = low[a];
     } else {
       last = low[lp - 1];
     }
@@ -71,14 +77,6 @@ void SegmentStack::saveTrailer() {
   } else {
     throw std::logic_error("segmentstack: cannot save from empty trailers");
   }
-}
-
-std::vector<uint> SegmentStack::getTrunk() {
-  std::vector<uint> r;
-  for (unsigned a = 0; a < q; a++) {
-    r.push_back(std::get<0>(trunk[a]));
-  }
-  return r;
 }
 
 bool SegmentStack::isAligned() {

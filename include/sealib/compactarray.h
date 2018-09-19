@@ -27,8 +27,9 @@ class CompactArray {
    * @param vpg values per group: the larger vpg is, the more values are put
    * into one group. It does not affect the total space needed.
    * The space efficiency is optimal if vpg divides n.
+   * @param v the highest possible value (default: 3)
    */
-  CompactArray(unsigned int count, unsigned int vpg);
+  CompactArray(unsigned int count, unsigned int vpg, unsigned int v = 3);
 
   ~CompactArray();
 

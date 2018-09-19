@@ -8,8 +8,8 @@ using Sealib::SegmentStack;
 #define popexp(n, exp) \
   for (int a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 
-SegmentStack *s;
-Pair r;
+static SegmentStack *s;
+static Pair r;
 class SegmentStackTest : public ::testing::TestWithParam<bool> {
  protected:
   virtual void SetUp() { s = new SegmentStack(20, 3, GetParam()); }
