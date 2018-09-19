@@ -4,7 +4,8 @@ A choice dictionary is a bitset containing n elements that supports reading and 
 
 ## Operations
 * get(i): Returns the bit at index i.
-* insert(i): Set a the bit at index i to 1.
+* insert(i): Set the bit at index i to 1.
+* remove(i): Set the bit at index i to 0.
 * choice: Returns an arbitrary bit position that is set to 1.
 
 ## Efficiency
@@ -27,12 +28,14 @@ cd.choice(); // May return 0, 4, 7 or 11.
 
 delete cd;
 ```
+<br>
 
 Iterator
 ===
 
 An Iterator is used to iterate through all bits set to 1 in a choice dictionary.
-It supports the so-called *more* operation that returns true if the choice dictionary contains more bits set to 1, aswell as the *next* operation that returns the index of the next arbitrary bit.
+It supports the so-called *more* operation that returns true if the choice dictionary contains more bits set to 1, aswell as the *next* operation that returns the index of the next arbitrary bit.<br>
+If there are changes made to the choice dictionary during the iteration process, the iterator may return wrong results.
 
 ## Operations
 * init: Initializes the Iterator.

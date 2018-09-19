@@ -10,10 +10,10 @@ class DyckMatchingStructure {
     static unsigned long getMatchNaive(
         const Sealib::Bitset<unsigned char> &word_,
         unsigned long idx);
+
     static unsigned long getMatchNaive(
         const Sealib::Bitset<unsigned char> &word,
         unsigned long idx, unsigned long skip);
-
     virtual unsigned long getMatch(unsigned long idx);
 
     explicit DyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_);
@@ -21,7 +21,6 @@ class DyckMatchingStructure {
     const Sealib::Bitset<unsigned char> &getWord() const;
 
     static const Bitset<unsigned char> segmentizeWord(const Bitset<unsigned char> &word);
-
  protected:
     const Sealib::Bitset<unsigned char> word;
     static constexpr const unsigned char mSegmentLength = 7;
