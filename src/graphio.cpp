@@ -21,7 +21,7 @@ void GraphExporter::exportGML(Graph *g, std::string filename) {
       out << "source " << u << "\n";
       out << "target " << g->head(u, k) << "\n";
       out << "value 1.0\n";
-      out << "fill \"#000000\"";
+      out << "fill \"#000000\"\n";
       out << "]\n";
     }
   }
