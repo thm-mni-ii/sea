@@ -34,14 +34,18 @@ namespace Sealib {
 */
 class SegmentStack {
  public:
-  /* size: number of stored entries, useTrailers: if true, use stack of
-   * trailers; if false, use last pushed entry*/
-  explicit SegmentStack(uint size, unsigned segmentSize, bool useTrailers);
+  /* size: number of stored entries
+   * extendedMode:
+   *  - enables stack of trailers (if false, use last pushed entry)
+   *  - enables segment number table and extended trailer storage
+   */
+  explicit SegmentStack(uint size, unsigned segmentSize, bool extendedMode);
   ~SegmentStack();
 
   int push(Pair u);
   int pop(Pair *r);
   bool empty();
+
   /* empty the entire stack - needed for a full restoration */
   void dropAll();
   /* save a trailer to survive a full restoration */
@@ -49,16 +53,17 @@ class SegmentStack {
   /* is the restoration finished? (i.e. saved trailer and actual trailer are
    * aligned) */
   bool isAligned();
-  std::vector<uint> getTrunk();
 
  private:
   unsigned q;
   bool t = false;
-  Pair *low, *high, *trailers, *trunk;
+  Pair *low, *high, *trailers;
   Pair last;
   unsigned lp = 0, hp = 0, tp = 0;
   Pair savedTrailer;
   int alignTarget;
+  CompactArray *table;
+  unsigned l;
 };
 }  // namespace Sealib
 #endif  // SRC_SEGMENTSTACK_H_

@@ -34,7 +34,8 @@ unsigned int CompactArray::get(uint i) {
   return d;
 }
 
-CompactArray::CompactArray(unsigned int count, unsigned int vpg) {
+CompactArray::CompactArray(unsigned int count, unsigned int vpg,
+                           unsigned int v) {
   /**
    * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible
    * states)
@@ -43,7 +44,7 @@ CompactArray::CompactArray(unsigned int count, unsigned int vpg) {
    */
 
   // the following is valid if the inserted values can have 3 states:
-  valueWidth = static_cast<unsigned>(ceil(log(3) / log(2)));
+  valueWidth = static_cast<unsigned>(ceil(log(v) / log(2)));
   valuesPerGroup = vpg;
   groupWidth = valuesPerGroup *
                valueWidth;  // bits for a group of 3/e (e.g. 2) consec. colors
