@@ -22,7 +22,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 #                   gtest library
 # --------------------------------------------------- #
 ExternalProject_Add(GTEST_PROJECT
-        GIT_REPOSITORY https://github.com/google/googletest.git
+        SOURCE_DIR third-party/gtest
+        TMP_DIR third-party/TEMP/gtest
+        STAMP_DIR third-party/TEMP/gtest
+        BINARY_DIR third-party/BIN/gtest
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS "-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=OFF -DINSTALL_GMOCK=OFF"
         INSTALL_COMMAND ""
@@ -40,6 +43,20 @@ include_directories(SYSTEM ${GOOGLETEST_ROOT}/googletest/include)
 add_library(gtest STATIC IMPORTED)
 add_dependencies(gtest GTEST_PROJECT)
 set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemock/gtest/libgtest.a")
+
+
+# --- submodule management --- #
+
+set(Gtest_path "${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest") 
+add_custom_target(InstallSubmodules
+        COMMAND git submodule update --init)
+IF(((NOT EXISTS "${Gtest_path}/.git") OR IS_DIRECTORY "${Gtest_path}/.git") AND EXISTS "${Gtest_path}")
+        add_custom_target(CleanGtest
+        COMMAND echo "Removing old 'gtest' folder..."
+        COMMAND rm -rf third-party/gtest)
+        add_dependencies(InstallSubmodules CleanGtest)
+ENDIF()
+add_dependencies(GTEST_PROJECT InstallSubmodules)
 
 # --------------------------------------------------- #
 #                   build library

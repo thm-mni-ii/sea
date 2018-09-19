@@ -1,5 +1,6 @@
 # Downloaded Dependencies
-/third-party
+/third-party/BIN
+/third-party/TEMP
 # Files for Build System
 /.gradle
 compile_commands.json
