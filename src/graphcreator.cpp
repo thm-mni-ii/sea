@@ -53,18 +53,35 @@ Basicgraph *GraphCreator::createGraphFromAdjacencyMatrix(
   return new Basicgraph(nodes, order);
 }
 
+static std::random_device rng;
+
 Basicgraph *GraphCreator::createRandomFixed(unsigned int order,
                                             unsigned int degreePerNode) {
-  std::random_device rnd;
+  std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
   Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
   for (unsigned int a = 0; a < order; a++) {
     unsigned int ai = degreePerNode;
     Adjacency *ad =
         reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * ai));
     for (unsigned int b = 0; b < ai; b++) {
-      ad[b] = Adjacency(rnd() % order);
+      ad[b] = Adjacency(rnd(rng));
     }
     n[a] = Node(ad, ai);
+  }
+  return new Basicgraph(n, order);
+}
+
+Basicgraph *GraphCreator::createRandomGenerated(unsigned int order) {
+  Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
+  std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
+  for (unsigned int a = 0; a < order; a++) {
+    unsigned int deg = rnd(rng);
+    Adjacency *ad =
+        reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * deg));
+    for (unsigned int b = 0; b < deg; b++) {
+      ad[b] = Adjacency(rnd(rng));
+    }
+    n[a] = Node(ad, deg);
   }
   return new Basicgraph(n, order);
 }

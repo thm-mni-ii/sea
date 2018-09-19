@@ -12,7 +12,6 @@ namespace Sealib {
  * and setting a bit in constant time and additionally a so-called choice
  * operation that returns the position of an arbitrary bit that is set to 1
  * in constant time.
- *
  * @author Dennis Appel
  */
 class ChoiceDictionary {
@@ -55,12 +54,18 @@ class ChoiceDictionary {
      */
     void updateSecondary(unsigned long int primaryIndex);
 
+    void removeFromSecondary(unsigned long int primaryIndex);
+
     /**
      * Creates a link between a tupel in secondary and validator.
      *
      * @param secondaryIndex Index of the new secondary word.
      */
     unsigned long int makeLink(unsigned long int secondaryIndex);
+
+    void breakLink(unsigned long int secondaryIndex);
+
+    void shrinkValidator(unsigned long int startIndex);
 
     bool isInitialized(unsigned long int primaryIndex);
 
@@ -75,7 +80,7 @@ class ChoiceDictionary {
 
     /**
      * Sets a bit at specified index to 1.
-     * @param index Index to insert into
+     * @param index Index of bit that should be set to 1.
      */
     void insert(unsigned long int index);
 
@@ -89,6 +94,12 @@ class ChoiceDictionary {
      * Returns an arbitrary bit position that is set to 1.
      */
     unsigned long int choice();
+
+    /**
+     * Sets a bit at specified index to 0.
+     * @param index Index of bit that should be set to 0.
+     */
+    void remove(unsigned long int index);
 
     unsigned long int getPrimaryWord(unsigned long int primaryIndex);
 
