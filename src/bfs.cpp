@@ -29,23 +29,30 @@ bool BFS::nextComponent() {
   return found;
 }
 
-bool BFS::more() {
-  // REPLACE with c-color CD:
+bool BFS::hasGrayNode() {
+  // needs 4-color CD:
+  // try {
+  //   c.choice();
+  //   return true;
+  // } catch(std::exception) {
+  //   return false;
+  // }
+
+  // TEMPORARY solution:
   for (uint a = 0; a < n; a++) {
     if (color->get(a) == BFS_GRAY1 || color->get(a) == BFS_GRAY2) return true;
   }
   return false;
 }
-
-Pair BFS::next() {
-  // uint u = getNextGray();
-  //          ^ choice()
+uint BFS::getGrayNode() {
+  // return choice();
 
   // TEMPORARY solution:
+  uint r;
   bool found = false;
   for (uint a = 0; a < n; a++) {
     if (color->get(a) == innerGray) {
-      u = a;
+      r = a;
       found = true;
       break;
     }
@@ -53,14 +60,24 @@ Pair BFS::next() {
   if (!found) {
     for (uint a = 0; a < n; a++) {
       if (color->get(a) == outerGray) {
-        u = a;
+        r = a;
         found = true;
         break;
       }
     }
   }
-  if (!found) throw std::logic_error("BFS.next(): no gray node found");
+  if (!found)
+    throw std::logic_error(
+        "BFS: no more gray nodes found; did you forget to call "
+        "nextComponent()?");
+  else
+    return r;
+}
 
+bool BFS::more() { return hasGrayNode(); }
+
+Pair BFS::next() {
+  u = getGrayNode();
   if (color->get(u) == innerGray) {
     for (uint k = 0; k < g->getNodeDegree(u); k++) {
       uint v = g->head(u, k);
