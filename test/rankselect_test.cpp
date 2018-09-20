@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 #include <include/sealib/simplerankselect.h>
-#include <include/sealib/sharedrankselect.h>
+#include <include/sealib/rankselect.h>
 
-TEST(SharedRankSelectTest, rankSelect) {
+TEST(RankSelectTest, rankSelect) {
     std::shared_ptr<Sealib::Bitset<unsigned char>> bits_(new Sealib::Bitset<unsigned char>(1));
     (*bits_)[0] = 1;
 
-    Sealib::SharedRankSelect rs(bits_);
+    Sealib::RankSelect rs(*bits_);
     ASSERT_EQ(1, rs.select(1));
     ASSERT_EQ(1, rs.rank(1));
     ASSERT_EQ((unsigned long) -1, rs.select(0));
@@ -28,7 +28,7 @@ TEST(SharedRankSelectTest, rankSelect) {
                 }
 
                 Sealib::SimpleRankSelect simpleRankSelect(bits);
-                Sealib::SharedRankSelect rankSelect(bits);
+                Sealib::RankSelect rankSelect(*bits);
                 for (unsigned int i = 0; i <= bits->size(); i++) {
                     ASSERT_EQ(rankSelect.select(i), simpleRankSelect.select(i));
                     ASSERT_EQ(rankSelect.rank(i), simpleRankSelect.rank(i));
@@ -43,7 +43,7 @@ TEST(SharedRankSelectTest, rankSelect) {
                     (*bits)[16 + i] = 0;
                 }
                 Sealib::SimpleRankSelect simpleRankSelect(bits);
-                Sealib::SharedRankSelect rankSelect(bits);
+                Sealib::RankSelect rankSelect(*bits);
                 for (unsigned int i = 0; i <= bits->size(); i++) {
                     ASSERT_EQ(rankSelect.select(i), simpleRankSelect.select(i));
                     ASSERT_EQ(rankSelect.rank(i), simpleRankSelect.rank(i));
