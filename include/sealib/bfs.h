@@ -76,6 +76,9 @@ class BFS : Iterator<Pair> {
   unsigned innerGray, outerGray;
   UserFunc1 preprocess;
   UserFunc2 preexplore;
+
+  bool hasGrayNode();
+  uint getGrayNode();
 };
 
 }  // namespace Sealib
