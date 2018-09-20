@@ -5,14 +5,11 @@
 #include <sealib/tikzelement.h>
 #include <vector>
 
-namespace SealibVisual { class TikzArray; }
-std::ostream &operator<<(std::ostream &, const SealibVisual::TikzArray &);
-
 namespace SealibVisual {
 /**
  * Abstract class representing a single Element in a TikzPicture.
  */
-class TikzArray{
+class TikzArray : public TikzElement {
  private:
     std::vector<std::string> content;
     std::string name;
@@ -28,8 +25,8 @@ class TikzArray{
                        std::string options = TikzArray::defaultOptions,
                        bool showIndices = false);
 
-    std::string toString() const;
-    friend std::ostream &(::operator<<)(std::ostream &os, const TikzArray &array);
+    std::string toString() const override;
+    std::ostream& out(std::ostream& os) const override;
 };
 }  // namespace SealibVisual
 #endif //SEALIB_TIKZARRAY_H_

@@ -18,18 +18,17 @@ std::string SealibVisual::TikzArray::toString() const {
     ss << (*this);
     return ss.str();
 }
-
-std::ostream &operator<<(std::ostream &os, const SealibVisual::TikzArray &array) {
+std::ostream &SealibVisual::TikzArray::out(std::ostream &os) const {
     os << "\\matrix" <<
-       "(" << array.name << ")" <<
-       "[" << array.options << "]";
+       "(" << name << ")" <<
+       "[" << options << "]";
 
     // array content
     os << "{\n\t";
-    if(array.showIndices) {
-        for(unsigned int i = 0; i < array.content.size(); i++) {
+    if (showIndices) {
+        for (unsigned int i = 0; i < content.size(); i++) {
             os << i;
-            if(i < array.content.size() - 1) {
+            if (i < content.size() - 1) {
                 os << " \\& ";
             } else {
                 os << " \\\\";
@@ -38,9 +37,9 @@ std::ostream &operator<<(std::ostream &os, const SealibVisual::TikzArray &array)
         os << "\n";
     }
     os << "\t";
-    for(unsigned int i = 0; i < array.content.size(); i++) {
-        os << array.content[i];
-        if(i < array.content.size() - 1) {
+    for (unsigned int i = 0; i < content.size(); i++) {
+        os << content[i];
+        if (i < content.size() - 1) {
             os << " \\& ";
         } else {
             os << " \\\\";

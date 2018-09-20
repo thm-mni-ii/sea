@@ -14,18 +14,18 @@ SealibVisual::TikzNode::TikzNode(
 
 std::string SealibVisual::TikzNode::toString() const {
     std::stringstream ss;
-    ss << this;
+    ss << (*this);
     return ss.str();
 }
 
-std::ostream &operator<<(std::ostream &os, const SealibVisual::TikzNode &node) {
+std::ostream &SealibVisual::TikzNode::out(std::ostream &os) const {
     std::string coordinateString;
-    if (!node.coordinate.empty()) {
-        coordinateString = " at " + node.coordinate + " ";
+    if (!coordinate.empty()) {
+        coordinateString = " at " + coordinate + " ";
     }
     return os << "\\node" <<
-              "(" << node.name << ")" <<
-              "[" << node.options << "]" <<
+              "(" << name << ")" <<
+              "[" << options << "]" <<
               coordinateString <<
-              "{" << node.content << "}";
+              "{" << content << "}";
 }

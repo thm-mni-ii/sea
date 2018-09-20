@@ -121,4 +121,13 @@ void runTest(uint n, uint (*fm)(uint n)) {
     test2.printResults();
 }
 
-int main() {}
+int main() {
+    std::vector<std::string> numbers1(10);
+    for(unsigned int i = 0; i < 10; i++) {
+        numbers1[i] = std::to_string(i*45);
+    }
+    SealibVisual::TikzArray tikzArray1(numbers1);
+    SealibVisual::TikzNode tikzNode("arrayNode", "options", tikzArray1.toString(), "(0,0)");
+
+    std::cout << tikzNode;
+}

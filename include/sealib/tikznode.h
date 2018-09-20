@@ -3,14 +3,12 @@
 
 #include <string>
 #include <sealib/tikzelement.h>
-namespace SealibVisual{ class TikzNode; }
-std::ostream& operator<<(std::ostream&, const SealibVisual::TikzNode&);
 
 namespace SealibVisual {
 /**
  * Abstract class representing a single Element in a TikzPicture.
  */
-class TikzNode : TikzElement {
+class TikzNode : public TikzElement {
  private:
     std::string name;
     std::string options;
@@ -23,7 +21,7 @@ class TikzNode : TikzElement {
                       const std::string &coordinate = "");
 
     std::string toString() const override;
-    friend std::ostream& (::operator<<) (std::ostream& os, const TikzNode& node);
+    std::ostream& out(std::ostream& os) const override;
 };
 }  // namespace SealibVisual
 #endif //SEALIB_TIKZNODE_H_
