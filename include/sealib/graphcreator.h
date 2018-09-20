@@ -1,8 +1,9 @@
 #ifndef SEALIB_GRAPHCREATOR_H_
 #define SEALIB_GRAPHCREATOR_H_
 
+#include <sealib/basicgraph.h>
+#include <memory>
 #include <random>
-#include "sealib/basicgraph.h"
 
 namespace Sealib {
 /**
@@ -28,7 +29,7 @@ class GraphCreator {
    * @param adj_matrix NxN adjacency matrix representation of the graph.
    * @param _order Order of the graph, order equals the number of nodes.
    */
-  static Basicgraph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
+  static Basicgraph createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
                                                     unsigned int order);
 
   /**
@@ -41,14 +42,6 @@ class GraphCreator {
    */
   static Basicgraph *createRandomFixed(unsigned int order,
                                        unsigned int degreePerNode);
-
-    /**
-     * Create a completely random graph with a given number of nodes. Each node will have outgoing edges to at most n other nodes.
-     * @param order the number of nodes the graph should contain
-     * @return the resulting graph: n = order, m = O(n^2)
-     * @author Simon Heuser
-     */
-    static Basicgraph *createRandomGenerated(unsigned int order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_
