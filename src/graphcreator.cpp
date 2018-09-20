@@ -24,7 +24,6 @@ Sealib::BasicGraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
         }
         nodes.emplace_back(adj);
     }
-
     for (unsigned int i = 0; i < order; i++) {
         const unsigned int deg = nodes[i].getDegree();
         const std::vector<Adjacency> &adj_arr = nodes[i].getAdj();
@@ -118,4 +117,35 @@ Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
     }
 
     return graph;
+}
+
+static std::random_device rng;
+
+Sealib::Basicgraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
+                                                            unsigned int degreePerNode) {
+    std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
+    std::vector<Node> n(order);
+    for (unsigned int a = 0; a < order; a++) {
+        unsigned int ai = degreePerNode;
+        std::vector<Adjacency> ad(ai);
+        for (unsigned int b = 0; b < ai; b++) {
+            ad[b] = Adjacency(rnd(rng));
+        }
+        n[a] = Node(ad);
+    }
+    return new Basicgraph(n);
+}
+
+Sealib::Basicgraph *Sealib::GraphCreator::createRandomGenerated(unsigned int order) {
+    std::vector<Node> n(order);
+    std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
+    for (unsigned int a = 0; a < order; a++) {
+        unsigned int deg = rnd(rng);
+        std::vector<Adjacency> ad(ai);
+        for (unsigned int b = 0; b < deg; b++) {
+            ad[b] = Adjacency(rnd(rng));
+        }
+        n[a] = Node(ad);
+    }
+    return new Basicgraph(n);
 }
