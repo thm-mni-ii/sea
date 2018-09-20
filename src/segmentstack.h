@@ -38,6 +38,7 @@ class SegmentStack {
    * extendedMode:
    *  - enables stack of trailers (if false, use last pushed entry)
    *  - enables segment number table and extended trailer storage
+   *  - disables high alignment (only 1 segment will be restored at a time)
    */
   explicit SegmentStack(uint size, unsigned segmentSize, bool extendedMode);
   ~SegmentStack();
