@@ -7,6 +7,8 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
+#include <include/sealib/tikznode.h>
+#include <include/sealib/tikzarray.h>
 #include "sealib/graphcreator.h"
 #include "sealib/dfs.h"
 #include "sealib/graphrepresentations.h"
@@ -119,6 +121,4 @@ void runTest(uint n, uint (*fm)(uint n)) {
     test2.printResults();
 }
 
-int main() {
-    return 0;
-}
+int main() {}

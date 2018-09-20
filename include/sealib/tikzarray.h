@@ -12,22 +12,23 @@ namespace SealibVisual {
 /**
  * Abstract class representing a single Element in a TikzPicture.
  */
-class TikzArray : TikzElement {
+class TikzArray{
  private:
     std::vector<std::string> content;
     std::string name;
     std::string options;
     bool showIndices;
 
-    const constexpr std::string defaultOptions = "matrix of nodes, ampersand replacement=\\&";
+    static const std::string defaultName;
+    static const std::string defaultOptions;
 
  public:
     explicit TikzArray(const std::vector<std::string> &content,
-                       const std::string &name = "",
-                       const std::string &options = "",
+                       std::string name = TikzArray::defaultName,
+                       std::string options = TikzArray::defaultOptions,
                        bool showIndices = false);
 
-    std::string toString() const override;
+    std::string toString() const;
     friend std::ostream &(::operator<<)(std::ostream &os, const TikzArray &array);
 };
 }  // namespace SealibVisual

@@ -20,8 +20,8 @@ std::string SealibVisual::TikzNode::toString() const {
 
 std::ostream &operator<<(std::ostream &os, const SealibVisual::TikzNode &node) {
     std::string coordinateString;
-    if (node.coordinate.empty()) {
-        coordinateString = "at " + node.coordinate + " ";
+    if (!node.coordinate.empty()) {
+        coordinateString = " at " + node.coordinate + " ";
     }
     return os << "\\node" <<
               "(" << node.name << ")" <<

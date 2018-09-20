@@ -7,13 +7,7 @@ namespace SealibVisual {
  * Abstract class representing a single Element in a TikzPicture.
  */
 class TikzElement {
- private:
-
  public:
-    virtual ~TikzElement() = 0;
-
-    virtual void out(std::ostream &os) const = 0;
-
     virtual std::string toString() const = 0;
 };
 }  // namespace SealibVisual
