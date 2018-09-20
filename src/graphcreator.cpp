@@ -121,7 +121,7 @@ Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
 
 static std::random_device rng;
 
-Sealib::Basicgraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
+Sealib::BasicGraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
                                                             unsigned int degreePerNode) {
     std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
     std::vector<Node> n(order);
@@ -133,19 +133,5 @@ Sealib::Basicgraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
         }
         n[a] = Node(ad);
     }
-    return new Basicgraph(n);
-}
-
-Sealib::Basicgraph *Sealib::GraphCreator::createRandomGenerated(unsigned int order) {
-    std::vector<Node> n(order);
-    std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
-    for (unsigned int a = 0; a < order; a++) {
-        unsigned int deg = rnd(rng);
-        std::vector<Adjacency> ad(ai);
-        for (unsigned int b = 0; b < deg; b++) {
-            ad[b] = Adjacency(rnd(rng));
-        }
-        n[a] = Node(ad);
-    }
-    return new Basicgraph(n);
+    return new BasicGraph(n);
 }
