@@ -53,8 +53,7 @@ SealibVisual::TikzGenerator::generateTikzElement<bitset_t>(const bitset_t &t) {
 template<>
 std::shared_ptr<SealibVisual::TikzElement>
 SealibVisual::TikzGenerator::generateTikzElement<basicgraph_t>(
-    const basicgraph_t &t,
-    const std::string name) {
+    const basicgraph_t &t) {
     using std::string;
     using std::shared_ptr;
     using std::tuple;
@@ -62,6 +61,9 @@ SealibVisual::TikzGenerator::generateTikzElement<basicgraph_t>(
     using std::to_string;
     shared_ptr<SealibVisual::TikzGraph> graph(new SealibVisual::TikzGraph(t.getOrder()));
 
+    for (auto &a : graph->getNodes()) {
+        a.setOptions("draw, circle");
+    }
     for (unsigned int i = 0; i < t.getOrder(); i++) {
         for (const auto &a : t.getNode(i).getAdj()) {
             tuple<std::string, std::string> key =

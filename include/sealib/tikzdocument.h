@@ -12,12 +12,18 @@ namespace SealibVisual {
 class TikzDocument {
  private:
     std::string filename;
-    std::string libraries;
+    std::string tikzLibraries;
+    std::string gdLibraries;
+    bool lualatex;
     std::ofstream file;
+
     void initialize();
 
  public:
-    explicit TikzDocument(std::string filename, std::string libraries = "");
+    explicit TikzDocument(std::string filename,
+                          std::string tikzLibraries = "",
+                          std::string gdLibraries = "",
+                          bool lualatex = false);
     void close();
 
     bool isOpen();

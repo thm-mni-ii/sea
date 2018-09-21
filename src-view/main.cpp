@@ -143,6 +143,29 @@ void tikz_example() {
     doc.close();
 }
 
+void tikz_example2() {
+    unsigned int order = 4;
+    auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * 4 * 4);
+    adj_mtrx[0] = new unsigned int[order]{0, 1, 0, 1};
+    adj_mtrx[1] = new unsigned int[order]{1, 0, 1, 0};
+    adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
+    adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
+
+    Sealib::Basicgraph bg =
+        Sealib::GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
+
+    std::shared_ptr<SealibVisual::TikzElement> vg =
+        SealibVisual::TikzGenerator::generateTikzElement(bg);
+
+    SealibVisual::TikzPicture pic("spring layout, node distance=100pt, scale=1");
+
+    pic.add(vg);
+
+    SealibVisual::TikzDocument doc("out.tex", "matrix, backgrounds, graphdrawing", "force", true);
+    doc.add(pic);
+    doc.close();
+}
+
 int main() {
-    return 0;
+    tikz_example2();
 }

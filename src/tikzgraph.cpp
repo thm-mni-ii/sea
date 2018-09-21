@@ -17,6 +17,7 @@ std::ostream &TikzGraph::out(std::ostream &os) const {
     for (auto const &v : edges) {
         os << "\\path " << v.second << ";" << std::endl;
     }
+    return os;
 }
 
 bool TikzGraph::containsEdge(const key_t &key) const {

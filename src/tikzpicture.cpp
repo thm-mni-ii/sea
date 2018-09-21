@@ -9,6 +9,7 @@ std::ostream &SealibVisual::TikzPicture::out(std::ostream &os) const {
         os << (*e) << std::endl;
     }
     os << "\\end{tikzpicture}" << std::endl;
+    return os;
 }
 
 SealibVisual::TikzPicture::TikzPicture(std::string options) :
