@@ -2,10 +2,6 @@
 
 using std::endl;
 
-std::istream &operator>>(std::istream &os, const SealibVisual::TikzDocument &tikzDocument) {
-    return tikzDocument.filename;
-}
-
 SealibVisual::TikzDocument::TikzDocument(std::string filename, std::string libraries) :
     filename(filename), file(filename), libraries(libraries) {
     initialize();
