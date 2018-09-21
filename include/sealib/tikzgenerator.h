@@ -3,6 +3,7 @@
 
 #include <sealib/tikzelement.h>
 #include <memory>
+#include <string>
 
 namespace SealibVisual {
 class TikzGenerator {
@@ -10,10 +11,12 @@ class TikzGenerator {
     TikzGenerator() = delete;
 
     template<class T>
-    static std::unique_ptr<SealibVisual::TikzElement> generateTikzElement(const T &t, const std::string name);
+    static std::shared_ptr<SealibVisual::TikzElement>
+    generateTikzElement(const T &t, const std::string name);
 
     template<class T>
-    static std::unique_ptr<SealibVisual::TikzElement> generateTikzElement(const T &t);
+    static std::shared_ptr<SealibVisual::TikzElement>
+    generateTikzElement(const T &t);
 };
 }  // namespace SealibVisual
-#endif // SEALIB_TIKZGENERATOR_H_
+#endif  // SEALIB_TIKZGENERATOR_H_

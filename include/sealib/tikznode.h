@@ -1,8 +1,8 @@
 #ifndef SEALIB_TIKZNODE_H_
 #define SEALIB_TIKZNODE_H_
 
-#include <string>
 #include <sealib/tikzelement.h>
+#include <string>
 
 namespace SealibVisual {
 /**
@@ -14,14 +14,26 @@ class TikzNode : public TikzElement {
     std::string options;
     std::string content;
     std::string coordinate;
+
  public:
     explicit TikzNode(const std::string &name,
                       const std::string &options = "",
                       const std::string &content = "",
                       const std::string &coordinate = "");
 
-    std::string toString() const override;
-    std::ostream& out(std::ostream& os) const override;
+    TikzNode() = default;
+
+    std::ostream &out(std::ostream &os) const override;
+
+    const std::string &getName() const;
+    void setName(const std::string &name);
+    const std::string &getOptions() const;
+    void setOptions(const std::string &options);
+    const std::string &getCoordinate() const;
+    void setCoordinate(const std::string &coordinate);
+    const std::string &getContent() const;
+    void setContent(const std::string &content);
+    void setContent(const TikzElement &element);
 };
 }  // namespace SealibVisual
-#endif //SEALIB_TIKZNODE_H_
+#endif  // SEALIB_TIKZNODE_H_

@@ -12,12 +12,6 @@ SealibVisual::TikzNode::TikzNode(
     content(content),
     coordinate(coordinate) {}
 
-std::string SealibVisual::TikzNode::toString() const {
-    std::stringstream ss;
-    ss << (*this);
-    return ss.str();
-}
-
 std::ostream &SealibVisual::TikzNode::out(std::ostream &os) const {
     std::string coordinateString;
     if (!coordinate.empty()) {
@@ -27,5 +21,40 @@ std::ostream &SealibVisual::TikzNode::out(std::ostream &os) const {
               "(" << name << ")" <<
               "[" << options << "]" <<
               coordinateString <<
-              "{" << content << "}";
+              "{" << content << "}" << ";" << std::endl;
+}
+
+const std::string &SealibVisual::TikzNode::getName() const {
+    return name;
+}
+
+void SealibVisual::TikzNode::setName(const std::string &name) {
+    TikzNode::name = name;
+}
+
+const std::string &SealibVisual::TikzNode::getOptions() const {
+    return options;
+}
+
+void SealibVisual::TikzNode::setOptions(const std::string &options) {
+    TikzNode::options = options;
+}
+
+const std::string &SealibVisual::TikzNode::getCoordinate() const {
+    return coordinate;
+}
+
+void SealibVisual::TikzNode::setCoordinate(const std::string &coordinate) {
+    TikzNode::coordinate = coordinate;
+}
+const std::string &SealibVisual::TikzNode::getContent() const {
+    return content;
+}
+
+void SealibVisual::TikzNode::setContent(const std::string &content) {
+    TikzNode::content = content;
+}
+
+void SealibVisual::TikzNode::setContent(const TikzElement &element) {
+    TikzNode::content = element.toString();
 }

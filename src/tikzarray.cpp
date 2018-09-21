@@ -2,22 +2,14 @@
 #include <utility>
 #include <sstream>
 
-const std::string SealibVisual::TikzArray::defaultName = "array";
-const std::string SealibVisual::TikzArray::defaultOptions = "matrix of nodes, ampersand replacement=\\&";
-
 SealibVisual::TikzArray::TikzArray(
-    const std::vector<std::string> &content_,
-    std::string name_,
-    std::string options_,
-    bool showIndices_) :
-    content(content_), name(std::move(name_)), options(std::move(options_)), showIndices(showIndices_) {
+    const std::vector<std::string> &content,
+    std::string name,
+    std::string options,
+    bool showIndices) :
+    content(content), name(name), options(options), showIndices(showIndices) {
 }
 
-std::string SealibVisual::TikzArray::toString() const {
-    std::stringstream ss;
-    ss << (*this);
-    return ss.str();
-}
 std::ostream &SealibVisual::TikzArray::out(std::ostream &os) const {
     os << "\\matrix" <<
        "(" << name << ")" <<
@@ -45,8 +37,32 @@ std::ostream &SealibVisual::TikzArray::out(std::ostream &os) const {
             os << " \\\\";
         }
     }
-    os << "\n};";
+    os << std::endl <<  "}" << ";" << std::endl;
     // array content end
 
     return os;
+}
+
+const std::string &SealibVisual::TikzArray::getName() const {
+    return name;
+}
+
+void SealibVisual::TikzArray::setName(const std::string &name) {
+    TikzArray::name = name;
+}
+
+const std::string &SealibVisual::TikzArray::getOptions() const {
+    return options;
+}
+
+void SealibVisual::TikzArray::setOptions(const std::string &options) {
+    TikzArray::options = options;
+}
+
+std::vector<std::string> &SealibVisual::TikzArray::getContent() {
+    return content;
+}
+
+const std::vector<std::string> &SealibVisual::TikzArray::getContent() const {
+    return content;
 }

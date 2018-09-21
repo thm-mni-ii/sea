@@ -1,10 +1,11 @@
 #ifndef SEALIB_TIKZPICTURE_H_
 #define SEALIB_TIKZPICTURE_H_
+
+#include <sealib/tikzelement.h>
 #include <string>
 #include <fstream>
 #include <vector>
 #include <utility>
-#include <sealib/tikzelement.h>
 #include <memory>
 
 namespace SealibVisual {
@@ -21,4 +22,4 @@ class TikzPicture : public TikzElement {
     std::ostream &out(std::ostream &os) const override;
 };
 }  // namespace SealibVisual
-#endif //SEALIB_TIKZPICTURE_H_
+#endif  // SEALIB_TIKZPICTURE_H_

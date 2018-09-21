@@ -2,6 +2,8 @@
 #define SEALIB_TIKZELEMENT_H_
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
 namespace SealibVisual { class TikzElement; }
 std::ostream &operator<<(std::ostream &, const SealibVisual::TikzElement &);
@@ -12,11 +14,13 @@ namespace SealibVisual {
  */
 class TikzElement {
  protected:
-    virtual std::ostream& out(std::ostream& os) const = 0;
+    virtual std::ostream &out(std::ostream &os) const = 0;
  public:
-    virtual std::string toString() const = 0;
+    virtual ~TikzElement() = default;
+    virtual std::string toString() const;
 
-    friend std::ostream &(::operator<<)(std::ostream &os, const SealibVisual::TikzElement &tikzElement);
+    friend std::ostream &(::operator<<)(std::ostream &os,
+                                        const SealibVisual::TikzElement &tikzElement);
 };
 }  // namespace SealibVisual
-#endif //SEALIB_TIKZELEMENT_H_
+#endif  // SEALIB_TIKZELEMENT_H_

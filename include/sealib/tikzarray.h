@@ -1,8 +1,8 @@
 #ifndef SEALIB_TIKZARRAY_H_
 #define SEALIB_TIKZARRAY_H_
 
-#include <string>
 #include <sealib/tikzelement.h>
+#include <string>
 #include <vector>
 
 namespace SealibVisual {
@@ -16,17 +16,20 @@ class TikzArray : public TikzElement {
     std::string options;
     bool showIndices;
 
-    static const std::string defaultName;
-    static const std::string defaultOptions;
-
  public:
     explicit TikzArray(const std::vector<std::string> &content,
-                       std::string name = TikzArray::defaultName,
-                       std::string options = TikzArray::defaultOptions,
+                       std::string name = "array",
+                       std::string options = "matrix of nodes, ampersand replacement=\\&",
                        bool showIndices = false);
 
-    std::string toString() const override;
-    std::ostream& out(std::ostream& os) const override;
+    std::ostream &out(std::ostream &os) const override;
+
+    std::vector<std::string> &getContent();
+    const std::vector<std::string> &getContent() const;
+    const std::string &getName() const;
+    void setName(const std::string &name);
+    const std::string &getOptions() const;
+    void setOptions(const std::string &options);
 };
 }  // namespace SealibVisual
-#endif //SEALIB_TIKZARRAY_H_
+#endif  // SEALIB_TIKZARRAY_H_
