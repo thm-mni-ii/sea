@@ -8,7 +8,6 @@
 #include <utility>
 #include <memory>
 
-
 namespace SealibVisual {
 class TikzDocument {
  private:
@@ -24,9 +23,10 @@ class TikzDocument {
     bool isOpen();
 
     void add(const SealibVisual::TikzElement *element);
+    void add(const SealibVisual::TikzElement &element);
     void add(std::shared_ptr<SealibVisual::TikzElement> element);
-
-    std::ostream& operator<< (std::ostream& (*pf)(std::ostream&));
+    void add(const std::string &line);
+    void add(const char *line);
 };
 }  // namespace SealibVisual
 #endif  // SEALIB_TIKZDOCUMENT_H_

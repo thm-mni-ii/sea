@@ -2,6 +2,10 @@
 
 using std::endl;
 
+std::istream &operator>>(std::istream &os, const SealibVisual::TikzDocument &tikzDocument) {
+    return tikzDocument.filename;
+}
+
 SealibVisual::TikzDocument::TikzDocument(std::string filename, std::string libraries) :
     filename(filename), file(filename), libraries(libraries) {
     initialize();
@@ -27,9 +31,7 @@ bool SealibVisual::TikzDocument::isOpen() {
     return file.is_open();
 }
 
-std::ostream &SealibVisual::TikzDocument::operator<<(std::ostream &(*pf)(std::ostream &)) {
-    return file << pf;
-}
+
 void SealibVisual::TikzDocument::add(const SealibVisual::TikzElement *element) {
     file << (*element) << std::endl;
 }
@@ -37,3 +39,18 @@ void SealibVisual::TikzDocument::add(const SealibVisual::TikzElement *element) {
 void SealibVisual::TikzDocument::add(std::shared_ptr<SealibVisual::TikzElement> element) {
     file << (*element) << std::endl;
 }
+
+void SealibVisual::TikzDocument::add(const std::string &line) {
+    file << line << std::endl;
+}
+
+void SealibVisual::TikzDocument::add(const char* line) {
+    file << line << std::endl;
+}
+
+void SealibVisual::TikzDocument::add(const SealibVisual::TikzElement &element) {
+    file << element << std::endl;
+
+}
+
+
