@@ -12,6 +12,66 @@ class EulerTrail<TrailStructure>;
 }
 
 template<class TrailStructureType>
+EulerTrail<TrailStructureType>::iterator::iterator(
+    const EulerTrail<TrailStructureType> &eulerTrail, unsigned int index) :
+    eulerTrail(eulerTrail),
+    nIndex(index),
+    mIndex(eulerTrail.trailStarts.select(nIndex) - 1),
+    arc(mIndex > eulerTrail.trail.size() ?
+        (unsigned int) -1 : eulerTrail.trail[mIndex].getStartingArc()),
+    ending(false) {
+}
+
+template<class TrailStructureType>
+std::tuple<unsigned long, bool> EulerTrail<TrailStructureType>::iterator::operator*() const {
+    return std::make_tuple(mIndex, ending);
+}
+
+template<class TrailStructureType>
+typename EulerTrail<TrailStructureType>::iterator
+&EulerTrail<TrailStructureType>::iterator::operator++() {
+    if (arc != (unsigned int) -1) {
+        unsigned int uCross = eulerTrail.graph->getNode(mIndex).getAdj()[arc].crossIndex;
+        mIndex = eulerTrail.graph->getNode(mIndex).getAdj()[arc].vertex;
+        arc = eulerTrail.trail[mIndex].getMatched(uCross);
+        if (arc == uCross) {
+            arc = (unsigned int) -1;
+            ending = true;
+        } else {
+            ending = false;
+        }
+    } else {
+        ending = false;
+        mIndex = eulerTrail.trailStarts.select(++nIndex) - 1;
+        arc = mIndex > eulerTrail.trail.size() ?
+              (unsigned int) -1 : eulerTrail.trail[mIndex].getStartingArc();
+    }
+    return *this;
+}
+
+template<class TrailStructureType>
+typename EulerTrail<TrailStructureType>::iterator
+&EulerTrail<TrailStructureType>::iterator::operator++(int) {
+    return ++(*this);
+}
+
+template<class TrailStructureType>
+bool EulerTrail<TrailStructureType>::iterator::operator!=(const EulerTrail::iterator &rhs) const {
+    return nIndex != rhs.nIndex;
+}
+
+template<class TrailStructureType>
+typename EulerTrail<TrailStructureType>::iterator EulerTrail<TrailStructureType>::begin() const {
+    return EulerTrail<TrailStructureType>::iterator(
+        const_cast<EulerTrail<TrailStructureType> &>(*this), 1);
+}
+template<class TrailStructureType>
+typename EulerTrail<TrailStructureType>::iterator EulerTrail<TrailStructureType>::end() const {
+    return EulerTrail<TrailStructureType>::iterator(
+        (EulerTrail<TrailStructureType> &) *this, trailStarts.rank(trailStarts.size()) + 1);
+}
+
+template<class TrailStructureType>
 EulerTrail<TrailStructureType>::EulerTrail(const graphptr_t &graph)
     : graph(graph), trail(initializeTrail()), trailStarts(findTrailStarts()) {
 }
@@ -46,8 +106,9 @@ unsigned int EulerTrail<TrailStructureType>::findStartingNode() {
 }
 
 template<class TrailStructureType>
-vector<TrailStructureType> EulerTrail<TrailStructureType>::initializeTrail() {
-    vector<TrailStructureType> trail;
+typename EulerTrail<TrailStructureType>::array_t
+EulerTrail<TrailStructureType>::initializeTrail() {
+    EulerTrail<TrailStructureType>::array_t trail;
 
     unsigned int order = graph->getOrder();
     trail.reserve(order);
@@ -89,10 +150,15 @@ vector<TrailStructureType> EulerTrail<TrailStructureType>::initializeTrail() {
 }
 
 template<class TrailStructureType>
-bitset_t EulerTrail<TrailStructureType>::findTrailStarts() {
-    bitset_t bs(graph->getOrder());
+typename EulerTrail<TrailStructureType>::bitset_t
+EulerTrail<TrailStructureType>::findTrailStarts() {
+    EulerTrail<TrailStructureType>::bitset_t bs(graph->getOrder());
     for (unsigned int i = 0; i < graph->getOrder(); i++) {
         bool hasStarting = trail.at(i).hasStartingArc();
+        if (hasStarting) {
+            unsigned int arc = trail.at(i).getStartingArc();
+            hasStarting = arc != (unsigned int) -1;
+        }
         bs[i] = hasStarting;
     }
     return bs;
