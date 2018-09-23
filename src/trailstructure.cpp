@@ -70,7 +70,6 @@ unsigned int Sealib::TrailStructure::enter(unsigned int i) {
     inAndOut[i] = 1;
     flags[2].flip();
     if (next == i) {  //  no elements left
-        flags[3] = 1;  //  has unmatched elements
         flags[1] = 1;  //  blacken it
         flags[2] = 1;
         //  black now, unused is not needed anymore
@@ -91,15 +90,15 @@ unsigned int Sealib::TrailStructure::enter(unsigned int i) {
     return next;
 }
 
-bool Sealib::TrailStructure::isBlack() {
+bool Sealib::TrailStructure::isBlack() const {
     return flags[1];
 }
 
-bool Sealib::TrailStructure::isGrey() {
+bool Sealib::TrailStructure::isGrey() const {
     return flags[0];
 }
 
-bool Sealib::TrailStructure::isEven() {
+bool Sealib::TrailStructure::isEven() const {
     return flags[2];
 }
 
@@ -134,7 +133,7 @@ void Sealib::TrailStructure::marry(unsigned int i, unsigned int o) {
     }
 }
 
-unsigned int Sealib::TrailStructure::getStartingArc() {
+unsigned int Sealib::TrailStructure::getStartingArc() const {
     if (!flags[3]) return (unsigned int) -1;
 
     for (unsigned int i = 0; i < inAndOut.size(); i++) {
@@ -146,7 +145,7 @@ unsigned int Sealib::TrailStructure::getStartingArc() {
     return (unsigned int) -1;
 }
 
-bool Sealib::TrailStructure::isEndingArc(unsigned int i) {
+bool Sealib::TrailStructure::isEndingArc(unsigned int i) const {
     return (getMatched(i) == i && inAndOut[i]);
 }
 
@@ -182,7 +181,7 @@ inline void Sealib::TrailStructure::initDyckStructure() {
     }
 }
 
-unsigned int Sealib::TrailStructure::getDyckStart() {
+unsigned int Sealib::TrailStructure::getDyckStart() const {
     return dyckStart;
 }
 
@@ -232,7 +231,7 @@ unsigned int Sealib::TrailStructure::getMatchedNaive(unsigned int idx) {
     return idx;
 }
 
-unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) {
+unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) const {
     // check if the idx is present in the married structure
     if (married != nullptr) {
         if ((*married)[0] == idx) return (*married)[1];
@@ -284,6 +283,10 @@ const Sealib::Bitset<unsigned char> &Sealib::TrailStructure::getMatchedBitset() 
     return matched;
 }
 
-unsigned int Sealib::TrailStructure::getLastClosed() {
+unsigned int Sealib::TrailStructure::getLastClosed() const {
     return lastClosed;
+}
+
+bool Sealib::TrailStructure::hasStartingArc() const {
+    return flags[3];
 }

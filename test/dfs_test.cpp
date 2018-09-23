@@ -1,9 +1,11 @@
+#include <sealib/basicgraph.h>
+#include <sealib/graphcreator.h>
+#include <sealib/dfs.h>
 #include <gtest/gtest.h>
 #include <random>
 #include <stack>
 #include <vector>
-#include <sealib/basicgraph.h>
-#include <sealib/graphcreator.h>
+
 
 using Sealib::DFS;
 using Sealib::CompactArray;
