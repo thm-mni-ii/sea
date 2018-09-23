@@ -70,21 +70,21 @@ class TrailStructure {
      * Grey meaning atleast one arc has been used so far.
      * @return true when grey, false otherwise
      */
-    bool isGrey();
+    bool isGrey() const;
 
     /**
      * check whether a TrailStructure is black.
      * Black meaning all arcs have been traversed.
      * @return true when black, false otherwise
      */
-    bool isBlack();
+    bool isBlack() const;
 
     /**
      * check whether a TrailStructure is even.
      * Even meaning the number of unused arcs is even..
      * @return true when even, false otherwise
      */
-    bool isEven();
+    bool isEven() const;
 
     /**
      * Leaves the node, gets arbitrary element from unused,
@@ -115,13 +115,17 @@ class TrailStructure {
     /**
      * @return value of lastClosed variable.
      */
-    unsigned int getLastClosed();
+    unsigned int getLastClosed() const;
 
     /**
      * @return Starting index of a Trail, or (unsigned int) - 1
      */
+    unsigned int getStartingArc() const;
 
-    unsigned int getStartingArc();
+    /**
+     * @return true if there is a starting arc (unmatched, outgoing edge)
+     */
+    bool hasStartingArc() const;
 
     /**
      * Checks if the arc at idx i is the end of a trail.
@@ -129,12 +133,12 @@ class TrailStructure {
      * @param i index to check
      * @return true if ending, false otherwise
      */
-    bool isEndingArc(unsigned int i);
+    bool isEndingArc(unsigned int i) const;
 
     /**
      * @return value of dyckStart
      */
-    unsigned int getDyckStart();
+    unsigned int getDyckStart() const;
 
     /**
      * Gets the match for a given matched arc.
@@ -142,7 +146,7 @@ class TrailStructure {
      * @param idx
      * @return
      */
-    unsigned int getMatched(unsigned int idx);
+    unsigned int getMatched(unsigned int idx) const;
 
     /**
      * Used for debugging

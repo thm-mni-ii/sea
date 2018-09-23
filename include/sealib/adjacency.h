@@ -19,7 +19,7 @@ class Adjacency {
      */
     explicit Adjacency(unsigned int _vertex);
 
-    Adjacency() = default;
+    Adjacency();
 };
 }  // namespace Sealib
 #endif  // SEALIB_ADJACENCY_H_
