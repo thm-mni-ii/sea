@@ -1,8 +1,8 @@
-#include <include/sealibvisual/tikznode.h>
-#include <include/sealibvisual/tikzarray.h>
-#include <include/sealibvisual/tikzdocument.h>
-#include <include/sealibvisual/tikzpicture.h>
-#include <include/sealibvisual/tikzgenerator.h>
+#include <sealibvisual/tikznode.h>
+#include <sealibvisual/tikzarray.h>
+#include <sealibvisual/tikzdocument.h>
+#include <sealibvisual/tikzpicture.h>
+#include <sealibvisual/tikzgenerator.h>
 #include <sealib/graphcreator.h>
 #include <sealib/dfs.h>
 #include <sealib/graphrepresentations.h>
