@@ -1,9 +1,9 @@
 #ifndef SEALIB_TIKZGRAPH_H_
 #define SEALIB_TIKZGRAPH_H_
 
-#include <include/sealibvisual/tikzelement.h>
-#include <include/sealibvisual/tikzedge.h>
-#include <include/sealibvisual/tikznode.h>
+#include <sealibvisual/tikzelement.h>
+#include <sealibvisual/tikzedge.h>
+#include <sealibvisual/tikznode.h>
 #include <string>
 #include <vector>
 #include <map>

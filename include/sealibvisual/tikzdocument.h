@@ -1,7 +1,7 @@
 #ifndef SEALIB_TIKZDOCUMENT_H_
 #define SEALIB_TIKZDOCUMENT_H_
 
-#include <include/sealibvisual/tikzelement.h>
+#include <sealibvisual/tikzelement.h>
 #include <string>
 #include <fstream>
 #include <vector>
