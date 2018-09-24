@@ -151,7 +151,7 @@ void tikz_example2() {
     adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
     adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
 
-    Sealib::Basicgraph bg =
+    Sealib::BasicGraph bg =
         Sealib::GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
 
     std::shared_ptr<SealibVisual::TikzElement> vg =

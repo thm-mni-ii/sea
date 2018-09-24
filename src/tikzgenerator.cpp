@@ -9,7 +9,7 @@
 #include <tuple>
 
 typedef Sealib::Bitset<unsigned char> bitset_t;
-typedef Sealib::Basicgraph basicgraph_t;
+typedef Sealib::BasicGraph basicgraph_t;
 
 template<>
 std::shared_ptr<SealibVisual::TikzElement>
