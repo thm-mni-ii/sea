@@ -5,9 +5,6 @@
 #include <sstream>
 #include <string>
 
-namespace SealibVisual { class TikzElement; }
-std::ostream &operator<<(std::ostream &, const SealibVisual::TikzElement &);
-
 namespace SealibVisual {
 /**
  * Abstract class representing a single Element in a TikzPicture.
@@ -19,8 +16,10 @@ class TikzElement {
     virtual ~TikzElement() = default;
     virtual std::string toString() const;
 
-    friend std::ostream &(::operator<<)(std::ostream &os,
-                                        const SealibVisual::TikzElement &tikzElement);
+    friend std::ostream &operator<<(std::ostream &os,
+                                    const SealibVisual::TikzElement &tikzElement) {
+        return tikzElement.out(os);
+    }
 };
 }  // namespace SealibVisual
 #endif  // SEALIB_TIKZELEMENT_H_
