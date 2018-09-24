@@ -13,9 +13,9 @@ class EulerTrail<TrailStructure>;
 
 template<class TrailStructureType>
 EulerTrail<TrailStructureType>::iterator::iterator(
-    const EulerTrail<TrailStructureType> &eulerTrail, unsigned int index) :
-    eulerTrail(eulerTrail),
-    nIndex(index),
+    const EulerTrail<TrailStructureType> &eulerTrail_, unsigned int nIndex_) :
+    eulerTrail(eulerTrail_),
+    nIndex(nIndex_),
     mIndex(eulerTrail.trailStarts.select(nIndex) - 1),
     arc(mIndex > eulerTrail.trail.size() ?
         (unsigned int) -1 : eulerTrail.trail[mIndex].getStartingArc()),
@@ -72,8 +72,8 @@ typename EulerTrail<TrailStructureType>::iterator EulerTrail<TrailStructureType>
 }
 
 template<class TrailStructureType>
-EulerTrail<TrailStructureType>::EulerTrail(const graphptr_t &graph)
-    : graph(graph), trail(initializeTrail()), trailStarts(findTrailStarts()) {
+EulerTrail<TrailStructureType>::EulerTrail(const graphptr_t &graph_)
+    : graph(graph_), trail(initializeTrail()), trailStarts(findTrailStarts()) {
 }
 
 template<class TrailStructureType>
@@ -108,45 +108,45 @@ unsigned int EulerTrail<TrailStructureType>::findStartingNode() {
 template<class TrailStructureType>
 typename EulerTrail<TrailStructureType>::array_t
 EulerTrail<TrailStructureType>::initializeTrail() {
-    EulerTrail<TrailStructureType>::array_t trail;
+    EulerTrail<TrailStructureType>::array_t trail_;
 
     unsigned int order = graph->getOrder();
-    trail.reserve(order);
+    trail_.reserve(order);
     for (unsigned int i = 0; i < graph->getOrder(); i++) {
-        trail.emplace_back(graph->getNode(i).getDegree());
+        trail_.emplace_back(graph->getNode(i).getDegree());
     }
-    trail.shrink_to_fit();
+    trail_.shrink_to_fit();
 
     unsigned int u = findStartingNode();
     while (u != (unsigned int) -1) {  // loop the iteration while there is a non-black vertex
         auto kOld = (unsigned int) -1;
-        if (trail.at(u).isEven() && trail.at(u).isGrey()) {  // remember aOld
-            kOld = trail.at(u).getLastClosed();
+        if (trail_.at(u).isEven() && trail_.at(u).isGrey()) {  // remember aOld
+            kOld = trail_.at(u).getLastClosed();
         }
-        unsigned int kFirst = trail.at(u).leave();
+        unsigned int kFirst = trail_.at(u).leave();
 
         unsigned int k = kFirst;
         unsigned int uMate;
         do {
             uMate = graph->getNode(u).getAdj()[k].crossIndex;
             u = graph->getNode(u).getAdj()[k].vertex;  // next node
-            k = trail.at(u).enter(uMate);
+            k = trail_.at(u).enter(uMate);
         } while (k != (unsigned int) -1);
 
         if (kOld != (unsigned int) -1) {
             unsigned int kLast = uMate;
-            unsigned int kOldMatch = trail.at(u).getMatched(kOld);
+            unsigned int kOldMatch = trail_.at(u).getMatched(kOld);
             if (kOldMatch != kOld) {  // has match
-                trail.at(u).marry(kOldMatch, kFirst);
-                trail.at(u).marry(kLast, kOld);
+                trail_.at(u).marry(kOldMatch, kFirst);
+                trail_.at(u).marry(kLast, kOld);
             } else {
-                trail.at(u).marry(kLast, kOld);
+                trail_.at(u).marry(kLast, kOld);
             }
         }
         // find next start node
         u = findStartingNode();
     }
-    return trail;
+    return trail_;
 }
 
 template<class TrailStructureType>
