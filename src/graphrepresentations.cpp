@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include <bitset>
 #include "sealib/adjacency.h"
 #include "sealib/compactgraph.h"
 #include "sealib/node.h"
@@ -257,3 +258,39 @@ void Graphrepresentations::swapRepresentation(unsigned int* a) {
   }
   return;
 }
+
+void Graphrepresentations::standardToShifted(unsigned int *g){
+	unsigned int order = g[0];
+	unsigned int wordsize = sizeof(*g) * 8;
+	unsigned int c = static_cast<unsigned int>(log2(order/wordsize)-1);
+	unsigned int c_prime = c + 1;
+	unsigned int wordsize_packed = wordsize - c_prime;
+  unsigned int c_prime_mask = static_cast<unsigned int>(-1)<<(wordsize-c_prime);	
+	unsigned int current_prefix = g[1] & c_prime_mask;
+ 	std::vector<unsigned int> changing_positions; 
+	for(unsigned int i = 1; i < order; ++i){
+		if((g[i] & c_prime_mask)!= current_prefix){
+				unsigned int num_increments = ((g[i] & c_prime_mask) - current_prefix) >> (wordsize - c_prime);
+				current_prefix = g[i] & c_prime_mask; 
+				for(unsigned int j = 0; j < num_increments; ++j){
+					changing_positions.push_back(i);
+				}
+		}
+	}
+	for(unsigned int i = 1; i <= order; ++i){
+		unsigned int value = g[i];
+		unsigned int startbit = wordsize_packed * (i-1);
+		unsigned int offset = startbit & (wordsize-1);
+		unsigned int index = (startbit >> (unsigned int)log2(wordsize))+1;
+		if(offset + wordsize_packed > wordsize){
+			unsigned int leftbits = (wordsize-offset);
+			unsigned int rightbits = wordsize_packed - leftbits;
+			value = value & ~c_prime_mask;
+			g[index] = (value >> rightbits) | g[index];
+			g[index+1] = value << (leftbits + c_prime);
+		}else{
+			g[index] = (g[index] & ~((unsigned int)-1>>offset)) | (value << (c_prime - offset));
+		}
+	}
+}
+
