@@ -8,13 +8,16 @@
 #include <sealibvisual/tikzgraph.h>
 #include <tuple>
 
-typedef Sealib::Bitset<unsigned char> bitset_t;
-typedef Sealib::BasicGraph basicgraph_t;
+namespace Sealib {
+    typedef Bitset<unsigned char> bitset_t;
+    typedef BasicGraph basicgraph_t;
+}
 
+namespace SealibVisual {
 template<>
 std::shared_ptr<SealibVisual::TikzElement>
-SealibVisual::TikzGenerator::generateTikzElement<bitset_t>(
-    const bitset_t &t,
+SealibVisual::TikzGenerator::generateTikzElement<Sealib::bitset_t>(
+    const Sealib::bitset_t &t,
     const std::string name) {
     std::vector<std::string> arr(t.size());
 
@@ -46,14 +49,14 @@ SealibVisual::TikzGenerator::generateTikzElement<bitset_t>(
 
 template<>
 std::shared_ptr<SealibVisual::TikzElement>
-SealibVisual::TikzGenerator::generateTikzElement<bitset_t>(const bitset_t &t) {
+SealibVisual::TikzGenerator::generateTikzElement<Sealib::bitset_t>(const Sealib::bitset_t &t) {
     return generateTikzElement(t, "bitset");
 }
 
 template<>
 std::shared_ptr<SealibVisual::TikzElement>
-SealibVisual::TikzGenerator::generateTikzElement<basicgraph_t>(
-    const basicgraph_t &t) {
+SealibVisual::TikzGenerator::generateTikzElement<Sealib::basicgraph_t>(
+    const Sealib::basicgraph_t &t) {
     using std::string;
     using std::shared_ptr;
     using std::tuple;
@@ -79,3 +82,4 @@ SealibVisual::TikzGenerator::generateTikzElement<basicgraph_t>(
 
     return graph;
 }
+}  // namespace SealibVisual
