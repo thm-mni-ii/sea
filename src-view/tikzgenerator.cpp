@@ -67,6 +67,7 @@ SealibVisual::TikzGenerator::generateTikzElement<Sealib::basicgraph_t>(
     for (auto &a : graph->getNodes()) {
         a.setOptions("draw, circle");
     }
+
     for (unsigned int i = 0; i < t.getOrder(); i++) {
         for (const auto &a : t.getNode(i).getAdj()) {
             tuple<std::string, std::string> key =

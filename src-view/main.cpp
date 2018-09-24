@@ -18,6 +18,7 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
+#include <include/sealibvisual/tikzfigure.h>
 
 using std::cout;
 using std::stack;
@@ -157,12 +158,15 @@ void tikz_example2() {
     std::shared_ptr<SealibVisual::TikzElement> vg =
         SealibVisual::TikzGenerator::generateTikzElement(bg);
 
-    SealibVisual::TikzPicture pic("spring layout, node distance=100pt, scale=1");
+    std::shared_ptr<SealibVisual::TikzPicture>
+        pic(new SealibVisual::TikzPicture("spring layout, node distance=100pt, scale=1"));
 
-    pic.add(vg);
+    pic->add(vg);
+
+    std::shared_ptr<SealibVisual::TikzFigure> fig(new SealibVisual::TikzFigure("A caption.", pic));
 
     SealibVisual::TikzDocument doc("out.tex", "matrix, backgrounds, graphdrawing", "force", true);
-    doc.add(pic);
+    doc.add(fig);
     doc.close();
 }
 
