@@ -21,6 +21,7 @@ void SealibVisual::TikzFigure::setCaption(const std::string &caption) {
 std::shared_ptr<SealibVisual::TikzElement> &SealibVisual::TikzFigure::getContent() {
     return content;
 }
-void SealibVisual::TikzFigure::setContent(const std::shared_ptr<SealibVisual::TikzElement> &content) {
+void SealibVisual::TikzFigure::setContent(
+    const std::shared_ptr<SealibVisual::TikzElement> &content) {
     TikzFigure::content = content;
 }

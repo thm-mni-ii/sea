@@ -3,6 +3,7 @@
 #include <sealibvisual/tikzdocument.h>
 #include <sealibvisual/tikzpicture.h>
 #include <sealibvisual/tikzgenerator.h>
+#include <sealibvisual/tikzfigure.h>
 #include <sealib/graphcreator.h>
 #include <sealib/dfs.h>
 #include <sealib/graphrepresentations.h>
@@ -18,7 +19,6 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
-#include <include/sealibvisual/tikzfigure.h>
 
 using std::cout;
 using std::stack;
