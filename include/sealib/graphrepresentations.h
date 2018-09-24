@@ -1,6 +1,7 @@
 #ifndef SEALIB_GRAPHREPRESENTATIONS_H_
 #define SEALIB_GRAPHREPRESENTATIONS_H_
 #include <random>
+#include <iostream>
 #include "sealib/compactgraph.h"
 /**
  * This class contains static functions to change the
@@ -85,6 +86,14 @@ class Graphrepresentations {
      * @param g graph in cross or beginpointer representation
      */
     static void swapRepresentation(unsigned int *g);
+
+		/**
+		 * Transforms graph inplace from standard to
+		 * shifted representation.
+		 * @param g graph in standard representation
+		 */
+		static void standardToShifted(unsigned int *g);
+
 };
 }  // namespace Sealib
-#endif  // SEALIB_GRAPHREPRESENTATIONS_H_
+#endif // SEALIB_GRAPHREPRESENTATIONS_H_
