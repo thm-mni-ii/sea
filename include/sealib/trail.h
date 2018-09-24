@@ -35,11 +35,11 @@ class EulerTrail {
         iterator &operator++(int);
         bool operator!=(const iterator &) const;
      private:
+        const EulerTrail<TrailStructureType> &eulerTrail;
         unsigned int nIndex;
         unsigned int mIndex;
         unsigned int arc;
         bool ending;
-        const EulerTrail<TrailStructureType> &eulerTrail;
     };
 
  public:
