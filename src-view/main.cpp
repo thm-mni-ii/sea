@@ -19,6 +19,7 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
+#include <include/sealibvisual/tikzgraph.h>
 
 using std::cout;
 using std::stack;
@@ -156,7 +157,7 @@ void tikz_example2() {
         Sealib::GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
 
     std::shared_ptr<SealibVisual::TikzElement> vg =
-        SealibVisual::TikzGenerator::generateTikzElement(bg);
+         SealibVisual::TikzGenerator::generateTikzElement(bg);
 
     std::shared_ptr<SealibVisual::TikzPicture>
         pic(new SealibVisual::TikzPicture("spring layout, node distance=100pt, scale=1"));
@@ -167,6 +168,26 @@ void tikz_example2() {
 
     SealibVisual::TikzDocument doc("out.tex", "matrix, backgrounds, graphdrawing", "force", true);
     doc.add(fig);
+
+    for(auto &e: ((SealibVisual::TikzGraph*) (vg.get()))->getEdges()) {
+        e.second.setOptions("--, color=green, line width=8");
+    }
+    doc.add(fig);
+
+    std::vector<std::string> numbers1(10);
+    for (unsigned int i = 0; i < 10; i++) {
+        numbers1[i] = std::to_string(i * 45);
+    }
+
+    Sealib::Bitset<unsigned char> bits(10);
+    bits[4] = 1;
+
+    std::shared_ptr<SealibVisual::TikzElement> tikzNode =
+        SealibVisual::TikzGenerator::generateTikzElement<Sealib::Bitset<unsigned char>>(bits);
+    pic->add(tikzNode);
+
+    doc.add(fig);
+
     doc.close();
 }
 
