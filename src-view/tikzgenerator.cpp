@@ -1,11 +1,11 @@
-#include <sealib/tikzgenerator.h>
+#include <sealibvisual/tikzgenerator.h>
 #include <sealib/bitset.h>
-#include <sealib/tikzarray.h>
-#include <sealib/tikznode.h>
-#include <include/sealib/tikzdocument.h>
-#include <include/sealib/tikzpicture.h>
-#include <include/sealib/basicgraph.h>
-#include <include/sealib/tikzgraph.h>
+#include <sealibvisual/tikzarray.h>
+#include <sealibvisual/tikznode.h>
+#include <sealibvisual/tikzdocument.h>
+#include <sealibvisual/tikzpicture.h>
+#include <sealib/basicgraph.h>
+#include <sealibvisual/tikzgraph.h>
 #include <tuple>
 
 typedef Sealib::Bitset<unsigned char> bitset_t;

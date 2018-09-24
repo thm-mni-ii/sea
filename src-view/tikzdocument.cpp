@@ -1,4 +1,4 @@
-#include <sealib/tikzdocument.h>
+#include <sealibvisual/tikzdocument.h>
 
 using std::endl;
 

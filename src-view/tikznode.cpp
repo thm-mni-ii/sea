@@ -1,7 +1,8 @@
-#include <sealib/tikznode.h>
+#include <sealibvisual/tikznode.h>
 #include <utility>
 #include <sstream>
 #include <vector>
+
 SealibVisual::TikzNode::TikzNode(
     const std::string &name,
     const std::string &options,

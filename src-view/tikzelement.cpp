@@ -1,4 +1,4 @@
-#include <sealib/tikzelement.h>
+#include <sealibvisual/tikzelement.h>
 
 std::string SealibVisual::TikzElement::toString() const {
     std::stringstream ss;

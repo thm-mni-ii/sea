@@ -1,4 +1,4 @@
-#include <sealib/tikzpicture.h>
+#include <sealibvisual/tikzpicture.h>
 #include <utility>
 #include <sstream>
 

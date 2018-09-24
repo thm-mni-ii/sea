@@ -1,7 +1,7 @@
 #ifndef SEALIB_TIKZGENERATOR_H_
 #define SEALIB_TIKZGENERATOR_H_
 
-#include <sealib/tikzelement.h>
+#include <include/sealibvisual/tikzelement.h>
 #include <memory>
 #include <string>
 

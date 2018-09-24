@@ -1,4 +1,4 @@
-#include <sealib/tikzarray.h>
+#include <sealibvisual/tikzarray.h>
 #include <utility>
 #include <sstream>
 

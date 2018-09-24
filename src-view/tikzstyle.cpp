@@ -1,4 +1,4 @@
-#include <sealib/tikzstyle.h>
+#include <include/sealibvisual/tikzstyle.h>
 
 SealibVisual::TikzStyle::TikzStyle(std::string name, std::string options) :
     name(name), options(options) {
