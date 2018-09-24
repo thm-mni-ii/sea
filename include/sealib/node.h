@@ -43,6 +43,13 @@ class Node {
      * Sets the crossindex in the adjacency
      */
      void setCrossIndex(unsigned int adjIndex, unsigned int crossIndex);
+
+     /**
+      * Adds a new Adjacency.
+      * @param vertex - vertex of the Adjacency.
+      * Set the crossindex manually after adding a new adjacency
+      */
+      void addAdjacency(unsigned int vertex);
 };
 }  // namespace Sealib
 #endif  // SEALIB_NODE_H_

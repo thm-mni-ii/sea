@@ -44,21 +44,26 @@ class SimpleTrailStructure {
      * Grey meaning atleast one arc has been used so far.
      * @return true when grey, false otherwise
      */
-    bool isGrey();
+    bool isGrey() const;
 
     /**
      * Checks whether a TrailStructure is black.
      * Black meaning all arcs have been traversed.
      * @return true when black, false otherwise
      */
-    bool isBlack();
+    bool isBlack() const;
 
     /**
      * Checks whether a TrailStructure is even.
      * Even meaning the number of unused arcs is even..
      * @return true when even, false otherwise
      */
-    bool isEven();
+    bool isEven() const;
+
+    /**
+     * @return value of lastClosed variable.
+     */
+    unsigned int getLastClosed() const;
 
     /**
      * Leaves the node, gets arbitrary element from unused,
@@ -67,6 +72,16 @@ class SimpleTrailStructure {
      * @return 
      */
     unsigned int leave();
+
+    /**
+     * @return Starting index of a Trail, or (unsigned int) - 1
+     */
+    unsigned int getStartingArc() const;
+
+    /**
+     * @return true if there is a starting arc (unmatched, outgoing edge)
+     */
+    bool hasStartingArc() const;
 
     /**
      * Enters the node at the specified edge/arc, and if there is an unused arc left, 
@@ -83,7 +98,7 @@ class SimpleTrailStructure {
      * @param idx 
      * @return 
      */
-    unsigned int getMatched(unsigned int idx);
+    unsigned int getMatched(unsigned int idx) const;
 
     /**
      * Matches the elements i and o.

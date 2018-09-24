@@ -1,7 +1,8 @@
 #include <sealib/graphcreator.h>
 #include <limits>
+#include <random>
 
-Sealib::Basicgraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
+Sealib::BasicGraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
     unsigned int **adjMatrix,
     unsigned int order) {
     std::vector<Node> nodes;
@@ -45,12 +46,82 @@ Sealib::Basicgraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
         }
     }
 
-    return Basicgraph(nodes);
+    return BasicGraph(nodes);
+}
+
+std::unique_ptr<Sealib::BasicGraph>
+Sealib::GraphCreator::generateRandomBasicGraph(unsigned int order,
+                                               double p,
+                                               unsigned int seed) {
+    std::unique_ptr<Sealib::BasicGraph> graph(new Sealib::BasicGraph(order));
+
+    std::mt19937_64 rng(seed);
+    std::uniform_real_distribution<double> unif(0.0, 1.0);
+
+    for (unsigned int n1 = 0; n1 < order - 1; n1++) {
+        for (unsigned int n2 = 1; n2 < order; n2++) {
+            if (n1 != n2) {
+                bool hasEdge = false;
+                for (const auto &adj : graph->getNode(n1).getAdj()) {
+                    if (adj.vertex == n2) {
+                        hasEdge = true;
+                        break;
+                    }
+                }
+                if (!hasEdge && unif(rng) < p) {
+                    Sealib::Node &node1 = graph->getNode(n1);
+                    Sealib::Node &node2 = graph->getNode(n2);
+
+                    unsigned int n1idx = node1.getDegree();
+                    unsigned int n2idx = node2.getDegree();
+
+                    node1.addAdjacency(n2);
+                    node1.setCrossIndex(n1idx, n2idx);
+
+                    node2.addAdjacency(n1);
+                    node2.setCrossIndex(n2idx, n1idx);
+                }
+            }
+        }
+    }
+
+    return graph;
+}
+
+std::unique_ptr<Sealib::BasicGraph>
+Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
+                                                        unsigned int order2,
+                                                        double p,
+                                                        unsigned int seed) {
+    std::unique_ptr<Sealib::BasicGraph> graph(new Sealib::BasicGraph(order1+order2));
+
+    std::mt19937_64 rng(seed);
+    std::uniform_real_distribution<double> unif(0.0, 1.0);
+
+    for (unsigned int n1 = 0; n1 < order1; n1++) {
+        for (unsigned int n2 = order1; n2 < order2; n2++) {
+            if (unif(rng) < p) {
+                Sealib::Node &node1 = graph->getNode(n1);
+                Sealib::Node &node2 = graph->getNode(n2);
+
+                unsigned int n1idx = node1.getDegree();
+                unsigned int n2idx = node2.getDegree();
+
+                node1.addAdjacency(n2);
+                node1.setCrossIndex(n1idx, n2idx);
+
+                node2.addAdjacency(n1);
+                node2.setCrossIndex(n2idx, n1idx);
+            }
+        }
+    }
+
+    return graph;
 }
 
 static std::random_device rng;
 
-Sealib::Basicgraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
+Sealib::BasicGraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
                                                             unsigned int degreePerNode) {
     std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
     std::vector<Node> n(order);
@@ -62,5 +133,5 @@ Sealib::Basicgraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
         }
         n[a] = Node(ad);
     }
-    return new Basicgraph(n);
+    return new BasicGraph(n);
 }

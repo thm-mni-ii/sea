@@ -167,5 +167,4 @@ void tikz_example2() {
 }
 
 int main() {
-    tikz_example2();
 }

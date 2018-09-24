@@ -1,15 +1,16 @@
-#include "sealib/dfs.h"
+#include <sealib/basicgraph.h>
+#include <sealib/graphcreator.h>
+#include <sealib/dfs.h>
 #include <gtest/gtest.h>
 #include <random>
 #include <stack>
 #include <vector>
-#include "sealib/basicgraph.h"
-#include "sealib/graphcreator.h"
+
 
 using Sealib::DFS;
 using Sealib::CompactArray;
 using Sealib::Graph;
-using Sealib::Basicgraph;
+using Sealib::BasicGraph;
 using Sealib::Node;
 using Sealib::Adjacency;
 using std::vector;
