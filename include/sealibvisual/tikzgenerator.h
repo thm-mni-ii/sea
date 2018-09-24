@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZGENERATOR_H_
-#define SEALIB_TIKZGENERATOR_H_
+#ifndef SEALIBVISUAL_TIKZGENERATOR_H_
+#define SEALIBVISUAL_TIKZGENERATOR_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <memory>
@@ -19,4 +19,4 @@ class TikzGenerator {
     generateTikzElement(const T &t);
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZGENERATOR_H_
+#endif  // SEALIBVISUAL_TIKZGENERATOR_H_

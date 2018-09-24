@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZDOCUMENT_H_
-#define SEALIB_TIKZDOCUMENT_H_
+#ifndef SEALIBVISUAL_TIKZDOCUMENT_H_
+#define SEALIBVISUAL_TIKZDOCUMENT_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <string>
@@ -35,4 +35,4 @@ class TikzDocument {
     void add(const char *line);
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZDOCUMENT_H_
+#endif  // SEALIBVISUAL_TIKZDOCUMENT_H_

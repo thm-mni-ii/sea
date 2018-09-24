@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZNODE_H_
-#define SEALIB_TIKZNODE_H_
+#ifndef SEALIBVISUAL_TIKZNODE_H_
+#define SEALIBVISUAL_TIKZNODE_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <string>
@@ -36,4 +36,4 @@ class TikzNode : public TikzElement {
     void setContent(const TikzElement &element);
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZNODE_H_
+#endif  // SEALIBVISUAL_TIKZNODE_H_

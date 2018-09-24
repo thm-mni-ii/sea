@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZDRAW_H_
-#define SEALIB_TIKZDRAW_H_
+#ifndef SEALIBVISUAL_TIKZDRAW_H_
+#define SEALIBVISUAL_TIKZDRAW_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <string>
@@ -28,4 +28,4 @@ class TikzDraw : public TikzElement {
     std::vector<std::string> &getEdges();
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZDRAW_H_
+#endif  // SEALIBVISUAL_TIKZDRAW_H_

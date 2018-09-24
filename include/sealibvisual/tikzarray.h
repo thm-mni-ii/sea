@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZARRAY_H_
-#define SEALIB_TIKZARRAY_H_
+#ifndef SEALIBVISUAL_TIKZARRAY_H_
+#define SEALIBVISUAL_TIKZARRAY_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <string>
@@ -32,4 +32,4 @@ class TikzArray : public TikzElement {
     void setOptions(const std::string &options);
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZARRAY_H_
+#endif  // SEALIBVISUAL_TIKZARRAY_H_

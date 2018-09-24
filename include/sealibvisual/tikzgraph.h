@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZGRAPH_H_
-#define SEALIB_TIKZGRAPH_H_
+#ifndef SEALIBVISUAL_TIKZGRAPH_H_
+#define SEALIBVISUAL_TIKZGRAPH_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <sealibvisual/tikzedge.h>
@@ -34,4 +34,4 @@ class TikzGraph : public TikzElement {
     bool containsEdge(const key_t &key) const;
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZGRAPH_H_
+#endif  // SEALIBVISUAL_TIKZGRAPH_H_

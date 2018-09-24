@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZEDGE_H_
-#define SEALIB_TIKZEDGE_H_
+#ifndef SEALIBVISUAL_TIKZEDGE_H_
+#define SEALIBVISUAL_TIKZEDGE_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <string>
@@ -24,4 +24,4 @@ class TikzEdge : public TikzElement {
     std::ostream &out(std::ostream &os) const override;
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZEDGE_H_
+#endif  // SEALIBVISUAL_TIKZEDGE_H_

@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZSTYLE_H_
-#define SEALIB_TIKZSTYLE_H_
+#ifndef SEALIBVISUAL_TIKZSTYLE_H_
+#define SEALIBVISUAL_TIKZSTYLE_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <string>
@@ -25,4 +25,4 @@ class TikzStyle : public TikzElement {
     void setOptions(const std::string &options);
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZSTYLE_H_
+#endif  // SEALIBVISUAL_TIKZSTYLE_H_

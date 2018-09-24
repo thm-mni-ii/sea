@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZELEMENT_H_
-#define SEALIB_TIKZELEMENT_H_
+#ifndef SEALIBVISUAL_TIKZELEMENT_H_
+#define SEALIBVISUAL_TIKZELEMENT_H_
 
 #include <iostream>
 #include <sstream>
@@ -22,4 +22,4 @@ class TikzElement {
     }
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZELEMENT_H_
+#endif  // SEALIBVISUAL_TIKZELEMENT_H_

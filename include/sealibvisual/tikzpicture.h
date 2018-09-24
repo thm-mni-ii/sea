@@ -1,5 +1,5 @@
-#ifndef SEALIB_TIKZPICTURE_H_
-#define SEALIB_TIKZPICTURE_H_
+#ifndef SEALIBVISUAL_TIKZPICTURE_H_
+#define SEALIBVISUAL_TIKZPICTURE_H_
 
 #include <sealibvisual/tikzelement.h>
 #include <string>
@@ -22,4 +22,4 @@ class TikzPicture : public TikzElement {
     std::ostream &out(std::ostream &os) const override;
 };
 }  // namespace SealibVisual
-#endif  // SEALIB_TIKZPICTURE_H_
+#endif  // SEALIBVISUAL_TIKZPICTURE_H_
