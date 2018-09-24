@@ -1,12 +1,13 @@
 #ifndef SEALIBVISUAL_TIKZFIGURE_H_
 #define SEALIBVISUAL_TIKZFIGURE_H_
 
+#include <sealibvisual/tikzpicture.h>
+#include <sealibvisual/tikzelement.h>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <sealibvisual/tikzelement.h>
 #include <memory>
-#include <sealibvisual/tikzpicture.h>
+
 
 namespace SealibVisual {
 /**
@@ -19,7 +20,8 @@ class TikzFigure : public TikzElement {
  protected:
     std::ostream &out(std::ostream &os) const override;
  public:
-    TikzFigure(const std::string &caption, const std::shared_ptr<TikzPicture> &content);
+    TikzFigure(const std::string &caption,
+               const std::shared_ptr<TikzPicture> &content);
     const std::string &getCaption();
     void setCaption(const std::string &caption);
     std::shared_ptr<TikzElement> &getContent();
