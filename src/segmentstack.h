@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
+#include "sealib/graph.h"
 
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
@@ -29,7 +30,7 @@ class SegmentStack {
  public:
   virtual int push(Pair u) = 0;
   int pop(Pair *r);
-  virtual bool empty();
+  bool isEmpty();
   virtual bool isAligned() = 0;
 
  protected:
@@ -56,12 +57,12 @@ class BasicSegmentStack : public SegmentStack {
 
   int push(Pair u) override;
 
-  /* empty the entire stack - needed for a full restoration */
+  // empty the entire stack - needed for a full restoration */
   void dropAll();
-  /* save a trailer to survive a full restoration */
+  // save a trailer to survive a full restoration */
   void saveTrailer();
-  /* is the restoration finished? (i.e. saved trailer and actual trailer are
-   * aligned) */
+  // is the restoration finished? (i.e. saved trailer and actual trailer are
+  // aligned)
   bool isAligned() override;
 
  private:
@@ -73,21 +74,36 @@ class BasicSegmentStack : public SegmentStack {
 /**
  * A more complicated segment stack which uses a stack of trailers. Also
  * includes a segment table and supports big and small vertices.
- *
- *
  */
 class ExtendedSegmentStack : public SegmentStack {
  public:
-  ExtendedSegmentStack(uint size, unsigned segmentSize);
+  // the extended stack needs access to the graph and the color array
+  ExtendedSegmentStack(uint size, unsigned segmentSize, Graph *g,
+                       CompactArray *c);
   ~ExtendedSegmentStack();
 
   int push(Pair u) override;
+
+  // check if u is labeled with the top segment number (i.e. is table[u]=top?)
+  bool isInTopSegment(uint u);
+  // get the outgoing edge: retrieve the approximation from the table if u is
+  // small, get the edge from the trailer stack if u is big
+  uint getOutgoingEdge(uint u);
+  // get the second-last trailer (the one that is needed to do a 1-segment
+  // restoration)
+  int getRestoreTrailer(Pair *r);
+  // recolor all vertices in the low segment to the given color (used after a
+  // restoration when the low segment is actually the top segment of S)
+  void recolorLow(uint v);
+
   bool isAligned() override;
 
  private:
   Pair *trailers;
   unsigned l;
-  CompactArray *table;
+  CompactArray *table, *edges;
+  Graph *graph;
+  CompactArray *color;
 };
 }  // namespace Sealib
 #endif  // SRC_SEGMENTSTACK_H_

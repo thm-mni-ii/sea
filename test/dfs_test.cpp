@@ -96,6 +96,16 @@ TEST_P(DFSTest, nBitUserproc) {
   delete g;
 }
 
+TEST_P(DFSTest, nloglognBitUserproc) {
+  Graph *g = GetParam();
+  DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
+  EXPECT_EQ(c1, order);
+  EXPECT_EQ(c2, DEGREE * order);
+  EXPECT_EQ(c3, DEGREE * order);
+  EXPECT_EQ(c4, order);
+  delete g;
+}
+
 auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
                                    12, 14, 3, 14, 4, 12, 17, 5, 14};
 unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
