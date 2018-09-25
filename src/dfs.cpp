@@ -54,7 +54,7 @@ static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
                           UserFunc2 postExplore, UserFunc1 postProcess) {
   s->push(Pair(u0, 0));
   Pair x;
-  while (!s->empty()) {
+  while (!s->isEmpty()) {
     int sr = s->pop(&x);
     if (sr == DFS_NO_MORE_NODES) {
       return;
@@ -68,7 +68,6 @@ static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
     }
     if (k < g->getNodeDegree(u)) {
       s->push(Pair(u, k + 1));
-      if (s->isAligned()) return;
       uint v = g->head(u, k);
       if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
       if (color->get(v) == DFS_WHITE) {
@@ -76,7 +75,6 @@ static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
       } else {
         if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
       }
-      if (s->isAligned()) return;
     } else {
       if (postExplore != DFS_NOP_EXPLORE && u != u0) {
         Pair px;
@@ -104,15 +102,50 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
       color->insert(a, DFS_WHITE);
     }
   }
-  process_small<BasicSegmentStack>(u0, g, color, s, restore_full,
-                                   DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                                   DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+  s->push(Pair(u0, 0));
+  Pair x;
+  while (!s->isAligned()) {
+    s->pop(&x);
+    uint u = x.head(), k = x.tail();
+    if (color->get(u) == DFS_WHITE) color->insert(u, DFS_GRAY);
+    if (k < g->getNodeDegree(u)) {
+      s->push(Pair(u, k + 1));
+      if (s->isAligned()) break;
+      uint v = g->head(u, k);
+      if (color->get(v) == DFS_WHITE) s->push(Pair(v, 0));
+    } else {
+      color->insert(u, DFS_BLACK);
+    }
+  }
 }
 
 static void restore_top(uint u0, Graph *g, CompactArray *color,
                         ExtendedSegmentStack *s) {
-  u0 += g->getOrder();
-  if (s->isAligned()) color->insert(u0, DFS_WHITE);
+  BasicSegmentStack tmp(3);
+  std::vector<uint> recolored;
+  Pair x;
+  if (s->isEmpty()) {
+    tmp.push(Pair(u0, 0));
+  } else {
+    s->getRestoreTrailer(&x);
+    tmp.push(x);
+  }
+  while (!s->isAligned()) {
+    tmp.pop(&x);
+    uint u = x.head(), k = x.tail();
+    if (k < g->getNodeDegree(u)) {
+      tmp.push(Pair(u, k + 1));
+      uint v = g->head(u, k);
+      tmp.push(Pair(v, 0));
+      if (color->get(v) == DFS_GRAY && s->isInTopSegment(v)) {
+        s->push(Pair(v, s->getOutgoingEdge(v)));
+        color->insert(u, DFS_WHITE);
+      }
+    } else {
+      color->insert(u, DFS_BLACK);
+    }
+  }
+  s->recolorLow(DFS_GRAY);
 }
 
 void DFS::standardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
@@ -164,8 +197,8 @@ void DFS::nloglognBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   unsigned vpg = static_cast<unsigned>(ceil(3 / e));
 
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
-  ExtendedSegmentStack s(n, q);
   CompactArray color(n, vpg, 3);
+  ExtendedSegmentStack s(n, q, g, &color);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
     if (color.get(a) == DFS_WHITE)
