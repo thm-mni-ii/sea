@@ -13,6 +13,7 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
+#include <include/sealib/linkedliststack.h>
 
 using std::cout;
 using std::stack;
@@ -122,4 +123,5 @@ void runTest(uint n, uint (*fm)(uint n)) {
 }
 
 int main() {
+
 }
