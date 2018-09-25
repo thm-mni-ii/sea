@@ -3,7 +3,6 @@
 
 #include <stack>
 #include <stdexcept>
-#include <tuple>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 

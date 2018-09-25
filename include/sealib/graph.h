@@ -28,6 +28,8 @@ class Graph {
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
     virtual unsigned int getOrder() = 0;
+
+    virtual ~Graph() {}
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_H_
