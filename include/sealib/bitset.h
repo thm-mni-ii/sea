@@ -149,6 +149,13 @@ class Bitset {
     const BlockType& getBlock(sizeType idx) const;
 
     /**
+     * @param idx of the bit the block should start at, it will create a new block starting at idx until idx+blocksize.
+     * This way you can get a block that is somewhere in the bitset, but residing in two actual blocks.
+     * @return the created new block
+     */
+    BlockType getShiftedBlock(sizeType idx) const;
+
+    /**
      * @param idx of the block
      * @param block value to be set
      */
