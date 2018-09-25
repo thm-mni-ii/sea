@@ -1,24 +1,26 @@
-#ifndef SEALIB_LINKEDLISTSTACK_H_
-#define SEALIB_LINKEDLISTSTACK_H_
+#ifndef SEALIB_SUBGRAPHSTACK_H_
+#define SEALIB_SUBGRAPHSTACK_H_
 #include <cstddef>
 #include <cassert>
 #include <ostream>
 
 namespace Sealib {
-template<class T>
+template <class T>
 class LinkedListStack {
  public:
     struct node {
       T val;
-      node *next;
+      node* next;
       explicit node(T val_, node *next_ = nullptr) : val(val_), next(next_) {}
     };
 
-    LinkedListStack() : top(nullptr), count(0) {}
+    LinkedListStack() : top(nullptr), count(0){
+
+    }
 
     ~LinkedListStack() {
-        node *current = top;
-        while (current) {
+        node* current = top;
+        while(current) {
             node *next = current->next;
             delete current;
             current = next;
@@ -26,7 +28,12 @@ class LinkedListStack {
         top = NULL;
     }
 
-    void push(const T &t) {
+    void push(T t) {
+        top = new node(t, top);
+        count++;
+    }
+
+    void push(T &t) {
         top = new node(t, top);
         count++;
     }
@@ -39,14 +46,14 @@ class LinkedListStack {
 
     void pop() {
         assert(count > 0);
-        node *oldTop = top;
+        node* oldTop = top;
 
         top = top->next;
         delete oldTop;
         count--;
     }
 
-    T &peek() const {
+    T& peek() const {
         assert(count > 0);
         return top->val;
     }
@@ -60,22 +67,21 @@ class LinkedListStack {
     }
 
     friend std::ostream &operator<<(std::ostream &os, const LinkedListStack &stack) {
-        node *current = stack.top;
+        node* current = stack.top;
         os << "[";
-        while (current) {
+        while(current) {
             os << current->val;
             node *next = current->next;
             current = next;
-            if (current) {
+            if(current) {
                 os << ", ";
             }
         }
         return os << "]";
     }
-
  private:
     node *top;
     std::size_t count;
 };
 }  // namespace Sealib
-#endif  // SEALIB_LINKEDLISTSTACK_H_
+#endif //SEALIB_SUBGRAPHSTACK_H_
