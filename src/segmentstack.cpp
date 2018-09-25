@@ -1,50 +1,24 @@
 #include "src/segmentstack.h"
 
 using Sealib::SegmentStack;
+using Sealib::BasicSegmentStack;
+using Sealib::ExtendedSegmentStack;
 
-SegmentStack::SegmentStack(uint size, unsigned segmentSize, bool extendedMode)
+//  -- SUPERCLASS --
+
+SegmentStack::SegmentStack(unsigned segmentSize)
     : q(segmentSize),
-      t(extendedMode),
       low(new Pair[q]),
       high(new Pair[q]),
-      l(static_cast<unsigned>(log(size))) {
-  if (t) {
-    trailers = new Pair[size / q + 1];
-    table = new CompactArray(size, q, l);
-  } else {
-    // use only the last trailer
-  }
-}
+      lp(0),
+      hp(0),
+      tp(0) {}
+
 SegmentStack::~SegmentStack() {
   delete[] low;
   delete[] high;
-  if (t) {
-    delete[] trailers;
-    delete table;
-  }
 }
 
-int SegmentStack::push(Pair u) {
-  // if(t) table[u.head()]=tp;
-  if (lp < q) {
-    low[lp++] = u;
-  } else if (hp < q) {
-    high[hp++] = u;
-  } else {
-    if (t) {
-      trailers[tp] = low[lp - 1];
-    } else {
-      last = low[lp - 1];
-    }
-    tp++;
-    Pair *tmp = low;
-    low = high;
-    high = tmp;
-    hp = 0;
-    high[hp++] = u;
-  }
-  return 0;
-}
 int SegmentStack::pop(Pair *r) {
   if (hp > 0) {
     *r = high[--hp];
@@ -59,27 +33,52 @@ int SegmentStack::pop(Pair *r) {
   }
   return 0;
 }
+
 bool SegmentStack::empty() {
   bool r;
   r = lp == 0 && hp == 0 && tp == 0;
   return r;
 }
 
-void SegmentStack::dropAll() {
+//  -- BASIC --
+
+BasicSegmentStack::BasicSegmentStack(unsigned segmentSize)
+    : SegmentStack(segmentSize) {}
+
+int BasicSegmentStack::push(Pair u) {
+  // if(t) table[u.head()]=tp;
+  if (lp < q) {
+    low[lp++] = u;
+  } else if (hp < q) {
+    high[hp++] = u;
+  } else {
+    last = low[lp - 1];
+    tp++;
+    Pair *tmp = low;
+    low = high;
+    high = tmp;
+    hp = 0;
+    high[hp++] = u;
+  }
+  return 0;
+}
+
+void BasicSegmentStack::dropAll() {
   lp = 0;
   hp = 0;
   tp = 0;
 }
-void SegmentStack::saveTrailer() {
+
+void BasicSegmentStack::saveTrailer() {
   if (tp > 0) {
-    savedTrailer = t ? trailers[tp - 1] : last;
+    savedTrailer = last;
     alignTarget = tp == 1 ? 1 : 2;
   } else {
     throw std::logic_error("segmentstack: cannot save from empty trailers");
   }
 }
 
-bool SegmentStack::isAligned() {
+bool BasicSegmentStack::isAligned() {
   bool r = false;
   if ((alignTarget == 2 && hp < q) || lp < q) {
     r = false;
@@ -93,3 +92,35 @@ bool SegmentStack::isAligned() {
   }
   return r;
 }
+
+//  -- EXTENDED --
+
+ExtendedSegmentStack::ExtendedSegmentStack(uint size, unsigned segmentSize)
+    : SegmentStack(segmentSize),
+      trailers(new Pair[size / q + 1]),
+      l(static_cast<unsigned>(log(size))),
+      table(new CompactArray(size, q, l)) {}
+
+ExtendedSegmentStack::~ExtendedSegmentStack() {
+  delete[] trailers;
+  delete table;
+}
+
+int ExtendedSegmentStack::push(Pair u) {
+  if (lp < q) {
+    low[lp++] = u;
+  } else if (hp < q) {
+    high[hp++] = u;
+  } else {
+    trailers[tp] = low[lp - 1];
+    tp++;
+    Pair *tmp = low;
+    low = high;
+    high = tmp;
+    hp = 0;
+    high[hp++] = u;
+  }
+  return 0;
+}
+
+bool ExtendedSegmentStack::isAligned() { return true; }
