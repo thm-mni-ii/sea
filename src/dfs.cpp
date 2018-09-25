@@ -5,6 +5,8 @@
 
 using Sealib::DFS;
 using Sealib::SegmentStack;
+using Sealib::BasicSegmentStack;
+using Sealib::ExtendedSegmentStack;
 using Sealib::CompactArray;
 using Sealib::Graph;
 using Sealib::Node;
@@ -44,10 +46,10 @@ static void process_standard(uint u0, Graph *g, uint *color,
   delete s;
 }
 
-static void process_small(uint u0, Graph *g, CompactArray *color,
-                          SegmentStack *s,
+template <class SS>
+static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
                           void (*restoration)(uint, Graph *, CompactArray *,
-                                              SegmentStack *),
+                                              SS *),
                           UserFunc1 preProcess, UserFunc2 preExplore,
                           UserFunc2 postExplore, UserFunc1 postProcess) {
   s->push(Pair(u0, 0));
@@ -94,7 +96,7 @@ static void process_small(uint u0, Graph *g, CompactArray *color,
 }
 
 static void restore_full(uint u0, Graph *g, CompactArray *color,
-                         SegmentStack *s) {
+                         BasicSegmentStack *s) {
   s->saveTrailer();
   s->dropAll();
   for (uint a = 0; a < g->getOrder(); a++) {
@@ -102,15 +104,16 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
       color->insert(a, DFS_WHITE);
     }
   }
-  process_small(u0, g, color, s, restore_full, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+  process_small<BasicSegmentStack>(u0, g, color, s, restore_full,
+                                   DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                                   DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
 }
 
-/*static void restore_top(uint u0, Graph *g, CompactArray *color,
-                        SegmentStack *s) {
+static void restore_top(uint u0, Graph *g, CompactArray *color,
+                        ExtendedSegmentStack *s) {
   u0 += g->getOrder();
-  if(s->isAligned()) color->insert(u0, DFS_WHITE);
-}*/
+  if (s->isAligned()) color->insert(u0, DFS_WHITE);
+}
 
 void DFS::standardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                       UserFunc2 postExplore, UserFunc1 postProcess) {
@@ -140,7 +143,7 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                                                       // integer that divides n
 
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
-  SegmentStack s(n, q, false);
+  BasicSegmentStack s(q);
   CompactArray color(n, vpg, 3);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
@@ -161,13 +164,13 @@ void DFS::nloglognBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   unsigned vpg = static_cast<unsigned>(ceil(3 / e));
 
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
-  SegmentStack s(n, q, false);
+  ExtendedSegmentStack s(n, q);
   CompactArray color(n, vpg, 3);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
     if (color.get(a) == DFS_WHITE)
-      process_small(a, g, &color, &s, /*restore_top*/ restore_full, preProcess,
-                    preExplore, postExplore, postProcess);
+      process_small(a, g, &color, &s, restore_top, preProcess, preExplore,
+                    postExplore, postProcess);
   }
 }
 
