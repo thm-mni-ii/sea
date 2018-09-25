@@ -12,7 +12,7 @@
 
 namespace Sealib {
 /*
-  auxiliary stack, used by the EHKDFS
+  Segment Stack:
   - the segment stack has a low and a high segment
   - the trailer (the last slot) of each segment is kept
   - on push, both segments are filled from low to high
@@ -23,30 +23,39 @@ namespace Sealib {
   request is issued
     - if the segments are empty and the trailers are empty, there is no more
   data in the stack
-  - instead of using a list of trailers, there is the option to store only the
-  last trailer in a variable (used in EHKDFS)
-
-  The segment size can be computed using the ε parameter:
-  2q entries on the segment stack shall take up at most (ε/3)n bits, thus each
-  segment has a size of ((ε/6)n)/bitsize(ENTRY) bits, where bitsize(x) is the
-  number of bits a type occupies (e.g. bitsize(uint)=32).
 
   @author Simon Heuser
 */
 class SegmentStack {
  public:
-  /* size: number of stored entries
-   * extendedMode:
-   *  - enables stack of trailers (if false, use last pushed entry)
-   *  - enables segment number table and extended trailer storage
-   *  - disables high alignment (only 1 segment will be restored at a time)
-   */
-  explicit SegmentStack(uint size, unsigned segmentSize, bool extendedMode);
-  ~SegmentStack();
-
-  int push(Pair u);
+  virtual int push(Pair u) = 0;
   int pop(Pair *r);
-  bool empty();
+  virtual bool empty();
+  virtual bool isAligned() = 0;
+
+ protected:
+  explicit SegmentStack(unsigned segmentSize);
+  virtual ~SegmentStack();
+
+  unsigned q;
+  Pair *low, *high;
+  unsigned lp, hp, tp;
+};
+
+/**
+ * A basic segment stack which uses only one trailer. Used for O(n)-bit DFS
+ * (full restoration).
+ *
+ * The segment size can be computed using the ε parameter:
+ * 2q entries on the segment stack shall take up at most (ε/3)n bits, thus each
+ * segment has a size of ((ε/6)n)/bitsize(ENTRY) bits, where bitsize(x) is the
+ * number of bits a type occupies (e.g. bitsize(uint)=32).
+ */
+class BasicSegmentStack : public SegmentStack {
+ public:
+  explicit BasicSegmentStack(unsigned segmentSize);
+
+  int push(Pair u) override;
 
   /* empty the entire stack - needed for a full restoration */
   void dropAll();
@@ -54,18 +63,32 @@ class SegmentStack {
   void saveTrailer();
   /* is the restoration finished? (i.e. saved trailer and actual trailer are
    * aligned) */
-  bool isAligned();
+  bool isAligned() override;
 
  private:
-  unsigned q;
-  bool t = false;
-  Pair *low, *high, *trailers;
   Pair last;
-  unsigned lp = 0, hp = 0, tp = 0;
   Pair savedTrailer;
   int alignTarget;
-  CompactArray *table;
+};
+
+/**
+ * A more complicated segment stack which uses a stack of trailers. Also
+ * includes a segment table and supports big and small vertices.
+ *
+ *
+ */
+class ExtendedSegmentStack : public SegmentStack {
+ public:
+  ExtendedSegmentStack(uint size, unsigned segmentSize);
+  ~ExtendedSegmentStack();
+
+  int push(Pair u) override;
+  bool isAligned() override;
+
+ private:
+  Pair *trailers;
   unsigned l;
+  CompactArray *table;
 };
 }  // namespace Sealib
 #endif  // SRC_SEGMENTSTACK_H_
