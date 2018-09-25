@@ -2,7 +2,7 @@
 #include <sealib/graphcreator.h>
 #include <sealib/graphalgorithm.h>
 #include <sealib/simpletrailstructure.h>
-#include <include/sealib/trail.h>
+#include <include/sealib/eulertrail.h>
 #include <stdlib.h>
 
 using Sealib::GraphCreator;
