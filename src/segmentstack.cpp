@@ -98,7 +98,7 @@ bool BasicSegmentStack::isAligned() {
 ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph *g, CompactArray *c)
     : SegmentStack(static_cast<unsigned>(ceil(size / log2(size)))),
       trailers(new Trailer[size / q + 1]),
-      l(static_cast<unsigned>(ceil(log(size))) + 1),
+      l(static_cast<unsigned>(ceil(log2(size))) + 1),
       table(new CompactArray(size, l)),
       edges(new CompactArray(size, l)),
       big(new Pair[q]),
@@ -130,16 +130,16 @@ int ExtendedSegmentStack::push(Pair u) {
     big[bp++] = u;
     if (bp > q) throw std::out_of_range("big storage is full!");
   } else if (uk > 0) {
-    double g = ceil(graph->getNodeDegree(uv) / l);
-    unsigned f = static_cast<unsigned>(floor((uk - 1) / g));
+    double g = ceil(graph->getNodeDegree(uv) / static_cast<double>(l));
+    unsigned f = static_cast<unsigned>(floor(uk / g));
     // std::cout << "inserting edge(" << uv << ")=" << f << "\n";
     edges->insert(uv, f);
   }
   if (lp < q) {
-    if (tp == 0) table->insert(uv, 0);  // ?
+    table->insert(uv, tp);  // ?
     low[lp++] = u;
   } else if (hp < q) {
-    if (tp == 0) table->insert(uv, 1);  // ?
+    table->insert(uv, tp + 1);  // ?
     high[hp++] = u;
   } else {
     trailers[tp].x = low[lp - 1];
@@ -149,8 +149,8 @@ int ExtendedSegmentStack::push(Pair u) {
     high = tmp;
     hp = 0;
     high[hp++] = u;
+    table->insert(uv, tp + 1);  // ?
   }
-  if (tp > 0) table->insert(uv, tp + 1);
   // std::cout << "lp=" << lp << ", hp=" << hp << ", tp=" << tp << ", bp=" << bp
   //          << ", table(u)=" << table->get(uv) << "\n";
   return 0;
@@ -170,16 +170,16 @@ uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
     if (trailers[tp - 1].tmp < trailers[tp - 1].bi + trailers[tp - 1].bc) {
       Pair x = big[trailers[tp - 1].tmp];
       trailers[tp - 1].tmp += 1;
-      return x.tail() - 1;
+      return x.tail();
     } else {
       throw std::out_of_range(
           "segmentstack: trailer points too far into big vertices");
     }
   } else {
     unsigned f = edges->get(u);
-    unsigned g = graph->getNodeDegree(u) / l;
-    unsigned k1 = f * g;
-    return k1;
+    unsigned g = static_cast<unsigned>(
+        ceil(graph->getNodeDegree(u) / static_cast<double>(l)));
+    return f * g;
   }
 }
 
