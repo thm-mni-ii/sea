@@ -77,4 +77,5 @@ const std::vector<unsigned int> &Sealib::SharedRankStructure::getSetCountTable()
 const std::vector<unsigned int> &Sealib::SharedRankStructure::getNonEmptySegments() const {
     return nonEmptySegments;
 }
+
 Sealib::SharedRankStructure::~SharedRankStructure() = default;

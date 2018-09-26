@@ -73,3 +73,7 @@ file(GLOB MAIN "src-view/*.cpp")                                   # all test fi
 add_executable(main ${LIB_SOURCES} ${MAIN})
 find_package(Threads)
 target_compile_options(main PRIVATE -std=c++11 -O3)
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
