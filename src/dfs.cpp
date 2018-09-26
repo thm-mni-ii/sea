@@ -1,4 +1,3 @@
-#include <iostream>
 #include "sealib/dfs.h"
 #include <sstream>
 #include <stack>
@@ -138,19 +137,20 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
     if (k < g->getNodeDegree(u)) {
       tmp.push(Pair(u, k + 1));
       uint v = g->head(u, k);
-      std::cout << "exploring " << v << " (color: " << color->get(v) << ")\n";
+      //std::cout << "exploring " << v << " (color: " << color->get(v) << ")\n";
       if (color->get(v) == DFS_GRAY) {
-        tmp.push(Pair(v, 0));
-        if(s->isInTopSegment(v)) {
-          std::cout << "found: ";
+        std::cout << "gray node: " << v << "," << s->getOutgoingEdge(v) << "\n";
+        tmp.push(Pair(v, s->getOutgoingEdge(v)));
+        if (s->isInTopSegment(v)) {
+          std::cout << " => pushing to S'\n";
           Pair p(v, s->getOutgoingEdge(v));
-          std::cout << p.head() << "," << p.tail() << " \n";
           s->push(p);
           color->insert(u, DFS_WHITE);
         }
       }
+      if (tmp.isEmpty()) throw std::logic_error("restoration failed");
     } else {
-      color->insert(u, DFS_BLACK);
+      std::cout << "finished node " << u << "\n";
     }
   }
   s->recolorLow(DFS_GRAY);

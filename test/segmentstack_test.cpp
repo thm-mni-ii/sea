@@ -102,19 +102,19 @@ TEST_F(ExtendedSegmentStackTest, outgoingEdge) {
 }
 
 TEST_F(ExtendedSegmentStackTest, aligned) {
-  pushn(0,4*q);
-  popexp(2*q,0);
-  EXPECT_EQ(s->pop(&r),DFS_DO_RESTORE);
-  for(uint a=q; a<2*q; a++) {
+  pushn(0, 4 * q);
+  popexp(2 * q, 0);
+  EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
+  for (uint a = q; a < 2 * q; a++) {
     EXPECT_FALSE(s->isAligned());
-    s->push(Pair(a,0));
+    s->push(Pair(a, 0));
   }
   EXPECT_TRUE(s->isAligned());
-  popexp(q,0);
-  EXPECT_EQ(s->pop(&r),DFS_DO_RESTORE);
-  for(uint a=0; a<q; a++) {
+  popexp(q, 0);
+  EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
+  for (uint a = 0; a < q; a++) {
     EXPECT_FALSE(s->isAligned());
-    s->push(Pair(a,0));
+    s->push(Pair(a, 0));
   }
   EXPECT_TRUE(s->isAligned());
 }
