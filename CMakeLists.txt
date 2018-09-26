@@ -26,7 +26,7 @@ ExternalProject_Add(GTEST_PROJECT
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS "-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=OFF -DINSTALL_GMOCK=OFF"
         INSTALL_COMMAND ""
-        BUILD_COMMAND "${MAKE}" --build .)
+        BUILD_COMMAND "${MAKE}" -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++ --build .)
 
 ExternalProject_Get_Property(GTEST_PROJECT source_dir)
 ExternalProject_Get_Property(GTEST_PROJECT binary_dir)
@@ -73,7 +73,3 @@ file(GLOB MAIN "src-view/*.cpp")                                   # all test fi
 add_executable(main ${LIB_SOURCES} ${MAIN})
 find_package(Threads)
 target_compile_options(main PRIVATE -std=c++11 -O3)
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
-
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
