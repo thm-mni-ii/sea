@@ -132,10 +132,9 @@ int ExtendedSegmentStack::push(Pair u) {
   } else if (uk > 0) {
     double g = ceil(graph->getNodeDegree(uv) / l);
     unsigned f = static_cast<unsigned>(floor((uk - 1) / g));
-    std::cout << "inserting edge(" << uv << ")=" << f << "\n";
+    // std::cout << "inserting edge(" << uv << ")=" << f << "\n";
     edges->insert(uv, f);
   }
-  if (tp > 0) table->insert(uv, tp + 1);
   if (lp < q) {
     if (tp == 0) table->insert(uv, 0);  // ?
     low[lp++] = u;
@@ -150,8 +149,8 @@ int ExtendedSegmentStack::push(Pair u) {
     high = tmp;
     hp = 0;
     high[hp++] = u;
-    table->insert(uv, tp + 1);
   }
+  if (tp > 0) table->insert(uv, tp + 1);
   // std::cout << "lp=" << lp << ", hp=" << hp << ", tp=" << tp << ", bp=" << bp
   //          << ", table(u)=" << table->get(uv) << "\n";
   return 0;
@@ -159,8 +158,9 @@ int ExtendedSegmentStack::push(Pair u) {
 
 bool ExtendedSegmentStack::isInTopSegment(uint u) {
   bool r;
-  r = table->get(u) == tp + 1;
-  std::cout << "table(" << u << ") = " << table->get(u) << "; tp=" << tp + 1
+  unsigned top = hp > 0 ? tp + 1 : tp;
+  r = table->get(u) == top;
+  std::cout << "table(" << u << ") = " << table->get(u) << "; top=" << top
             << "\n";
   return r;
 }
@@ -170,7 +170,7 @@ uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
     if (trailers[tp - 1].tmp < trailers[tp - 1].bi + trailers[tp - 1].bc) {
       Pair x = big[trailers[tp - 1].tmp];
       trailers[tp - 1].tmp += 1;
-      return x.tail();
+      return x.tail() - 1;
     } else {
       throw std::out_of_range(
           "segmentstack: trailer points too far into big vertices");
