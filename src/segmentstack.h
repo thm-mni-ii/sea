@@ -91,6 +91,7 @@ class ExtendedSegmentStack : public SegmentStack {
   uint getOutgoingEdge(uint u);
   // get the second-last trailer (the one that is needed to do a 1-segment
   // restoration)
+  // @return 0 if a trailer is found, 1 otherwise
   int getRestoreTrailer(Pair *r);
   // recolor all vertices in the low segment to the given color (used after a
   // restoration when the low segment is actually the top segment of S)
@@ -101,7 +102,9 @@ class ExtendedSegmentStack : public SegmentStack {
  private:
   struct Trailer {
     Pair x;
-    unsigned bi;
+    unsigned b : 1;
+    unsigned bi, bc, tmp;
+    Trailer() : b(0), bi(0), bc(0) {}
   };
 
   Trailer *trailers;
