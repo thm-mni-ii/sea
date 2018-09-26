@@ -1,5 +1,6 @@
 #include "sealib/dfs.h"
 #include <gtest/gtest.h>
+#include <memory>
 #include <random>
 #include <stack>
 #include <vector>
@@ -50,35 +51,26 @@ static const unsigned GRAPHCOUNT = 4;  // how many random graphs to generate?
 static const unsigned DEGREE = 5;      // how many outneighbours per node?
 static const unsigned order = 200;
 
-static std::vector<Graph *> makeGraphs() {
-  std::vector<Graph *> g = std::vector<Graph *>();
+static std::vector<std::shared_ptr<Graph>> makeGraphs() {
+  std::vector<std::shared_ptr<Graph>> g;
   for (uint c = 0; c < GRAPHCOUNT; c++) {
-    Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
-    for (unsigned int a = 0; a < order; a++) {
-      unsigned int ai = DEGREE;
-      Adjacency *ad =
-          reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * ai));
-      for (unsigned int b = 0; b < ai; b++) {
-        ad[b] = Adjacency(rnd() % order);
-      }
-      n[a] = Node(ad, ai);
-    }
-    g.push_back(new Basicgraph(n, order));
+    g.push_back(std::shared_ptr<Graph>(
+        Sealib::GraphCreator::createRandomFixed(order, DEGREE)));
   }
   return g;
 }
 
-static std::vector<Graph *> graphs = makeGraphs();
-class DFSTest : public ::testing::TestWithParam<Graph *> {
+class DFSTest : public ::testing::TestWithParam<std::shared_ptr<Graph>> {
  protected:
   virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
                                                    // TEST_P
 };
 
-INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(graphs), /**/);
+INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
+                        /**/);
 
 TEST_P(DFSTest, stdUserproc) {
-  Graph *g = GetParam();
+  Graph *g = GetParam().get();
   DFS::standardDFS(g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, DEGREE * order);
@@ -87,23 +79,21 @@ TEST_P(DFSTest, stdUserproc) {
 }
 
 TEST_P(DFSTest, nBitUserproc) {
-  Graph *g = GetParam();
+  Graph *g = GetParam().get();
   DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
-  delete g;
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
-  Graph *g = GetParam();
+  Graph *g = GetParam().get();
   DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
-  delete g;
 }
 
 auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
