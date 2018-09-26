@@ -95,15 +95,21 @@ bool BasicSegmentStack::isAligned() {
 
 //  -- EXTENDED --
 
-ExtendedSegmentStack::ExtendedSegmentStack(uint size, unsigned segmentSize,
-                                           Graph *g, CompactArray *c)
-    : SegmentStack(segmentSize),
-      trailers(new Pair[size / q + 1]),
-      l(static_cast<unsigned>(log(size))),
-      table(new CompactArray(size, q, l)),
-      edges(new CompactArray(size, q, l)),
+ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph *g, CompactArray *c)
+    : SegmentStack(static_cast<unsigned>(ceil(size / log2(size)))),
+      trailers(new Trailer[size / q + 1]),
+      l(static_cast<unsigned>(ceil(log(size)))+1),
+      table(new CompactArray(size, l)),
+      edges(new CompactArray(size, l)),
+      big(new Pair[q]),
+      bp(0),
       graph(g),
-      color(c) {}
+      n(graph->getOrder()),
+      color(c) {
+  m = 0;
+  for (uint a = 0; a < n; a++) m += g->getNodeDegree(a);
+  std::cout << "q=" << q << "\n";
+}
 
 ExtendedSegmentStack::~ExtendedSegmentStack() {
   delete[] trailers;
@@ -111,41 +117,50 @@ ExtendedSegmentStack::~ExtendedSegmentStack() {
 }
 
 int ExtendedSegmentStack::push(Pair u) {
+  uint uv = u.head(), uk = u.tail();
+  if (graph->getNodeDegree(uv) > m / q) {
+    std::cout << "deg(" << uv << ")=" << graph->getNodeDegree(uv) << "; > "
+              << m / q << "\n";
+    trailers[tp].bi += 1;  // another big vertex is stored
+    big[bp++] = u;
+    if (bp > q) throw std::out_of_range("big storage is full!");
+  } else if(uk>0) {
+    double g = ceil(graph->getNodeDegree(uv) / l);
+    unsigned f = static_cast<unsigned>(floor((uk - 1) / g));
+    std::cout << "inserting edge(" << uk << ")=" << f << "\n";
+    edges->insert(uv, f);
+  }
+  if(tp>0) table->insert(uv,tp+1);
   if (lp < q) {
+    if(tp==0) table->insert(uv, 0);  // ?
     low[lp++] = u;
   } else if (hp < q) {
+    if(tp==0) table->insert(uv, 1);  // ?
     high[hp++] = u;
   } else {
-    trailers[tp] = low[lp - 1];
+    trailers[tp].x = low[lp - 1];
     tp++;
     Pair *tmp = low;
     low = high;
     high = tmp;
     hp = 0;
     high[hp++] = u;
+    table->insert(uv,tp+1);
   }
-  uint uv = u.head(), uk = u.tail();
-  table->insert(uv, tp);  // ?
-  if (graph->getNodeDegree(uv) > graph->getOrder() / q) {
-    // to do: add big vertex storage in trailers
-  } else {
-    double g = ceil(graph->getNodeDegree(uv) / l);
-    unsigned f = static_cast<unsigned>(floor((uk - 1) / g));
-    edges->insert(uv, f);
-  }
-  std::cout << "lp=" << lp << ", hp=" << hp << ", tp=" << tp << "\n";
+  std::cout << "lp=" << lp << ", hp=" << hp << ", tp=" << tp << ", bp=" << bp
+            << ", table(u)=" << table->get(uv) << "\n";
   return 0;
 }
 
 bool ExtendedSegmentStack::isInTopSegment(uint u) {
   bool r;
-  r = table->get(u) == tp;
-  std::cout << "segment(" << u << ") = " << table->get(u) << "\n";
+  r = table->get(u) == tp+1;
+  std::cout << "segment(" << u << ") = " << table->get(u) << "; tp=" << tp+1 << "\n";
   return r;
 }
 
 uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
-  if (graph->getNodeDegree(u) > graph->getOrder() / q) {
+  if (graph->getNodeDegree(u) > m / q) {
     // to do: add big vertex storage in trailers
     return 0;
   } else {
@@ -158,14 +173,14 @@ uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
 
 int ExtendedSegmentStack::getRestoreTrailer(Pair *r) {
   if (tp > 1) {
-    *r = trailers[tp - 2];
+    *r = trailers[tp - 2].x;
     return 0;
   } else {
     return 1;
   }
 }
 
-void ExtendedSegmentStack::recolorLow(uint v) {
+void ExtendedSegmentStack::recolorLow(unsigned v) {
   for (unsigned a = 0; a < q; a++) color->insert(low[a].head(), v);
 }
 

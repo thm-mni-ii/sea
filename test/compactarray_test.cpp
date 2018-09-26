@@ -5,9 +5,9 @@
 using Sealib::CompactArray;
 
 TEST(CompactArrayTest, insertAndGet) {
-  CompactArray *a = new CompactArray(1500, 50);
-  for (unsigned int b = 0; b < 50; b++) a->insert(b, 3);
-  for (unsigned int b = 0; b < 50; b++) EXPECT_EQ(a->get(b), 3);
+  CompactArray *a = new CompactArray(1500, 6);
+  for (unsigned int b = 0; b < 50; b++) a->insert(b, 5);
+  for (unsigned int b = 0; b < 50; b++) EXPECT_EQ(a->get(b), 5);
   for (unsigned int b = 50; b < 1500; b++) EXPECT_EQ(a->get(b), 0);
   a->insert(60, 1);
   EXPECT_EQ(a->get(60), 1);
