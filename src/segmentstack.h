@@ -77,9 +77,9 @@ class BasicSegmentStack : public SegmentStack {
  */
 class ExtendedSegmentStack : public SegmentStack {
  public:
-  // the extended stack needs access to the graph and the color array
-  ExtendedSegmentStack(uint size, unsigned segmentSize, Graph *g,
-                       CompactArray *c);
+  // the extended stack needs access to the graph and the color array; the
+  // segment size is n/ld(n) by default
+  ExtendedSegmentStack(uint size, Graph *g, CompactArray *c);
   ~ExtendedSegmentStack();
 
   int push(Pair u) override;
@@ -94,15 +94,23 @@ class ExtendedSegmentStack : public SegmentStack {
   int getRestoreTrailer(Pair *r);
   // recolor all vertices in the low segment to the given color (used after a
   // restoration when the low segment is actually the top segment of S)
-  void recolorLow(uint v);
+  void recolorLow(unsigned v);
 
   bool isAligned() override;
 
  private:
-  Pair *trailers;
+  struct Trailer {
+    Pair x;
+    unsigned bi;
+  };
+
+  Trailer *trailers;
   unsigned l;
   CompactArray *table, *edges;
+  Pair *big;
+  unsigned bp;
   Graph *graph;
+  unsigned m, n;
   CompactArray *color;
 };
 }  // namespace Sealib
