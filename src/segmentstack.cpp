@@ -160,8 +160,7 @@ int ExtendedSegmentStack::push(Pair u) {
 bool ExtendedSegmentStack::isInTopSegment(uint u) {
   bool r;
   r = table->get(u) == tp + 1;
-  // std::cout << "segment(" << u << ") = " << table->get(u) << "; tp=" << tp +
-  // 1 << "\n";
+  std::cout << "table(" << u << ") = " << table->get(u) << "; tp=" << tp + 1 << "\n";
   return r;
 }
 
@@ -196,4 +195,13 @@ void ExtendedSegmentStack::recolorLow(unsigned v) {
   for (unsigned a = 0; a < q; a++) color->insert(low[a].head(), v);
 }
 
-bool ExtendedSegmentStack::isAligned() { return lp == q; }
+bool ExtendedSegmentStack::isAligned() {
+  if(lp==q) {
+    std::cout << low[lp-1].head() << " = " << trailers[tp-1].x.head() << "?\n";
+    bool r=low[lp-1]==trailers[tp-1].x;
+    tp--;
+    return r;
+  } else {
+    return false;
+  }
+}
