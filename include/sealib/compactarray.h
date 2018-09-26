@@ -24,19 +24,16 @@ class CompactArray {
   /**
    * Create a new compact array.
    * @param count number of values this compact array can hold
-   * @param vpg values per group: the larger vpg is, the more values are put
-   * into one group. It does not affect the total space needed.
-   * The space efficiency is optimal if vpg divides n.
    * @param v the highest possible value (default: 3)
    */
-  CompactArray(unsigned int count, unsigned int v = 3);
+  explicit CompactArray(unsigned int count, unsigned int v = 3);
 
   ~CompactArray();
 
   /**
    * Insert a value to the given index.
    * @param i the destination index
-   * @param p the value to insert (in [0,3])
+   * @param p the value to insert (in [0,v])
    */
   void insert(uint i, unsigned int p);
 
@@ -54,7 +51,8 @@ class CompactArray {
   Group **group;
   std::out_of_range OUTOFBOUNDS =
       std::out_of_range("compactarray: index out of bounds");
-  std::invalid_argument TOOLARGE = std::invalid_argument("compactarray: inserted value is too large");
+  std::invalid_argument TOOLARGE =
+      std::invalid_argument("compactarray: inserted value is too large");
 };
 }  // namespace Sealib
 #endif  // SEALIB_COMPACTARRAY_H_

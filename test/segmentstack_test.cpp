@@ -55,10 +55,10 @@ class ExtendedSegmentStackTest : public ::testing::Test {
   CompactArray *c;
   Sealib::Graph *g = Sealib::GraphCreator::createRandomGenerated(100);
   virtual void SetUp() {
-    unsigned n=256;
+    unsigned n = 256;
     c = new CompactArray(n, 3);
     s = new ExtendedSegmentStack(n, g, c);
-    q = static_cast<unsigned>(ceil(n/log2(n)));
+    q = static_cast<unsigned>(ceil(n / log2(n)));
   }
   virtual void TearDown() { delete s; }
 };
@@ -90,11 +90,11 @@ TEST_F(ExtendedSegmentStackTest, secondLastTrailer) {
 }
 
 TEST_F(ExtendedSegmentStackTest, recolorLow) {
-  pushn(0, 3*q+1);
+  pushn(0, 3 * q + 1);
   s->recolorLow(1);
-  for (uint a = 0; a < 2*q; a++) EXPECT_EQ(c->get(a), 0);
-  for (uint a = 2*q; a < 3*q; a++) EXPECT_EQ(c->get(a), 1);
-  EXPECT_EQ(c->get(3*q), 0);
+  for (uint a = 0; a < 2 * q; a++) EXPECT_EQ(c->get(a), 0);
+  for (uint a = 2 * q; a < 3 * q; a++) EXPECT_EQ(c->get(a), 1);
+  EXPECT_EQ(c->get(3 * q), 0);
 }
 
 TEST_F(ExtendedSegmentStackTest, outgoingEdge) {

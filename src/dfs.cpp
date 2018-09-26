@@ -1,3 +1,4 @@
+#include <iostream>
 #include "sealib/dfs.h"
 #include "./inplacerunner.h"
 #include "./segmentstack.h"
@@ -120,13 +121,14 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
 
 static void restore_top(uint u0, Graph *g, CompactArray *color,
                         ExtendedSegmentStack *s) {
+  std::cout << "entering restoration\n";
   BasicSegmentStack tmp(3);
-  std::vector<uint> recolored;
   Pair x;
-  if (s->isEmpty()) {
+  if (s->getRestoreTrailer(&x) == 1) {
+    std::cout << "starting at bottom " << u0 << ",0\n";
     tmp.push(Pair(u0, 0));
   } else {
-    s->getRestoreTrailer(&x);
+    std::cout << "starting at " << x.head() << "," << x.tail() << " \n";
     tmp.push(x);
   }
   while (!s->isAligned()) {
@@ -137,7 +139,10 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
       uint v = g->head(u, k);
       tmp.push(Pair(v, 0));
       if (color->get(v) == DFS_GRAY && s->isInTopSegment(v)) {
-        s->push(Pair(v, s->getOutgoingEdge(v)));
+        std::cout << "found: ";
+        Pair p(v, s->getOutgoingEdge(v));
+        std::cout << p.head() << "," << p.tail() << " \n";
+        s->push(p);
         color->insert(u, DFS_WHITE);
       }
     } else {
