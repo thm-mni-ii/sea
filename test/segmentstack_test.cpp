@@ -53,9 +53,10 @@ class ExtendedSegmentStackTest : public ::testing::Test {
   ExtendedSegmentStack *s;
   unsigned q;
   CompactArray *c;
-  Sealib::Graph *g = Sealib::GraphCreator::createRandomGenerated(100);
+  Sealib::Graph *g;
   virtual void SetUp() {
     unsigned n = 256;
+    g = Sealib::GraphCreator::createRandomFixed(n, 10);
     c = new CompactArray(n, 3);
     s = new ExtendedSegmentStack(n, g, c);
     q = static_cast<unsigned>(ceil(n / log2(n)));
@@ -110,7 +111,18 @@ TEST_F(ExtendedSegmentStackTest, recolorLow) {
 }
 
 TEST_F(ExtendedSegmentStackTest, outgoingEdge) {
-  // to do
+  /* We push a small vertex and check the outgoing edge. Expected: the returned
+   * outgoing edge will be the first in the unexplored group */
+  // m/q=2560/(256/8)=2560/32=80 => all vertices in G are small (10 < 80)
+  s->push(Pair(0, 5));
+  // gu=ceil(deg(u)/ld(n))=ceil(10/8)=2
+  // storing: k=5 => fu=floor(k/2)=floor(5/2)=2
+  // retrieving: fu=2 => k'=fu*gu=2*2=4
+  EXPECT_EQ(s->getOutgoingEdge(0), 4);
+  s->push(Pair(1, 11));
+  EXPECT_EQ(s->getOutgoingEdge(1), 10);
+  s->push(Pair(2, 1));
+  EXPECT_EQ(s->getOutgoingEdge(2), 0);
 }
 
 TEST_F(ExtendedSegmentStackTest, aligned) {
