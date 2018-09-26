@@ -30,15 +30,14 @@ delete cd;
 ```
 <br>
 
-Iterator
+ChoiceDictionaryIterator
 ===
 
-An Iterator is used to iterate through all bits set to 1 in a choice dictionary.
-It supports the so-called *more* operation that returns true if the choice dictionary contains more bits set to 1, aswell as the *next* operation that returns the index of the next arbitrary bit.<br>
-If there are changes made to the choice dictionary during the iteration process, the iterator may return wrong results.
+A ChoiceDictionaryIterator is used to iterate through all bits set to 1 in a choice dictionary.
+It supports the so-called *more* operation that returns true if the choice dictionary contains more bits set to 1, aswell as the *next* operation that returns the index of the next arbitrary bit.
 
 ## Operations
-* init: Initializes the Iterator.
+* init: Initializes the ChoiceDictionaryIterator.
 * more: Returns true if there are more bits set to 1.
 * next: Returns the next arbitrary bit position that is set to 1.
 
@@ -49,7 +48,7 @@ If there are changes made to the choice dictionary during the iteration process,
 
 ```cpp
 ChoiceDictionary* cd = new ChoiceDictionary(12);
-Iterator* it = new Iterator(cd);
+ChoiceDictionaryIterator* it = new ChoiceDictionaryIterator(cd);
 cd->insert(0); // Indexing beginns with 0
 cd->insert(4);
 cd->insert(7);

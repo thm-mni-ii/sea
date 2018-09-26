@@ -1,11 +1,13 @@
 #include <iostream>
-#include "sealib/iterator.h"
+#include "sealib/choicedictionaryiterator.h"
 
-using Sealib::Iterator;
+using Sealib::ChoiceDictionaryIterator;
 
-Iterator::Iterator(ChoiceDictionary *_choicedictionary) { choicedictionary = _choicedictionary; }
+ChoiceDictionaryIterator::ChoiceDictionaryIterator(ChoiceDictionary *_choicedictionary) {
+    choicedictionary = _choicedictionary;
+}
 
-void Iterator::init() {
+void ChoiceDictionaryIterator::init() {
     pointer = 0;
     primaryWord = 0;
     secondaryWord = 0;
@@ -16,7 +18,7 @@ void Iterator::init() {
     }
 }
 
-bool Iterator::more() {
+bool ChoiceDictionaryIterator::more() {
     if (primaryWord == 0) {
         if (secondaryWord == 0) {
             if (hasNextSecondary())
@@ -29,7 +31,7 @@ bool Iterator::more() {
     return true;
 }
 
-unsigned long int Iterator::next() {
+unsigned long int ChoiceDictionaryIterator::next() {
     unsigned long int newPrimaryValue;
     unsigned long int wordSize = choicedictionary->getWordSize();
 
@@ -43,15 +45,17 @@ unsigned long int Iterator::next() {
     return primaryIndex * wordSize + nextIndex;
 }
 
-bool Iterator::hasNextSecondary() { return choicedictionary->pointerIsValid(pointer); }
+bool ChoiceDictionaryIterator::hasNextSecondary() {
+    return choicedictionary->pointerIsValid(pointer);
+}
 
-void Iterator::setNextSecondaryWord() {
+void ChoiceDictionaryIterator::setNextSecondaryWord() {
     secondaryIndex = choicedictionary->getPointerTarget(pointer);
     secondaryWord = choicedictionary->getSecondaryWord(secondaryIndex);
     pointer++;
 }
 
-void Iterator::setNextPrimaryWord() {
+void ChoiceDictionaryIterator::setNextPrimaryWord() {
     unsigned long int targetBit;
     unsigned long int wordSize = choicedictionary->getWordSize();
     unsigned long int primaryInnerIndex = (unsigned long int)__builtin_clzl(secondaryWord);
@@ -65,4 +69,4 @@ void Iterator::setNextPrimaryWord() {
     primaryWord = choicedictionary->getPrimaryWord(primaryIndex);
 }
 
-Iterator::~Iterator() {}
+ChoiceDictionaryIterator::~ChoiceDictionaryIterator() {}

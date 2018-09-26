@@ -3,7 +3,6 @@
 
 #include <stack>
 #include <stdexcept>
-#include <tuple>
 #include "sealib/_types.h"
 
 #define DFS_NO_MORE_NODES (unsigned)11

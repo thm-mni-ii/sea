@@ -25,6 +25,8 @@ class Basicgraph : public Graph {
      */
     Basicgraph(Node *_nodes, unsigned int _order);
 
+    ~Basicgraph();
+
     /**
      * Getter for a specific node in the nodes array.
      * @param u index in the nodes array.
