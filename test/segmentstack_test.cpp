@@ -64,7 +64,19 @@ class ExtendedSegmentStackTest : public ::testing::Test {
 };
 
 TEST_F(ExtendedSegmentStackTest, topSegment) {
+  /* We fill 3 segments. Expected: The top segment will be correctly recognized
+   */
   pushn(0, 3 * q);
+  for (uint a = 0; a < 2 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
+  for (uint a = 2 * q; a < 3 * q; a++) EXPECT_TRUE(s->isInTopSegment(a));
+  /* We push one value to the fourth segment. Expected: Only the new value is
+   * now in a top segment */
+  s->push(Pair(3 * q, 0));
+  for (uint a = 0; a < 3 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
+  EXPECT_TRUE(s->isInTopSegment(3 * q));
+  /* We pop the top value, which will leave us with 3 segments. Expected: Again,
+   * the third segment is the top segment of S */
+  s->pop(&r);
   for (uint a = 0; a < 2 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
   for (uint a = 2 * q; a < 3 * q; a++) EXPECT_TRUE(s->isInTopSegment(a));
 }
