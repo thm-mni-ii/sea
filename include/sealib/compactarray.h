@@ -29,7 +29,7 @@ class CompactArray {
    * The space efficiency is optimal if vpg divides n.
    * @param v the highest possible value (default: 3)
    */
-  CompactArray(unsigned int count, unsigned int vpg, unsigned int v = 3);
+  CompactArray(unsigned int count, unsigned int v = 3);
 
   ~CompactArray();
 
@@ -54,6 +54,7 @@ class CompactArray {
   Group **group;
   std::out_of_range OUTOFBOUNDS =
       std::out_of_range("compactarray: index out of bounds");
+  std::invalid_argument TOOLARGE = std::invalid_argument("compactarray: inserted value is too large");
 };
 }  // namespace Sealib
 #endif  // SEALIB_COMPACTARRAY_H_

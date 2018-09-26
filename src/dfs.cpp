@@ -170,13 +170,10 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
        sizeof(Pair))));  // 2q entries on S shall take up at most (e/3)n bits
   unsigned qs = 3;       // stable segment size (?)
   if (q < qs) q = qs;
-  unsigned vpg = static_cast<unsigned>(ceil(3 / e));  // 3/e values per group,
-                                                      // assume that 3/e is an
-                                                      // integer that divides n
 
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   BasicSegmentStack s(q);
-  CompactArray color(n, vpg, 3);
+  CompactArray color(n, 3);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
     if (color.get(a) == DFS_WHITE)
@@ -188,16 +185,10 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 void DFS::nloglognBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                          UserFunc2 postExplore, UserFunc1 postProcess) {
   unsigned int n = g->getOrder();
-  double e = 0.2;
-  unsigned q =
-      static_cast<unsigned>(ceil(ceil(e / 6 * n) / (8 * sizeof(Pair))));
-  unsigned qs = 3;
-  if (q < qs) q = qs;
-  unsigned vpg = static_cast<unsigned>(ceil(3 / e));
 
   // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
-  CompactArray color(n, vpg, 3);
-  ExtendedSegmentStack s(n, q, g, &color);
+  CompactArray color(n, 3);
+  ExtendedSegmentStack s(n, g, &color);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
     if (color.get(a) == DFS_WHITE)
