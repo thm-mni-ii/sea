@@ -56,14 +56,14 @@ class BasicSegmentStack : public SegmentStack {
   explicit BasicSegmentStack(unsigned segmentSize);
 
   int push(Pair u) override;
+  // is the restoration finished? (i.e. saved trailer and actual trailer are
+  // aligned)
+  bool isAligned() override;
 
   // empty the entire stack - needed for a full restoration */
   void dropAll();
   // save a trailer to survive a full restoration */
   void saveTrailer();
-  // is the restoration finished? (i.e. saved trailer and actual trailer are
-  // aligned)
-  bool isAligned() override;
 
  private:
   Pair last;
@@ -83,6 +83,7 @@ class ExtendedSegmentStack : public SegmentStack {
   ~ExtendedSegmentStack();
 
   int push(Pair u) override;
+  bool isAligned() override;
 
   // check if u is labeled with the top segment number (i.e. is table[u]=top?)
   bool isInTopSegment(uint u);
@@ -96,8 +97,6 @@ class ExtendedSegmentStack : public SegmentStack {
   // recolor all vertices in the low segment to the given color (used after a
   // restoration when the low segment is actually the top segment of S)
   void recolorLow(unsigned v);
-
-  bool isAligned() override;
 
  private:
   struct Trailer {

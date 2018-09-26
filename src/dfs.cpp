@@ -137,13 +137,16 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
     if (k < g->getNodeDegree(u)) {
       tmp.push(Pair(u, k + 1));
       uint v = g->head(u, k);
-      tmp.push(Pair(v, 0));
-      if (color->get(v) == DFS_GRAY && s->isInTopSegment(v)) {
-        std::cout << "found: ";
-        Pair p(v, s->getOutgoingEdge(v));
-        std::cout << p.head() << "," << p.tail() << " \n";
-        s->push(p);
-        color->insert(u, DFS_WHITE);
+      std::cout << "exploring " << v << " (color: " << color->get(v) << ")\n";
+      if (color->get(v) == DFS_GRAY) {
+        tmp.push(Pair(v, 0));
+        if(s->isInTopSegment(v)) {
+          std::cout << "found: ";
+          Pair p(v, s->getOutgoingEdge(v));
+          std::cout << p.head() << "," << p.tail() << " \n";
+          s->push(p);
+          color->insert(u, DFS_WHITE);
+        }
       }
     } else {
       color->insert(u, DFS_BLACK);

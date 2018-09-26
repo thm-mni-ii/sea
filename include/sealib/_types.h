@@ -15,6 +15,9 @@ class Pair {
   Pair(uint a, uint b) : v1(a), v2(b) {}
   uint head() { return v1; }
   uint tail() { return v2; }
+  bool operator==(Pair &x) {
+    return x.head()==v1 && x.tail()==v2;
+  }
 };
 
 #endif  // SEALIB__TYPES_H_
