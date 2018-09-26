@@ -5,9 +5,10 @@ using Sealib::CompactArray;
 
 void CompactArray::insert(uint i, unsigned int p) {
   // values per group: vpg, value width=ceil(ld(v)) bits, group width=vpg*vw
-  if(ceil(log2(p))>valueWidth) {
-      std::cout << "failing because " << log2(p) << " bits is wider than " << valueWidth << " bits\n";
-      throw TOOLARGE;
+  if (ceil(log2(p)) > valueWidth) {
+    std::cout << "failing because " << log2(p) << " bits is wider than "
+              << valueWidth << " bits\n";
+    throw TOOLARGE;
   }
   unsigned groupOffset =
       static_cast<unsigned>(floor(i / static_cast<double>(valuesPerGroup)));
@@ -45,12 +46,14 @@ CompactArray::CompactArray(unsigned int count, unsigned int v) {
    * states)
    * group width: no. bits a group occupies (e.g. ceil(valueWidth*3/e) for 3
    * possible states)
-   * values per group: vw*vpg = bitsize(unsigned int) <=> vpg=bitsize(unsigned int)/vw
+   * values per group: vw*vpg = bitsize(unsigned int) <=> vpg=bitsize(unsigned
+   * int)/vw
    */
 
   // the following is valid if the inserted values can have v states:
   valueWidth = static_cast<unsigned>(ceil(log2(v)));
-  valuesPerGroup = (sizeof(unsigned int)*8)/valueWidth;
+  valuesPerGroup =
+      static_cast<unsigned>((sizeof(unsigned int) * 8) / valueWidth);
   groupWidth = valuesPerGroup *
                valueWidth;  // bits for a group of vpg (e.g. 2) consec. colors
   maxValue = static_cast<unsigned>(pow(2, valueWidth) - 1);
