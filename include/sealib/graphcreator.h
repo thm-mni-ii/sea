@@ -28,7 +28,7 @@ class GraphCreator {
    * @param adj_matrix NxN adjacency matrix representation of the graph.
    * @param _order Order of the graph, order equals the number of nodes.
    */
-  static Basicgraph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
+  static BasicGraph *createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
                                                     unsigned int order);
 
   /**
@@ -39,8 +39,8 @@ class GraphCreator {
    * @return the resulting graph G (n = order, m = degreePerNode*order)
    * @author Simon Heuser
    */
-  static Basicgraph *createRandomFixed(unsigned int order,
-                                       unsigned int degreePerNode);
+  static BasicGraph *createRandomFixed(unsigned int order,
+                                      unsigned int degreePerNode);
 
     /**
      * Create a completely random graph with a given number of nodes. Each node will have outgoing edges to at most n other nodes.
@@ -48,7 +48,7 @@ class GraphCreator {
      * @return the resulting graph: n = order, m = O(n^2)
      * @author Simon Heuser
      */
-    static Basicgraph *createRandomGenerated(unsigned int order);
+    static BasicGraph *createRandomGenerated(unsigned int order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_

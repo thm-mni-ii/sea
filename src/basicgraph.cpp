@@ -1,24 +1,24 @@
 #include "sealib/basicgraph.h"
 
-using Sealib::Basicgraph;
+using Sealib::BasicGraph;
 using Sealib::Node;
 
-Node *Basicgraph::getNode(unsigned int u) { return &nodes[u]; }
+Node *BasicGraph::getNode(unsigned int u) { return &nodes[u]; }
 
-unsigned int Basicgraph::getNodeDegree(unsigned int  u) {
+unsigned int BasicGraph::getNodeDegree(unsigned int  u) {
     return nodes[u].getDegree();
 }
 
-unsigned int Basicgraph::head(unsigned int u, unsigned int k) {
+unsigned int BasicGraph::head(unsigned int u, unsigned int k) {
     return nodes[u].getAdj()[k].vertex;
 }
 
-unsigned int Basicgraph::getOrder() {
+unsigned int BasicGraph::getOrder() {
     return order;
 }
 
-Basicgraph::Basicgraph(Node *_nodes, unsigned int _order) : nodes(_nodes), order(_order) { }
+BasicGraph::BasicGraph(Node *_nodes, unsigned int _order) : nodes(_nodes), order(_order) { }
 
-Basicgraph::~Basicgraph() {
+BasicGraph::~BasicGraph() {
     delete nodes;
 }

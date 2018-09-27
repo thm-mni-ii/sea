@@ -12,7 +12,7 @@ namespace Sealib {
  * @complexity (O((n + m) log n)) bits Stores a undirected graph with n vertices and m edges using (n + 4m) log n bits.
  * @author Johannes Meintrup
  */
-class Basicgraph : public Graph {
+class BasicGraph : public Graph {
  private:
     Node *nodes;
     unsigned int order;
@@ -23,9 +23,9 @@ class Basicgraph : public Graph {
      * @param _nodes Array of nodes.
      * @param _order Order of the graph (equals the length of the nodes array).
      */
-    Basicgraph(Node *_nodes, unsigned int _order);
+    BasicGraph(Node *_nodes, unsigned int _order);
 
-    ~Basicgraph();
+    ~BasicGraph();
 
     /**
      * Getter for a specific node in the nodes array.

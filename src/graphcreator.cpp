@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <limits>
 
-using Sealib::Basicgraph;
+using Sealib::BasicGraph;
 using Sealib::GraphCreator;
 
-Basicgraph *GraphCreator::createGraphFromAdjacencyMatrix(
+BasicGraph *GraphCreator::createGraphFromAdjacencyMatrix(
     unsigned int **adjMatrix, unsigned int order) {
   Node *nodes = static_cast<Node *>(malloc(sizeof(Node) * order));
 
@@ -50,12 +50,12 @@ Basicgraph *GraphCreator::createGraphFromAdjacencyMatrix(
     }
   }
 
-  return new Basicgraph(nodes, order);
+  return new BasicGraph(nodes, order);
 }
 
 static std::random_device rng;
 
-Basicgraph *GraphCreator::createRandomFixed(unsigned int order,
+BasicGraph *GraphCreator::createRandomFixed(unsigned int order,
                                             unsigned int degreePerNode) {
   std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
   Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
@@ -68,10 +68,10 @@ Basicgraph *GraphCreator::createRandomFixed(unsigned int order,
     }
     n[a] = Node(ad, ai);
   }
-  return new Basicgraph(n, order);
+  return new BasicGraph(n, order);
 }
 
-Basicgraph *GraphCreator::createRandomGenerated(unsigned int order) {
+BasicGraph *GraphCreator::createRandomGenerated(unsigned int order) {
   Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
   std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
   for (unsigned int a = 0; a < order; a++) {
@@ -83,5 +83,5 @@ Basicgraph *GraphCreator::createRandomGenerated(unsigned int order) {
     }
     n[a] = Node(ad, deg);
   }
-  return new Basicgraph(n, order);
+  return new BasicGraph(n, order);
 }
