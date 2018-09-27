@@ -30,3 +30,7 @@ void Sealib::BasicGraph::addNode(const Sealib::Node &node) {
 Sealib::BasicGraph::BasicGraph(unsigned int order) : nodes(order) {}
 
 Sealib::BasicGraph::BasicGraph() : BasicGraph(0) {}
+
+Sealib::BasicGraph::~BasicGraph() {
+
+}
