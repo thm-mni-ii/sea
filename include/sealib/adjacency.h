@@ -18,6 +18,8 @@ class Adjacency {
      * @param _vertex The vertex id
      */
     explicit Adjacency(unsigned int _vertex);
+
+    Adjacency();
 };
 }  // namespace Sealib
 #endif  // SEALIB_ADJACENCY_H_
