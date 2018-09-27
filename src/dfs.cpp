@@ -124,25 +124,28 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
   std::cout << "entering restoration\n";
   Pair x;
   if (s->getRestoreTrailer(&x) == 1) {
-    std::cout << "starting at bottom " << u0 << ",0\n";
-    x = Pair(u0, 0);
-  } else {
-    std::cout << "starting at " << x.head() << "," << x.tail() << " \n";
-  }
-  while (!s->isAligned()) {
-    uint u = x.head(), k0 = x.tail();
-    bool found = false;
-    for (uint k = k0; k < g->getNodeDegree(u); k++) {
-      uint v = g->head(u, k);
-      if (color->get(v) == DFS_GRAY && s->isInTopSegment(v)) {
-        x = Pair(v, s->getOutgoingEdge(v));
+    for (uint a = 0; a < g->getNodeDegree(u0); a++) {
+      if (color->get(g->head(u0, a)) == DFS_GRAY) {
+        x = Pair(u0, a + 1);
+        std::cout << "starting at bottom " << u0 << "," << a + 1 << "\n";
         s->push(x);
-        color->insert(u, DFS_WHITE);
-        found = true;
         break;
       }
     }
-    if (!found) throw std::logic_error("restoration failed: no node found");
+  } else {
+    std::cout << "starting at " << x.head() << "," << x.tail() << " \n";
+  }
+  uint u = x.head(), k = x.tail();
+  while (!s->isAligned()) {
+    uint v = g->head(u, k - 1);
+    if (color->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
+      u = v;
+      k = s->getOutgoingEdge(v);
+      s->push(Pair(u, k));
+      color->insert(v, DFS_WHITE);
+    } else {
+      throw std::logic_error("restoration failed: no node found");
+    }
   }
   s->recolorLow(DFS_GRAY);
 }

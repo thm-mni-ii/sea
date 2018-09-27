@@ -86,7 +86,9 @@ class ExtendedSegmentStack : public SegmentStack {
   bool isAligned() override;
 
   // check if u is labeled with the top segment number (i.e. is table[u]=top?)
-  bool isInTopSegment(uint u);
+  // @param restoring refer to the previous top segment (used when restoring and
+  // values are actively pushed)
+  bool isInTopSegment(uint u, bool restoring = false);
   // get the outgoing edge: retrieve the approximation from the table if u is
   // small, get the edge from the trailer stack if u is big
   uint getOutgoingEdge(uint u);

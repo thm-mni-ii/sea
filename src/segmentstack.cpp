@@ -156,9 +156,10 @@ int ExtendedSegmentStack::push(Pair u) {
   return 0;
 }
 
-bool ExtendedSegmentStack::isInTopSegment(uint u) {
-  bool r;
-  unsigned top = hp > 0 ? tp + 1 : tp;
+bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
+  bool r = false;
+  unsigned top = hp > 0 ? tp + 1 : lp > 0 ? tp : tp - 1;
+  if (restoring && lp > 0) top--;
   r = table->get(u) == top;
   std::cout << "table(" << u << ") = " << table->get(u) << "; top=" << top
             << "\n";
@@ -197,8 +198,10 @@ void ExtendedSegmentStack::recolorLow(unsigned v) {
 }
 
 bool ExtendedSegmentStack::isAligned() {
-  if (lp == q) {
-    std::cout << low[lp - 1].head() << " = " << trailers[tp - 1].x.head()
+  std::cout << "lp=" << lp << ", tp=" << tp << "\n";
+  if (lp == q && tp > 0) {
+    std::cout << low[lp - 1].head() << "," << low[lp - 1].tail() << " = "
+              << trailers[tp - 1].x.head() << "," << trailers[tp - 1].x.tail()
               << "?\n";
     bool r = low[lp - 1] == trailers[tp - 1].x;
     if (r) tp--;
