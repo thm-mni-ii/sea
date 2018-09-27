@@ -7,7 +7,6 @@
 #include <sealib/graphcreator.h>
 #include <sealib/dfs.h>
 #include <sealib/graphrepresentations.h>
-#include <sealib/basicgraph.h>
 #include <sealib/compactgraph.h>
 #include <sealib/runtimetest.h>
 #include <sealib/_types.h>
@@ -156,8 +155,7 @@ void tikz_example2() {
     adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
 
     Sealib::BasicGraph bg =
-        *Sealib::GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
-
+        Sealib::GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
     std::shared_ptr<SealibVisual::TikzElement> vg =
          SealibVisual::TikzGenerator::generateTikzElement(bg);
 
