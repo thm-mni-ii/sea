@@ -116,6 +116,8 @@ class ExtendedSegmentStack : public SegmentStack {
   Graph *graph;
   unsigned m, n;
   CompactArray *color;
+
+  unsigned approximateEdge(uint u, uint k);
 };
 }  // namespace Sealib
 #endif  // SRC_SEGMENTSTACK_H_
