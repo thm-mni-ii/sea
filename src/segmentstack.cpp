@@ -129,9 +129,10 @@ int ExtendedSegmentStack::push(Pair u) {
     trailers[tp].bc += 1;  // another big vertex is stored
     big[bp++] = u;
     if (bp > q) throw std::out_of_range("big storage is full!");
-  } else if (uk > 0) {
+  } else if (uk > 0) {  // only store edge k>0 (because only those can occur
+                        // when restoring)
     double g = ceil(graph->getNodeDegree(uv) / static_cast<double>(l));
-    unsigned f = static_cast<unsigned>(floor(uk / g));
+    unsigned f = static_cast<unsigned>(floor((uk - 1) / g));
     // std::cout << "inserting edge(" << uv << ")=" << f << "\n";
     edges->insert(uv, f);
   }
