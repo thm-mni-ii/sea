@@ -14,6 +14,7 @@
 #include <ctime>
 #include <cmath>
 #include <include/sealib/linkedliststack.h>
+#include <include/sealib/subgraphstack.h>
 
 using std::cout;
 using std::stack;
@@ -122,6 +123,54 @@ void runTest(uint n, uint (*fm)(uint n)) {
     test2.printResults();
 }
 
-int main() {
+void testSubGraphStack() {
+    /*unsigned int order = 7;
+    auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * 7 * 7);
+    adj_mtrx[0] = new unsigned int[order]{0, 0, 0, 0, 0, 0, 0};
+    adj_mtrx[1] = new unsigned int[order]{0, 0, 0, 1, 1, 1, 0};
+    adj_mtrx[2] = new unsigned int[order]{0, 0, 0, 0, 0, 0, 0};
+    adj_mtrx[3] = new unsigned int[order]{0, 1, 0, 0, 0, 1, 0};
+    adj_mtrx[4] = new unsigned int[order]{0, 1, 0, 0, 0, 1, 0};
+    adj_mtrx[5] = new unsigned int[order]{0, 1, 0, 1, 1, 0, 0};
+    adj_mtrx[6] = new unsigned int[order]{0, 0, 0, 0, 0, 0, 0};*/
 
+    unsigned int order = 4;
+    auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * 4 * 4);
+    adj_mtrx[0] = new unsigned int[order]{0, 0, 1, 1};
+    adj_mtrx[1] = new unsigned int[order]{0, 0, 0, 0};
+    adj_mtrx[2] = new unsigned int[order]{1, 0, 0, 0};
+    adj_mtrx[3] = new unsigned int[order]{1, 0, 0, 0};
+
+    /**
+     * 0:
+     * 1: 3, 4
+     * 2:
+     * 3: 1, 5
+     * 4: 1, 5
+     * 5: 3, 4
+     * 6:
+     */
+
+    std::shared_ptr<Sealib::BasicGraph> bg =
+        Sealib::GraphCreator::createSharedGraphFromAdjacencyMatrix(adj_mtrx, order);
+
+    Sealib::SubgraphStack stack(bg);
+    std::cout << stack.peek().arcNumber(1, 1) << std::endl;
+    std::cout << stack.peek().arcNumber(1, 2) << std::endl;
+    std::cout << stack.peek().arcNumber(3, 1) << std::endl;
+
+    std::cout << stack.peek().arcNumber(4, 1) << std::endl;
+
+    std::tuple<unsigned long, unsigned long> r = stack.peek().inverseArcNumber(1);
+    std::cout << std::get<0>(r) << ", " << std::get<1>(r) << std::endl;
+    r = stack.peek().inverseArcNumber(2);
+    std::cout << std::get<0>(r) << ", " << std::get<1>(r) << std::endl;
+    r = stack.peek().inverseArcNumber(3);
+    std::cout << std::get<0>(r) << ", " << std::get<1>(r) << std::endl;
+    r = stack.peek().inverseArcNumber(4);
+    std::cout << std::get<0>(r) << ", " << std::get<1>(r) << std::endl;
+}
+
+int main() {
+    testSubGraphStack();
 }

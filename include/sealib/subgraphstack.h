@@ -15,7 +15,7 @@ class SubgraphStack {
 
  public:
 
-    SubgraphStack(std::shared_ptr<BasicGraph> g_) {
+    explicit SubgraphStack(std::shared_ptr<BasicGraph> g_) : clientList(), fatness(4) {
         clientList.emplace_back(new BaseSubGraph(g_));
     }
     /**
@@ -27,7 +27,7 @@ class SubgraphStack {
      */
     void push(Sealib::Bitset<unsigned char> &v,
               Sealib::Bitset<unsigned char> &e) {
-        clientList.emplace_back(v, e);
+        clientList.emplace_back(new RecursiveSubGraph(clientList[clientList.size()-1], v, e));
     };
 
     /**
@@ -40,35 +40,43 @@ class SubgraphStack {
     };
 
     /**
+     * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).
+     * Asserts that the client list is not empty.
+     */
+    const SubGraph& peek() const {
+        return (*clientList[clientList.size() - 1]);
+    };
+
+    /**
      * Returns the order of G_i
      */
-    unsigned int order(unsigned int i) const {
+    unsigned long order(unsigned long i) const {
         return clientList[i]->order();
     };
 
     /**
      * @return - the degree of vertex u in G_i
      */
-    unsigned int degree(unsigned int i,
-                        unsigned int u) const {
+    unsigned long degree(unsigned long i,
+                        unsigned long u) const {
         return clientList[i]->degree(i);
     }
 
     /**
      * @return - the head of u's k-th outgoing arc in G_i. i.e. head_i(u, k)
      */
-    unsigned int head(unsigned int i,
-                      unsigned int u,
-                      unsigned int k) const {
+    unsigned long head(unsigned long i,
+                      unsigned long u,
+                      unsigned long k) const {
         return clientList[i]->head(u, k);
     };
 
     /**
      * @return - the pair that represents the mate of u's kth outgoing arc in G_i, i.e. mate_i(u, k)
      */
-    std::tuple<unsigned int, unsigned int> mate(unsigned int i,
-                                                unsigned int u,
-                                                unsigned int k) const {
+    std::tuple<unsigned long, unsigned long> mate(unsigned long i,
+                                                  unsigned long u,
+                                                  unsigned long k) const {
         return clientList[i]->mate(u, k);
     };
 
