@@ -130,22 +130,19 @@ int ExtendedSegmentStack::push(Pair p) {
     if (trailers[tp].b == 0) {
       trailers[tp].b = 1;
       trailers[tp].bi = bp;
-      trailers[tp].tmp = bp;
     }
-    trailers[tp].bc += 1;  // another big vertex is stored
-    big[bp++] = p;
+    big[bp++] = p;  // another big vertex is stored
     if (bp > q) throw std::out_of_range("big storage is full!");
   } else if (k > 0) {  // only store edge k>0 (because only those can occur
                        // when restoring)
     unsigned f = approximateEdge(u, k);
-    // std::cout << "inserting edge(" << u << ")=" << f << "\n";
     edges->insert(u, f);
   }
   if (lp < q) {
-    table->insert(u, tp);  // ?
+    table->insert(u, tp);
     low[lp++] = p;
   } else if (hp < q) {
-    table->insert(u, tp + 1);  // ?
+    table->insert(u, tp + 1);
     high[hp++] = p;
   } else {
     trailers[tp].x = low[lp - 1];
@@ -174,14 +171,11 @@ bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
 
 uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
   if (graph->getNodeDegree(u) > m / q) {
-    if (trailers[tp - 1].tmp < trailers[tp - 1].bi + trailers[tp - 1].bc) {
-      Pair x = big[trailers[tp - 1].tmp];
-      trailers[tp - 1].tmp += 1;
-      return x.tail();
-    } else {
-      throw std::out_of_range(
-          "segmentstack: trailer points too far into big vertices");
-    }
+    Trailer &t = trailers[tp - 1];
+    Pair x = big[t.bi + t.bc];
+    t.bc += 1;
+    std::cout << "getting big vertex " << x.head() << "," << x.tail() << "\n";
+    return x.tail();
   } else {
     unsigned f = edges->get(u);
     unsigned g = static_cast<unsigned>(
@@ -210,12 +204,7 @@ bool ExtendedSegmentStack::isAligned() {
     Trailer t = trailers[tp - 1];
     std::cout << low[lp - 1].head() << "," << low[lp - 1].tail() << " = "
               << t.x.head() << "," << t.x.tail() << "?\n";
-    if (t.b) {
-      throw std::logic_error(
-          "not yet implemented: alignment check for big vertices!");
-    } else {
-      r = low[lp - 1] == t.x;
-    }
+    r = low[lp - 1] == t.x;
     if (r) tp--;
   }
   return r;
