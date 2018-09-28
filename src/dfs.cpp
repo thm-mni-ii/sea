@@ -121,14 +121,26 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
 
 /**
  * Get the outgoing edge of u which leads to a gray, top-segment node.
+ * @param u node to check
+ * @param k starting edge to check
+ * @return k outgoing edge that points to a gray, top-segment node
  */
-static Pair findEdge(uint u, uint k, Graph *g, CompactArray *c,
-                     ExtendedSegmentStack *s) {
+static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
+                                      CompactArray *c,
+                                      ExtendedSegmentStack *s) {
   for (uint i = k; i < g->getNodeDegree(u); i++) {
     uint v = g->head(u, i);
     if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
       std::cout << " found forward edge: " << i << "\n";
-      return Pair(u, i);
+      return std::make_pair(true, i);
+    }
+  }
+  for (uint i = k; i < g->getNodeDegree(u); i++) {
+    uint v = g->head(u, i);
+    if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, false)) {
+      // there are no more forward edges, so the restoration must exit
+      std::cout << " found enclosing edge: " << i << "\n";
+      return std::make_pair(false, i);
     }
   }
   throw std::logic_error("DFS: no node found in restoration");
@@ -140,23 +152,30 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
   uint u = u0, k = 0;
   if (s->getRestoreTrailer(&x) == 1) {
     std::cout << "starting at bottom " << u << "," << k << "\n";
-    s->push(Pair(u, k));
+    // s->push(Pair(u, k));
+    // color->insert(u, DFS_RESERVED);
     color->insert(u, DFS_RESERVED);
   } else {
     u = x.head(), k = x.tail() - 1;
     std::cout << "trailer: " << u << "," << k << "\n";
     u = g->head(u, k), k = s->getOutgoingEdge(u);
     std::cout << "starting at " << u << "," << k << " \n";
+    color->insert(u, DFS_RESERVED);
   }
   while (!s->isAligned()) {
     // problem: stack is 1 entry too small -> misaligned (off by one!)
     std::cout << "node " << u << ":\n";
-    x = findEdge(u, k, g, color, s);
-    uint u1 = x.head(), k1 = x.tail();
-    s->push(Pair(u1, k1 + 1));  // is simply doing 'k+1' OK?
-    u = g->head(u1, k1);
-    k = s->getOutgoingEdge(u);
-    color->insert(u, DFS_RESERVED);
+    std::pair<bool, uint> r = findEdge(u, k, g, color, s);
+    uint u1 = u, k1 = r.second;
+    if (r.first) {
+      s->push(Pair(u1, k1 + 1));  // k+1 to simulate the normal stack behaviour
+      u = g->head(u1, k1);
+      k = s->getOutgoingEdge(u);
+      color->insert(u, DFS_RESERVED);
+    } else {
+      s->push(Pair(u, k1 + 1));
+      // restoration loop must end now, the stack is aligned
+    }
   }
   s->recolorLow(DFS_GRAY);
 }

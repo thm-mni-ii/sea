@@ -167,8 +167,8 @@ bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
   unsigned top = hp > 0 ? tp + 1 : lp > 0 ? tp : tp - 1;
   if (restoring && lp > 0) top--;
   r = table->get(u) == top;
-  std::cout << "table(" << u << ") = " << table->get(u) << "; top=" << top
-            << "\n";
+  // std::cout << "table(" << u << ") = " << table->get(u) << "; top=" << top <<
+  // "\n";
   return r;
 }
 
