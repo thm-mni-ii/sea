@@ -198,7 +198,7 @@ void ExtendedSegmentStack::recolorLow(unsigned v) {
 }
 
 bool ExtendedSegmentStack::isAligned() {
-  std::cout << "lp=" << lp << ", tp=" << tp << "\n";
+  //std::cout << "lp=" << lp << ", tp=" << tp << "\n";
   bool r = false;
   if (lp == q && tp > 0) {
     Trailer t = trailers[tp - 1];
