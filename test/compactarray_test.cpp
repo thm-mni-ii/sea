@@ -17,3 +17,8 @@ TEST(CompactArrayTest, insertAndGet) {
   EXPECT_THROW(a->insert(1500, 1), std::out_of_range);
   delete a;
 }
+
+TEST(CompactArrayTest, tooWide) {
+  CompactArray a(20, 3);
+  EXPECT_THROW(a.insert(0, 42), std::invalid_argument);
+}

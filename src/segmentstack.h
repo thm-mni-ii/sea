@@ -104,7 +104,7 @@ class ExtendedSegmentStack : public SegmentStack {
   struct Trailer {
     Pair x;
     unsigned b : 1;
-    unsigned bi, bc, tmp;
+    unsigned bi, bc;
     Trailer() : b(0), bi(0), bc(0) {}
   };
 

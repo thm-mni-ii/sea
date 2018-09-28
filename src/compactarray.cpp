@@ -6,8 +6,6 @@ using Sealib::CompactArray;
 void CompactArray::insert(uint i, unsigned int p) {
   // values per group: vpg, value width=ceil(ld(v)) bits, group width=vpg*vw
   if (ceil(log2(p)) > valueWidth) {
-    std::cout << "failing because " << log2(p) << " bits is wider than "
-              << valueWidth << " bits\n";
     throw TOOLARGE;
   }
   unsigned groupOffset =
