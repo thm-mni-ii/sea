@@ -113,8 +113,6 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
       if (s->isAligned()) break;
       uint v = g->head(u, k);
       if (color->get(v) == DFS_WHITE) s->push(Pair(v, 0));
-    } else {
-      color->insert(u, DFS_BLACK);
     }
   }
 }
@@ -123,7 +121,10 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
  * Get the outgoing edge of u which leads to a gray, top-segment node.
  * @param u node to check
  * @param k starting edge to check
- * @return k outgoing edge that points to a gray, top-segment node
+ * @return (c,k) a result tuple with
+ *    c: are there more possible nodes to find?
+ *    k: outgoing edge that points to a gray, top-segment node (if c is false, k
+ * is an 'enclosing' edge)
  */
 static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
                                       CompactArray *c,
@@ -143,7 +144,6 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
       return std::make_pair(false, i);
     }
   }
-  throw std::logic_error("DFS: no node found in restoration");
 }
 static void restore_top(uint u0, Graph *g, CompactArray *color,
                         ExtendedSegmentStack *s) {
@@ -152,8 +152,6 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
   uint u = u0, k = 0;
   if (s->getRestoreTrailer(&x) == 1) {
     std::cout << "starting at bottom " << u << "," << k << "\n";
-    // s->push(Pair(u, k));
-    // color->insert(u, DFS_RESERVED);
     color->insert(u, DFS_RESERVED);
   } else {
     u = x.head(), k = x.tail() - 1;
@@ -163,7 +161,6 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
     color->insert(u, DFS_RESERVED);
   }
   while (!s->isAligned()) {
-    // problem: stack is 1 entry too small -> misaligned (off by one!)
     std::cout << "node " << u << ":\n";
     std::pair<bool, uint> r = findEdge(u, k, g, color, s);
     uint u1 = u, k1 = r.second;
