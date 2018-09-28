@@ -116,10 +116,16 @@ ExtendedSegmentStack::~ExtendedSegmentStack() {
   delete table;
 }
 
-int ExtendedSegmentStack::push(Pair u) {
-  uint uv = u.head(), uk = u.tail();
-  if (graph->getNodeDegree(uv) > m / q) {
-    std::cout << "deg(" << uv << ")=" << graph->getNodeDegree(uv) << "; > "
+unsigned ExtendedSegmentStack::approximateEdge(uint u, uint k) {
+  double g = ceil(graph->getNodeDegree(u) / static_cast<double>(l));
+  unsigned f = static_cast<unsigned>(floor((k - 1) / g));
+  return f;
+}
+
+int ExtendedSegmentStack::push(Pair p) {
+  uint u = p.head(), k = p.tail();
+  if (graph->getNodeDegree(u) > m / q) {
+    std::cout << "deg(" << u << ")=" << graph->getNodeDegree(u) << "; > "
               << m / q << "\n";
     if (trailers[tp].b == 0) {
       trailers[tp].b = 1;
@@ -127,21 +133,20 @@ int ExtendedSegmentStack::push(Pair u) {
       trailers[tp].tmp = bp;
     }
     trailers[tp].bc += 1;  // another big vertex is stored
-    big[bp++] = u;
+    big[bp++] = p;
     if (bp > q) throw std::out_of_range("big storage is full!");
-  } else if (uk > 0) {  // only store edge k>0 (because only those can occur
-                        // when restoring)
-    double g = ceil(graph->getNodeDegree(uv) / static_cast<double>(l));
-    unsigned f = static_cast<unsigned>(floor((uk - 1) / g));
-    // std::cout << "inserting edge(" << uv << ")=" << f << "\n";
-    edges->insert(uv, f);
+  } else if (k > 0) {  // only store edge k>0 (because only those can occur
+                       // when restoring)
+    unsigned f = approximateEdge(u, k);
+    // std::cout << "inserting edge(" << u << ")=" << f << "\n";
+    edges->insert(u, f);
   }
   if (lp < q) {
-    table->insert(uv, tp);  // ?
-    low[lp++] = u;
+    table->insert(u, tp);  // ?
+    low[lp++] = p;
   } else if (hp < q) {
-    table->insert(uv, tp + 1);  // ?
-    high[hp++] = u;
+    table->insert(u, tp + 1);  // ?
+    high[hp++] = p;
   } else {
     trailers[tp].x = low[lp - 1];
     tp++;
@@ -149,11 +154,11 @@ int ExtendedSegmentStack::push(Pair u) {
     low = high;
     high = tmp;
     hp = 0;
-    high[hp++] = u;
-    table->insert(uv, tp + 1);  // ?
+    high[hp++] = p;
+    table->insert(u, tp + 1);  // ?
   }
   // std::cout << "lp=" << lp << ", hp=" << hp << ", tp=" << tp << ", bp=" << bp
-  //          << ", table(u)=" << table->get(uv) << "\n";
+  //          << ", table(p)=" << table->get(u) << "\n";
   return 0;
 }
 
@@ -200,14 +205,18 @@ void ExtendedSegmentStack::recolorLow(unsigned v) {
 
 bool ExtendedSegmentStack::isAligned() {
   std::cout << "lp=" << lp << ", tp=" << tp << "\n";
+  bool r = false;
   if (lp == q && tp > 0) {
+    Trailer t = trailers[tp - 1];
     std::cout << low[lp - 1].head() << "," << low[lp - 1].tail() << " = "
-              << trailers[tp - 1].x.head() << "," << trailers[tp - 1].x.tail()
-              << "?\n";
-    bool r = low[lp - 1] == trailers[tp - 1].x;
+              << t.x.head() << "," << t.x.tail() << "?\n";
+    if (t.b) {
+      throw std::logic_error(
+          "not yet implemented: alignment check for big vertices!");
+    } else {
+      r = low[lp - 1] == t.x;
+    }
     if (r) tp--;
-    return r;
-  } else {
-    return false;
   }
+  return r;
 }

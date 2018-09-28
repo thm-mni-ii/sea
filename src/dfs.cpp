@@ -119,33 +119,35 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
   }
 }
 
+static Pair findTop(uint u, uint k, Graph *g, CompactArray *c,
+                    ExtendedSegmentStack *s) {
+  for (uint i = k; i < g->getNodeDegree(u); i++) {
+    uint v = g->head(u, i);
+    if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
+      uint rk = s->getOutgoingEdge(v);
+      return Pair(v, rk);
+    }
+  }
+  throw std::logic_error("DFS: no node found in restoration");
+}
 static void restore_top(uint u0, Graph *g, CompactArray *color,
                         ExtendedSegmentStack *s) {
   std::cout << "entering restoration\n";
   Pair x;
+  uint u = u0, k = 0;
   if (s->getRestoreTrailer(&x) == 1) {
-    for (uint a = 0; a < g->getNodeDegree(u0); a++) {
-      if (color->get(g->head(u0, a)) == DFS_GRAY) {
-        x = Pair(u0, a + 1);
-        std::cout << "starting at bottom " << u0 << "," << a + 1 << "\n";
-        s->push(x);
-        break;
-      }
-    }
+    std::cout << "starting at bottom " << u << "," << k << "\n";
+    s->push(Pair(u, k));
+    color->insert(u, DFS_WHITE);
   } else {
-    std::cout << "starting at " << x.head() << "," << x.tail() << " \n";
+    u = x.head(), k = x.tail() - 1;
+    std::cout << "starting at " << u << "," << k << " \n";
   }
-  uint u = x.head(), k = x.tail();
   while (!s->isAligned()) {
-    uint v = g->head(u, k - 1);
-    if (color->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
-      u = v;
-      k = s->getOutgoingEdge(v);
-      s->push(Pair(u, k));
-      color->insert(v, DFS_WHITE);
-    } else {
-      throw std::logic_error("restoration failed: no node found");
-    }
+    x = findTop(u, k, g, color, s);
+    u = x.head(), k = x.tail();  // problem: k is 1 too low
+    color->insert(u, DFS_RESERVED);
+    s->push(Pair(u, k + 1));  // is simply doing 'k+1' OK?
   }
   s->recolorLow(DFS_GRAY);
 }
