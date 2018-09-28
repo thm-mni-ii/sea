@@ -119,13 +119,16 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
   }
 }
 
-static Pair findTop(uint u, uint k, Graph *g, CompactArray *c,
-                    ExtendedSegmentStack *s) {
+/**
+ * Get the outgoing edge of u which leads to a gray, top-segment node.
+ */
+static Pair findEdge(uint u, uint k, Graph *g, CompactArray *c,
+                     ExtendedSegmentStack *s) {
   for (uint i = k; i < g->getNodeDegree(u); i++) {
     uint v = g->head(u, i);
     if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
-      uint rk = s->getOutgoingEdge(v);
-      return Pair(v, rk);
+      std::cout << " found forward edge: " << i << "\n";
+      return Pair(u, i);
     }
   }
   throw std::logic_error("DFS: no node found in restoration");
@@ -138,16 +141,22 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
   if (s->getRestoreTrailer(&x) == 1) {
     std::cout << "starting at bottom " << u << "," << k << "\n";
     s->push(Pair(u, k));
-    color->insert(u, DFS_WHITE);
+    color->insert(u, DFS_RESERVED);
   } else {
     u = x.head(), k = x.tail() - 1;
+    std::cout << "trailer: " << u << "," << k << "\n";
+    u = g->head(u, k), k = s->getOutgoingEdge(u);
     std::cout << "starting at " << u << "," << k << " \n";
   }
   while (!s->isAligned()) {
-    x = findTop(u, k, g, color, s);
-    u = x.head(), k = x.tail();  // problem: k is 1 too low
+    // problem: stack is 1 entry too small -> misaligned (off by one!)
+    std::cout << "node " << u << ":\n";
+    x = findEdge(u, k, g, color, s);
+    uint u1 = x.head(), k1 = x.tail();
+    s->push(Pair(u1, k1 + 1));  // is simply doing 'k+1' OK?
+    u = g->head(u1, k1);
+    k = s->getOutgoingEdge(u);
     color->insert(u, DFS_RESERVED);
-    s->push(Pair(u, k + 1));  // is simply doing 'k+1' OK?
   }
   s->recolorLow(DFS_GRAY);
 }
