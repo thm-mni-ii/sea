@@ -42,13 +42,23 @@ class GraphCreator {
   static Basicgraph *createRandomFixed(unsigned int order,
                                        unsigned int degreePerNode);
 
-    /**
-     * Create a completely random graph with a given number of nodes. Each node will have outgoing edges to at most n other nodes.
-     * @param order the number of nodes the graph should contain
-     * @return the resulting graph: n = order, m = O(n^2)
-     * @author Simon Heuser
-     */
-    static Basicgraph *createRandomGenerated(unsigned int order);
+  /**
+   * Create a completely random graph with a given number of nodes. Each node
+   * will have outgoing edges to at most n other nodes.
+   * @param order the number of nodes the graph should contain
+   * @return the resulting graph: n = order, m = O(n^2)
+   * @author Simon Heuser
+   */
+  static Basicgraph *createRandomGenerated(unsigned int order);
+
+  /**
+   * Create a random "imbalanced" graph, which contains a handful of very large
+   * nodes.
+   * @param order number of nodes
+   * @return the resulting graph: some nodes have a very large degree (they are
+   * "big")
+   */
+  static Basicgraph *createRandomImbalanced(unsigned int order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_

@@ -51,16 +51,21 @@ TEST_F(BasicSegmentStackTest, highAlign) {
 
 class ExtendedSegmentStackTest : public ::testing::Test {
  protected:
-  ExtendedSegmentStack *s;
-  unsigned q;
-  CompactArray *c;
-  Sealib::Graph *g;
+  ExtendedSegmentStack *s, *s2;
+  unsigned q, q2;
+  CompactArray *c, *c2;
+  Sealib::Graph *g, *g2;
   virtual void SetUp() {
     unsigned n = 256;
     g = Sealib::GraphCreator::createRandomFixed(n, 10);
     c = new CompactArray(n, 3);
     s = new ExtendedSegmentStack(n, g, c);
     q = static_cast<unsigned>(ceil(n / log2(n)));
+    unsigned n2 = 16;
+    g2 = Sealib::GraphCreator::createRandomImbalanced(n2);
+    c2 = new CompactArray(n2, 3);
+    s2 = new ExtendedSegmentStack(n2, g2, c2);
+    q2 = static_cast<unsigned>(ceil(n2 / log2(n2)));
   }
   virtual void TearDown() { delete s; }
 };
@@ -131,6 +136,12 @@ TEST_F(ExtendedSegmentStackTest, outgoingEdgeSmall) {
   EXPECT_EQ(s->getOutgoingEdge(0), 2);
   s->push(Pair(0, 11));
   EXPECT_EQ(s->getOutgoingEdge(0), 10);
+}
+
+TEST_F(ExtendedSegmentStackTest, outgoingEdgeBig) {
+  for (uint a = 0; a < g2->getOrder(); a++)
+    s2->push(Pair(a, g2->getNodeDegree(a) - 1));
+  // ...
 }
 
 TEST_F(ExtendedSegmentStackTest, aligned) {
