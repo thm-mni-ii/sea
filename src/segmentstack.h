@@ -103,9 +103,8 @@ class ExtendedSegmentStack : public SegmentStack {
  private:
   struct Trailer {
     Pair x;
-    unsigned b : 1;
     unsigned bi, bc;
-    Trailer() : b(0), bi(0), bc(0) {}
+    Trailer() : bi(INVALID), bc(0) {}
   };
 
   Trailer *trailers;
@@ -117,6 +116,7 @@ class ExtendedSegmentStack : public SegmentStack {
   unsigned m, n;
   CompactArray *color;
 
+  static constexpr unsigned INVALID = static_cast<unsigned>(-1);
   unsigned approximateEdge(uint u, uint k);
 };
 }  // namespace Sealib

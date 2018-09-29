@@ -133,7 +133,7 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
   for (uint i = k; i < g->getNodeDegree(u); i++) {
     uint v = g->head(u, i);
     if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
-      //std::cout << " found forward edge: " << i << "\n";
+      // std::cout << " found forward edge: " << i << "\n";
       r = std::make_pair(true, i);
       break;
     }
@@ -143,7 +143,7 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
       uint v = g->head(u, i);
       if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, false)) {
         // there are no more forward edges, so the restoration must exit
-        //std::cout << " found enclosing edge: " << i << "\n";
+        // std::cout << " found enclosing edge: " << i << "\n";
         r = std::make_pair(false, i);
         break;
       }
@@ -156,17 +156,17 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
   Pair x;
   uint u = u0, k = 0;
   if (s->getRestoreTrailer(&x) == 1) {
-    //std::cout << "starting at bottom " << u << "," << k << "\n";
+    // std::cout << "starting at bottom " << u << "," << k << "\n";
     color->insert(u, DFS_RESERVED);
   } else {
     u = x.head(), k = x.tail() - 1;
-    //std::cout << "trailer: " << u << "," << k << "\n";
+    // std::cout << "trailer: " << u << "," << k << "\n";
     u = g->head(u, k), k = s->getOutgoingEdge(u);
-    //std::cout << "starting at " << u << "," << k << " \n";
+    // std::cout << "starting at " << u << "," << k << " \n";
     color->insert(u, DFS_RESERVED);
   }
   while (!s->isAligned()) {
-    //std::cout << "node " << u << ":\n";
+    // std::cout << "node " << u << ":\n";
     std::pair<bool, uint> r = findEdge(u, k, g, color, s);
     uint u1 = u, k1 = r.second;
     if (r.first) {

@@ -96,6 +96,14 @@ TEST_P(DFSTest, nloglognBitUserproc) {
   EXPECT_EQ(c4, order);
 }
 
+TEST(DFSTest, nloglognImbalanced) {
+  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
+  DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                      DFS_NOP_PROCESS);
+  SUCCEED();
+  delete g;
+}
+
 auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
                                    12, 14, 3, 14, 4, 12, 17, 5, 14};
 unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
