@@ -7,6 +7,9 @@
 #include <sealib/linkedliststack.h>
 #include <memory>
 #include <utility>
+#include <vector>
+#include <tuple>
+
 namespace Sealib {
 class SubgraphStack {
  private:
@@ -14,7 +17,6 @@ class SubgraphStack {
     int fatness;
 
  public:
-
     explicit SubgraphStack(std::shared_ptr<BasicGraph> g_) : clientList(), fatness(4) {
         clientList.emplace_back(new BaseSubGraph(g_));
     }
@@ -25,10 +27,10 @@ class SubgraphStack {
      * @param v Bitsequence of length n_l
      * @param e Bitsequence of length 2m_l
      */
-    void push(Sealib::Bitset<unsigned char> &v,
-              Sealib::Bitset<unsigned char> &e) {
-        clientList.emplace_back(new RecursiveSubGraph(clientList[clientList.size()-1], v, e));
-    };
+    void push(const Sealib::Bitset<unsigned char> &v,
+              const Sealib::Bitset<unsigned char> &e) {
+        clientList.emplace_back(new RecursiveSubGraph(clientList[clientList.size() - 1], v, e));
+    }
 
     /**
      * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).
@@ -37,28 +39,28 @@ class SubgraphStack {
     void pop() {
         delete clientList[clientList.size() - 1];
         clientList.pop_back();
-    };
+    }
 
     /**
      * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).
      * Asserts that the client list is not empty.
      */
-    const SubGraph& peek() const {
+    const SubGraph &peek() const {
         return (*clientList[clientList.size() - 1]);
-    };
+    }
 
     /**
      * Returns the order of G_i
      */
     unsigned long order(unsigned long i) const {
         return clientList[i]->order();
-    };
+    }
 
     /**
      * @return - the degree of vertex u in G_i
      */
     unsigned long degree(unsigned long i,
-                        unsigned long u) const {
+                         unsigned long u) const {
         return clientList[i]->degree(i);
     }
 
@@ -66,10 +68,10 @@ class SubgraphStack {
      * @return - the head of u's k-th outgoing arc in G_i. i.e. head_i(u, k)
      */
     unsigned long head(unsigned long i,
-                      unsigned long u,
-                      unsigned long k) const {
+                       unsigned long u,
+                       unsigned long k) const {
         return clientList[i]->head(u, k);
-    };
+    }
 
     /**
      * @return - the pair that represents the mate of u's kth outgoing arc in G_i, i.e. mate_i(u, k)
@@ -78,10 +80,10 @@ class SubgraphStack {
                                                   unsigned long u,
                                                   unsigned long k) const {
         return clientList[i]->mate(u, k);
-    };
+    }
 
     virtual ~SubgraphStack() {
-        for(SubGraph* g : clientList) {
+        for (SubGraph *g : clientList) {
             delete g;
         }
     }

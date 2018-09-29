@@ -3,11 +3,11 @@
 #include <sealib/subgraph.h>
 #include <sealib/rankselect.h>
 #include <sealib/basicgraph.h>
+#include <tuple>
 
 namespace Sealib {
 class BaseSubGraph : public SubGraph {
     typedef std::shared_ptr<BasicGraph> rgraph_t;
-
  private:
     rgraph_t rGraph;
 
@@ -28,4 +28,4 @@ class BaseSubGraph : public SubGraph {
     unsigned long translateArc(unsigned long e) const override;
 };
 }  // namespace Sealib
-#endif //SEALIB_BASESUBGRAPH_H_
+#endif  // SEALIB_BASESUBGRAPH_H_
