@@ -1,5 +1,5 @@
-#ifndef SEALIB_TRAIL_H_
-#define SEALIB_TRAIL_H_
+#ifndef SEALIB_EULERTRAIL_H_
+#define SEALIB_EULERTRAIL_H_
 
 #include <sealib/rankselect.h>
 #include <sealib/basicgraph.h>
@@ -69,4 +69,4 @@ class EulerTrail {
     iterator end() const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_TRAIL_H_
+#endif  // SEALIB_EULERTRAIL_H_

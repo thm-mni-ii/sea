@@ -2,10 +2,12 @@
 #define SEALIB_RECURSIVESUBGRAPH_H_
 #include <sealib/subgraph.h>
 #include <sealib/rankselect.h>
+#include <tuple>
 
 namespace Sealib {
 class RecursiveSubGraph : public SubGraph {
     typedef SubGraph rgraph_t;
+
  private:
     rgraph_t *rGraph;
     rankselect_t vSelect;
@@ -16,8 +18,8 @@ class RecursiveSubGraph : public SubGraph {
 
  public:
     RecursiveSubGraph(SubGraph *rGraph_,
-                     Sealib::Bitset<unsigned char> &v,
-                     Sealib::Bitset<unsigned char> &e);
+                     const Sealib::Bitset<unsigned char> &v,
+                     const Sealib::Bitset<unsigned char> &e);
 
     ~RecursiveSubGraph() override;
 

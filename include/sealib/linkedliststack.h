@@ -14,9 +14,7 @@ class LinkedListStack {
       explicit node(T val_, node *next_ = nullptr) : val(val_), next(next_) {}
     };
 
-    LinkedListStack() : top(nullptr), count(0) {
-
-    }
+    LinkedListStack() : top(nullptr), count(0) {}
 
     ~LinkedListStack() {
         node *current = top;
@@ -33,7 +31,7 @@ class LinkedListStack {
         count++;
     }
 
-    void push(T &t) {
+    void push(const T &t) {
         top = new node(t, top);
         count++;
     }
@@ -79,6 +77,7 @@ class LinkedListStack {
         }
         return os << "]";
     }
+
  private:
     node *top;
     std::size_t count;
