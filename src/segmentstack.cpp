@@ -127,13 +127,24 @@ unsigned ExtendedSegmentStack::approximateEdge(uint u, uint k) {
 int ExtendedSegmentStack::push(Pair p) {
   uint u = p.head(), k = p.tail();
   if (graph->getNodeDegree(u) > m / q) {
-    std::cout << "deg(" << u << ")=" << graph->getNodeDegree(u) << "; > "
-              << m / q << "\n";
+    // std::cout << "deg(" << u << ")=" << graph->getNodeDegree(u) << "; > "
+    //           << m / q << "\n";
     if (trailers[tp].bi == INVALID) {
       trailers[tp].bi = bp;
       trailers[tp].bc = 0;
     }
-    big[bp++] = p;  // another big vertex is stored
+    if (k == 0) {
+      std::cout << bp << " new big " << p.head() << "," << p.tail() << "\n";
+      big[bp++] = p;  // another big vertex is stored
+    } else {
+      std::cout << bp << " update big " << p.head() << "," << p.tail() << "\n";
+      for (unsigned a = 0; a < bp; a++) {
+        if (big[a].head() == u) {
+          big[a] = p;
+          break;
+        }
+      }
+    }
     if (bp > q) throw std::out_of_range("big storage is full!");
   } else if (k > 0) {  // only store edge k>0 (because only those can occur
                        // when restoring)
@@ -174,10 +185,10 @@ bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
 uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
   if (graph->getNodeDegree(u) > m / q &&
       tp > 1) {  // if tp<2, then the vertex will not be stored on T
-    Trailer &t = trailers[tp - 2];
-    Pair x = big[t.bi + t.bc];
-    t.bc += 1;
+    Trailer *t = trailers + (tp - 2);
+    Pair x = big[t->bi + t->bc];
     std::cout << "getting big vertex " << x.head() << "," << x.tail() << "\n";
+    t->bc += 1;
     return x.tail();
   } else {
     unsigned f = edges->get(u);
@@ -201,7 +212,7 @@ void ExtendedSegmentStack::recolorLow(unsigned v) {
 }
 
 bool ExtendedSegmentStack::isAligned() {
-  // std::cout << "lp=" << lp << ", tp=" << tp << "\n";
+  std::cout << "lp=" << lp << ", tp=" << tp << "\n";
   bool r = false;
   if (lp == q && tp > 0) {
     Trailer t = trailers[tp - 1];
