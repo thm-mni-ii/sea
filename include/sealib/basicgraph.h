@@ -80,6 +80,16 @@ class BasicGraph : public Graph {
     unsigned int head(unsigned int u, unsigned int k) const override;
 
     /**
+    * Returns the mate of the k-th arc out of u.
+    * Which is the k'-th arc out of u'.
+    * u' = head of (u, k)
+    * @param u Vertex u
+    * @param k index in the adjacency vector of node u
+    * @return Returns (u', k')
+    */
+    std::tuple<unsigned int, unsigned int> mate(unsigned int u, unsigned int k) const;
+
+    /**
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
     unsigned int getOrder() const override;

@@ -47,67 +47,18 @@ unsigned long Sealib::BaseSubGraph::head(unsigned long u,
 
 std::tuple<unsigned long, unsigned long>
 Sealib::BaseSubGraph::mate(unsigned long u, unsigned long k) const {
-    return std::tuple<unsigned int, unsigned int>();
+    return rGraph->mate(static_cast<unsigned int>(u), static_cast<unsigned int>(k));
 }
 
-unsigned long Sealib::BaseSubGraph::order() const {
-    return qSelect.size();
-}
-
-unsigned long
-Sealib::BaseSubGraph::arcNumber(unsigned long j, unsigned long k) const {
-    if (j == 0 || k == 0) {
-        throw std::invalid_argument(
-            "j and k need to be > 0! (j,k)=(" +
-                std::to_string(j) + "," + std::to_string(k) + ")");
+unsigned long Sealib::BaseSubGraph::degree(unsigned long u) const {
+    if (u == 0) {
+        throw std::invalid_argument("u needs to be > 0");
     }
-    if (degree(j) == 0) {
-        throw std::out_of_range("isolated node! (j = " + std::to_string(j) + ")");
-    }
-
-    unsigned long qRank = qSelect.rank(j);
-    unsigned long n = 0;
-    if (qRank > 1) {
-        n = pSelect.select(qRank - 1) - 1;
-    }
-    unsigned long arc = n + k;
-
-    if (pSelect.rank(n + 1) != pSelect.rank(arc)) {
-        throw std::out_of_range(
-            "node j has less than k arcs! (j,k)=("
-            + std::to_string(j) + "," + std::to_string(k) + ")");
-    }
-    return arc;
-}
-
-std::tuple<unsigned long, unsigned long>
-Sealib::BaseSubGraph::inverseArcNumber(unsigned long r) const {
-    if (r == 0) {
-        throw std::invalid_argument("r needs to be > 0 (r = " + std::to_string(r) + ")");
-    }
-    unsigned long j = pSelect.rank(r);
-    if (j == (unsigned long) -1) {
-        throw std::out_of_range("out of range - no arc r exists! (r = " + std::to_string(r) + ")");
-    }
-    j++;
-    unsigned long a = qSelect.select(j);
-    if (a == (unsigned long) -1) {
-        throw std::out_of_range("out of range - no arc r exists! (r = " + std::to_string(r) + ")");
-    }
-    unsigned long b = pSelect.select(j - 1);
-    b = b == (unsigned long) -1 ? 0 : b - 1;
-    return std::tuple<unsigned long, unsigned long>(a, r - b);
-}
-
-unsigned long Sealib::BaseSubGraph::degree(unsigned long v) const {
-    if (v == 0) {
-        throw std::invalid_argument("v needs to be > 0");
-    }
-    unsigned long a = pSelect.select(qSelect.rank(v));
+    unsigned long a = select_p(rank_q(u));  //  pSelect.select(qSelect.rank(v));
     if (a == (unsigned long) -1) {
         throw std::out_of_range("out of range on node idx v");
     }
-    unsigned long b = pSelect.select(qSelect.rank(v - 1));
+    unsigned long b = select_p(rank_q(u - 1));  // pSelect.select(qSelect.rank(v - 1));
 
     if (a == b) {
         return 0;
@@ -118,12 +69,27 @@ unsigned long Sealib::BaseSubGraph::degree(unsigned long v) const {
     }
 }
 
-unsigned long
-Sealib::BaseSubGraph::translateVertex(unsigned long u) const {
+unsigned long Sealib::BaseSubGraph::phi(unsigned long u) const {
+    if (u == 0) {
+        throw std::invalid_argument("u needs to be > 0");
+    }
     return u;
 }
-
-unsigned long
-Sealib::BaseSubGraph::translateArc(unsigned long e) const {
-    return e;
+unsigned long Sealib::BaseSubGraph::psi(unsigned long a) const {
+    if (a == 0) {
+        throw std::invalid_argument("a needs to be > 0");
+    }
+    return a;
+}
+unsigned long Sealib::BaseSubGraph::phiInv(unsigned long u) const {
+    if (u == 0) {
+        throw std::invalid_argument("u needs to be > 0");
+    }
+    return u;
+}
+unsigned long Sealib::BaseSubGraph::psiInv(unsigned long a) const {
+    if (a == 0) {
+        throw std::invalid_argument("a needs to be > 0");
+    }
+    return a;
 }

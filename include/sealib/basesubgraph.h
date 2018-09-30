@@ -18,14 +18,20 @@ class BaseSubGraph : public SubGraph {
 
     ~BaseSubGraph() override;
 
-    unsigned long degree(unsigned long v) const override;
+    unsigned long degree(unsigned long u) const override;
+
     unsigned long head(unsigned long u, unsigned long k) const override;
+
     std::tuple<unsigned long, unsigned long> mate(unsigned long u, unsigned long k) const override;
-    unsigned long order() const override;
-    unsigned long arcNumber(unsigned long j, unsigned long k) const override;
-    std::tuple<unsigned long, unsigned long> inverseArcNumber(unsigned long r) const override;
-    unsigned long translateVertex(unsigned long u) const override;
-    unsigned long translateArc(unsigned long e) const override;
+
+    unsigned long g(unsigned long j, unsigned long k) const override;
+
+    std::tuple<unsigned long, unsigned long> gInv(unsigned long r) const override;
+
+    unsigned long phi(unsigned long u) const override;
+    unsigned long psi(unsigned long a) const override;
+    unsigned long phiInv(unsigned long u) const override;
+    unsigned long psiInv(unsigned long a) const override;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BASESUBGRAPH_H_
