@@ -96,11 +96,22 @@ class ExtendedSegmentStack : public SegmentStack {
   // restoration)
   // @return 0 if a trailer is found, 1 otherwise
   int getRestoreTrailer(Pair *r);
+  // get the last trailer (the one that a restoration will align to)
+  int getTopTrailer(Pair *r);
   // recolor all vertices in the low segment to the given color (used after a
   // restoration when the low segment is actually the top segment of S)
   void recolorLow(unsigned v);
 
+  unsigned approximateEdge(uint u, uint k);
+  uint retrieveEdge(uint u, unsigned f);
+
  private:
+  /**
+   * A Trailer struct additionally manages a sequence of big vertices.
+   * In detail: trailers[tp-1] manages all big vertices in its segment. The
+   * first managed vertex can be accessed via big[trailers[tp-1].bi].
+   * bc is freely available to increment during restoration.
+   */
   struct Trailer {
     Pair x;
     unsigned bi, bc;
@@ -117,7 +128,7 @@ class ExtendedSegmentStack : public SegmentStack {
   CompactArray *color;
 
   static constexpr unsigned INVALID = static_cast<unsigned>(-1);
-  unsigned approximateEdge(uint u, uint k);
+  void storeEdges();
 };
 }  // namespace Sealib
 #endif  // SRC_SEGMENTSTACK_H_
