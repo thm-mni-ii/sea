@@ -97,7 +97,7 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 }
 
 TEST(DFSTest, nloglognImbalanced) {
-  Graph *g = Sealib::GraphCreator::createRandomImbalanced(20);
+  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
   DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                       DFS_NOP_PROCESS);
   SUCCEED();

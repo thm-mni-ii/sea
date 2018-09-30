@@ -137,7 +137,8 @@ int ExtendedSegmentStack::push(Pair p) {
       std::cout << bp << " new big " << p.head() << "," << p.tail() << "\n";
       big[bp++] = p;  // another big vertex is stored
     } else {
-      std::cout << bp << " update big " << p.head() << "," << p.tail() << "\n";
+      // std::cout << bp << " update big " << p.head() << "," << p.tail() <<
+      // "\n";
       for (unsigned a = 0; a < bp; a++) {
         if (big[a].head() == u) {
           big[a] = p;
@@ -183,13 +184,33 @@ bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
 }
 
 uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
-  if (graph->getNodeDegree(u) > m / q &&
-      tp > 1) {  // if tp<2, then the vertex will not be stored on T
-    Trailer *t = trailers + (tp - 2);
-    Pair x = big[t->bi + t->bc];
-    std::cout << "getting big vertex " << x.head() << "," << x.tail() << "\n";
-    t->bc += 1;
-    return x.tail();
+  if (graph->getNodeDegree(u) > m / q) {
+    for (unsigned a = 0; a < bp; a++) {
+      if (big[a].head() == u) {
+        std::cout << u << "," << big[a].tail() << "\n";
+        return big[a].tail();
+      }
+      break;
+    }
+    throw std::logic_error("getOugoing: no big edge found");
+    // if (tp > 1) {
+    //   Trailer *t = trailers + (tp - 2);
+    //   Pair x = big[t->bi + t->bc];
+    //   std::cout << "getting big vertex " << x.head() << "," << x.tail() <<
+    //   "\n";
+    //   t->bc += 1;
+    //   return x.tail();
+    // } else {
+    //   std::cout << "searching big vertex from bottom: ";
+    //   for (unsigned a = 0; a < bp; a++) {
+    //     if (big[a].head() == u) {
+    //       std::cout << u << "," << big[a].tail() << "\n";
+    //       return big[a].tail();
+    //     }
+    //     break;
+    //   }
+    //   throw std::logic_error("getOugoing: no big edge found (tp==1)");
+    // }
   } else {
     unsigned f = edges->get(u);
     unsigned g = static_cast<unsigned>(

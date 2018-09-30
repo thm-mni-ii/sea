@@ -1,5 +1,6 @@
 #include "sealib/dfs.h"
 #include <iostream>
+#include <sstream>
 #include "./inplacerunner.h"
 #include "./segmentstack.h"
 
@@ -148,6 +149,11 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
         break;
       }
     }
+    if (r.second == static_cast<uint>(-1)) {
+      std::stringstream a;
+      a << "findEdge: no edge found for u=" << u;
+      throw std::logic_error(a.str());
+    }
   }
   return r;
 }
@@ -156,7 +162,7 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
   Pair x;
   uint u = u0, k = 0;
   if (s->getRestoreTrailer(&x) == 1) {
-    // std::cout << "starting at bottom " << u << "," << k << "\n";
+    std::cout << "starting at bottom " << u << "," << k << "\n";
     color->insert(u, DFS_RESERVED);
   } else {
     u = x.head(), k = x.tail() - 1;
