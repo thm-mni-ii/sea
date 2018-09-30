@@ -8,24 +8,24 @@ namespace Sealib {
  */
 template <class T>
 class Iterator {
- public:
+ protected:
   /**
    * Initialize the iterator.
    */
-  virtual void init();
+  virtual void init() = 0;
 
   /**
    * Check if the iterator has another element that can be retrieved.
    * @return true if there is another element, false otherwise
    */
-  virtual bool more();
+  virtual bool more() = 0;
 
   /**
    * Get the next element from this iterator
    * @return the next element
    * @throws std::logic_error if there are no more elements
    */
-  virtual T next();
+  virtual T next() = 0;
 
   virtual ~Iterator() {}
 };
