@@ -1,8 +1,6 @@
 #ifndef SEALIB_DFS_H_
 #define SEALIB_DFS_H_
 
-#include <sstream>
-#include <stack>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"

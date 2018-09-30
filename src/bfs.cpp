@@ -1,4 +1,7 @@
 #include "sealib/bfs.h"
+#include <stdexcept>
+#include <vector>
+
 using Sealib::BFS;
 using Sealib::Graph;
 using Sealib::CompactArray;
