@@ -51,21 +51,32 @@ TEST_F(BasicSegmentStackTest, highAlign) {
 
 class ExtendedSegmentStackTest : public ::testing::Test {
  protected:
-  ExtendedSegmentStack *s, *s2;
-  unsigned q, q2;
-  CompactArray *c, *c2;
-  Sealib::Graph *g, *g2;
+  ExtendedSegmentStack *s;
+  unsigned q;
+  CompactArray *c;
+  Sealib::Graph *g;
   virtual void SetUp() {
     unsigned n = 256;
     g = Sealib::GraphCreator::createRandomFixed(n, 10);
     c = new CompactArray(n, 3);
     s = new ExtendedSegmentStack(n, g, c);
     q = static_cast<unsigned>(ceil(n / log2(n)));
-    unsigned n2 = 16;
-    g2 = Sealib::GraphCreator::createRandomImbalanced(n2);
-    c2 = new CompactArray(n2, 3);
-    s2 = new ExtendedSegmentStack(n2, g2, c2);
-    q2 = static_cast<unsigned>(ceil(n2 / log2(n2)));
+  }
+  virtual void TearDown() { delete s; }
+};
+
+class ExtendedSegmentStackTest2 : public ::testing::Test {
+ protected:
+  ExtendedSegmentStack *s;
+  unsigned q;
+  CompactArray *c;
+  Sealib::Graph *g;
+  virtual void SetUp() {
+    unsigned n = 128;
+    g = Sealib::GraphCreator::createRandomImbalanced(n);
+    c = new CompactArray(n, 3);
+    s = new ExtendedSegmentStack(n, g, c);
+    q = static_cast<unsigned>(ceil(n / log2(n)));
   }
   virtual void TearDown() { delete s; }
 };
@@ -128,20 +139,52 @@ TEST_F(ExtendedSegmentStackTest, outgoingEdgeSmall) {
 
   // storing: k=1 => fu=floor((k-1)/2)=floor(0/2)=0
   // retrieving: fu=0 => k'=fu*gu=0*2=0
-  s->push(Pair(0, 1));
-  EXPECT_EQ(s->getOutgoingEdge(0), 0);
-  s->push(Pair(0, 2));
-  EXPECT_EQ(s->getOutgoingEdge(0), 0);
-  s->push(Pair(0, 3));
-  EXPECT_EQ(s->getOutgoingEdge(0), 2);
-  s->push(Pair(0, 11));
-  EXPECT_EQ(s->getOutgoingEdge(0), 10);
+  EXPECT_EQ(s->approximateEdge(0, 1), 0);
+  EXPECT_EQ(s->retrieveEdge(0, 0), 0);
+
+  EXPECT_EQ(s->approximateEdge(0, 2), 0);
+  EXPECT_EQ(s->retrieveEdge(0, 0), 0);
+
+  EXPECT_EQ(s->approximateEdge(0, 3), 1);
+  EXPECT_EQ(s->retrieveEdge(0, 1), 2);
+
+  EXPECT_EQ(s->approximateEdge(0, 6), 2);
+  EXPECT_EQ(s->retrieveEdge(0, 2), 4);
+
+  EXPECT_EQ(s->approximateEdge(0, 11), 5);
+  EXPECT_EQ(s->retrieveEdge(0, 5), 10);
 }
 
-TEST_F(ExtendedSegmentStackTest, outgoingEdgeBig) {
-  for (uint a = 0; a < g2->getOrder(); a++)
-    s2->push(Pair(a, g2->getNodeDegree(a) - 1));
-  // ...
+TEST_F(ExtendedSegmentStackTest2, outgoingEdgeBig) {
+  uint m = 0;
+  std::set<uint> big;
+  for (uint u = 0; u < g->getOrder(); u++) m += g->getNodeDegree(u);
+  for (uint u = 0; u < g->getOrder(); u++) {
+    if (g->getNodeDegree(u) > m / q) {
+      big.insert(u);
+    }
+  }
+  for (uint a = 0; a < 4 * q; a++) {
+    s->push(Pair(a, 0));
+    s->pop(&r);
+    s->push(Pair(a, 3));
+  }
+  popexp(2 * q, 0);
+  EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
+  EXPECT_EQ(s->getRestoreTrailer(&r), 0);
+  EXPECT_EQ(r.head(), q - 1);
+  EXPECT_EQ(r.tail(), 3);
+  for (uint a = q; a < 2 * q; a++) {
+    EXPECT_FALSE(s->isAligned());
+    if (big.find(a) == big.end()) {
+      s->push(Pair(a, 3));
+    } else {
+      uint b = s->getOutgoingEdge(a);
+      EXPECT_EQ(b, 2);
+      s->push(Pair(a, 3));
+    }
+  }
+  EXPECT_TRUE(s->isAligned());
 }
 
 TEST_F(ExtendedSegmentStackTest, aligned) {

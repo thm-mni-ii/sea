@@ -1,5 +1,6 @@
 #include "src/segmentstack.h"
 #include <iostream>
+#include <sstream>
 
 using Sealib::SegmentStack;
 using Sealib::BasicSegmentStack;
@@ -124,49 +125,44 @@ unsigned ExtendedSegmentStack::approximateEdge(uint u, uint k) {
   return f;
 }
 
-int ExtendedSegmentStack::push(Pair p) {
-  uint u = p.head(), k = p.tail();
-  if (graph->getNodeDegree(u) > m / q) {
-    // std::cout << "deg(" << u << ")=" << graph->getNodeDegree(u) << "; > "
-    //           << m / q << "\n";
-    if (trailers[tp].bi == INVALID) {
-      trailers[tp].bi = bp;
-      trailers[tp].bc = 0;
-    }
-    if (k == 0) {
-      std::cout << bp << " new big " << p.head() << "," << p.tail() << "\n";
-      big[bp++] = p;  // another big vertex is stored
-    } else {
-      // std::cout << bp << " update big " << p.head() << "," << p.tail() <<
-      // "\n";
-      for (unsigned a = 0; a < bp; a++) {
-        if (big[a].head() == u) {
-          big[a] = p;
-          break;
-        }
+void ExtendedSegmentStack::storeEdges() {
+  for (uint c = 0; c < lp; c++) {
+    uint u = low[c].head(), k = low[c].tail();
+    if (graph->getNodeDegree(u) > m / q) {
+      if (trailers[tp].bi == INVALID) {
+        trailers[tp].bi = bp;
+        trailers[tp].bc = 0;
       }
+      std::cout << "new big " << u << "," << k - 1 << " (" << bp << ", T" << tp
+                << ")\n";
+      big[bp++] = Pair(u, k - 1);  // another big vertex is stored
+      if (bp > q) throw std::out_of_range("big storage is full!");
+    } else {  // store an approximation
+      unsigned f = approximateEdge(u, k);
+      edges->insert(u, f);
     }
-    if (bp > q) throw std::out_of_range("big storage is full!");
-  } else if (k > 0) {  // only store edge k>0 (because only those can occur
-                       // when restoring)
-    unsigned f = approximateEdge(u, k);
-    edges->insert(u, f);
   }
+}
+
+int ExtendedSegmentStack::push(Pair p) {
+  uint pu = p.head();
   if (lp < q) {
-    table->insert(u, tp);
+    table->insert(pu, tp);
     low[lp++] = p;
   } else if (hp < q) {
-    table->insert(u, tp + 1);
+    table->insert(pu, tp + 1);
     high[hp++] = p;
   } else {
     trailers[tp].x = low[lp - 1];
+    storeEdges();
+
     tp++;
     Pair *tmp = low;
     low = high;
     high = tmp;
     hp = 0;
     high[hp++] = p;
-    table->insert(u, tp + 1);
+    table->insert(pu, tp + 1);
   }
   // std::cout << "lp=" << lp << ", hp=" << hp << ", tp=" << tp << ", bp=" << bp
   //          << ", table(p)=" << table->get(u) << "\n";
@@ -183,23 +179,27 @@ bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
   return r;
 }
 
+uint ExtendedSegmentStack::retrieveEdge(uint u, unsigned f) {
+  unsigned g = static_cast<unsigned>(
+      ceil(graph->getNodeDegree(u) / static_cast<double>(l)));
+  return f * g;
+}
+
 uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
   if (graph->getNodeDegree(u) > m / q) {
-    for (unsigned a = 0; a < bp; a++) {
-      if (big[a].head() == u) {
-        std::cout << u << "," << big[a].tail() << "\n";
-        return big[a].tail();
-      }
-      break;
+    std::cout << "getOutgoing [big] " << u << "\n";
+    if (tp > 0) {  // tp>0 should be given in every restoration, which is
+                   // precisely when this method may be called
+      Trailer *t = trailers + (tp - 1);
+      Pair x = big[t->bi + t->bc];
+      std::cout << "getting edge from big vertex " << x.head() << ","
+                << x.tail() << "\n";
+      t->bc += 1;
+      return x.tail();
+    } else {
+      throw std::logic_error(
+          "can't get edge from big vertex because there are no trailers");
     }
-    throw std::logic_error("getOugoing: no big edge found");
-    // if (tp > 1) {
-    //   Trailer *t = trailers + (tp - 2);
-    //   Pair x = big[t->bi + t->bc];
-    //   std::cout << "getting big vertex " << x.head() << "," << x.tail() <<
-    //   "\n";
-    //   t->bc += 1;
-    //   return x.tail();
     // } else {
     //   std::cout << "searching big vertex from bottom: ";
     //   for (unsigned a = 0; a < bp; a++) {
@@ -207,21 +207,28 @@ uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
     //       std::cout << u << "," << big[a].tail() << "\n";
     //       return big[a].tail();
     //     }
-    //     break;
     //   }
-    //   throw std::logic_error("getOugoing: no big edge found (tp==1)");
+    //   std::stringstream a;
+    //   a << "getOugoing: no big edge found for u=" << u;
+    //   throw std::logic_error(a.str());
     // }
   } else {
-    unsigned f = edges->get(u);
-    unsigned g = static_cast<unsigned>(
-        ceil(graph->getNodeDegree(u) / static_cast<double>(l)));
-    return f * g;
+    return retrieveEdge(u, edges->get(u));
   }
 }
 
 int ExtendedSegmentStack::getRestoreTrailer(Pair *r) {
   if (tp > 1) {
     *r = trailers[tp - 2].x;
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+int ExtendedSegmentStack::getTopTrailer(Pair *r) {
+  if (tp > 0) {
+    *r = trailers[tp - 1].x;
     return 0;
   } else {
     return 1;
@@ -241,7 +248,7 @@ bool ExtendedSegmentStack::isAligned() {
               << t.x.head() << "," << t.x.tail() << "?\n";
     r = low[lp - 1] == t.x;
     if (r) {
-      if (tp > 1) trailers[tp - 2].bi = INVALID;
+      if (tp > 0) trailers[tp - 1].bi = INVALID;
       tp--;
     }
   }

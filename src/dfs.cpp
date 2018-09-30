@@ -57,7 +57,10 @@ static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
   Pair x;
   while (!s->isEmpty()) {
     int sr = s->pop(&x);
-    if (sr == DFS_NO_MORE_NODES) {
+    if (sr == DFS_DO_RESTORE) {
+      restoration(u0, g, color, s);
+      s->pop(&x);
+    } else if (sr == DFS_NO_MORE_NODES) {
       return;
     }
     uint u, k;
@@ -140,20 +143,9 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
     }
   }
   if (!r.first) {
-    for (uint i = k; i < g->getNodeDegree(u); i++) {
-      uint v = g->head(u, i);
-      if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, false)) {
-        // there are no more forward edges, so the restoration must exit
-        // std::cout << " found enclosing edge: " << i << "\n";
-        r = std::make_pair(false, i);
-        break;
-      }
-    }
-    if (r.second == static_cast<uint>(-1)) {
-      std::stringstream a;
-      a << "findEdge: no edge found for u=" << u;
-      throw std::logic_error(a.str());
-    }
+    Pair a;
+    s->getTopTrailer(&a);
+    r = std::make_pair(false, a.tail() - 1);
   }
   return r;
 }
@@ -163,25 +155,24 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
   uint u = u0, k = 0;
   if (s->getRestoreTrailer(&x) == 1) {
     std::cout << "starting at bottom " << u << "," << k << "\n";
-    color->insert(u, DFS_RESERVED);
+    color->insert(u, DFS_WHITE);
   } else {
     u = x.head(), k = x.tail() - 1;
     // std::cout << "trailer: " << u << "," << k << "\n";
     u = g->head(u, k), k = s->getOutgoingEdge(u);
     // std::cout << "starting at " << u << "," << k << " \n";
-    color->insert(u, DFS_RESERVED);
+    color->insert(u, DFS_WHITE);
   }
   while (!s->isAligned()) {
-    // std::cout << "node " << u << ":\n";
     std::pair<bool, uint> r = findEdge(u, k, g, color, s);
     uint u1 = u, k1 = r.second;
     if (r.first) {
       s->push(Pair(u1, k1 + 1));  // k+1 to simulate the normal stack behaviour
       u = g->head(u1, k1);
       k = s->getOutgoingEdge(u);
-      color->insert(u, DFS_RESERVED);
+      color->insert(u, DFS_WHITE);
     } else {
-      s->push(Pair(u, k1 + 1));
+      s->push(Pair(u1, k1 + 1));
       // restoration loop must end now, the stack is aligned
     }
   }
