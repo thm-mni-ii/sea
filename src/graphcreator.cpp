@@ -104,7 +104,6 @@ Basicgraph *GraphCreator::createRandomImbalanced(unsigned int order) {
       deg = dist2(rng);
     } else {
       deg = dist1(rng);
-      std::cout << "generated big deg=" << deg << "\n";
     }
     Adjacency *ad =
         reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * deg));
