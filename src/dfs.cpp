@@ -136,7 +136,6 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
   for (uint i = k; i < g->getNodeDegree(u); i++) {
     uint v = g->head(u, i);
     if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
-      // std::cout << " found forward edge: " << i << "\n";
       r = std::make_pair(true, i);
       break;
     }
@@ -148,18 +147,16 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
   }
   return r;
 }
+
 static void restore_top(uint u0, Graph *g, CompactArray *color,
                         ExtendedSegmentStack *s) {
   Pair x;
   uint u = u0, k = 0;
   if (s->getRestoreTrailer(&x) == 1) {
-    std::cout << "starting at bottom " << u << "," << k << "\n";
     color->insert(u, DFS_WHITE);
   } else {
     u = x.head(), k = x.tail() - 1;
-    // std::cout << "trailer: " << u << "," << k << "\n";
     u = g->head(u, k), k = s->getOutgoingEdge(u);
-    // std::cout << "starting at " << u << "," << k << " \n";
     color->insert(u, DFS_WHITE);
   }
   while (!s->isAligned()) {
@@ -216,8 +213,6 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
 void DFS::nloglognBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
                          UserFunc2 postExplore, UserFunc1 postProcess) {
   unsigned int n = g->getOrder();
-
-  // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   CompactArray color(n, 3);
   ExtendedSegmentStack s(n, g, &color);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);

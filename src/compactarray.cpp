@@ -1,8 +1,13 @@
 #include "sealib/compactarray.h"
-#include <iostream>
+#include <math.h>
+#include <stdexcept>
 
 using Sealib::CompactArray;
 
+static const std::out_of_range OUTOFBOUNDS =
+    std::out_of_range("compactarray: index out of bounds");
+static const std::invalid_argument TOOLARGE =
+    std::invalid_argument("compactarray: inserted value is too large");
 void CompactArray::insert(uint i, unsigned int p) {
   // values per group: vpg, value width=ceil(ld(v)) bits, group width=vpg*vw
   if (ceil(log2(p)) > valueWidth) {

@@ -1,8 +1,6 @@
 #ifndef SRC_SEGMENTSTACK_H_
 #define SRC_SEGMENTSTACK_H_
 
-#include <stack>
-#include <stdexcept>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"

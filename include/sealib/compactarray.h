@@ -1,8 +1,6 @@
 #ifndef SEALIB_COMPACTARRAY_H_
 #define SEALIB_COMPACTARRAY_H_
 
-#include <math.h>
-#include <stdexcept>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
 
@@ -49,10 +47,6 @@ class CompactArray {
   unsigned groupCount;
 
   Group **group;
-  std::out_of_range OUTOFBOUNDS =
-      std::out_of_range("compactarray: index out of bounds");
-  std::invalid_argument TOOLARGE =
-      std::invalid_argument("compactarray: inserted value is too large");
 };
 }  // namespace Sealib
 #endif  // SEALIB_COMPACTARRAY_H_
