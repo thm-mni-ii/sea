@@ -117,7 +117,7 @@ ExtendedSegmentStack::~ExtendedSegmentStack() {
   delete[] trailers;
   delete table;
   delete edges;
-  delete big;
+  delete[] big;
 }
 
 unsigned ExtendedSegmentStack::approximateEdge(uint u, uint k) {
