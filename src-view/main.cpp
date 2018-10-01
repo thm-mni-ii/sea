@@ -4,12 +4,15 @@
 #include <sealibvisual/tikzpicture.h>
 #include <sealibvisual/tikzgenerator.h>
 #include <sealibvisual/tikzfigure.h>
+#include <sealibvisual/tikzgraph.h>
 #include <sealib/graphcreator.h>
 #include <sealib/dfs.h>
 #include <sealib/graphrepresentations.h>
 #include <sealib/compactgraph.h>
 #include <sealib/runtimetest.h>
 #include <sealib/_types.h>
+#include <ctime>
+#include <cmath>
 #include <iostream>
 #include <chrono>
 #include <stack>
@@ -17,9 +20,6 @@
 #include <string>
 #include <sstream>
 #include <memory>
-#include <ctime>
-#include <cmath>
-#include <include/sealibvisual/tikzgraph.h>
 
 using std::cout;
 using std::stack;
@@ -27,6 +27,12 @@ using Sealib::BasicGraph;
 using Sealib::Compactgraph;
 using Sealib::DFS;
 using Sealib::Graphrepresentations;
+
+using SealibVisual::TikzElement;
+using SealibVisual::TikzGenerator;
+using SealibVisual::TikzPicture;
+using SealibVisual::TikzDocument;
+using SealibVisual::TikzGraph;
 
 #define VERY_SPARSE ([](double n) { return (5. * n) / (n * (n - 1.)); })
 #define SPARSE      ([](double n) { return (n * std::log2(n)) / (n * (n - 1.)); })
@@ -169,7 +175,7 @@ void tikz_example2() {
     SealibVisual::TikzDocument doc("out.tex", "matrix, backgrounds, graphdrawing", "force", true);
     doc.add(fig);
 
-    for(auto &e: ((SealibVisual::TikzGraph*) (vg.get()))->getEdges()) {
+    for (auto &e : ((SealibVisual::TikzGraph*) (vg.get()))->getEdges()) {
         e.second.setOptions("--, color=green, line width=8");
     }
     doc.add(fig);
@@ -191,6 +197,24 @@ void tikz_example2() {
     doc.close();
 }
 
+void tikz_example3() {
+    BasicGraph *g = Sealib::GraphCreator::createRandomFixed(10,4);
+    std::shared_ptr<TikzElement> vg = TikzGenerator::generateTikzElement(*g);
+
+    std::shared_ptr<TikzPicture> pic(new TikzPicture("spring layout"));
+    pic->add(vg);
+
+    TikzDocument doc("out-bfs.tex", "graphdrawing", "force", true);
+    doc.add(pic);
+
+    TikzGraph *tg = (TikzGraph*)vg.get();
+    tg->getNodes().at(0).setOptions("draw,circle,fill=gray");
+    doc.add(pic);
+
+    doc.close();
+}
+
 int main() {
     tikz_example2();
+    tikz_example3();
 }
