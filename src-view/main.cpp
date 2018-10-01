@@ -34,6 +34,7 @@ using SealibVisual::TikzGenerator;
 using SealibVisual::TikzPicture;
 using SealibVisual::TikzDocument;
 using SealibVisual::TikzGraph;
+using SealibVisual::TikzNode;
 
 #define VERY_SPARSE ([](double n) { return (5. * n) / (n * (n - 1.)); })
 #define SPARSE ([](double n) { return (n * std::log2(n)) / (n * (n - 1.)); })
@@ -148,8 +149,7 @@ void tikz_example() {
   bits[4] = 1;
 
   std::shared_ptr<SealibVisual::TikzElement> tikzNode =
-      SealibVisual::TikzGenerator::generateTikzElement<
-          Sealib::Bitset<unsigned char>>(bits);
+      SealibVisual::TikzGenerator::generateTikzElement(bits);
 
   SealibVisual::TikzDocument doc("out.tex", "matrix, backgrounds");
   doc.add(tikzNode);
@@ -195,8 +195,7 @@ void tikz_example2() {
   bits[4] = 1;
 
   std::shared_ptr<SealibVisual::TikzElement> tikzNode =
-      SealibVisual::TikzGenerator::generateTikzElement<
-          Sealib::Bitset<unsigned char>>(bits);
+      SealibVisual::TikzGenerator::generateTikzElement(bits);
   pic->add(tikzNode);
 
   doc.add(fig);
@@ -208,8 +207,8 @@ void tikz_example3() {
   BasicGraph *g = Sealib::GraphCreator::createRandomFixed(10, 4);
   std::shared_ptr<TikzElement> vg = TikzGenerator::generateTikzElement(*g);
   TikzGraph *tg = (TikzGraph *)vg.get();
-  for (auto e : tg->getEdges()) {
-    e.second.setOptions("->, color=black");
+  for (auto &e : tg->getEdges()) {
+    e.second.setOptions("--, color=black");
   }
 
   Sealib::CompactArray c(10);

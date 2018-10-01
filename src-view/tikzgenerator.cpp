@@ -18,10 +18,9 @@ typedef BasicGraph basicgraph_t;
 
 namespace SealibVisual {
 
-template <>
-std::shared_ptr<SealibVisual::TikzElement>
-SealibVisual::TikzGenerator::generateTikzElement<Sealib::bitset_t>(
-    const Sealib::bitset_t &t, const std::string name) {
+std::shared_ptr<SealibVisual::TikzPicture>
+SealibVisual::TikzGenerator::generateTikzElement(
+    const Sealib::Bitset<unsigned char> &t, const std::string name) {
   std::vector<std::string> arr(t.size());
 
   for (unsigned int i = 0; i < t.size(); i++) {
@@ -50,16 +49,14 @@ SealibVisual::TikzGenerator::generateTikzElement<Sealib::bitset_t>(
   return outer;
 }
 
-template <>
-std::shared_ptr<SealibVisual::TikzElement>
-SealibVisual::TikzGenerator::generateTikzElement<Sealib::bitset_t>(
-    const Sealib::bitset_t &t) {
+std::shared_ptr<SealibVisual::TikzPicture>
+SealibVisual::TikzGenerator::generateTikzElement(
+    const Sealib::Bitset<unsigned char> &t) {
   return generateTikzElement(t, "bitset");
 }
 
-template <>
-std::shared_ptr<SealibVisual::TikzElement>
-SealibVisual::TikzGenerator::generateTikzElement<Sealib::basicgraph_t>(
+std::shared_ptr<SealibVisual::TikzGraph>
+SealibVisual::TikzGenerator::generateTikzElement(
     const Sealib::basicgraph_t &t) {
   using std::string;
   using std::shared_ptr;
@@ -92,10 +89,13 @@ SealibVisual::TikzGenerator::generateTikzElement<Sealib::basicgraph_t>(
 using Sealib::CompactArray;
 using SealibVisual::TikzElement;
 using SealibVisual::TikzPicture;
-template <>
-std::shared_ptr<TikzElement> TikzGenerator::generateTikzElement<CompactArray>(
-    const CompactArray &p) {
-  CompactArray &c = const_cast<CompactArray &>(p);
+std::shared_ptr<TikzNode> TikzGenerator::generateTikzElement(CompactArray &c) {
+  std::vector<std::string> u;
+  for (unsigned a = 0; a < c.size(); a++) {
+    u.push_back(std::to_string(c.get(a)));
+  }
+  std::shared_ptr<TikzElement> array(new TikzArray(u, "C", "array", true));
+
   std::shared_ptr<TikzPicture> va(new TikzPicture(
       "array/.style={"
       "matrix of nodes,"
@@ -103,14 +103,8 @@ std::shared_ptr<TikzElement> TikzGenerator::generateTikzElement<CompactArray>(
       "nodes={draw, minimum size=7mm, fill=white},"
       "column sep=-\\pgflinewidth, row sep=0.5mm, nodes in empty cells,"
       "row 1/.style={nodes={draw=none, fill=none, minimum size=5mm}}}"));
-
-  std::vector<std::string> u;
-  for (unsigned a = 0; a < c.size(); a++) {
-    u.push_back(std::to_string(c.get(a)));
-  }
-
-  std::shared_ptr<TikzElement> array(new TikzArray(u, "C", "array", true));
   va->add(array);
+
   std::shared_ptr<TikzNode> node(
       new TikzNode("C", "anchor=west", va->toString()));
   return node;
