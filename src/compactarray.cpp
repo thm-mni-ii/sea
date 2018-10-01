@@ -1,9 +1,18 @@
 #include "sealib/compactarray.h"
+#include <math.h>
+#include <stdexcept>
 
 using Sealib::CompactArray;
 
+static const std::out_of_range OUTOFBOUNDS =
+    std::out_of_range("compactarray: index out of bounds");
+static const std::invalid_argument TOOLARGE =
+    std::invalid_argument("compactarray: inserted value is too large");
 void CompactArray::insert(uint i, unsigned int p) {
-  // values per group: 3/e, value width=ceil(log3) bits, group width
+  // values per group: vpg, value width=ceil(ld(v)) bits, group width=vpg*vw
+  if (ceil(log2(p)) > valueWidth) {
+    throw TOOLARGE;
+  }
   unsigned groupOffset =
       static_cast<unsigned>(floor(i / static_cast<double>(valuesPerGroup)));
   if (groupOffset >= groupCount) throw OUTOFBOUNDS;
@@ -11,10 +20,10 @@ void CompactArray::insert(uint i, unsigned int p) {
   Group a = *(group[groupOffset]);
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
-  Group b = Group(groupWidth);
+  Group b(groupWidth);
   b.setBlock(0, maxValue << gap);
   Group c = a & ~b;
-  Group d = Group(groupWidth);
+  Group d(groupWidth);
   d.setBlock(0, p << gap);
   Group r = c | d;
   delete group[groupOffset];
@@ -34,19 +43,22 @@ unsigned int CompactArray::get(uint i) {
   return d;
 }
 
-CompactArray::CompactArray(unsigned int count, unsigned int vpg) {
+CompactArray::CompactArray(unsigned int count, unsigned int v) {
   /**
    * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible
    * states)
    * group width: no. bits a group occupies (e.g. ceil(valueWidth*3/e) for 3
    * possible states)
+   * values per group: vw*vpg = bitsize(unsigned int) <=> vpg=bitsize(unsigned
+   * int)/vw
    */
 
-  // the following is valid if the inserted values can have 3 states:
-  valueWidth = static_cast<unsigned>(ceil(log(3) / log(2)));
-  valuesPerGroup = vpg;
+  // the following is valid if the inserted values can have v states:
+  valueWidth = static_cast<unsigned>(ceil(log2(v)));
+  valuesPerGroup =
+      static_cast<unsigned>((sizeof(unsigned int) * 8) / valueWidth);
   groupWidth = valuesPerGroup *
-               valueWidth;  // bits for a group of 3/e (e.g. 2) consec. colors
+               valueWidth;  // bits for a group of vpg (e.g. 2) consec. colors
   maxValue = static_cast<unsigned>(pow(2, valueWidth) - 1);
   groupCount =
       static_cast<unsigned>(ceil(count / static_cast<double>(valuesPerGroup)));
