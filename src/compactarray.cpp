@@ -43,6 +43,8 @@ unsigned int CompactArray::get(uint i) {
   return d;
 }
 
+unsigned int CompactArray::size() { return valueCount; }
+
 CompactArray::CompactArray(unsigned int count, unsigned int v) {
   /**
    * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible
@@ -60,6 +62,7 @@ CompactArray::CompactArray(unsigned int count, unsigned int v) {
   groupWidth = valuesPerGroup *
                valueWidth;  // bits for a group of vpg (e.g. 2) consec. colors
   maxValue = static_cast<unsigned>(pow(2, valueWidth) - 1);
+  valueCount = count;
   groupCount =
       static_cast<unsigned>(ceil(count / static_cast<double>(valuesPerGroup)));
   group = new Group *[groupCount];

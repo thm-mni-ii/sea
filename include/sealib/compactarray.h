@@ -42,9 +42,11 @@ class CompactArray {
    */
   unsigned int get(uint i);
 
+  unsigned int size();
+
  private:
   unsigned valueWidth, maxValue, groupWidth, valuesPerGroup;
-  unsigned groupCount;
+  unsigned valueCount, groupCount;
 
   Group **group;
 };

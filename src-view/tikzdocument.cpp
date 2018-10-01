@@ -25,7 +25,7 @@ void SealibVisual::TikzDocument::initialize() {
     file << "\\documentclass{article}" << endl;
     file << "\\usepackage{tikz}" << endl;
     file << "\\usetikzlibrary{" << tikzLibraries << "}" << endl;
-    file << "\\usegdlibrary{" << gdLibraries << "}" << endl;
+    if(gdLibraries != "") file << "\\usegdlibrary{" << gdLibraries << "}" << endl;
     file << "\\begin{document}" << endl;
 }
 
