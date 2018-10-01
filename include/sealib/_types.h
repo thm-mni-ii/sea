@@ -13,8 +13,11 @@ class Pair {
  public:
   Pair() : v1(), v2() {}
   Pair(uint a, uint b) : v1(a), v2(b) {}
-  uint head() { return v1; }
-  uint tail() { return v2; }
+  uint head() const { return v1; }
+  uint tail() const { return v2; }
+  bool operator==(const Pair &x) {
+    return x.head() == v1 && x.tail() == v2;
+  }
 };
 
 #endif  // SEALIB__TYPES_H_

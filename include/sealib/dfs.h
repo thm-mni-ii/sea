@@ -1,8 +1,6 @@
 #ifndef SEALIB_DFS_H_
 #define SEALIB_DFS_H_
 
-#include <sstream>
-#include <stack>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
@@ -55,7 +53,7 @@ class DFS {
   /**
    * Run a space-efficient depth-first search over a given graph. (Elmasry,
    * Hagerup and Kammer; 2015) <br>
-   * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) space
+   * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) bits
    * @param g graph G=(V,E) to iterate over
    * @param preprocess to be executed before processing a node u
    * @param preexplore to be executed before exploring an edge (u,v)
@@ -65,6 +63,20 @@ class DFS {
    */
   static void nBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
                       UserFunc2 postexplore, UserFunc1 postprocess);
+
+  /**
+   * Run a linear-time space-efficient depth-first search. (Elmasry, Hagerup and
+   * Kammer; 2015) <br>
+   * EFFICIENCY: O(n+m) time, O(n log log n) bits
+  * @param g graph G=(V,E) to iterate over
+  * @param preprocess to be executed before processing a node u
+  * @param preexplore to be executed before exploring an edge (u,v)
+  * @param postexplore to be executed after exploring an edge (u,v)
+  * @param postprocess to be executed after processing a node u
+  */
+  static void nloglognBitDFS(Graph *g, UserFunc1 preprocess,
+                             UserFunc2 preexplore, UserFunc2 postexplore,
+                             UserFunc1 postprocess);
 
   /**
    * Runs an inplace DFS in linear time over a graph that is given in a special

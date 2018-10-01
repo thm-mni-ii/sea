@@ -9,7 +9,7 @@ namespace Sealib {
  */
 template <class T>
 class Iterator {
- public:
+ protected:
   /**
    * Initialize the iterator.
    */
