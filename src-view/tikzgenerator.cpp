@@ -89,7 +89,7 @@ SealibVisual::TikzGenerator::generateTikzElement(
 using Sealib::CompactArray;
 using SealibVisual::TikzElement;
 using SealibVisual::TikzPicture;
-std::shared_ptr<TikzNode> TikzGenerator::generateTikzElement(CompactArray &c) {
+std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(CompactArray &c, std::string name) {
   std::vector<std::string> u;
   for (unsigned a = 0; a < c.size(); a++) {
     u.push_back(std::to_string(c.get(a)));
@@ -105,8 +105,14 @@ std::shared_ptr<TikzNode> TikzGenerator::generateTikzElement(CompactArray &c) {
       "row 1/.style={nodes={draw=none, fill=none, minimum size=5mm}}}"));
   va->add(array);
 
+  std::shared_ptr<TikzPicture> vb(new TikzPicture());
+  if(name!="") {
+    std::shared_ptr<TikzNode> label(new TikzNode("C_label", "anchor=west", name));
+    vb->add(label);
+  }
   std::shared_ptr<TikzNode> node(
-      new TikzNode("C", "anchor=west", va->toString()));
-  return node;
+      new TikzNode("C", "anchor=north", va->toString()));
+  vb->add(node);
+  return vb;
 }
 }  // namespace SealibVisual

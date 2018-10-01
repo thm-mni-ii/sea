@@ -25,7 +25,7 @@ class TikzGenerator {
   static std::shared_ptr<TikzGraph> generateTikzElement(
       const Sealib::BasicGraph &);
 
-  static std::shared_ptr<TikzNode> generateTikzElement(Sealib::CompactArray &);
+  static std::shared_ptr<TikzPicture> generateTikzElement(Sealib::CompactArray &, std::string name = "");
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZGENERATOR_H_

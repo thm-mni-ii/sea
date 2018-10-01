@@ -12,7 +12,7 @@ TikzGraph::TikzGraph(unsigned int n) : nodes(n) {
 
 std::ostream &TikzGraph::out(std::ostream &os) const {
     for (auto const &n : nodes) {
-        os << n << std::endl;
+        os << n;
     }
     for (auto const &v : edges) {
         os << "\\path " << v.second << ";" << std::endl;
