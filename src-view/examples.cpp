@@ -19,14 +19,15 @@ static TikzDocument *doc = nullptr;
 static std::shared_ptr<TikzGraph> tg;
 static std::shared_ptr<TikzPicture> pic;
 
-static unsigned bfs_inner = BFS_GRAY1, bfs_outer = BFS_GRAY2;
 static CompactArray *ca;
+static std::vector<uint> *s;
 
 const char *style_white = "circle,draw=black,fill=white",
            *style_lightgray = "circle,draw=black,fill=gray!20",
            *style_gray = "circle,draw=black,fill=gray!75",
            *style_black = "circle,draw=black,fill=black";
 
+static unsigned bfs_inner = BFS_GRAY1, bfs_outer = BFS_GRAY2;
 static void bfs_emit() {
   doc->add(pic);
   doc->add(TikzGenerator::generateTikzElement(*ca, "color"));
@@ -66,9 +67,9 @@ static void bfs_swap() {
   }
 }
 
-TikzDocument *Examples::visualBFS(std::string filename) {
-  doc =
-      new TikzDocument(filename, "matrix,graphdrawing", "layered,force", true);
+void Examples::visualBFS(std::string filename) {
+  doc = new TikzDocument(filename, "matrix,graphdrawing,positioning",
+                         "layered,force", true);
   pic = std::shared_ptr<TikzPicture>(
       new TikzPicture("spring layout, sibling distance=15mm, node "
                       "distance=20mm, node sep=1cm"));
@@ -83,11 +84,10 @@ TikzDocument *Examples::visualBFS(std::string filename) {
   }
   tg = TikzGenerator::generateTikzElement(*g);
   ca = new CompactArray(n, 3);
-  BFS b(g, bfs_preprocess /*BFS_NOP_PROCESS*/,
-        bfs_preexplore /*BFS_NOP_EXPLORE*/);
+  BFS b(g, bfs_preprocess, bfs_preexplore);
 
   for (auto &e : tg->getEdges()) {
-    e.second.setOptions("->, color=black");
+    e.second.setOptions("->, line width=1pt, color=black");
   }
   pic->add(tg);
   b.init();
@@ -104,5 +104,39 @@ TikzDocument *Examples::visualBFS(std::string filename) {
     }
     std::cout << "\n";
   } while (b.nextComponent());
-  return doc;
+  doc->close();
+}
+
+static void dfs_emit() {
+  doc->add(pic);
+  doc->add(TikzGenerator::generateTikzElement(*ca, "color"));
+  doc->add(TikzGenerator::generateTikzElement(*s, "S", true));
+  doc->add("\\newpage");
+}
+
+void Examples::visualDFS(std::string filename) {
+  doc = new TikzDocument(filename, "matrix,graphdrawing,positioning",
+                         "layered,force", true);
+  pic = std::shared_ptr<TikzPicture>(
+      new TikzPicture("spring layout, sibling distance=15mm, node "
+                      "distance=20mm, node sep=1cm"));
+  uint n = 10;
+
+  BasicGraph *g = Sealib::GraphCreator::createRandomFixed(n, 2);
+  tg = TikzGenerator::generateTikzElement(*g);
+  ca = new CompactArray(n, 3);
+  s = new std::vector<uint>(1, 0);
+
+  for (auto &e : tg->getEdges()) {
+    e.second.setOptions("->, line width=1pt, color=black");
+  }
+  pic->add(tg);
+
+  dfs_emit();
+  s->push_back(0);
+  dfs_emit();
+  s->pop_back();
+  dfs_emit();
+
+  doc->close();
 }

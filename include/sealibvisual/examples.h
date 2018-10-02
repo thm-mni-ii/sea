@@ -6,7 +6,9 @@
 namespace SealibVisual {
 class Examples {
  public:
-  static TikzDocument* visualBFS(std::string filename = "example.tex");
+  static void visualBFS(std::string filename = "example.tex");
+
+  static void visualDFS(std::string filename = "example.tex");
 };
 }
 #endif  // SEALIBVISUAL_EXAMPLES_H_

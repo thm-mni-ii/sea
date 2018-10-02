@@ -4,6 +4,7 @@
 #include <sealib/graphcreator.h>
 #include <sealib/graphrepresentations.h>
 #include <sealib/runtimetest.h>
+#include <sealibvisual/examples.h>
 #include <sealibvisual/tikzarray.h>
 #include <sealibvisual/tikzdocument.h>
 #include <sealibvisual/tikzfigure.h>
@@ -12,7 +13,6 @@
 #include <sealibvisual/tikznode.h>
 #include <sealibvisual/tikzpicture.h>
 #include <sealibvisual/tikzstyle.h>
-#include <sealibvisual/examples.h>
 #include <chrono>
 #include <cmath>
 #include <ctime>
@@ -209,33 +209,35 @@ void tikz_example3() {
   std::shared_ptr<TikzGraph> vg = TikzGenerator::generateTikzElement(*g);
   TikzGraph *tg = vg.get();
   for (auto &e : tg->getEdges()) {
-    e.second.setOptions("--, color=black");
+    e.second.setOptions("line width=1pt, color=black, arrows={->}");
   }
 
   Sealib::CompactArray c(10);
-  std::shared_ptr<TikzPicture> vc = TikzGenerator::generateTikzElement(c,"color");
+  std::shared_ptr<TikzPicture> vc =
+      TikzGenerator::generateTikzElement(c, "color");
 
   std::shared_ptr<TikzPicture> pic1(new TikzPicture("spring layout"));
   std::shared_ptr<TikzPicture> pic2(new TikzPicture(""));
 
   pic1->add(vg);
 
-  TikzDocument doc("out-bfs.tex", "matrix,graphdrawing", "layered,force", true);
+  TikzDocument doc("out-bfs.tex", "matrix,positioning,graphdrawing",
+                   "layered,force", true);
   doc.add(pic1);
-  //doc.add(pic2);
+  // doc.add(pic2);
   doc.add(vc);
   doc.add("\\newpage");
 
   tg->getNodes().at(0).setOptions("circle,draw=black,fill=gray");
   c.insert(0, 1);
   doc.add(pic1);
-  doc.add(TikzGenerator::generateTikzElement(c,"color"));
+  doc.add(TikzGenerator::generateTikzElement(c, "color"));
   doc.add("\\newpage");
 
   tg->getNodes().at(0).setOptions("circle,draw=black,fill=gray");
   c.insert(0, 1);
   doc.add(pic1);
-  doc.add(TikzGenerator::generateTikzElement(c,"color"));
+  doc.add(TikzGenerator::generateTikzElement(c, "color"));
   doc.add("\\newpage");
 
   tg->getNodes().at(1).setOptions("circle,draw=black,fill=gray!30");
@@ -247,7 +249,7 @@ void tikz_example3() {
   c.insert(7, 2);
   c.insert(8, 2);
   doc.add(pic1);
-  doc.add(TikzGenerator::generateTikzElement(c,"color"));
+  doc.add(TikzGenerator::generateTikzElement(c, "color"));
   doc.add("\\newpage");
 
   tg->getNodes().at(0).setOptions("circle,draw=black,fill=black");
@@ -261,23 +263,23 @@ void tikz_example3() {
   c.insert(7, 1);
   c.insert(8, 1);
   doc.add(pic1);
-  doc.add(TikzGenerator::generateTikzElement(c,"color"));
+  doc.add(TikzGenerator::generateTikzElement(c, "color"));
   doc.add("\\newpage");
 
   doc.close();
 
-  /* Convert PDF to GIF:    
-    convert -density 200 -delay 100 -background white -alpha remove out-bfs.pdf out-bfs.gif
+  /* Convert PDF to GIF:
+    convert -density 200 -delay 100 -background white -alpha remove out-bfs.pdf
+    out-bfs.gif       //NOLINT
   */
 }
 
 using SealibVisual::Examples;
-void tikz_example4() {
-  TikzDocument *a=Examples::visualBFS("out-bfs2.tex");
-  a->close();
-}
+void tikz_example4() {}
 
 int main() {
   tikz_example();
-  tikz_example4();
+  tikz_example3();
+  // Examples::visualBFS("out-bfs2.tex");
+  Examples::visualDFS("out-dfs.tex");
 }

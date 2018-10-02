@@ -10,7 +10,7 @@ namespace SealibVisual {
  * Abstract class representing a single Element in a TikzPicture.
  */
 class TikzArray : public TikzElement {
- private:
+ protected:
     std::vector<std::string> content;
     std::string name;
     std::string options;
@@ -22,7 +22,7 @@ class TikzArray : public TikzElement {
                        std::string options = "matrix of nodes, ampersand replacement=\\&",
                        bool showIndices = false);
 
-    std::ostream &out(std::ostream &os) const override;
+    virtual std::ostream &out(std::ostream &os) const override;
 
     std::vector<std::string> &getContent();
     const std::vector<std::string> &getContent() const;

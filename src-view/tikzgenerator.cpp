@@ -4,11 +4,13 @@
 #include <sealibvisual/tikzgraph.h>
 #include <sealibvisual/tikznode.h>
 #include <sealibvisual/tikzpicture.h>
+#include <sealibvisual/tikzstack.h>
 
 #include <sealib/basicgraph.h>
 #include <sealib/bitset.h>
 #include <sealib/compactarray.h>
 
+#include <sstream>
 #include <tuple>
 
 namespace Sealib {
@@ -89,12 +91,13 @@ SealibVisual::TikzGenerator::generateTikzElement(
 using Sealib::CompactArray;
 using SealibVisual::TikzElement;
 using SealibVisual::TikzPicture;
-std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(CompactArray &c, std::string name) {
+std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
+    CompactArray &c, std::string name) {
   std::vector<std::string> u;
   for (unsigned a = 0; a < c.size(); a++) {
     u.push_back(std::to_string(c.get(a)));
   }
-  std::shared_ptr<TikzElement> array(new TikzArray(u, "C", "array", true));
+  std::shared_ptr<TikzElement> array(new TikzArray(u, "", "array", true));
 
   std::shared_ptr<TikzPicture> va(new TikzPicture(
       "array/.style={"
@@ -105,14 +108,60 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(CompactArray &c,
       "row 1/.style={nodes={draw=none, fill=none, minimum size=5mm}}}"));
   va->add(array);
 
-  std::shared_ptr<TikzPicture> vb(new TikzPicture());
-  if(name!="") {
-    std::shared_ptr<TikzNode> label(new TikzNode("C_label", "anchor=west", name));
-    vb->add(label);
-  }
+  std::shared_ptr<TikzPicture> vb(new TikzPicture("node distance=1mm"));
   std::shared_ptr<TikzNode> node(
       new TikzNode("C", "anchor=north", va->toString()));
   vb->add(node);
+  if (name != "") {
+    std::shared_ptr<TikzNode> label(
+        new TikzNode("C_label", "left=of C, yshift=-3mm", name));
+    vb->add(label);
+  }
   return vb;
 }
+
+using SealibVisual::TikzStack;
+std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
+    std::vector<unsigned int> &v, std::string name, bool vertical) {
+  std::vector<std::string> s;
+  for (unsigned a : v) {
+    s.push_back(std::to_string(a));
+  }
+  std::shared_ptr<TikzElement> array;
+  if (vertical) {
+    array = std::shared_ptr<TikzElement>(new TikzStack(s, "", "array", true));
+  } else {
+    array = std::shared_ptr<TikzElement>(new TikzStack(s, "", "array", true));
+  }
+
+  std::stringstream arrayStyle;
+  arrayStyle
+      << "array/.style={"
+         "matrix of nodes,"
+         "ampersand replacement=\\&,"
+         "nodes={draw, minimum size=7mm, fill=white},"
+         "column sep=-\\pgflinewidth, row sep=0.5mm, nodes in empty cells,";
+  if (vertical) {
+    arrayStyle
+        << "column 1/.style={nodes={draw=none, fill=none, minimum size=5mm}}}";
+  } else {
+    arrayStyle
+        << "row 1/.style={nodes={draw=none, fill=none, minimum size=5mm}}}";
+  }
+
+  std::shared_ptr<TikzPicture> va(new TikzPicture(arrayStyle.str()));
+  va->add(array);
+
+  std::shared_ptr<TikzPicture> vb(new TikzPicture("node distance=1mm"));
+  std::shared_ptr<TikzNode> node(
+      new TikzNode("V", "anchor=north", va->toString()));
+  vb->add(node);
+  if (name != "") {
+    std::shared_ptr<TikzNode> label(
+        new TikzNode("V_label", "left=of V, yshift=-3mm", name));
+    vb->add(label);
+  }
+  return vb;
+}
+
 }  // namespace SealibVisual
