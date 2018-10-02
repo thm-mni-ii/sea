@@ -18,6 +18,19 @@ DartConfiguration.tcl
 # Visual Studio Code
 .project
 
+# L(u)atex
+*.log
+*.aux
+*.bib
+*.tex
+*.pdf
+# uncomment to whitelist:
+#!mysample1.pdf
+
+# Image output
+*.gif
+*.mp4
+
 # Created by .ignore support plugin (hsz.mobi)
 ### C template
 # Prerequisites
