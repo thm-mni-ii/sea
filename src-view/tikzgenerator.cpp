@@ -157,8 +157,14 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
       new TikzNode("V", "anchor=north", va->toString()));
   vb->add(node);
   if (name != "") {
+    std::stringstream labelStyle;
+    labelStyle << "left=of V,";
+    if (vertical)
+      labelStyle << "yshift=1mm";
+    else
+      labelStyle << "yshift=-3mm";
     std::shared_ptr<TikzNode> label(
-        new TikzNode("V_label", "left=of V, yshift=-3mm", name));
+        new TikzNode("V_label", labelStyle.str(), name));
     vb->add(label);
   }
   return vb;

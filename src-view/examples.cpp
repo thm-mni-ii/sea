@@ -1,5 +1,6 @@
 #include <sealib/basicgraph.h>
 #include <sealib/bfs.h>
+#include <sealib/dfs.h>
 #include <sealib/graphcreator.h>
 #include <sealibvisual/examples.h>
 #include <sealibvisual/tikzgenerator.h>
@@ -13,6 +14,7 @@ using SealibVisual::TikzGraph;
 using Sealib::Graph;
 using Sealib::BasicGraph;
 using Sealib::BFS;
+using Sealib::DFS;
 using Sealib::CompactArray;
 
 static TikzDocument *doc = nullptr;
@@ -108,35 +110,48 @@ void Examples::visualBFS(std::string filename) {
 }
 
 static void dfs_emit() {
+  doc->add("\\begin{tikzContainer}");
   doc->add(pic);
   doc->add(TikzGenerator::generateTikzElement(*ca, "color"));
   doc->add(TikzGenerator::generateTikzElement(*s, "S", true));
-  doc->add("\\newpage");
+  doc->add("\\end{tikzContainer}");
+  // doc->add("\\newframe");
+}
+
+static void dfs_preprocess(uint u) {
+  tg->getNodes().at(u).setOptions(style_gray);
+  ca->insert(u, DFS_GRAY);
+  s->push_back(u);
+  dfs_emit();
+}
+
+static void dfs_postprocess(uint u) {
+  tg->getNodes().at(u).setOptions(style_black);
+  ca->insert(u, DFS_BLACK);
+  s->pop_back();
+  dfs_emit();
 }
 
 void Examples::visualDFS(std::string filename) {
   doc = new TikzDocument(filename, "matrix,graphdrawing,positioning",
-                         "layered,force", true);
+                         "layered,force", true, false);
   pic = std::shared_ptr<TikzPicture>(
       new TikzPicture("spring layout, sibling distance=15mm, node "
                       "distance=20mm, node sep=1cm"));
-  uint n = 10;
+  // root=std::shared_ptr<TikzPicture>(new TikzPicture());
 
+  uint n = 10;
   BasicGraph *g = Sealib::GraphCreator::createRandomFixed(n, 2);
   tg = TikzGenerator::generateTikzElement(*g);
   ca = new CompactArray(n, 3);
-  s = new std::vector<uint>(1, 0);
+  s = new std::vector<uint>;
 
   for (auto &e : tg->getEdges()) {
     e.second.setOptions("->, line width=1pt, color=black");
   }
   pic->add(tg);
 
-  dfs_emit();
-  s->push_back(0);
-  dfs_emit();
-  s->pop_back();
-  dfs_emit();
+  DFS::nBitDFS(g, dfs_preprocess, nullptr, nullptr, dfs_postprocess);
 
   doc->close();
 }
