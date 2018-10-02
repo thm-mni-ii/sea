@@ -29,11 +29,13 @@ const char *style_white = "circle,draw=black,fill=white",
            *style_gray = "circle,draw=black,fill=gray!75",
            *style_black = "circle,draw=black,fill=black";
 
-static unsigned bfs_inner = BFS_GRAY1, bfs_outer = BFS_GRAY2;
+static unsigned bfs_inner = BFS_GRAY2, bfs_outer = BFS_GRAY1;
+
 static void bfs_emit() {
+  doc->add("\\begin{tikzContainer}");
   doc->add(pic);
   doc->add(TikzGenerator::generateTikzElement(*ca, "color"));
-  doc->add("\\newpage");
+  doc->add("\\end{tikzContainer}");
 }
 
 static void bfs_preprocess(uint u) {
@@ -43,9 +45,11 @@ static void bfs_preprocess(uint u) {
   bfs_emit();
 }
 static void bfs_preexplore(uint u, uint v) {
-  tg->getNodes().at(u).setOptions("circle,draw=black,fill=gray!70");
-  ca->insert(v, bfs_inner);
-  // bfs_emit();
+  if (ca->get(u) != bfs_inner) {
+    tg->getNodes().at(u).setOptions(style_gray);
+    ca->insert(u, bfs_inner);
+    bfs_emit();
+  }
 }
 
 static void bfs_swap() {
@@ -100,7 +104,7 @@ void Examples::visualBFS(std::string filename) {
 
       tg->getNodes().at(p.head()).setOptions(style_black);
       ca->insert(p.head(), BFS_BLACK);
-      bfs_swap();
+      // bfs_swap();
       bfs_emit();
       std::cout << p.head() << "," << p.tail() << " ";
     }

@@ -280,6 +280,6 @@ void tikz_example4() {}
 int main() {
   tikz_example();
   tikz_example3();
-  // Examples::visualBFS("out-bfs2.tex");
-  Examples::visualDFS("out-dfs.tex");
+  Examples::visualBFS("out-bfs2.tex");
+  // Examples::visualDFS("out-dfs.tex");
 }
