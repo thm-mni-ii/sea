@@ -3,8 +3,8 @@
 #include <vector>
 
 using Sealib::BFS;
-using Sealib::Graph;
 using Sealib::CompactArray;
+using Sealib::Graph;
 
 void BFS::init() {
   u = 0;
@@ -22,8 +22,6 @@ bool BFS::nextComponent() {
       u = a;
       found = true;
       dist = 0;
-      // innerGray = BFS_GRAY1;
-      // outerGray = BFS_GRAY2;
       if (preprocess != BFS_NOP_PROCESS) preprocess(u);
       color->insert(u, innerGray);
       break;
