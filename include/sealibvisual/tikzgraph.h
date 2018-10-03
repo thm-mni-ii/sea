@@ -28,7 +28,7 @@ class TikzGraph : public TikzElement {
 
     std::ostream &out(std::ostream &os) const override;
 
-    edge_t &addEdge(const key_t &edge);
+    edge_t &addEdge(const key_t &edge, std::string options = "--");
     map_t &getEdges();
     std::vector<node_t> &getNodes();
     bool containsEdge(const key_t &key) const;

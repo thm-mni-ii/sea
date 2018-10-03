@@ -24,8 +24,8 @@ bool TikzGraph::containsEdge(const key_t &key) const {
     return edges.count(key) > 0;
 }
 
-TikzGraph::edge_t &TikzGraph::addEdge(const key_t &key) {
-    edges[key] = edge_t(std::get<0>(key), std::get<1>(key));
+TikzGraph::edge_t &TikzGraph::addEdge(const key_t &key, std::string options) {
+    edges[key] = edge_t(std::get<0>(key), std::get<1>(key), options);
     return edges[key];
 }
 

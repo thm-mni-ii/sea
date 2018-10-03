@@ -58,8 +58,8 @@ SealibVisual::TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<SealibVisual::TikzGraph>
-SealibVisual::TikzGenerator::generateTikzElement(
-    const Sealib::basicgraph_t &t) {
+SealibVisual::TikzGenerator::generateTikzElement(const Sealib::basicgraph_t &t,
+                                                 bool directed) {
   using std::string;
   using std::shared_ptr;
   using std::tuple;
@@ -80,7 +80,11 @@ SealibVisual::TikzGenerator::generateTikzElement(
           make_tuple(to_string(a.vertex), to_string(i));
 
       if (!graph->containsEdge(key) && !graph->containsEdge(keyReverse)) {
-        graph->addEdge(key);
+        if (directed) {
+          graph->addEdge(key, "->");
+        } else {
+          graph->addEdge(key);
+        }
       }
     }
   }
