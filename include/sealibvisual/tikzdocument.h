@@ -15,16 +15,15 @@ class TikzDocument {
   std::string tikzLibraries;
   std::string gdLibraries;
   bool lualatex;
-  bool animate;
   std::ofstream file;
+  const std::string blockName = "tikzContainer";
 
   void initialize();
 
  public:
-  // ! the 'animate' option is currently broken, convert the PDF instead
+  // ! to animate the resulting document, use 'convert' on the PDF
   explicit TikzDocument(std::string filename, std::string tikzLibraries = "",
-                        std::string gdLibraries = "", bool lualatex = false,
-                        bool animate = false);
+                        std::string gdLibraries = "", bool lualatex = false);
   void close();
 
   bool isOpen();
@@ -34,6 +33,11 @@ class TikzDocument {
   void add(std::shared_ptr<SealibVisual::TikzElement> element);
   void add(const std::string &line);
   void add(const char *line);
+
+  // Starts a block. All tikzpictures in a block will be put on the same page
+  void beginBlock();
+  // Ends a block.
+  void endBlock();
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZDOCUMENT_H_

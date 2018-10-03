@@ -131,7 +131,7 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
   if (vertical) {
     array = std::shared_ptr<TikzElement>(new TikzStack(s, "", "array", true));
   } else {
-    array = std::shared_ptr<TikzElement>(new TikzStack(s, "", "array", true));
+    array = std::shared_ptr<TikzElement>(new TikzArray(s, "", "array", true));
   }
 
   std::stringstream arrayStyle;

@@ -4,14 +4,12 @@ using std::endl;
 
 SealibVisual::TikzDocument::TikzDocument(std::string filename,
                                          std::string tikzLibraries,
-                                         std::string gdLibraries, bool lualatex,
-                                         bool animate)
+                                         std::string gdLibraries, bool lualatex)
     : filename(filename),
       file(filename),
       tikzLibraries(tikzLibraries),
       gdLibraries(gdLibraries),
-      lualatex(lualatex),
-      animate(animate) {
+      lualatex(lualatex) {
   initialize();
 }
 
@@ -23,22 +21,17 @@ void SealibVisual::TikzDocument::initialize() {
   }
   file << "% Document: " << filename << endl;
   file << "% Created by sealib TikzDocument" << endl << endl;
-  file << "\\RequirePackage{luatex85}" << endl;
+  if (lualatex) file << "\\RequirePackage{luatex85}" << endl;
   file << "\\documentclass[tikz,border=20pt]{standalone}" << endl;
-  file << "\\standaloneenv{tikzContainer}" << endl;
+  file << "\\standaloneenv{" << blockName << "}" << endl;
   file << "\\usepackage{tikz}" << endl;
-  if (animate) file << "\\usepackage{animate}" << endl;
   file << "\\usetikzlibrary{" << tikzLibraries << "}" << endl;
   if (gdLibraries != "")
     file << "\\usegdlibrary{" << gdLibraries << "}" << endl;
   file << "\\begin{document}" << endl;
-  if (animate) {
-    file << "\\begin{animateinline}[controls,loop]{1}" << endl;
-  }
 }
 
 void SealibVisual::TikzDocument::close() {
-  if (animate) file << "\\end{animateinline}" << endl;
   file << "\\end{document}" << endl;
   file << "% Closing document.";
   file.close();
@@ -65,4 +58,12 @@ void SealibVisual::TikzDocument::add(const char *line) {
 
 void SealibVisual::TikzDocument::add(const SealibVisual::TikzElement &element) {
   file << element << std::endl;
+}
+
+void SealibVisual::TikzDocument::beginBlock() {
+  file << "\\begin{" << blockName << "}\n";
+}
+
+void SealibVisual::TikzDocument::endBlock() {
+  file << "\\end{" << blockName << "}\n";
 }

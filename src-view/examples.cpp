@@ -18,24 +18,24 @@ using Sealib::DFS;
 using Sealib::CompactArray;
 
 static TikzDocument *doc = nullptr;
-static std::shared_ptr<TikzGraph> tg;
 static std::shared_ptr<TikzPicture> pic;
+static std::shared_ptr<TikzGraph> tg;
 
 static CompactArray *ca;
 static std::vector<uint> *s;
 
 const char *style_white = "circle,draw=black,fill=white",
-           *style_lightgray = "circle,draw=black,fill=gray!20",
-           *style_gray = "circle,draw=black,fill=gray!75",
+           *style_lightgray = "circle,draw=black,fill=gray!50",
+           *style_gray = "circle,draw=black,fill=gray",
            *style_black = "circle,draw=black,fill=black";
 
 static unsigned bfs_inner = BFS_GRAY2, bfs_outer = BFS_GRAY1;
 
 static void bfs_emit() {
-  doc->add("\\begin{tikzContainer}");
+  doc->beginBlock();
   doc->add(pic);
   doc->add(TikzGenerator::generateTikzElement(*ca, "color"));
-  doc->add("\\end{tikzContainer}");
+  doc->endBlock();
 }
 
 static void bfs_preprocess(uint u) {
@@ -114,12 +114,11 @@ void Examples::visualBFS(std::string filename) {
 }
 
 static void dfs_emit() {
-  doc->add("\\begin{tikzContainer}");
+  doc->beginBlock();
   doc->add(pic);
   doc->add(TikzGenerator::generateTikzElement(*ca, "color"));
   doc->add(TikzGenerator::generateTikzElement(*s, "S", true));
-  doc->add("\\end{tikzContainer}");
-  // doc->add("\\newframe");
+  doc->endBlock();
 }
 
 static void dfs_preprocess(uint u) {
@@ -138,11 +137,10 @@ static void dfs_postprocess(uint u) {
 
 void Examples::visualDFS(std::string filename) {
   doc = new TikzDocument(filename, "matrix,graphdrawing,positioning",
-                         "layered,force", true, false);
+                         "layered,force", true);
   pic = std::shared_ptr<TikzPicture>(
       new TikzPicture("spring layout, sibling distance=15mm, node "
                       "distance=20mm, node sep=1cm"));
-  // root=std::shared_ptr<TikzPicture>(new TikzPicture());
 
   uint n = 10;
   BasicGraph *g = Sealib::GraphCreator::createRandomFixed(n, 2);
