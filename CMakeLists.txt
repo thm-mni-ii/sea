@@ -27,7 +27,7 @@ ExternalProject_Add(GTEST_PROJECT
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS -DINSTALL_GTEST=OFF -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++
         INSTALL_COMMAND ""
-        BUILD_COMMAND "${MAKE}" --build .)
+        BUILD_COMMAND "${MAKE}" -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++ --build .)
 
 ExternalProject_Get_Property(GTEST_PROJECT source_dir)
 ExternalProject_Get_Property(GTEST_PROJECT binary_dir)

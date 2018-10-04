@@ -1,4 +1,4 @@
-#include "sealib/basicgraph.h"
+#include <sealib/basicgraph.h>
 
 using Sealib::BasicGraph;
 using Sealib::Node;
