@@ -137,9 +137,9 @@ void testSubGraphStack() {
 
     unsigned int order = 4;
     auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * 4 * 4);
-    adj_mtrx[0] = new unsigned int[order]{0, 0, 1, 1};
-    adj_mtrx[1] = new unsigned int[order]{0, 0, 0, 0};
-    adj_mtrx[2] = new unsigned int[order]{1, 0, 0, 0};
+    adj_mtrx[0] = new unsigned int[order]{0, 1, 1, 1};
+    adj_mtrx[1] = new unsigned int[order]{1, 0, 1, 0};
+    adj_mtrx[2] = new unsigned int[order]{1, 1, 0, 0};
     adj_mtrx[3] = new unsigned int[order]{1, 0, 0, 0};
 
     /**
@@ -155,7 +155,24 @@ void testSubGraphStack() {
     std::shared_ptr<Sealib::BasicGraph> bg =
         Sealib::GraphCreator::createSharedGraphFromAdjacencyMatrix(adj_mtrx, order);
 
-    Sealib::SubgraphStack stack(bg);
+    Sealib::SubGraphStack stack(bg);
+    std::cout << stack.g(1, 1) << std::endl;
+    std::cout << stack.g(1, 2) << std::endl;
+    std::cout << stack.g(1, 3) << std::endl;
+
+    std::cout << stack.g(2, 1) << std::endl;
+    std::cout << stack.g(2, 2) << std::endl;
+
+    std::cout << stack.g(3, 1) << std::endl;
+    std::cout << stack.g(3, 2) << std::endl;
+
+    std::cout << stack.g(4, 1) << std::endl;
+
+    std::cout << stack.order() << std::endl;
+    for (unsigned int i = 1; i <= 8; i++) {
+        std::tuple<unsigned long, unsigned long> gInv = stack.gInv(i);
+        std::cout << std::get<0>(gInv) << "," << std::get<1>(gInv) << std::endl;
+    }
 }
 
 int main() {
