@@ -1,6 +1,7 @@
 #ifndef SEALIB_BFS_H_
 #define SEALIB_BFS_H_
 
+#include <functional>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
@@ -11,11 +12,8 @@
 #define BFS_GRAY2 2
 #define BFS_BLACK 3
 
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
-
-#define BFS_NOP_PROCESS (UserFunc1)0
-#define BFS_NOP_EXPLORE (UserFunc2)0
+#define BFS_NOP_PROCESS [](uint) {}        // NOLINT
+#define BFS_NOP_EXPLORE [](uint, uint) {}  // NOLINT
 
 namespace Sealib {
 /**
@@ -63,7 +61,8 @@ class BFS : Iterator<Pair> {
   * @param preprocess to be executed before processing a node u
   * @param preexplore to be executed before exploring an edge (u,v)
   */
-  BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe);
+  BFS(Graph *graph, UserFunc1 preprocess, UserFunc2 preexplore);
+  BFS(Graph *g, CompactArray *c, UserFunc1 preprocess, UserFunc2 preexplore);
 
   ~BFS();
 
@@ -71,6 +70,7 @@ class BFS : Iterator<Pair> {
   Graph *g;
   uint n;
   CompactArray *color;
+  bool externalCA = false;
   uint u, dist;
   unsigned innerGray, outerGray;
   UserFunc1 preprocess;

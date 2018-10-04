@@ -8,6 +8,7 @@
 #include <iostream>
 using SealibVisual::Examples;
 using SealibVisual::VisualDFS;
+using SealibVisual::VisualBFS;
 using SealibVisual::TikzDocument;
 using SealibVisual::TikzPicture;
 using SealibVisual::TikzGenerator;
@@ -17,14 +18,61 @@ using Sealib::BasicGraph;
 using Sealib::BFS;
 using Sealib::DFS;
 using Sealib::CompactArray;
-using Sealib::SegmentStack;
+using Sealib::ExtendedSegmentStack;
 
 const char *Examples::style_white = "circle,draw=black,fill=white",
            *Examples::style_lightgray = "circle,draw=black,fill=gray!50",
            *Examples::style_gray = "circle,draw=black,fill=gray",
            *Examples::style_black = "circle,text=white,fill=black";
 
-VisualDFS::VisualDFS(Graph *g, CompactArray *c, SegmentStack *s,
+//  --- VISUAL BREADTH-FIRST SEARCH ---
+
+VisualBFS::VisualBFS(Graph *g, CompactArray *c, std::string filename)
+    : g(g),
+      tg(TikzGenerator::generateTikzElement(*static_cast<BasicGraph *>(g),
+                                            true)),
+      c(c),
+      doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
+                           "layered,force", true)),
+      pic(new TikzPicture("spring layout, sibling distance=15mm, node "
+                          "distance=20mm, node sep=1cm, arrows={->}, line "
+                          "width=1pt, color=black")) {
+  pic->add(tg);
+}
+
+void VisualBFS::emit() {
+  doc->beginBlock();
+  doc->add(pic);
+  doc->add(TikzGenerator::generateTikzElement(*c, "color"));
+  doc->endBlock();
+}
+
+void VisualBFS::run() {
+  BFS b(g, c,
+        [this](uint u) {
+          emit();
+          tg->getNodes().at(u).setOptions(Examples::style_lightgray);
+        },
+        [this](uint u, uint v) {
+          if (tg->getNodes().at(u).getOptions() != Examples::style_gray) {
+            tg->getNodes().at(u).setOptions(Examples::style_gray);
+            emit();
+          }
+        });
+  b.init();
+  do {
+    while (b.more()) {
+      Pair p = b.next();
+      tg->getNodes().at(p.head()).setOptions(Examples::style_black);
+      emit();
+    }
+  } while (b.nextComponent());
+  doc->close();
+}
+
+// --- VISUAL DEPTH-FIRST SEARCH
+
+VisualDFS::VisualDFS(Graph *g, CompactArray *c, ExtendedSegmentStack *s,
                      std::string filename)
     : g(g),
       tg(TikzGenerator::generateTikzElement(*static_cast<BasicGraph *>(g),
@@ -39,40 +87,28 @@ VisualDFS::VisualDFS(Graph *g, CompactArray *c, SegmentStack *s,
   pic->add(tg);
 }
 
-void VisualDFS::preprocess(uint u) {
-  tg->getNodes().at(u).setOptions(Examples::style_gray);
-  emit();
-}
-
-void VisualDFS::postprocess(uint u) {
-  tg->getNodes().at(u).setOptions(Examples::style_black);
-  emit();
-}
-
 void VisualDFS::emit() {
-  std::cout << "emit " << this << "\n";
   doc->beginBlock();
   doc->add(pic);
   doc->add(TikzGenerator::generateTikzElement(*c, "color"));
-  std::vector<uint> l, h;
+  std::vector<uint> l, h, t;
   for (uint a = 0; a < s->lp; a++) l.push_back(s->low[a].head());
   for (uint a = 0; a < s->hp; a++) h.push_back(s->high[a].head());
+  for (uint a = 0; a < s->tp; a++) t.push_back(s->trailers[a].x.head());
   doc->add(TikzGenerator::generateTikzElement(l, "$S_L$", true));
   doc->add(TikzGenerator::generateTikzElement(h, "$S_H$", true));
+  doc->add(TikzGenerator::generateTikzElement(t, "T", true));
   doc->endBlock();
 }
 
 void VisualDFS::run() {
-  std::cout << "run " << this << "\n";
   for (uint u = 0; u < g->getOrder(); u++) {
-    DFS::process_small(u, g, c,
-                       reinterpret_cast<Sealib::ExtendedSegmentStack *>(s),
-                       DFS::restore_top, DFS_NOP_PROCESS,
-                       [this](uint u, uint v) {
-                         tg->getNodes().at(u).setOptions(Examples::style_gray);
+    DFS::process_small(u, g, c, s, DFS::restore_top,
+                       [this](uint u) {
                          emit();
+                         tg->getNodes().at(u).setOptions(Examples::style_gray);
                        },
-                       DFS_NOP_EXPLORE,
+                       DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                        [this](uint u) {
                          tg->getNodes().at(u).setOptions(Examples::style_black);
                          emit();

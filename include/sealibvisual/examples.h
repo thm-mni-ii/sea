@@ -18,21 +18,35 @@ class Examples {
   static const char *style_white, *style_lightgray, *style_gray, *style_black;
 };
 
-class VisualDFS {
+class VisualBFS {
  private:
   Sealib::Graph *g;
-  Sealib::SegmentStack *s;
   Sealib::CompactArray *c;
   TikzDocument *doc;
   std::shared_ptr<TikzPicture> pic;
   std::shared_ptr<TikzGraph> tg;
 
  public:
-  VisualDFS(Sealib::Graph *, Sealib::CompactArray *, Sealib::SegmentStack *,
+  VisualBFS(Sealib::Graph *, Sealib::CompactArray *,
             std::string filename = "example.tex");
   void run();
-  void preprocess(uint);
-  void postprocess(uint);
+  void emit();
+};
+
+class VisualDFS {
+ private:
+  Sealib::Graph *g;
+  Sealib::ExtendedSegmentStack *s;
+  Sealib::CompactArray *c;
+  TikzDocument *doc;
+  std::shared_ptr<TikzPicture> pic;
+  std::shared_ptr<TikzGraph> tg;
+
+ public:
+  VisualDFS(Sealib::Graph *, Sealib::CompactArray *,
+            Sealib::ExtendedSegmentStack *,
+            std::string filename = "example.tex");
+  void run();
   void emit();
 };
 }  // namespace SealibVisual

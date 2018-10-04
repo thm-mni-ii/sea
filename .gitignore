@@ -24,6 +24,9 @@ DartConfiguration.tcl
 *.bib
 *.tex
 *.pdf
+*.nav
+*.snm
+*.toc
 # uncomment to whitelist:
 #!mysample1.pdf
 

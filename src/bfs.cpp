@@ -11,7 +11,7 @@ void BFS::init() {
   dist = 0;
   innerGray = BFS_GRAY1;
   outerGray = BFS_GRAY2;
-  if (preprocess != BFS_NOP_PROCESS) preprocess(0);
+  preprocess(0);
   color->insert(0, innerGray);
 }
 
@@ -24,7 +24,7 @@ bool BFS::nextComponent() {
       dist = 0;
       // innerGray = BFS_GRAY1;
       // outerGray = BFS_GRAY2;
-      if (preprocess != BFS_NOP_PROCESS) preprocess(u);
+      preprocess(u);
       color->insert(u, innerGray);
       break;
     }
@@ -78,14 +78,20 @@ Pair BFS::next() {
   }
   for (uint k = 0; k < g->getNodeDegree(u); k++) {
     uint v = g->head(u, k);
-    if (preexplore != BFS_NOP_EXPLORE) preexplore(u, v);
+    preexplore(u, v);
     if (color->get(v) == BFS_WHITE) {
-      if (preprocess != BFS_NOP_PROCESS) preprocess(v);
+      preprocess(v);
       color->insert(v, outerGray);
     }
   }
   color->insert(u, BFS_BLACK);
   return Pair(u, dist);
+}
+
+BFS::BFS(Graph *graph, CompactArray *c, UserFunc1 pp, UserFunc2 pe)
+    : g(graph), n(g->getOrder()), color(c), preprocess(pp), preexplore(pe) {
+  for (uint a = 0; a < n; a++) color->insert(a, BFS_WHITE);
+  externalCA = true;
 }
 
 BFS::BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe)
@@ -97,4 +103,6 @@ BFS::BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe)
   for (uint a = 0; a < n; a++) color->insert(a, BFS_WHITE);
 }
 
-BFS::~BFS() { delete color; }
+BFS::~BFS() {
+  if (!externalCA) delete color;
+}

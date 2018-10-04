@@ -18,8 +18,8 @@
  * (DFS_NOP_PROCESS,DFS_NOP_EXPLORE,DFS_NOP_EXPLORE,DFS_NOP_PROCESS) to run it
  * silently.
  */
-#define DFS_NOP_PROCESS [](uint) {}
-#define DFS_NOP_EXPLORE [](uint, uint) {}
+#define DFS_NOP_PROCESS [](uint) {}        // NOLINT
+#define DFS_NOP_EXPLORE [](uint, uint) {}  // NOLINT
 
 namespace Sealib {
 /**

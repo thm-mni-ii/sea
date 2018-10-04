@@ -8,6 +8,7 @@
 #ifdef VISUALIZE
 namespace Sealib {
 class SegmentStack;
+class ExtendedSegmentStack;
 }
 
 #include "sealibvisual/examples.h"
@@ -33,9 +34,6 @@ namespace Sealib {
   @author Simon Heuser
 */
 class SegmentStack {
-#ifdef VISUALIZE
-  friend class SealibVisual::VisualDFS;
-#endif
  public:
   virtual int push(Pair u) = 0;
   int pop(Pair *r);
@@ -49,6 +47,10 @@ class SegmentStack {
   unsigned q;
   Pair *low, *high;
   unsigned lp, hp, tp;
+
+#ifdef VISUALIZE
+  friend class SealibVisual::VisualDFS;
+#endif
 };
 
 /**
@@ -138,6 +140,10 @@ class ExtendedSegmentStack : public SegmentStack {
 
   static constexpr unsigned INVALID = static_cast<unsigned>(-1);
   void storeEdges();
+
+#ifdef VISUALIZE
+  friend class SealibVisual::VisualDFS;
+#endif
 };
 }  // namespace Sealib
 #endif  // SEALIB_SEGMENTSTACK_H_
