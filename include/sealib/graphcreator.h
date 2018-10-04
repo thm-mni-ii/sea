@@ -1,8 +1,8 @@
 #ifndef SEALIB_GRAPHCREATOR_H_
 #define SEALIB_GRAPHCREATOR_H_
 
-#include <random>
 #include <sealib/basicgraph.h>
+#include <random>
 #include <memory>
 
 namespace Sealib {
@@ -65,7 +65,8 @@ class GraphCreator {
                                                                   unsigned int order2,
                                                                   double p,
                                                                   unsigned int seed);
-    static std::shared_ptr<BasicGraph> createSharedGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
+    static std::shared_ptr<BasicGraph>
+    createSharedGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_

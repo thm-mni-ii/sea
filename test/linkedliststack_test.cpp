@@ -8,18 +8,12 @@ TEST(ListListStackTest, linked_list_stack) {
     stack->push(3);
     stack->push(2);
     stack->push(1);
-
-    std::cout << (*stack) << std::endl;
-
     size_t size = stack->size();
-    for(int i = 1; i <= size; i++) {
+    for (int i = 1; i <= size; i++) {
         ASSERT_EQ(stack->peek(), i);
         stack->pop();
     }
-
     ASSERT_EQ(stack->size(), 0);
-
-
     delete stack;
 }
 

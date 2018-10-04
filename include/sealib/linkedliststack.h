@@ -26,11 +26,6 @@ class LinkedListStack {
         top = NULL;
     }
 
-    void push(T t) {
-        top = new node(t, top);
-        count++;
-    }
-
     void push(const T &t) {
         top = new node(t, top);
         count++;
