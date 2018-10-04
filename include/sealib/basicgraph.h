@@ -55,7 +55,7 @@ class BasicGraph : public Graph {
      */
     const Node &getNode(unsigned int u) const;
 
-    ~Basicgraph();
+    ~BasicGraph() override = default;
 
     /**
      * Getter for a specific node in the nodes array.
