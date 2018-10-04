@@ -36,6 +36,8 @@ class BasicGraph : public Graph {
      */
     BasicGraph();
 
+    ~BasicGraph() override = default;
+
     /**
      * Created a graph with the specified order and without any edges.
      * @param order - order of the graph
@@ -54,8 +56,6 @@ class BasicGraph : public Graph {
      * @return Pointer to the Node in the nodes array.
      */
     const Node &getNode(unsigned int u) const;
-
-    ~BasicGraph() override = default;
 
     /**
      * Getter for a specific node in the nodes array.

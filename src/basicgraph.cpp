@@ -3,16 +3,20 @@
 using Sealib::BasicGraph;
 using Sealib::Node;
 
-Sealib::BasicGraph::BasicGraph(Node *nodes_, unsigned int order_) : nodes(order_) {
-    for (unsigned int i = 0; i < order_; i++) {
+Sealib::BasicGraph::BasicGraph(Node *nodes_, unsigned int order_) : nodes(order_){
+    for(unsigned int i = 0; i < order_; i++) {
         nodes[i] = nodes_[i];
     }
 }
-Sealib::BasicGraph::BasicGraph(const std::vector<Sealib::Node> &nodes_) : nodes(nodes_) {}
+Sealib::BasicGraph::BasicGraph(const std::vector<Sealib::Node> &nodes_) : nodes(nodes_){
 
-Sealib::BasicGraph::BasicGraph() : nodes(0) {}
+}
+Sealib::BasicGraph::BasicGraph() : nodes(0){
 
-Sealib::BasicGraph::BasicGraph(unsigned int order) : nodes(order) {}
+}
+Sealib::BasicGraph::BasicGraph(unsigned int order) : nodes(order){
+
+}
 
 void Sealib::BasicGraph::addNode(const Sealib::Node &node) {
     nodes.emplace_back(node);
