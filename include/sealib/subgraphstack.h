@@ -16,15 +16,15 @@ class RecursiveSubGraph;
 
 namespace Sealib {
 class SubGraphStack {
+    static unsigned long refs[6];
+
     friend class SubGraph;
     friend class RecursiveSubGraph;
     friend class BaseSubGraph;
 
  private:
     std::vector<SubGraph *> clientList;
-
     unsigned long currentRef;
-    static unsigned long refs[6] = {0, 1, 3, 15, 65535, (unsigned long) - 1};
 
  public:
     explicit SubGraphStack(std::shared_ptr<BasicGraph> g_);

@@ -89,7 +89,7 @@ unsigned long Sealib::RecursiveSubGraph::psiInv(unsigned long a) const {
 }
 
 Sealib::SubGraph::bitset_t Sealib::RecursiveSubGraph::initializeVSelect(const bitset_t &v) {
-    if (stack->refs[ridx] == sidx - 1) {
+    if (stack_t::refs[ridx] == sidx - 1) {
         return v;
     } else {
         auto *gL = (RecursiveSubGraph *) stack->clientList[sidx - 1];
@@ -104,7 +104,7 @@ Sealib::SubGraph::bitset_t Sealib::RecursiveSubGraph::initializeVSelect(const bi
 }
 
 Sealib::SubGraph::bitset_t Sealib::RecursiveSubGraph::initializeASelect(const bitset_t &a) {
-    if (stack->refs[ridx] == sidx - 1) {
+    if (stack_t::refs[ridx] == sidx - 1) {
         return a;
     } else {
         auto *gL = (RecursiveSubGraph *) stack->clientList[sidx - 1];

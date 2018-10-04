@@ -8,6 +8,8 @@ using Sealib::BaseSubGraph;
 using Sealib::RecursiveSubGraph;
 using Sealib::SubGraphStack;
 
+unsigned long SubGraphStack::refs[6] = {0, 1, 3, 15, 65535, (unsigned long) - 1};
+
 SubGraphStack::SubGraphStack(std::shared_ptr<BasicGraph> g_) : clientList() {
     clientList.emplace_back(new BaseSubGraph(this, g_));
 }
@@ -18,7 +20,7 @@ SubGraphStack::~SubGraphStack() {
     }
 }
 void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &v, const Sealib::Bitset<unsigned char> &e) {
-    if(clientList.size() > refs[currentRef]) {
+    if(clientList.size() > Sealib::SubGraphStack::refs[currentRef]) {
         currentRef++;
     }
     SubGraph *g = new RecursiveSubGraph(this, clientList.size(), currentRef, v, e);
@@ -84,10 +86,10 @@ unsigned long Sealib::SubGraphStack::phi(unsigned long i, unsigned long j, unsig
 
 unsigned long Sealib::SubGraphStack::psi(unsigned long i, unsigned long j, unsigned long a) {
     if (i == j) {
-        return u;
+        return a;
     } else if (i > j) {
         unsigned long rIdx = clientList[i]->getRidx();
-        unsigned long uR = clientList[i]->psi(u);
+        unsigned long uR = clientList[i]->psi(a);
 
         while (rIdx != clientList[j]->getRidx()) {
             uR = clientList[refs[rIdx]]->psi(uR);
@@ -95,7 +97,7 @@ unsigned long Sealib::SubGraphStack::psi(unsigned long i, unsigned long j, unsig
         }
         return clientList[j]->psiInv(uR);
     } else {
-        unsigned long uR = clientList[i]->psi(u);
+        unsigned long uR = clientList[i]->psi(a);
         unsigned long rIdx = clientList[i]->getRidx();
 
         while(rIdx != clientList[j]->getRidx()) {
