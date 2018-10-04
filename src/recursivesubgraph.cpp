@@ -8,7 +8,8 @@ Sealib::RecursiveSubGraph::~RecursiveSubGraph() {}
 
 Sealib::RecursiveSubGraph::RecursiveSubGraph(Sealib::SubGraph *rGraph_,
                                              const Sealib::Bitset<unsigned char> &v,
-                                             const Sealib::Bitset<unsigned char> &e) : SubGraph(v, e) {}
+                                             const Sealib::Bitset<unsigned char> &e) :
+    SubGraph(v, e) {}
 
 Sealib::SubGraph::bitset_t Sealib::RecursiveSubGraph::initializeQSelect() {
     return Sealib::SubGraph::bitset_t();
