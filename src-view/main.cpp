@@ -16,7 +16,6 @@
 #include <ctime>
 #include <cmath>
 
-
 using std::cout;
 using std::stack;
 using Sealib::Compactgraph;
@@ -172,7 +171,13 @@ void testSubGraphStack() {
     for (unsigned int i = 1; i <= 8; i++) {
         std::tuple<unsigned long, unsigned long> gInv = stack.gInv(i);
         std::cout << std::get<0>(gInv) << "," << std::get<1>(gInv) << std::endl;
+        std::cout << "psi " << i << ": " << stack.psi(i) << std::endl;
     }
+    
+    for(unsigned int i = 1; i <= 4; i++) {
+        std::cout << "phi " << i << ": " << stack.phi(i) << std::endl;
+    }
+
 }
 
 int main() {

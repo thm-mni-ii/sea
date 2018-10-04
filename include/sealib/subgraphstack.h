@@ -129,6 +129,48 @@ class SubGraphStack {
     unsigned long psi(unsigned long i, unsigned long j, unsigned long a);
 
     /**
+     * @return translation of the u'th node in G_l = the top graph to the isomorph node in G_j
+     */
+    inline unsigned long phi(unsigned long j, unsigned long u) {
+        return phi(clientList.size() - 1, j, u);
+    }
+
+    /**
+     * @return translation of the a'th arc in G_l = the top graph of to the isomorph arc in G_j
+     */
+    inline unsigned long psi(unsigned long j, unsigned long a) {
+        return psi(clientList.size() - 1, j, a);
+    }
+
+    /**
+     * @return translation of the u'th node in G_l = the top graph to the isomorph node in G_0
+     */
+    inline unsigned long phi(unsigned long u) {
+        return phi(clientList.size() - 1, 0, u);
+    }
+
+    /**
+     * @return translation of the a'th arc in G_l = the top graph of to the isomorph arc in G_0
+     */
+    inline unsigned long psi(unsigned long a) {
+        return psi(clientList.size() - 1, 0, a);
+    }
+
+    /**
+     * @return  translation of the u'th node in G_0 to G_l = the top graph
+     */
+    inline unsigned long phiInv(unsigned long u) {
+        return phi(0, clientList.size() - 1, u);
+    }
+
+    /**
+     * @return translation of the a'th arc in G_0 to G_l = the top graph
+     */
+    inline unsigned long psiInv(unsigned long a) {
+        return psi(0, clientList.size() - 1, a);
+    }
+
+    /**
      * Speeds up the calls of phi, psi, g, gInv, head, mate, order and degree
      * for the graph G_l that is currently on the top of the stack.
      * This is done by creating rankSelect structures for the direct translation between G_0 and G_l
