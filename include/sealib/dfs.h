@@ -5,14 +5,12 @@
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
 #include "sealib/node.h"
+#include "sealib/segmentstack.h"
 
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
 #define DFS_RESERVED 3
-
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
 
 /**
  * These two functions symbolize a NOP: you can call a DFS which accepts
@@ -20,8 +18,8 @@ typedef void (*UserFunc2)(uint, uint);
  * (DFS_NOP_PROCESS,DFS_NOP_EXPLORE,DFS_NOP_EXPLORE,DFS_NOP_PROCESS) to run it
  * silently.
  */
-#define DFS_NOP_PROCESS (UserFunc1)0
-#define DFS_NOP_EXPLORE (UserFunc2)0
+#define DFS_NOP_PROCESS [](uint) {}
+#define DFS_NOP_EXPLORE [](uint, uint) {}
 
 namespace Sealib {
 /**
@@ -74,9 +72,10 @@ class DFS {
   * @param postexplore to be executed after exploring an edge (u,v)
   * @param postprocess to be executed after processing a node u
   */
-  static void nloglognBitDFS(Graph *g, UserFunc1 preprocess,
-                             UserFunc2 preexplore, UserFunc2 postexplore,
-                             UserFunc1 postprocess);
+  static void nloglognBitDFS(Graph *g, UserFunc1 preprocess = DFS_NOP_PROCESS,
+                             UserFunc2 preexplore = DFS_NOP_EXPLORE,
+                             UserFunc2 postexplore = DFS_NOP_EXPLORE,
+                             UserFunc1 postprocess = DFS_NOP_PROCESS);
 
   /**
    * Runs an inplace DFS in linear time over a graph that is given in a special
@@ -89,6 +88,31 @@ class DFS {
   static void runLinearTimeInplaceDFS(unsigned int *graph, UserFunc1 preProcess,
                                       UserFunc1 postProcess,
                                       unsigned int startVertex);
+
+ private:
+  static void process_standard(uint u0, Graph *g, uint *color,
+                               UserFunc1 preProcess, UserFunc2 preExplore,
+                               UserFunc2 postExplore, UserFunc1 postProcess);
+
+  template <class SS>
+  static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
+                            void (*restoration)(uint, Graph *, CompactArray *,
+                                                SS *),
+                            UserFunc1 preProcess, UserFunc2 preExplore,
+                            UserFunc2 postExplore, UserFunc1 postProcess);
+
+  static void restore_full(uint u0, Graph *g, CompactArray *color,
+                           BasicSegmentStack *s);
+
+  static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
+                                        CompactArray *c,
+                                        ExtendedSegmentStack *s);
+  static void restore_top(uint u0, Graph *g, CompactArray *color,
+                          ExtendedSegmentStack *s);
+
+#ifdef VISUALIZE
+  friend class SealibVisual::VisualDFS;
+#endif
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_

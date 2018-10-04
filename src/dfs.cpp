@@ -3,7 +3,6 @@
 #include <sstream>
 #include <stack>
 #include "./inplacerunner.h"
-#include "./segmentstack.h"
 
 using Sealib::DFS;
 using Sealib::SegmentStack;
@@ -13,9 +12,9 @@ using Sealib::CompactArray;
 using Sealib::Graph;
 using Sealib::Node;
 
-static void process_standard(uint u0, Graph *g, uint *color,
-                             UserFunc1 preProcess, UserFunc2 preExplore,
-                             UserFunc2 postExplore, UserFunc1 postProcess) {
+void DFS::process_standard(uint u0, Graph *g, uint *color, UserFunc1 preProcess,
+                           UserFunc2 preExplore, UserFunc2 postExplore,
+                           UserFunc1 postProcess) {
   std::stack<Pair> *s = new std::stack<Pair>;
   s->push(Pair(u0, 0));
   while (!s->empty()) {
@@ -24,36 +23,36 @@ static void process_standard(uint u0, Graph *g, uint *color,
     uint u = x.head();
     uint k = x.tail();
     if (color[u] == DFS_WHITE) {
-      if (preProcess != DFS_NOP_PROCESS) preProcess(u);
+      preProcess(u);
       color[u] = DFS_GRAY;
     }
     if (k < g->getNodeDegree(u)) {
       s->push(Pair(u, k + 1));
       uint v = g->head(u, k);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
+      preExplore(u, v);
       if (color[v] == DFS_WHITE) {
         s->push(Pair(v, 0));
       } else {
-        if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
+        postExplore(u, v);
       }
     } else {
-      if (postExplore != DFS_NOP_EXPLORE && u != u0) {
+      if (u != u0) {
         uint pu = s->top().head();
         postExplore(pu, u);
       }
       color[u] = DFS_BLACK;
-      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
+      postProcess(u);
     }
   }
   delete s;
 }
 
 template <class SS>
-static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
-                          void (*restoration)(uint, Graph *, CompactArray *,
-                                              SS *),
-                          UserFunc1 preProcess, UserFunc2 preExplore,
-                          UserFunc2 postExplore, UserFunc1 postProcess) {
+void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
+                        void (*restoration)(uint, Graph *, CompactArray *,
+                                            SS *),
+                        UserFunc1 preProcess, UserFunc2 preExplore,
+                        UserFunc2 postExplore, UserFunc1 postProcess) {
   s->push(Pair(u0, 0));
   Pair x;
   while (!s->isEmpty()) {
@@ -68,20 +67,20 @@ static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
     u = x.head();
     k = x.tail();
     if (color->get(u) == DFS_WHITE) {
-      if (preProcess != DFS_NOP_PROCESS) preProcess(u);
+      preProcess(u);
       color->insert(u, DFS_GRAY);
     }
     if (k < g->getNodeDegree(u)) {
       s->push(Pair(u, k + 1));
       uint v = g->head(u, k);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
+      preExplore(u, v);
       if (color->get(v) == DFS_WHITE) {
         s->push(Pair(v, 0));
       } else {
-        if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
+        postExplore(u, v);
       }
     } else {
-      if (postExplore != DFS_NOP_EXPLORE && u != u0) {
+      if (u != u0) {
         Pair px;
         sr = s->pop(&px);
         if (sr == DFS_DO_RESTORE) {
@@ -93,13 +92,13 @@ static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
         s->push(px);
       }
       color->insert(u, DFS_BLACK);
-      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
+      postProcess(u);
     }
   }
 }
 
-static void restore_full(uint u0, Graph *g, CompactArray *color,
-                         BasicSegmentStack *s) {
+void DFS::restore_full(uint u0, Graph *g, CompactArray *color,
+                       BasicSegmentStack *s) {
   s->saveTrailer();
   s->dropAll();
   for (uint a = 0; a < g->getOrder(); a++) {
@@ -131,9 +130,8 @@ static void restore_full(uint u0, Graph *g, CompactArray *color,
  *    k: outgoing edge that points to a gray, top-segment node (if c is false, k
  * is an 'enclosing' edge)
  */
-static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
-                                      CompactArray *c,
-                                      ExtendedSegmentStack *s) {
+std::pair<bool, uint> DFS::findEdge(const uint u, const uint k, Graph *g,
+                                    CompactArray *c, ExtendedSegmentStack *s) {
   std::pair<bool, uint> r = std::make_pair(false, static_cast<uint>(-1));
   for (uint i = k; i < g->getNodeDegree(u); i++) {
     uint v = g->head(u, i);
@@ -150,8 +148,8 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
   return r;
 }
 
-static void restore_top(uint u0, Graph *g, CompactArray *color,
-                        ExtendedSegmentStack *s) {
+void DFS::restore_top(uint u0, Graph *g, CompactArray *color,
+                      ExtendedSegmentStack *s) {
   Pair x;
   uint u = u0, k = 0;
   if (s->getRestoreTrailer(&x) == 1) {

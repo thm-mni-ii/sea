@@ -1,9 +1,17 @@
-#ifndef SRC_SEGMENTSTACK_H_
-#define SRC_SEGMENTSTACK_H_
+#ifndef SEALIB_SEGMENTSTACK_H_
+#define SEALIB_SEGMENTSTACK_H_
 
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
+
+#ifdef VISUALIZE
+namespace Sealib {
+class SegmentStack;
+}
+
+#include "sealibvisual/examples.h"
+#endif
 
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
@@ -25,6 +33,9 @@ namespace Sealib {
   @author Simon Heuser
 */
 class SegmentStack {
+#ifdef VISUALIZE
+  friend class SealibVisual::VisualDFS;
+#endif
  public:
   virtual int push(Pair u) = 0;
   int pop(Pair *r);
@@ -129,4 +140,4 @@ class ExtendedSegmentStack : public SegmentStack {
   void storeEdges();
 };
 }  // namespace Sealib
-#endif  // SRC_SEGMENTSTACK_H_
+#endif  // SEALIB_SEGMENTSTACK_H_

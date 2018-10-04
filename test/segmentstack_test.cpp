@@ -1,4 +1,4 @@
-#include "../src/segmentstack.h"
+#include "sealib/segmentstack.h"
 #include <gtest/gtest.h>
 #include <math.h>
 #include "sealib/compactarray.h"

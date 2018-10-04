@@ -275,11 +275,18 @@ void tikz_example3() {
 }
 
 using SealibVisual::Examples;
-void tikz_example4() {}
+using SealibVisual::VisualDFS;
+void tikz_example4() {
+  uint n=10;
+  BasicGraph *g=Sealib::GraphCreator::createRandomFixed(10,3);
+  Sealib::CompactArray c(n,3);
+  Sealib::ExtendedSegmentStack s(n,g,&c);
+  VisualDFS d(g,&c,&s,"out-dfs2.tex");
+  d.run();
+}
 
 int main() {
   tikz_example();
-  tikz_example3();
+  tikz_example4();
   Examples::visualBFS("out-bfs2.tex");
-  // Examples::visualDFS("out-dfs.tex");
 }
