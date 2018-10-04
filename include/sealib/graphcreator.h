@@ -1,8 +1,8 @@
 #ifndef SEALIB_GRAPHCREATOR_H_
 #define SEALIB_GRAPHCREATOR_H_
 
+#include <sealib/basicgraph.h>
 #include <random>
-#include "sealib/basicgraph.h"
 #include <memory>
 
 namespace Sealib {

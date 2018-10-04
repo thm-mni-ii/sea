@@ -28,7 +28,6 @@ BasicGraph GraphCreator::createGraphFromAdjacencyMatrix(
         }
         nodes[i] = Node(adj);
     }
-
     for (unsigned int i = 0; i < order; i++) {
         const unsigned int deg = nodes[i].getDegree();
         std::vector<Adjacency> adj_arr = nodes[i].getAdj();
@@ -120,8 +119,8 @@ std::shared_ptr<BasicGraph> GraphCreator::createSharedGraphFromAdjacencyMatrix(
                     if (_adj_arr[_j].crossIndex ==
                         std::numeric_limits<unsigned int>::max() &&
                         _adj_arr[_j].vertex == i) {
-                        _adj_arr[_j].crossIndex = j;
-                        adj_arr[j].crossIndex = _j;
+                        nodes[v].setCrossIndex(_j, j);
+                        nodes[i].setCrossIndex(j, _j);
                         break;
                     }
                     std::vector<Adjacency> adj(deg);

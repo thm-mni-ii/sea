@@ -4,6 +4,7 @@
 #include <sealib/compactgraph.h>
 #include <sealib/runtimetest.h>
 #include <sealib/_types.h>
+#include <sealib/subgraphstack.h>
 #include <iostream>
 #include <chrono>
 #include <stack>
@@ -13,8 +14,7 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
-#include <include/sealib/linkedliststack.h>
-#include <include/sealib/subgraphstack.h>
+
 
 using std::cout;
 using std::stack;
