@@ -281,9 +281,9 @@ void tikz_exampleDFS() {
   uint n = 10;
   BasicGraph *g = Sealib::GraphCreator::createRandomFixed(n, 3);
   Sealib::CompactArray c(n, 3);
-  Sealib::ExtendedSegmentStack s(n, g, &c);
-  VisualDFS d(g, &c, &s, "out-dfs3.tex", "beamer");
+  VisualDFS d(g, &c, "out-dfs3.tex", "beamer");
   d.run();
+  delete g;
 }
 
 void tikz_exampleBFS() {
@@ -292,6 +292,7 @@ void tikz_exampleBFS() {
   Sealib::CompactArray c(n, 4);
   VisualBFS b(g, &c, "out-bfs3.tex");
   b.run();
+  delete g;
 }
 
 int main() {

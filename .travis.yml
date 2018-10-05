@@ -8,7 +8,7 @@ addons:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-trusty-5.0
     packages:
-      - g++-6
+    #  - g++-6
       - clang-5.0
 
 cache:
@@ -24,7 +24,7 @@ script:
   - cpplint ./include/*/*.*
   - cpplint ./src-view/*.*
   - cpplint ./test/*.*
-  - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 . && make && ./bin/tests
+  - cmake -DCOVERAGE=1 -DCMAKE_CXX_COMPILER=clang++ . && make && ./bin/tests
 
 after_success:
   - coveralls --root .  -E ".*CMakeFiles.*" -e test -e third-party -e src-view -e include --gcov-options '\-lp'

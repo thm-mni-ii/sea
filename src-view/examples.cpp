@@ -72,8 +72,8 @@ void VisualBFS::run() {
 
 // --- VISUAL DEPTH-FIRST SEARCH
 
-VisualDFS::VisualDFS(BasicGraph *g, CompactArray *c, ExtendedSegmentStack *s,
-                     std::string filename, std::string mode)
+VisualDFS::VisualDFS(BasicGraph *g, CompactArray *c, std::string filename,
+                     std::string mode)
     : ExtendedSegmentStack(g->getOrder(), g, c),
       g(g),
       tg(TikzGenerator::generateTikzElement(*g, true)),
@@ -103,8 +103,8 @@ void VisualDFS::emit() {
 void VisualDFS::run() {
   for (uint u = 0; u < g->getOrder(); u++) {
     if (c->get(u) == DFS_WHITE) {
-      DFS::process_small<ExtendedSegmentStack>(
-          u, g, c, this, DFS::restore_top,
+      process_small<ExtendedSegmentStack>(
+          u, g, c, this, restore_top,
           [this](uint u) {
             tg->getNodes().at(u).setOptions(Examples::style_gray);
             emit();

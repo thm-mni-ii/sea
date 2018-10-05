@@ -42,7 +42,6 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
 
  public:
   VisualDFS(Sealib::BasicGraph *, Sealib::CompactArray *,
-            Sealib::ExtendedSegmentStack *,
             std::string filename = "example.tex",
             std::string mode = "standalone");
   void run();
