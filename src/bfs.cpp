@@ -3,8 +3,8 @@
 #include <vector>
 
 using Sealib::BFS;
-using Sealib::Graph;
 using Sealib::CompactArray;
+using Sealib::Graph;
 
 void BFS::init() {
   u = 0;

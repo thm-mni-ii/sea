@@ -39,8 +39,9 @@ INSTANTIATE_TEST_CASE_P(ParamTests, BFSTest, ::testing::ValuesIn(makeGraphs()),
 TEST_P(BFSTest, userproc) {
   BFS bfs(GetParam(), incr1, incr2);
   bfs.init();
-  while (bfs.nextComponent())
+  do {
     while (bfs.more()) bfs.next();
+  } while (bfs.nextComponent());
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, order * degree);
 }
@@ -49,10 +50,11 @@ TEST(BFSTest, nextComponent) {
   c1 = c2 = 0;
   BFS bfs(GraphCreator::createRandomFixed(order, 0), incr1, incr2);
   uint rc = 0;
-  while (bfs.nextComponent()) {
+  bfs.init();
+  do {
     rc++;
     while (bfs.more()) bfs.next();
-  }
+  } while (bfs.nextComponent());
   EXPECT_EQ(rc, order);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, 0);
