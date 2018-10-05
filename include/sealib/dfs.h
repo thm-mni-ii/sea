@@ -90,7 +90,13 @@ class DFS {
                                       UserFunc1 postProcess,
                                       unsigned int startVertex);
 
+#ifdef VISUALIZE
+
+ protected:
+#else
+
  private:
+#endif
   static void process_standard(uint u0, Graph *g, uint *color,
                                UserFunc1 preProcess, UserFunc2 preExplore,
                                UserFunc2 postExplore, UserFunc1 postProcess);
@@ -110,10 +116,6 @@ class DFS {
                                         ExtendedSegmentStack *s);
   static void restore_top(uint u0, Graph *g, CompactArray *color,
                           ExtendedSegmentStack *s);
-
-#ifdef VISUALIZE
-  friend class SealibVisual::VisualDFS;
-#endif
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_

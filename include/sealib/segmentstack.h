@@ -5,15 +5,6 @@
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
 
-#ifdef VISUALIZE
-namespace Sealib {
-class SegmentStack;
-class ExtendedSegmentStack;
-}
-
-#include "sealibvisual/examples.h"
-#endif
-
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
 
@@ -47,10 +38,6 @@ class SegmentStack {
   unsigned q;
   Pair *low, *high;
   unsigned lp, hp, tp;
-
-#ifdef VISUALIZE
-  friend class SealibVisual::VisualDFS;
-#endif
 };
 
 /**
@@ -116,7 +103,13 @@ class ExtendedSegmentStack : public SegmentStack {
   unsigned approximateEdge(uint u, uint k);
   uint retrieveEdge(uint u, unsigned f);
 
+#ifdef VISUALIZE
+
+ protected:
+#else
+
  private:
+#endif
   /**
    * A Trailer struct additionally manages a sequence of big vertices.
    * In detail: trailers[tp-1] manages all big vertices in its segment. The
@@ -140,10 +133,6 @@ class ExtendedSegmentStack : public SegmentStack {
 
   static constexpr unsigned INVALID = static_cast<unsigned>(-1);
   void storeEdges();
-
-#ifdef VISUALIZE
-  friend class SealibVisual::VisualDFS;
-#endif
 };
 }  // namespace Sealib
 #endif  // SEALIB_SEGMENTSTACK_H_

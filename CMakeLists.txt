@@ -18,11 +18,6 @@ include(ExternalProject)
 find_program(MAKE NAMES cmake make)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-IF(VISUALIZE)
-        MESSAGE(STATUS "Building visualization support")
-        add_definitions(-DVISUALIZE)
-ENDIF()
-
 # --------------------------------------------------- #
 #                   gtest library
 # --------------------------------------------------- #

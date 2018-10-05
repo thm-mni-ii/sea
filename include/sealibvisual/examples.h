@@ -1,6 +1,10 @@
 #ifndef SEALIBVISUAL_EXAMPLES_H_
 #define SEALIBVISUAL_EXAMPLES_H_
 #include <sealib/basicgraph.h>
+#include <sealib/bfs.h>
+#include <sealib/compactarray.h>
+#include <sealib/dfs.h>
+#include <sealib/segmentstack.h>
 #include <sealibvisual/tikzdocument.h>
 #include <sealibvisual/tikzgraph.h>
 #include <sealibvisual/tikzpicture.h>
@@ -8,12 +12,7 @@
 
 namespace SealibVisual {
 class Examples {
-  // friend class of: Sealib::SegmentStack, Sealib::DFS
  public:
-  static void visualBFS(std::string filename = "example.tex");
-
-  static void visualDFS(std::string filename = "example.tex");
-
   static const char *style_white, *style_lightgray, *style_gray, *style_black;
 };
 
@@ -33,10 +32,9 @@ class VisualBFS {
   void emit();
 };
 
-class VisualDFS {
+class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
  private:
   Sealib::BasicGraph *g;
-  Sealib::ExtendedSegmentStack *s;
   Sealib::CompactArray *c;
   TikzDocument *doc;
   std::shared_ptr<TikzPicture> pic;

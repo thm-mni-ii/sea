@@ -74,9 +74,9 @@ void VisualBFS::run() {
 
 VisualDFS::VisualDFS(BasicGraph *g, CompactArray *c, ExtendedSegmentStack *s,
                      std::string filename, std::string mode)
-    : g(g),
+    : ExtendedSegmentStack(g->getOrder(), g, c),
+      g(g),
       tg(TikzGenerator::generateTikzElement(*g, true)),
-      s(s),
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
@@ -91,9 +91,9 @@ void VisualDFS::emit() {
   doc->add(pic);
   doc->add(TikzGenerator::generateTikzElement(*c, "color"));
   std::vector<uint> l, h, t;
-  for (uint a = 0; a < s->lp; a++) l.push_back(s->low[a].head());
-  for (uint a = 0; a < s->hp; a++) h.push_back(s->high[a].head());
-  for (uint a = 0; a < s->tp; a++) t.push_back(s->trailers[a].x.head());
+  for (uint a = 0; a < lp; a++) l.push_back(low[a].head());
+  for (uint a = 0; a < hp; a++) h.push_back(high[a].head());
+  for (uint a = 0; a < tp; a++) t.push_back(trailers[a].x.head());
   doc->add(TikzGenerator::generateTikzElement(l, "$S_L$", true));
   doc->add(TikzGenerator::generateTikzElement(h, "$S_H$", true));
   doc->add(TikzGenerator::generateTikzElement(t, "T", true));
@@ -103,8 +103,8 @@ void VisualDFS::emit() {
 void VisualDFS::run() {
   for (uint u = 0; u < g->getOrder(); u++) {
     if (c->get(u) == DFS_WHITE) {
-      DFS::process_small(
-          u, g, c, s, DFS::restore_top,
+      DFS::process_small<ExtendedSegmentStack>(
+          u, g, c, this, DFS::restore_top,
           [this](uint u) {
             tg->getNodes().at(u).setOptions(Examples::style_gray);
             emit();
