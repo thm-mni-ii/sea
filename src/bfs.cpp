@@ -97,7 +97,7 @@ BFS::BFS(Graph *graph, CompactArray *c, UserFunc1 pp, UserFunc2 pe)
 BFS::BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe)
     : g(graph),
       n(g->getOrder()),
-      color(new CompactArray(n, 10)),
+      color(new CompactArray(n, 4)),
       preprocess(pp),
       preexplore(pe) {
   for (uint a = 0; a < n; a++) color->insert(a, BFS_WHITE);

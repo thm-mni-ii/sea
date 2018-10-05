@@ -50,7 +50,7 @@ void SealibVisual::TikzDocument::initialize() {
 }
 
 void SealibVisual::TikzDocument::close() {
-  if(mode=="standalone") {
+  if (mode == "standalone") {
     file << "\\end{document}" << endl;
     file << "% Closing document.";
   }
@@ -82,9 +82,9 @@ void SealibVisual::TikzDocument::add(const SealibVisual::TikzElement &element) {
 
 void SealibVisual::TikzDocument::beginBlock() {
   static unsigned slide = 1;
-  if (mode == "standalone")
+  if (mode == "standalone") {
     file << "\\begin{" << blockName << "}\n";
-  else if (mode == "beamer") {
+  } else if (mode == "beamer") {
     file << "\n\\only<" << slide << ">{\n";
     slide++;
   }

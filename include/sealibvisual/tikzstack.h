@@ -1,6 +1,10 @@
 #ifndef SEALIBVISUAL_TIKZSTACK_H_
 #define SEALIBVISUAL_TIKZSTACK_H_
+
+#include <string>
+#include <vector>
 #include "sealibvisual/tikzarray.h"
+
 namespace SealibVisual {
 /**
 * Visualizes a vertical array that grows upwards.

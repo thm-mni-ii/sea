@@ -141,7 +141,7 @@ Sealib::BasicGraph *Sealib::GraphCreator::createRandomFixed(
 
 Sealib::BasicGraph *Sealib::GraphCreator::createRandomImbalanced(
     unsigned int order) {
-  Node *n = reinterpret_cast<Node *>(malloc(sizeof(Node) * order));
+  std::vector<Node> n(order);
   std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
   std::uniform_int_distribution<unsigned int> dist1(order * order,
                                                     2 * order * order);
@@ -157,12 +157,11 @@ Sealib::BasicGraph *Sealib::GraphCreator::createRandomImbalanced(
     } else {
       deg = dist1(rng);
     }
-    Adjacency *ad =
-        reinterpret_cast<Adjacency *>(malloc(sizeof(Adjacency) * deg));
+    std::vector<Adjacency> ad(deg);
     for (unsigned int b = 0; b < deg; b++) {
       ad[b] = Adjacency(rnd(rng));
     }
-    n[a] = Node(ad, deg);
+    n[a] = Node(ad);
   }
-  return new Sealib::BasicGraph(n, order);
+  return new BasicGraph(n);
 }

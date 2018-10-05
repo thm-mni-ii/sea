@@ -1,21 +1,32 @@
 #include "sealib/compactarray.h"
 #include <math.h>
+#include <sstream>
 #include <stdexcept>
 
 using Sealib::CompactArray;
 
-static const std::out_of_range OUTOFBOUNDS =
-    std::out_of_range("compactarray: index out of bounds");
-static const std::invalid_argument TOOLARGE =
-    std::invalid_argument("compactarray: inserted value is too large");
+static void E_outofbounds(uint i) {
+  std::stringstream e;
+  e << "compactarray: index out of bounds\n"
+    << "tried to access index " << i << "\n";
+  throw std::out_of_range(e.str());
+}
+static void E_toolarge(uint i, unsigned int p) {
+  std::stringstream e;
+  e << "compactarray: inserted value is too large\n"
+    << "tried to insert " << p << " at index " << i << " (" << ceil(log2(p))
+    << "bits wide)\n";
+  throw std::invalid_argument(e.str());
+}
+
 void CompactArray::insert(uint i, unsigned int p) {
   // values per group: vpg, value width=ceil(ld(v)) bits, group width=vpg*vw
   if (ceil(log2(p)) > valueWidth) {
-    throw TOOLARGE;
+    E_toolarge(i, p);
   }
   unsigned groupOffset =
       static_cast<unsigned>(floor(i / static_cast<double>(valuesPerGroup)));
-  if (groupOffset >= groupCount) throw OUTOFBOUNDS;
+  if (groupOffset >= groupCount) E_outofbounds(i);
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
   Group a = *(group[groupOffset]);
   unsigned gap =
@@ -32,7 +43,7 @@ void CompactArray::insert(uint i, unsigned int p) {
 
 unsigned int CompactArray::get(uint i) {
   unsigned groupOffset = static_cast<unsigned>(floor(i / valuesPerGroup));
-  if (groupOffset >= groupCount) throw OUTOFBOUNDS;
+  if (groupOffset >= groupCount) E_outofbounds(i);
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);

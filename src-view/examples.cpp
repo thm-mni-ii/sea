@@ -27,11 +27,10 @@ const char *Examples::style_white = "circle,draw=black,fill=white",
 
 //  --- VISUAL BREADTH-FIRST SEARCH ---
 
-VisualBFS::VisualBFS(Graph *g, CompactArray *c, std::string filename,
+VisualBFS::VisualBFS(BasicGraph *g, CompactArray *c, std::string filename,
                      std::string mode)
     : g(g),
-      tg(TikzGenerator::generateTikzElement(*static_cast<BasicGraph *>(g),
-                                            true)),
+      tg(TikzGenerator::generateTikzElement(*g, true)),
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
@@ -73,11 +72,10 @@ void VisualBFS::run() {
 
 // --- VISUAL DEPTH-FIRST SEARCH
 
-VisualDFS::VisualDFS(Graph *g, CompactArray *c, ExtendedSegmentStack *s,
+VisualDFS::VisualDFS(BasicGraph *g, CompactArray *c, ExtendedSegmentStack *s,
                      std::string filename, std::string mode)
     : g(g),
-      tg(TikzGenerator::generateTikzElement(*static_cast<BasicGraph *>(g),
-                                            true)),
+      tg(TikzGenerator::generateTikzElement(*g, true)),
       s(s),
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",

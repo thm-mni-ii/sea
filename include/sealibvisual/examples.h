@@ -1,15 +1,14 @@
 #ifndef SEALIBVISUAL_EXAMPLES_H_
 #define SEALIBVISUAL_EXAMPLES_H_
+#include <sealib/basicgraph.h>
 #include <sealibvisual/tikzdocument.h>
 #include <sealibvisual/tikzgraph.h>
 #include <sealibvisual/tikzpicture.h>
 #include <string>
 
 namespace SealibVisual {
-/**
- * Examples is a friend class of: Sealib::SegmentStack, Sealib::DFS
- */
 class Examples {
+  // friend class of: Sealib::SegmentStack, Sealib::DFS
  public:
   static void visualBFS(std::string filename = "example.tex");
 
@@ -20,14 +19,14 @@ class Examples {
 
 class VisualBFS {
  private:
-  Sealib::Graph *g;
+  Sealib::BasicGraph *g;
   Sealib::CompactArray *c;
   TikzDocument *doc;
   std::shared_ptr<TikzPicture> pic;
   std::shared_ptr<TikzGraph> tg;
 
  public:
-  VisualBFS(Sealib::Graph *, Sealib::CompactArray *,
+  VisualBFS(Sealib::BasicGraph *, Sealib::CompactArray *,
             std::string filename = "example.tex",
             std::string mode = "standalone");
   void run();
@@ -36,7 +35,7 @@ class VisualBFS {
 
 class VisualDFS {
  private:
-  Sealib::Graph *g;
+  Sealib::BasicGraph *g;
   Sealib::ExtendedSegmentStack *s;
   Sealib::CompactArray *c;
   TikzDocument *doc;
@@ -44,7 +43,7 @@ class VisualDFS {
   std::shared_ptr<TikzGraph> tg;
 
  public:
-  VisualDFS(Sealib::Graph *, Sealib::CompactArray *,
+  VisualDFS(Sealib::BasicGraph *, Sealib::CompactArray *,
             Sealib::ExtendedSegmentStack *,
             std::string filename = "example.tex",
             std::string mode = "standalone");

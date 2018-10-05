@@ -22,7 +22,7 @@ class TikzArray : public TikzElement {
                        std::string options = "matrix of nodes, ampersand replacement=\\&",
                        bool showIndices = false);
 
-    virtual std::ostream &out(std::ostream &os) const override;
+    std::ostream &out(std::ostream &os) const override;
 
     std::vector<std::string> &getContent();
     const std::vector<std::string> &getContent() const;

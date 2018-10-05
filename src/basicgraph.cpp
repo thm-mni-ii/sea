@@ -31,6 +31,4 @@ Sealib::BasicGraph::BasicGraph(unsigned int order) : nodes(order) {}
 
 Sealib::BasicGraph::BasicGraph() : BasicGraph(0) {}
 
-Sealib::BasicGraph::~BasicGraph() {
-
-}
+Sealib::BasicGraph::~BasicGraph() {}

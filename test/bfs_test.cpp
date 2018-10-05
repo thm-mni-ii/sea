@@ -1,6 +1,5 @@
 #include "sealib/bfs.h"
 #include <gtest/gtest.h>
-#include <stdio.h>
 #include "sealib/graph.h"
 #include "sealib/graphcreator.h"
 

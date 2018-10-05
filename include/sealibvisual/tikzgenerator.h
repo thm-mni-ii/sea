@@ -11,6 +11,7 @@
 #include <sealib/compactarray.h>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace SealibVisual {
 class TikzGenerator {
