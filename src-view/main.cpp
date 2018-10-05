@@ -155,29 +155,26 @@ void testSubGraphStack() {
         Sealib::GraphCreator::createSharedGraphFromAdjacencyMatrix(adj_mtrx, order);
 
     Sealib::SubGraphStack stack(bg);
-    std::cout << stack.g(1, 1) << std::endl;
-    std::cout << stack.g(1, 2) << std::endl;
-    std::cout << stack.g(1, 3) << std::endl;
 
-    std::cout << stack.g(2, 1) << std::endl;
-    std::cout << stack.g(2, 2) << std::endl;
+    Sealib::Bitset<unsigned char> v(4);
+    v[0] = 1;
+    v[2] = 1;
+    v[3] = 1;
 
-    std::cout << stack.g(3, 1) << std::endl;
-    std::cout << stack.g(3, 2) << std::endl;
+    Sealib::Bitset<unsigned char> a(8);
+    a[1] = 1;
+    a[2] = 1;
+    a[5] = 1;
+    a[7] = 1;
 
-    std::cout << stack.g(4, 1) << std::endl;
+    stack.push(v, a);
 
-    std::cout << stack.order() << std::endl;
-    for (unsigned int i = 1; i <= 8; i++) {
-        std::tuple<unsigned long, unsigned long> gInv = stack.gInv(i);
-        std::cout << std::get<0>(gInv) << "," << std::get<1>(gInv) << std::endl;
-        std::cout << "psi " << i << ": " << stack.psi(i) << std::endl;
-    }
-    
-    for(unsigned int i = 1; i <= 4; i++) {
-        std::cout << "phi " << i << ": " << stack.phi(i) << std::endl;
-    }
+    std::cout << stack.degree(1) << std::endl;
+    std::cout << stack.degree(2) << std::endl;
+    std::cout << stack.degree(3) << std::endl;
 
+    std::cout << stack.order(0) << std::endl;
+    std::cout << stack.order(1) << std::endl;
 }
 
 int main() {

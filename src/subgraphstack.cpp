@@ -10,7 +10,7 @@ using Sealib::SubGraphStack;
 
 unsigned long SubGraphStack::refs[6] = {0, 1, 3, 15, 65535, (unsigned long) - 1};
 
-SubGraphStack::SubGraphStack(std::shared_ptr<BasicGraph> g_) : clientList() {
+SubGraphStack::SubGraphStack(std::shared_ptr<BasicGraph> g_) : currentRef(0), clientList() {
     clientList.emplace_back(new BaseSubGraph(this, g_));
 }
 
@@ -20,7 +20,7 @@ SubGraphStack::~SubGraphStack() {
     }
 }
 void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &v, const Sealib::Bitset<unsigned char> &e) {
-    if(clientList.size() > Sealib::SubGraphStack::refs[currentRef]) {
+    if(clientList.size() - 1 > Sealib::SubGraphStack::refs[currentRef]) {
         currentRef++;
     }
     SubGraph *g = new RecursiveSubGraph(this, clientList.size(), currentRef, v, e);
@@ -38,7 +38,7 @@ unsigned long Sealib::SubGraphStack::order(unsigned long i) const {
 }
 
 unsigned long Sealib::SubGraphStack::degree(unsigned long i, unsigned long u) const {
-    return clientList[i]->degree(i);
+    return clientList[i]->degree(u);
 }
 
 unsigned long Sealib::SubGraphStack::head(unsigned long i, unsigned long u, unsigned long k) const {

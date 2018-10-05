@@ -1,4 +1,5 @@
 #include <sealib/recursivesubgraph.h>
+#include <iostream>
 
 /**
  * deletion of the subgraphs will be in the subgraph stack
@@ -15,18 +16,19 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack,
     vSelect(initializeVSelect(v)), aSelect(initializeASelect(a)) {
     SubGraph *r = stack->clientList[stack_t::refs[ridx]];
 
-    bitset_t p(select_a(aSelect.size()));
-    bitset_t q(select_v(vSelect.size()));
+    bitset_t p(rank_a(aSelect.size()));
+    bitset_t q(rank_v(vSelect.size()));
 
     unsigned long degRSum = 0;
     unsigned long degSum = 0;
-    for (unsigned long uR = 1; uR <= q.size(); uR++) {  // iterate all vertices of G_r
+    for (unsigned long uR = 1; uR <= vSelect.size(); uR++) {  // iterate all vertices of G_r
         unsigned long u = phiInv(uR);
         unsigned long degR = r->degree(uR);
         if (u > 0) {  // if u exists in G_this
             unsigned long deg = 0;
             for (unsigned long i = degRSum; i < degRSum + degR; i++) {
-                deg += psiInv(i + 1) == 0 ? 0 : 1;
+                unsigned long pinv = psiInv(i + 1);
+                deg += pinv == 0 ? 0 : 1;
             }
             degSum += deg;
             if (deg > 0) {
@@ -36,6 +38,16 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack,
         }
         degRSum += degR;
     }
+
+    for(unsigned long i = 0; i < p.size(); i++) {
+        std::cout << p[i] << " ";
+    }
+    std::cout << std::endl;
+
+    for(unsigned long i = 0; i < q.size(); i++) {
+        std::cout << q[i] << " ";
+    }
+    std::cout << std::endl;
 
     pSelect = new RankSelect(p);
     qSelect = new RankSelect(q);
@@ -63,7 +75,7 @@ unsigned long Sealib::RecursiveSubGraph::phiInv(unsigned long u) const {
     if (u == 0) {
         throw std::invalid_argument("u needs to be > 0");
     }
-    if (vSelect.getBitset()[u]) {
+    if (vSelect.getBitset()[u - 1]) {
         return rank_v(u);
     } else {
         return 0;
@@ -81,7 +93,7 @@ unsigned long Sealib::RecursiveSubGraph::psiInv(unsigned long a) const {
     if (a == 0) {
         throw std::invalid_argument("a needs to be > 0");
     }
-    if (aSelect.getBitset()[a]) {
+    if (aSelect.getBitset()[a - 1]) {
         return rank_a(a);
     } else {
         return 0;
