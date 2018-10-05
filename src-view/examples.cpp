@@ -27,13 +27,14 @@ const char *Examples::style_white = "circle,draw=black,fill=white",
 
 //  --- VISUAL BREADTH-FIRST SEARCH ---
 
-VisualBFS::VisualBFS(Graph *g, CompactArray *c, std::string filename)
+VisualBFS::VisualBFS(Graph *g, CompactArray *c, std::string filename,
+                     std::string mode)
     : g(g),
       tg(TikzGenerator::generateTikzElement(*static_cast<BasicGraph *>(g),
                                             true)),
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
-                           "layered,force", true)),
+                           "layered,force", true, mode)),
       pic(new TikzPicture("spring layout, sibling distance=15mm, node "
                           "distance=20mm, node sep=1cm, arrows={->}, line "
                           "width=1pt, color=black")) {
@@ -73,14 +74,14 @@ void VisualBFS::run() {
 // --- VISUAL DEPTH-FIRST SEARCH
 
 VisualDFS::VisualDFS(Graph *g, CompactArray *c, ExtendedSegmentStack *s,
-                     std::string filename)
+                     std::string filename, std::string mode)
     : g(g),
       tg(TikzGenerator::generateTikzElement(*static_cast<BasicGraph *>(g),
                                             true)),
       s(s),
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
-                           "layered,force", true)),
+                           "layered,force", true, mode)),
       pic(new TikzPicture("spring layout, sibling distance=15mm, node "
                           "distance=20mm, node sep=1cm, arrows={->}, line "
                           "width=1pt, color=black")) {
@@ -103,16 +104,19 @@ void VisualDFS::emit() {
 
 void VisualDFS::run() {
   for (uint u = 0; u < g->getOrder(); u++) {
-    DFS::process_small(u, g, c, s, DFS::restore_top,
-                       [this](uint u) {
-                         emit();
-                         tg->getNodes().at(u).setOptions(Examples::style_gray);
-                       },
-                       DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                       [this](uint u) {
-                         tg->getNodes().at(u).setOptions(Examples::style_black);
-                         emit();
-                       });
+    if (c->get(u) == DFS_WHITE) {
+      DFS::process_small(
+          u, g, c, s, DFS::restore_top,
+          [this](uint u) {
+            tg->getNodes().at(u).setOptions(Examples::style_gray);
+            emit();
+          },
+          DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+          [this](uint u) {
+            tg->getNodes().at(u).setOptions(Examples::style_black);
+            emit();
+          });
+    }
   }
   doc->close();
 }

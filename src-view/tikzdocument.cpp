@@ -1,39 +1,59 @@
 #include <sealibvisual/tikzdocument.h>
-
+#include <iostream>
 using std::endl;
 
 SealibVisual::TikzDocument::TikzDocument(std::string filename,
                                          std::string tikzLibraries,
-                                         std::string gdLibraries, bool lualatex)
+                                         std::string gdLibraries, bool lualatex,
+                                         std::string mode)
     : filename(filename),
       file(filename),
       tikzLibraries(tikzLibraries),
       gdLibraries(gdLibraries),
-      lualatex(lualatex) {
+      lualatex(lualatex),
+      mode(mode) {
   initialize();
 }
 
 void SealibVisual::TikzDocument::initialize() {
   using std::endl;
 
-  if (lualatex) {
-    file << "% !TeX program = lualatex" << endl;
+  if (mode == "standalone") {
+    if (lualatex) {
+      file << "% !TeX program = lualatex" << endl;
+    }
+    file << "% Document: " << filename << endl;
+    file << "% Created by sealib TikzDocument" << endl << endl;
+    if (lualatex) file << "\\RequirePackage{luatex85}" << endl;
+    file << "\\documentclass[tikz,border=20pt]{standalone}" << endl;
+    file << "\\standaloneenv{" << blockName << "}" << endl;
+    file << "\\usepackage{tikz}" << endl;
+    file << "\\usetikzlibrary{" << tikzLibraries << "}" << endl;
+    if (gdLibraries != "")
+      file << "\\usegdlibrary{" << gdLibraries << "}" << endl;
+    file << "\\begin{document}" << endl;
+  } else if (mode == "beamer") {
+    file << "% Document: " << filename << endl;
+    file << "% Created by sealib TikzDocument" << endl << endl;
+    file << "%  Your beamer presentation:\n";
+    file << "% \\documentclass{beamer}" << endl;
+    file << "% \\usepackage{tikz}" << endl;
+    file << "% \\usetikzlibrary{" << tikzLibraries << "}" << endl;
+    if (gdLibraries != "")
+      file << "% \\usegdlibrary{" << gdLibraries << "}" << endl;
+    file << "% \\begin{document}" << endl;
+    file << "% ...\n";
+    file << "% \\input{" << filename
+         << "}\t\t% You can auto-animate with \\transduration{1.5}, etc.\n";
+    file << "% ...\n";
   }
-  file << "% Document: " << filename << endl;
-  file << "% Created by sealib TikzDocument" << endl << endl;
-  if (lualatex) file << "\\RequirePackage{luatex85}" << endl;
-  file << "\\documentclass[tikz,border=20pt]{standalone}" << endl;
-  file << "\\standaloneenv{" << blockName << "}" << endl;
-  file << "\\usepackage{tikz}" << endl;
-  file << "\\usetikzlibrary{" << tikzLibraries << "}" << endl;
-  if (gdLibraries != "")
-    file << "\\usegdlibrary{" << gdLibraries << "}" << endl;
-  file << "\\begin{document}" << endl;
 }
 
 void SealibVisual::TikzDocument::close() {
-  file << "\\end{document}" << endl;
-  file << "% Closing document.";
+  if(mode=="standalone") {
+    file << "\\end{document}" << endl;
+    file << "% Closing document.";
+  }
   file.close();
 }
 
@@ -61,9 +81,18 @@ void SealibVisual::TikzDocument::add(const SealibVisual::TikzElement &element) {
 }
 
 void SealibVisual::TikzDocument::beginBlock() {
-  file << "\\begin{" << blockName << "}\n";
+  static unsigned slide = 1;
+  if (mode == "standalone")
+    file << "\\begin{" << blockName << "}\n";
+  else if (mode == "beamer") {
+    file << "\n\\only<" << slide << ">{\n";
+    slide++;
+  }
 }
 
 void SealibVisual::TikzDocument::endBlock() {
-  file << "\\end{" << blockName << "}\n";
+  if (mode == "standalone")
+    file << "\\end{" << blockName << "}\n";
+  else if (mode == "beamer")
+    file << "\n}\n";
 }

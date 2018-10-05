@@ -28,7 +28,8 @@ class VisualBFS {
 
  public:
   VisualBFS(Sealib::Graph *, Sealib::CompactArray *,
-            std::string filename = "example.tex");
+            std::string filename = "example.tex",
+            std::string mode = "standalone");
   void run();
   void emit();
 };
@@ -45,7 +46,8 @@ class VisualDFS {
  public:
   VisualDFS(Sealib::Graph *, Sealib::CompactArray *,
             Sealib::ExtendedSegmentStack *,
-            std::string filename = "example.tex");
+            std::string filename = "example.tex",
+            std::string mode = "standalone");
   void run();
   void emit();
 };

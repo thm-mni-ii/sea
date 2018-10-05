@@ -16,14 +16,20 @@ class TikzDocument {
   std::string gdLibraries;
   bool lualatex;
   std::ofstream file;
+  std::string mode;
   const std::string blockName = "tikzContainer";
 
   void initialize();
 
  public:
-  // ! to animate the resulting document, use 'convert' on the PDF
+  /**
+   * @param mode output format to generate ("standalone": a freestanding
+   * (lua)latex document, to animate the resulting document, use 'convert' on
+   * the PDF; "beamer": (lua)latex code to include in a beamer presentation)
+   */
   explicit TikzDocument(std::string filename, std::string tikzLibraries = "",
-                        std::string gdLibraries = "", bool lualatex = false);
+                        std::string gdLibraries = "", bool lualatex = false,
+                        std::string mode = "standalone");
   void close();
 
   bool isOpen();

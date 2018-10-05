@@ -6,9 +6,10 @@ std::ostream &SealibVisual::TikzPicture::out(std::ostream &os) const {
     os << "\\begin{tikzpicture}" <<
        "[" << options << "]" << std::endl;
     for (const std::shared_ptr<TikzElement> &e : elements) {
-        os << (*e) << std::endl;
+        os << (*e);
     }
     os << "\\end{tikzpicture}" << std::endl;
+    os << "\\hspace{0cm}";
     return os;
 }
 
