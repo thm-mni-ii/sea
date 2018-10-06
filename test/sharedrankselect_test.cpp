@@ -1,3 +1,4 @@
+/*
 #include <gtest/gtest.h>
 #include <include/sealib/simplerankselect.h>
 #include <include/sealib/sharedrankselect.h>
@@ -52,3 +53,4 @@ TEST(SharedRankSelectTest, rankSelect) {
         } while (++c2);
     } while (++c1);
 }
+*/

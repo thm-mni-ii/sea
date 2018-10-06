@@ -34,12 +34,14 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack, rgraph_t rGraph_) :
 
 unsigned long Sealib::BaseSubGraph::head(unsigned long u,
                                          unsigned long k) const {
-    return rGraph->head(static_cast<unsigned int>(u), static_cast<unsigned int>(k));
+    return rGraph->head(static_cast<unsigned int>(u - 1), static_cast<unsigned int>(k - 1)) + 1;
 }
 
 std::tuple<unsigned long, unsigned long>
 Sealib::BaseSubGraph::mate(unsigned long u, unsigned long k) const {
-    return rGraph->mate(static_cast<unsigned int>(u), static_cast<unsigned int>(k));
+    std::tuple<unsigned long, unsigned long>
+        mate = rGraph->mate(static_cast<unsigned int>(u - 1), static_cast<unsigned int>(k - 1));
+    return {std::get<0>(mate) + 1, std::get<1>(mate) + 1};
 }
 
 unsigned long Sealib::BaseSubGraph::phi(unsigned long u) const {

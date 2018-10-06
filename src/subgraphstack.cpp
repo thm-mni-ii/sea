@@ -2,13 +2,14 @@
 #include <sealib/subgraph.h>
 #include <sealib/recursivesubgraph.h>
 #include <sealib/basesubgraph.h>
+#include <iostream>
 
 using Sealib::SubGraph;
 using Sealib::BaseSubGraph;
 using Sealib::RecursiveSubGraph;
 using Sealib::SubGraphStack;
 
-unsigned long SubGraphStack::refs[6] = {0, 1, 3, 15, 65535, (unsigned long) - 1};
+unsigned long SubGraphStack::refs[6] = {0, 1, 3, 15, 65535, (unsigned long) -1};
 
 SubGraphStack::SubGraphStack(std::shared_ptr<BasicGraph> g_) : currentRef(0), clientList() {
     clientList.emplace_back(new BaseSubGraph(this, g_));
@@ -19,12 +20,14 @@ SubGraphStack::~SubGraphStack() {
         delete g;
     }
 }
-void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &v, const Sealib::Bitset<unsigned char> &e) {
-    if(clientList.size() - 1 > Sealib::SubGraphStack::refs[currentRef]) {
+void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &v, const Sealib::Bitset<unsigned char> &a) {
+    if (clientList.size() - 1 == Sealib::SubGraphStack::refs[currentRef + 1]) {
         currentRef++;
     }
-    SubGraph *g = new RecursiveSubGraph(this, clientList.size(), currentRef, v, e);
+
+    SubGraph *g = new RecursiveSubGraph(this, clientList.size(), currentRef, v, a);
     clientList.emplace_back(g);
+    return;
 }
 
 void Sealib::SubGraphStack::pop() {
@@ -75,10 +78,10 @@ unsigned long Sealib::SubGraphStack::phi(unsigned long i, unsigned long j, unsig
         unsigned long uR = clientList[i]->phi(u);
         unsigned long rIdx = clientList[i]->getRidx();
 
-        while(rIdx != clientList[j]->getRidx()) {
+        while (rIdx != clientList[j]->getRidx()) {
             rIdx++;
             uR = clientList[refs[rIdx]]->phiInv(uR);
-            if(uR == 0) return 0;
+            if (uR == 0) return 0;
         }
         return clientList[j]->phiInv(uR);
     }
@@ -100,13 +103,26 @@ unsigned long Sealib::SubGraphStack::psi(unsigned long i, unsigned long j, unsig
         unsigned long uR = clientList[i]->psi(a);
         unsigned long rIdx = clientList[i]->getRidx();
 
-        while(rIdx != clientList[j]->getRidx()) {
+        while (rIdx != clientList[j]->getRidx()) {
             rIdx++;
             uR = clientList[refs[rIdx]]->psiInv(uR);
-            if(uR == 0) return 0;
+            if (uR == 0) return 0;
         }
         return clientList[j]->psiInv(uR);
     }
 }
 
-void Sealib::SubGraphStack::toptune() {}
+void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &a) {
+    Sealib::Bitset<unsigned char> v(clientList[clientList.size() - 1]->order());
+    for (unsigned long i = 0; i < a.size(); i++) {
+        if (a[i]) {
+            unsigned long vi = std::get<0>(clientList[clientList.size() - 1]->gInv(i + 1));
+            v[vi - 1] = 1;
+        }
+    }
+    push(v, a);
+}
+
+unsigned long Sealib::SubGraphStack::gMax(unsigned long i) {
+    return clientList[i]->gMax();
+}

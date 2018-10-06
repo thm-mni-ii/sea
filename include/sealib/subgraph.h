@@ -72,7 +72,7 @@ class SubGraph {
     virtual unsigned long head(unsigned long u, unsigned long k) const = 0;
 
     inline unsigned long head(std::tuple<unsigned long, unsigned long> uk) const {
-        return head(std::get<0>(uk), std::get<0>(uk));
+        return head(std::get<0>(uk), std::get<1>(uk));
     }
 
     virtual std::tuple<unsigned long, unsigned long>
@@ -80,7 +80,7 @@ class SubGraph {
 
     inline std::tuple<unsigned long, unsigned long>
     mate(std::tuple<unsigned long, unsigned long> uk) const {
-        return mate(std::get<0>(uk), std::get<0>(uk));
+        return mate(std::get<0>(uk), std::get<1>(uk));
     }
 
     inline unsigned long order() const {
@@ -109,8 +109,12 @@ class SubGraph {
         return arc; // pSelect.rank(n + 1) != pSelect.rank(arc)
     }
 
+    inline unsigned long gMax() {
+        return pSelect->size();
+    }
+
     inline unsigned long g(std::tuple<unsigned long, unsigned long> jk) const {
-        return g(std::get<0>(jk), std::get<0>(jk));
+        return g(std::get<0>(jk), std::get<1>(jk));
     }
 
     std::tuple<unsigned long, unsigned long> gInv(unsigned long r) const {

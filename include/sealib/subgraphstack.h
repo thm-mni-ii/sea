@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 #include <tuple>
+#include "rankselect.h"
 
 namespace Sealib {
 class SubGraph;
@@ -21,7 +22,6 @@ class SubGraphStack {
     friend class SubGraph;
     friend class RecursiveSubGraph;
     friend class BaseSubGraph;
-
  private:
     std::vector<SubGraph *> clientList;
     unsigned long currentRef;
@@ -33,10 +33,21 @@ class SubGraphStack {
      * i.e. replaces the client list (G_0,...,G_l) with (G_0,...,G_l,G_l+1)
      * G_l+1 is isomorphic to a proper subgraph of G_l.
      * @param v Bitsequence of length n_l
-     * @param e Bitsequence of length 2m_l
+     * @param a Bitsequence of length 2m_l
      */
     void push(const Sealib::Bitset<unsigned char> &v,
-              const Sealib::Bitset<unsigned char> &e);
+              const Sealib::Bitset<unsigned char> &a);
+
+    /**
+     * Pushes a new subgraph G_l+1 on G_l.
+     * i.e. replaces the client list (G_0,...,G_l) with (G_0,...,G_l,G_l+1)
+     * G_l+1 is isomorphic to a proper subgraph of G_l.
+     * The bitset for the vertices will be created from the arc bitset.
+     * With this version of push there are no vertices without arcs.
+     * Each vertice that still has an outgoing arc will be set in the bitset v.
+     * @param a Bitsequence of length 2m_l
+     */
+    void push(const Sealib::Bitset<unsigned char> &a);
 
     /**
      * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).
@@ -105,6 +116,10 @@ class SubGraphStack {
         return g(clientList.size() - 1, u, k);
     };
 
+    /**
+     * @return the number of arcs the subgraph G_i has
+     */
+    unsigned long gMax(unsigned long i);
 
     /**
      * @return the (node, arc) pair belonging to the r'th arc in G_i
