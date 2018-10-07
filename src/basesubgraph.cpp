@@ -7,8 +7,8 @@
  */
 Sealib::BaseSubGraph::~BaseSubGraph() = default;
 
-Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack, rgraph_t rGraph_) :
-    SubGraph(0, 0, stack),
+Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
+    SubGraph(0, 0, stack_),
     rGraph(rGraph_) {
     unsigned long dSum = 0;
     bitset_t q(rGraph->getOrder());
