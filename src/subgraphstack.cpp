@@ -11,7 +11,7 @@ using Sealib::SubGraphStack;
 
 unsigned long SubGraphStack::refs[6] = {0, 1, 3, 15, 65535, (unsigned long) -1};
 
-SubGraphStack::SubGraphStack(std::shared_ptr<BasicGraph> g_) : currentRef(0), clientList() {
+SubGraphStack::SubGraphStack(std::shared_ptr<BasicGraph> g_) : clientList(), currentRef(0) {
     clientList.emplace_back(new BaseSubGraph(this, g_));
 }
 
