@@ -3,11 +3,11 @@
 
 #include <sealib/basicgraph.h>
 #include <sealib/bitset.h>
+#include <sealib/rankselect.h>
 #include <memory>
 #include <utility>
 #include <vector>
 #include <tuple>
-#include "rankselect.h"
 
 namespace Sealib {
 class SubGraph;
@@ -105,83 +105,87 @@ class SubGraphStack {
     inline std::tuple<unsigned long, unsigned long> mate(unsigned long u,
                                                          unsigned long k) const {
         return mate(clientList.size() - 1, u, k);
-    };
+    }
 
     /**
      * @return the arc number of the k'th outgoing arc in vertex u in G_i.
      */
-    unsigned long g(unsigned long i, unsigned long u, unsigned long k);
+    unsigned long g(unsigned long i, unsigned long u, unsigned long k) const;
 
-    inline unsigned long g(unsigned long u, unsigned long k) {
+    inline unsigned long g(unsigned long u, unsigned long k) const {
         return g(clientList.size() - 1, u, k);
-    };
+    }
 
     /**
      * @return the number of arcs the subgraph G_i has
      */
-    unsigned long gMax(unsigned long i);
+    unsigned long gMax(unsigned long i) const;
+
+    inline unsigned long gMax() const {
+        return gMax(clientList.size() - 1);
+    }
 
     /**
      * @return the (node, arc) pair belonging to the r'th arc in G_i
      */
-    std::tuple<unsigned long, unsigned long> gInv(unsigned long i, unsigned long r);
+    std::tuple<unsigned long, unsigned long> gInv(unsigned long i, unsigned long r) const;
 
     /**
      * @return the (node, arc) pair belonging to the r'th arc in G_l = the top graph on the stack
      */
-    inline std::tuple<unsigned long, unsigned long> gInv(unsigned long r) {
+    inline std::tuple<unsigned long, unsigned long> gInv(unsigned long r) const {
         return gInv(clientList.size() - 1, r);
-    };
+    }
 
     /**
      * @return translation of the u'th node in G_i to the isomorph node in G_j
      */
-    unsigned long phi(unsigned long i, unsigned long j, unsigned long u);
+    unsigned long phi(unsigned long i, unsigned long j, unsigned long u) const;
 
     /**
      * @return translation of the a'th arc in G_i to the isomorph arc in G_j
      */
-    unsigned long psi(unsigned long i, unsigned long j, unsigned long a);
+    unsigned long psi(unsigned long i, unsigned long j, unsigned long a)const;
 
     /**
      * @return translation of the u'th node in G_l = the top graph to the isomorph node in G_j
      */
-    inline unsigned long phi(unsigned long j, unsigned long u) {
+    inline unsigned long phi(unsigned long j, unsigned long u) const {
         return phi(clientList.size() - 1, j, u);
     }
 
     /**
      * @return translation of the a'th arc in G_l = the top graph of to the isomorph arc in G_j
      */
-    inline unsigned long psi(unsigned long j, unsigned long a) {
+    inline unsigned long psi(unsigned long j, unsigned long a) const {
         return psi(clientList.size() - 1, j, a);
     }
 
     /**
      * @return translation of the u'th node in G_l = the top graph to the isomorph node in G_0
      */
-    inline unsigned long phi(unsigned long u) {
+    inline unsigned long phi(unsigned long u) const {
         return phi(clientList.size() - 1, 0, u);
     }
 
     /**
      * @return translation of the a'th arc in G_l = the top graph of to the isomorph arc in G_0
      */
-    inline unsigned long psi(unsigned long a) {
+    inline unsigned long psi(unsigned long a) const {
         return psi(clientList.size() - 1, 0, a);
     }
 
     /**
      * @return  translation of the u'th node in G_0 to G_l = the top graph
      */
-    inline unsigned long phiInv(unsigned long u) {
+    inline unsigned long phiInv(unsigned long u) const {
         return phi(0, clientList.size() - 1, u);
     }
 
     /**
      * @return translation of the a'th arc in G_0 to G_l = the top graph
      */
-    inline unsigned long psiInv(unsigned long a) {
+    inline unsigned long psiInv(unsigned long a) const {
         return psi(0, clientList.size() - 1, a);
     }
 
@@ -191,6 +195,10 @@ class SubGraphStack {
      * This is done by creating rankSelect structures for the direct translation between G_0 and G_l
      */
     void toptune();
+
+    inline unsigned long size() const {
+        return clientList.size();
+    }
 
     virtual ~SubGraphStack();
 };

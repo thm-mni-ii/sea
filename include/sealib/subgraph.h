@@ -45,11 +45,11 @@ class SubGraph {
     }
 
  public:
-    inline unsigned long getSidx() {
+    inline unsigned long getSidx() const {
         return sidx;
     }
 
-    inline unsigned long getRidx() {
+    inline unsigned long getRidx() const {
         return ridx;
     }
 
@@ -85,7 +85,7 @@ class SubGraph {
 
     inline unsigned long order() const {
         return qSelect->size();
-    };
+    }
 
     unsigned long g(unsigned long j, unsigned long k) const {
         if (j == 0 || k == 0) {
@@ -106,7 +106,7 @@ class SubGraph {
             n = select_p(qRank - 1);  // pSelect.select(qRank - 1) - 1;
         }
         unsigned long arc = n + k;
-        return arc; // pSelect.rank(n + 1) != pSelect.rank(arc)
+        return arc;  // pSelect.rank(n + 1) != pSelect.rank(arc)
     }
 
     inline unsigned long gMax() {
@@ -119,16 +119,19 @@ class SubGraph {
 
     std::tuple<unsigned long, unsigned long> gInv(unsigned long r) const {
         if (r == 0) {
-            throw std::invalid_argument("r needs to be > 0 (r = " + std::to_string(r) + ")");
+            throw std::invalid_argument("r needs to be > 0 (r = "
+                                        + std::to_string(r) + ")");
         }
         unsigned long j = r == 1 ? 0 : rank_p(r - 1);  // pSelect.rank(r - 1);
         if (j == (unsigned long) -1) {
-            throw std::out_of_range("out of range - no arc r exists! (r = " + std::to_string(r) + ")");
+            throw std::out_of_range("out of range - no arc r exists! (r = "
+                                    + std::to_string(r) + ")");
         }
         j++;
         unsigned long a = select_q(j);  // qSelect.select(j);
         if (a == (unsigned long) -1) {
-            throw std::out_of_range("out of range - no arc r exists! (r = " + std::to_string(r) + ")");
+            throw std::out_of_range("out of range - no arc r exists! (r = "
+                                    + std::to_string(r) + ")");
         }
         unsigned long b = select_p(j - 1);  // pSelect.select(j - 1);
         b = b == (unsigned long) -1 ? 0 : b;
@@ -145,7 +148,7 @@ class SubGraph {
     virtual ~SubGraph() {
         delete pSelect;
         delete qSelect;
-    };
+    }
     SubGraph() = delete;
 };
 }  // namespace Sealib

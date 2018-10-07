@@ -3,20 +3,16 @@
 using Sealib::BasicGraph;
 using Sealib::Node;
 
-Sealib::BasicGraph::BasicGraph(Node *nodes_, unsigned int order_) : nodes(order_){
-    for(unsigned int i = 0; i < order_; i++) {
+Sealib::BasicGraph::BasicGraph(Node *nodes_, unsigned int order_) : nodes(order_) {
+    for (unsigned int i = 0; i < order_; i++) {
         nodes[i] = nodes_[i];
     }
 }
-Sealib::BasicGraph::BasicGraph(const std::vector<Sealib::Node> &nodes_) : nodes(nodes_){
+Sealib::BasicGraph::BasicGraph(const std::vector<Sealib::Node> &nodes_) : nodes(nodes_) {}
 
-}
-Sealib::BasicGraph::BasicGraph() : nodes(0){
+Sealib::BasicGraph::BasicGraph() : nodes(0) {}
 
-}
-Sealib::BasicGraph::BasicGraph(unsigned int order) : nodes(order){
-
-}
+Sealib::BasicGraph::BasicGraph(unsigned int order) : nodes(order) {}
 
 void Sealib::BasicGraph::addNode(const Sealib::Node &node) {
     nodes.emplace_back(node);
@@ -36,6 +32,7 @@ unsigned int Sealib::BasicGraph::head(unsigned int u, unsigned int k) const {
 unsigned int Sealib::BasicGraph::getOrder() const {
     return static_cast<unsigned int>(nodes.size());
 }
-std::tuple<unsigned int, unsigned int> Sealib::BasicGraph::mate(unsigned int u, unsigned int k) const {
+std::tuple<unsigned int, unsigned int>
+Sealib::BasicGraph::mate(unsigned int u, unsigned int k) const {
     return {nodes[u].getAdj()[k].vertex, nodes[u].getAdj()[k].crossIndex};
 }

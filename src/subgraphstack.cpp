@@ -20,14 +20,13 @@ SubGraphStack::~SubGraphStack() {
         delete g;
     }
 }
-void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &v, const Sealib::Bitset<unsigned char> &a) {
+void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &v,
+                                 const Sealib::Bitset<unsigned char> &a) {
     if (clientList.size() - 1 == Sealib::SubGraphStack::refs[currentRef + 1]) {
         currentRef++;
     }
-
     SubGraph *g = new RecursiveSubGraph(this, clientList.size(), currentRef, v, a);
     clientList.emplace_back(g);
-    return;
 }
 
 void Sealib::SubGraphStack::pop() {
@@ -40,11 +39,14 @@ unsigned long Sealib::SubGraphStack::order(unsigned long i) const {
     return clientList[i]->order();
 }
 
-unsigned long Sealib::SubGraphStack::degree(unsigned long i, unsigned long u) const {
+unsigned long Sealib::SubGraphStack::degree(unsigned long i,
+                                            unsigned long u) const {
     return clientList[i]->degree(u);
 }
 
-unsigned long Sealib::SubGraphStack::head(unsigned long i, unsigned long u, unsigned long k) const {
+unsigned long Sealib::SubGraphStack::head(unsigned long i,
+                                          unsigned long u,
+                                          unsigned long k) const {
     return clientList[i]->head(u, k);
 }
 
@@ -54,15 +56,20 @@ std::tuple<unsigned long, unsigned long> Sealib::SubGraphStack::mate(unsigned lo
     return clientList[i]->mate(u, k);
 }
 
-unsigned long Sealib::SubGraphStack::g(unsigned long i, unsigned long u, unsigned long k) {
+unsigned long Sealib::SubGraphStack::g(unsigned long i,
+                                       unsigned long u,
+                                       unsigned long k) const {
     return clientList[i]->g(u, k);
 }
 
-std::tuple<unsigned long, unsigned long> Sealib::SubGraphStack::gInv(unsigned long i, unsigned long r) {
+std::tuple<unsigned long, unsigned long>
+Sealib::SubGraphStack::gInv(unsigned long i, unsigned long r) const {
     return clientList[i]->gInv(r);
 }
 
-unsigned long Sealib::SubGraphStack::phi(unsigned long i, unsigned long j, unsigned long u) {
+unsigned long Sealib::SubGraphStack::phi(unsigned long i,
+                                         unsigned long j,
+                                         unsigned long u) const {
     if (i == j) {
         return u;
     } else if (i > j) {
@@ -87,7 +94,9 @@ unsigned long Sealib::SubGraphStack::phi(unsigned long i, unsigned long j, unsig
     }
 }
 
-unsigned long Sealib::SubGraphStack::psi(unsigned long i, unsigned long j, unsigned long a) {
+unsigned long Sealib::SubGraphStack::psi(unsigned long i,
+                                         unsigned long j,
+                                         unsigned long a) const {
     if (i == j) {
         return a;
     } else if (i > j) {
@@ -123,6 +132,6 @@ void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &a) {
     push(v, a);
 }
 
-unsigned long Sealib::SubGraphStack::gMax(unsigned long i) {
+unsigned long Sealib::SubGraphStack::gMax(unsigned long i) const {
     return clientList[i]->gMax();
 }

@@ -123,61 +123,6 @@ void runTest(uint n, uint (*fm)(uint n)) {
     test2.printResults();
 }
 
-void testSubGraphStack() {
-    /*unsigned int order = 7;
-    auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * 7 * 7);
-    adj_mtrx[0] = new unsigned int[order]{0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[1] = new unsigned int[order]{0, 0, 0, 1, 1, 1, 0};
-    adj_mtrx[2] = new unsigned int[order]{0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[3] = new unsigned int[order]{0, 1, 0, 0, 0, 1, 0};
-    adj_mtrx[4] = new unsigned int[order]{0, 1, 0, 0, 0, 1, 0};
-    adj_mtrx[5] = new unsigned int[order]{0, 1, 0, 1, 1, 0, 0};
-    adj_mtrx[6] = new unsigned int[order]{0, 0, 0, 0, 0, 0, 0};*/
-
-    unsigned int order = 4;
-    auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * 4 * 4);
-    adj_mtrx[0] = new unsigned int[order]{0, 1, 1, 1};
-    adj_mtrx[1] = new unsigned int[order]{1, 0, 1, 0};
-    adj_mtrx[2] = new unsigned int[order]{1, 1, 0, 0};
-    adj_mtrx[3] = new unsigned int[order]{1, 0, 0, 0};
-
-    /**
-     * 1: 2, 3, 4
-     * 2: 1, 3
-     * 3: 1, 2
-     * 4: 1
-     */
-
-    std::shared_ptr<Sealib::BasicGraph> bg =
-        Sealib::GraphCreator::createSharedGraphFromAdjacencyMatrix(adj_mtrx, order);
-
-    Sealib::SubGraphStack stack(bg);
-
-    Sealib::Bitset<unsigned char> a(8);
-    for (unsigned long i = 0; i < a.blocks(); i++) {
-        a.setBlock(i, (unsigned char) -1);
-    }
-
-    a[1] = 0;
-    a[5] = 0;
-
-
-    stack.push(a);
-
-    for(unsigned long u = 1; u <= stack.order(); u++) {
-        for(unsigned long a = 1; a <= stack.degree(u); a++) {
-            std::cout << "(u, a): " << u << ", " << a << std::endl;
-            std::tuple<unsigned long, unsigned long> mate = stack.mate(u, a);
-            std::cout << "(um, am): " << std::get<0>(mate) << ", " << std::get<1>(mate) << std::endl;
-        }
-    }
-
-}
-
-void t() {
-
-}
-
 int main() {
-    testSubGraphStack();
+    return 0;
 }

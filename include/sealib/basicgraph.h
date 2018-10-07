@@ -4,6 +4,7 @@
 #include <sealib/graph.h>
 #include <sealib/node.h>
 #include <vector>
+#include <tuple>
 
 namespace Sealib {
 /**
