@@ -7,12 +7,12 @@
  */
 Sealib::RecursiveSubGraph::~RecursiveSubGraph() = default;
 
-Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack,
+Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
                                              unsigned long sidx_,
                                              unsigned long ridx_,
                                              const bitset_t &v,
                                              const bitset_t &a) :
-    SubGraph(sidx_, ridx_, stack),
+    SubGraph(sidx_, ridx_, stack_),
     vSelect(initializeVSelect(v)), aSelect(initializeASelect(a)) {
     SubGraph *r = stack->clientList[stack_t::refs[ridx]];
 
