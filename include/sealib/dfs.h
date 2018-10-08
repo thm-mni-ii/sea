@@ -4,7 +4,9 @@
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
+#include "sealib/iterator.h"
 #include "sealib/node.h"
+#include "sealib/segmentstack.h"
 
 #define DFS_WHITE 0
 #define DFS_GRAY 1
@@ -89,6 +91,32 @@ class DFS {
   static void runLinearTimeInplaceDFS(unsigned int *graph, UserFunc1 preProcess,
                                       UserFunc1 postProcess,
                                       unsigned int startVertex);
+
+  class UserCall {
+   public:
+    enum Type { preprocess, preexplore, postexplore, postprocess };
+    unsigned type;
+    uint u, v;
+    UserCall(unsigned type, uint u, uint v = 0);
+  };
+
+  class ReverseDFS : Iterator<std::vector<UserCall>> {
+   public:
+    explicit ReverseDFS(Graph *);
+    ~ReverseDFS();
+
+    void init() override;
+
+    bool more() override;
+
+    std::vector<UserCall> next() override;
+
+   private:
+    Graph *g;
+    uint n, r;
+    CompactArray *c;
+    SimulationStack *s;
+  };
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_

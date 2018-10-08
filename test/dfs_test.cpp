@@ -48,7 +48,7 @@ void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }*/
 
 static std::random_device rnd;
 static const unsigned GRAPHCOUNT = 4;  // how many random graphs to generate?
-static const unsigned DEGREE = 15;      // how many outneighbours per node?
+static const unsigned DEGREE = 15;     // how many outneighbours per node?
 static const unsigned order = 200;
 
 static std::vector<std::shared_ptr<Graph>> makeGraphs() {
@@ -102,6 +102,13 @@ TEST(DFSTest, nloglognImbalanced) {
                       DFS_NOP_PROCESS);
   SUCCEED();
   delete g;
+}
+
+TEST(ReverseDFSTest, init) {
+  Graph *g = Sealib::GraphCreator::createRandomFixed(256, 2);
+  DFS::ReverseDFS d(g);
+  d.init();
+  SUCCEED();
 }
 
 auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,

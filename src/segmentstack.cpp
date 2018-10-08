@@ -1,5 +1,6 @@
-#include "src/segmentstack.h"
+#include "sealib/segmentstack.h"
 #include <math.h>
+#include <iostream>
 #include <sstream>
 #include <stack>
 #include <stdexcept>
@@ -7,6 +8,7 @@
 using Sealib::SegmentStack;
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
+using Sealib::SimulationStack;
 
 //  -- SUPERCLASS --
 
@@ -230,4 +232,101 @@ bool ExtendedSegmentStack::isAligned() {
     }
   }
   return r;
+}
+
+//  -- SIMULATION --
+
+SimulationStack::SimulationStack(uint size, uint intervalCount, Graph *g,
+                                 CompactArray *c)
+    : ExtendedSegmentStack(size, g, c),
+      r(intervalCount + 1),
+      w(static_cast<uint>(ceil(4 * n / static_cast<double>(r)))),
+      i(new IntervalData[r]),
+      ip(0) {
+  std::cout << "r=" << r << ", w=" << w << "\n";
+}
+
+void SimulationStack::reconstructPart(unsigned j) { std::cout << j; }
+
+void SimulationStack::storeTime(unsigned df, uint u) {
+  // std::cout << "storeTime " << df << " " << u << "\n";
+  if (ip >= r) throw std::out_of_range("too many intervals");
+  bool inserted = false;
+  IntervalData &c = i[ip];
+  if (df == 0) {
+    if (c.d.find(u) == c.d.end()) {
+      c.d.insert(u);
+      // std::cout << "d["<<u<<"]="<<ip<<"\n";
+      inserted = true;
+    }
+  } else if (df == 1) {
+    if (c.f.find(u) == c.f.end()) {
+      c.f.insert(u);
+      // std::cout << "f["<<u<<"]="<<ip<<"\n";
+      inserted = true;
+    }
+  } else {
+    throw std::invalid_argument("storeTime: df must be 0 or 1");
+  }
+  if (inserted) {
+    if (c.ic < w) {
+      c.ic++;
+    } else {
+      Pair top = hp > 0 ? high[hp - 1] : lp > 0 ? low[lp - 1] : Pair(0, 0);
+      c.h = top;
+      if (c.hdc == -1 || static_cast<int>(count) < c.hdc) {
+        c.hd = top;
+        c.hdc = static_cast<int>(count);
+      }
+      ip++;
+    }
+  }
+}
+
+int SimulationStack::push(Pair p) {
+  // std::cout << "pushing " << p.head() << ", ip=" << ip << "\n";
+  uint pu = p.head();
+
+  if (lp < q) {
+    table->insert(pu, tp);
+    low[lp++] = p;
+  } else if (hp < q) {
+    table->insert(pu, tp + 1);
+    high[hp++] = p;
+  } else {
+    trailers[tp].x = low[lp - 1];
+    storeEdges();
+
+    tp++;
+    Pair *tmp = low;
+    low = high;
+    high = tmp;
+    hp = 0;
+    high[hp++] = p;
+    table->insert(pu, tp + 1);
+  }
+
+  count++;
+  storeTime(0, pu);
+
+  return 0;
+}
+
+int SimulationStack::pop(Pair *p) {
+  if (hp > 0) {
+    *p = high[--hp];
+  } else if (lp > 0) {
+    *p = low[--lp];
+  } else {
+    if (tp > 0) {
+      return DFS_DO_RESTORE;
+    } else {
+      return DFS_NO_MORE_NODES;
+    }
+  }
+
+  count--;
+  storeTime(1, p->head());
+
+  return 0;
 }

@@ -1,6 +1,7 @@
-#ifndef SRC_SEGMENTSTACK_H_
-#define SRC_SEGMENTSTACK_H_
+#ifndef SEALIB_SEGMENTSTACK_H_
+#define SEALIB_SEGMENTSTACK_H_
 
+#include <set>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
@@ -27,7 +28,7 @@ namespace Sealib {
 class SegmentStack {
  public:
   virtual int push(Pair u) = 0;
-  int pop(Pair *r);
+  virtual int pop(Pair *r);
   bool isEmpty();
   virtual bool isAligned() = 0;
 
@@ -80,7 +81,7 @@ class ExtendedSegmentStack : public SegmentStack {
   ExtendedSegmentStack(uint size, Graph *g, CompactArray *c);
   ~ExtendedSegmentStack();
 
-  int push(Pair u) override;
+  int push(Pair p) override;
   bool isAligned() override;
 
   // check if u is labeled with the top segment number (i.e. is table[u]=top?)
@@ -103,7 +104,7 @@ class ExtendedSegmentStack : public SegmentStack {
   unsigned approximateEdge(uint u, uint k);
   uint retrieveEdge(uint u, unsigned f);
 
- private:
+ protected:
   /**
    * A Trailer struct additionally manages a sequence of big vertices.
    * In detail: trailers[tp-1] manages all big vertices in its segment. The
@@ -128,5 +129,30 @@ class ExtendedSegmentStack : public SegmentStack {
   static constexpr unsigned INVALID = static_cast<unsigned>(-1);
   void storeEdges();
 };
+
+class SimulationStack : public ExtendedSegmentStack {
+ public:
+  SimulationStack(uint size, uint intervalCount, Graph *g, CompactArray *c);
+
+  void reconstructPart(unsigned j);
+
+  int push(Pair p) override;
+  int pop(Pair *p) override;
+
+ private:
+  class IntervalData {
+   public:
+    std::set<uint> d, f;
+    Pair h, hd;
+    int hdc = -1;
+    uint ic = 0;
+  };
+  uint r, w;
+  uint count;
+  IntervalData *i;
+  uint ip;
+
+  void storeTime(unsigned df, uint u);
+};
 }  // namespace Sealib
-#endif  // SRC_SEGMENTSTACK_H_
+#endif  // SEALIB_SEGMENTSTACK_H_

@@ -3,7 +3,6 @@
 #include <sstream>
 #include <stack>
 #include "./inplacerunner.h"
-#include "./segmentstack.h"
 
 using Sealib::DFS;
 using Sealib::SegmentStack;
@@ -231,4 +230,36 @@ void DFS::runLinearTimeInplaceDFS(uint *graph, UserFunc1 preProcess,
       new LinearTimeInplaceDFSRunner(graph, preProcess, postProcess);
   ilDFSRunner->run(startVertex);
   delete ilDFSRunner;
+}
+
+DFS::UserCall::UserCall(unsigned p1, uint p2, uint p3)
+    : type(p1), u(p2), v(p3) {}
+
+DFS::ReverseDFS::ReverseDFS(Graph *graph)
+    : g(graph),
+      n(g->getOrder()),
+      r(static_cast<uint>(ceil(log2(n)))),
+      c(new CompactArray(n, 3)),
+      s(new SimulationStack(n, r, g, c)) {}
+
+DFS::ReverseDFS::~ReverseDFS() {
+  delete c;
+  delete s;
+}
+
+void DFS::ReverseDFS::init() {
+  for (uint a = 0; a < n; a++) c->insert(a, DFS_WHITE);
+  for (uint a = 0; a < n; a++) {
+    if (c->get(a) == DFS_WHITE)
+      process_small(a, g, c, static_cast<ExtendedSegmentStack *>(s),
+                    restore_top, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+  }
+}
+
+bool DFS::ReverseDFS::more() { return false; }
+
+std::vector<DFS::UserCall> DFS::ReverseDFS::next() {
+  std::vector<DFS::UserCall> seq;
+  return seq;
 }
