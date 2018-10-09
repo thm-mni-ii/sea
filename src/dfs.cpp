@@ -277,7 +277,7 @@ bool DFS::ReverseDFS::more() { return static_cast<int>(ip) >= 0; }
 DFS::UserCall DFS::ReverseDFS::next() {
   if (sp < w) {
     sp++;
-    return seq.at(sp - 1);
+    return *(seq.rbegin() + sp - 1);
   } else {  // build new sequence
     std::stack<Pair> sj = reconstructPart(ip, i[ip].hd, i[ip].h1);
     for (uint a = 0; a < n; a++) {
@@ -322,35 +322,35 @@ std::vector<DFS::UserCall> DFS::ReverseDFS::simulate(std::stack<Pair> sj,
                                                      Pair until) {
   std::vector<UserCall> ret;
   std::cout << "sj empty: " << sj.empty() << "\n";
+  // to do: handle empty stack
   while (!(sj.top() == until)) {
     Pair x = sj.top();
     sj.pop();
     uint u = x.head(), k = x.tail();
     if (c->get(u) == DFS_WHITE) {
-      ret.push_back(UserCall(UserCall::Type::preprocess, u));
+      ret.emplace_back(UserCall(UserCall::Type::preprocess, u));
       c->insert(u, DFS_GRAY);
     }
     if (k < g->getNodeDegree(u)) {
       sj.push(Pair(u, k + 1));
       uint v = g->head(u, k);
-      ret.push_back(UserCall(UserCall::Type::preexplore, u, v));
+      ret.emplace_back(UserCall(UserCall::Type::preexplore, u, v));
       if (c->get(v) == DFS_WHITE) {
         s->push(Pair(v, 0));
       } else {
-        ret.push_back(UserCall(UserCall::Type::postexplore, u,
-                               v));  // remove this later -> "missing parts"
+        ret.emplace_back(UserCall(UserCall::Type::postexplore, u,
+                                  v));  // remove this later -> "missing parts"
       }
     } else {
       if (!sj.empty()) {
         uint pu = sj.top().head();
-        ret.push_back(UserCall(UserCall::Type::postexplore, pu, u));
+        ret.emplace_back(UserCall(UserCall::Type::postexplore, pu, u));
       }
       c->insert(u, DFS_BLACK);
-      ret.push_back(UserCall(UserCall::Type::postprocess, u));
+      ret.emplace_back(UserCall(UserCall::Type::postprocess, u));
     }
   }
-  sj.push(Pair(0, 0));
-  ret.push_back(UserCall(UserCall::Type::preprocess, 42, 1));  // dummy
+  // std::reverse(ret.begin(), ret.end());
   return ret;
 }
 
