@@ -104,7 +104,9 @@ class ExtendedSegmentStack : public SegmentStack {
   unsigned approximateEdge(uint u, uint k);
   uint retrieveEdge(uint u, unsigned f);
 
- protected:
+  Pair top();
+
+ private:
   /**
    * A Trailer struct additionally manages a sequence of big vertices.
    * In detail: trailers[tp-1] manages all big vertices in its segment. The
@@ -128,35 +130,6 @@ class ExtendedSegmentStack : public SegmentStack {
 
   static constexpr unsigned INVALID = static_cast<unsigned>(-1);
   void storeEdges();
-};
-
-class SimulationStack : public ExtendedSegmentStack {
- public:
-  SimulationStack(uint size, uint intervalCount, Graph *g, CompactArray *c);
-
-  void reconstructPart(unsigned j);
-
-  int push(Pair p) override;
-  int pop(Pair *p) override;
-
-  void storeBeginTime(uint u);
-  void storeEndTime(uint u);
-
- private:
-  class IntervalData {
-   public:
-    Pair h1, h2;   // top entries at start and end of the interval
-    Pair hd;       // value of deepest entry
-    int hdc = -1;  // index of deepest entry
-    uint ic = 0;   // call counter for the interval
-  };
-  uint r, w;
-  uint count;
-  CompactArray *d, *f;
-  IntervalData *i;
-  uint ip;
-
-  void storeTime(unsigned df, uint u);
 };
 }  // namespace Sealib
 #endif  // SEALIB_SEGMENTSTACK_H_

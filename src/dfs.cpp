@@ -1,5 +1,6 @@
 #include "sealib/dfs.h"
 #include <math.h>
+#include <iostream>
 #include <sstream>
 #include <stack>
 #include "./inplacerunner.h"
@@ -232,34 +233,128 @@ void DFS::runLinearTimeInplaceDFS(uint *graph, UserFunc1 preProcess,
   delete ilDFSRunner;
 }
 
-DFS::UserCall::UserCall(unsigned p1, uint p2, uint p3)
-    : type(p1), u(p2), v(p3) {}
+// reverse DFS:
 
 DFS::ReverseDFS::ReverseDFS(Graph *graph)
     : g(graph),
       n(g->getOrder()),
       r(static_cast<uint>(ceil(8 * log2(n)))),
+      w(static_cast<uint>(ceil(n / log2(n)))),
       c(new CompactArray(n, 3)),
-      s(new SimulationStack(n, r, g, c)) {}
+      s(new ExtendedSegmentStack(n, g, c)),
+      d(new CompactArray(n, r + 1)),
+      f(new CompactArray(n, r + 1)),
+      i(new IntervalData[r]),
+      sp(w + 1) {
+  std::cout << "r=" << r << ", w=" << w << "\n";
+  for (uint a = 0; a < n; a++) {
+    d->insert(a, r + 1);
+    f->insert(a, r + 1);
+  }
+}
 
 DFS::ReverseDFS::~ReverseDFS() {
   delete c;
   delete s;
+  delete d;
+  delete f;
+  delete[] i;
 }
 
 void DFS::ReverseDFS::init() {
   for (uint a = 0; a < n; a++) c->insert(a, DFS_WHITE);
   for (uint a = 0; a < n; a++) {
-    if (c->get(a) == DFS_WHITE)
-      process_small(a, g, c, static_cast<ExtendedSegmentStack *>(s),
-                    restore_top, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                    DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+    if (c->get(a) == DFS_WHITE) {
+      process_small(a, g, c, s, restore_top,
+                    [this](uint u) { storeBeginTime(u); }, DFS_NOP_EXPLORE,
+                    DFS_NOP_EXPLORE, [this](uint u) { storeEndTime(u); });
+    }
   }
 }
 
-bool DFS::ReverseDFS::more() { return false; }
+bool DFS::ReverseDFS::more() { return static_cast<int>(ip) >= 0; }
 
-std::vector<DFS::UserCall> DFS::ReverseDFS::next() {
-  std::vector<DFS::UserCall> seq;
-  return seq;
+DFS::UserCall DFS::ReverseDFS::next() {
+  if (sp < w) {
+    sp++;
+    return seq.at(sp - 1);
+  } else {  // build new sequence
+    std::stack<Pair> sj = reconstructPart(ip, i[ip].hd, i[ip].h1);
+    ip--;
+    seq = simulate(sj);
+    sp = 1;
+    return seq.at(0);
+  }
 }
+
+std::stack<Pair> DFS::ReverseDFS::reconstructPart(uint j, Pair from, Pair to) {
+  std::cout << "reconstruct " << j << " " << from.head() << " " << to.head()
+            << "\n";
+  std::stack<Pair> rs;
+  rs.push(from);
+  std::cout << rs.top().head() << " = " << to.head() << "?\n";
+  while (!(rs.top() == to)) {
+    Pair x = rs.top();
+    uint u = g->head(x.head(), x.tail());
+    for (uint k = 0; k < g->getNodeDegree(u); k++) {
+      uint v = g->head(u, k);
+      if (d->get(v) >= j) {
+        std::cout << "restoring (" << u << "," << k << ")\n";
+        rs.push(Pair(u, k));
+        break;
+      }
+    }
+  }
+  return rs;
+}
+
+std::vector<DFS::UserCall> DFS::ReverseDFS::simulate(std::stack<Pair> sj) {
+  sj.push(Pair(0, 0));
+  std::vector<UserCall> v;
+  v.push_back(UserCall(UserCall::Type::preprocess, 42, 1));  // dummy
+  return v;
+}
+
+void DFS::ReverseDFS::storeTime(unsigned df, uint u) {
+  // std::cout << "storeTime " << df << " " << u << "\n";
+  if (ip >= r) throw std::out_of_range("too many intervals");
+  Pair top = s->top();
+  bool inserted = false;
+  IntervalData &ci = i[ip];
+  if (ci.ic == 0) {
+    std::cout << "H" << ip << "=" << top.head() << "\n";
+    ci.h1 = top;
+  }
+  if (df == 0) {
+    if (d->get(u) == r + 1) {
+      d->insert(u, ip);
+      ns++;
+      // std::cout << "d[" << u << "]=" << ip << "\n";
+      inserted = true;
+    }
+  } else if (df == 1) {
+    if (f->get(u) == r + 1) {
+      f->insert(u, ip);
+      ns--;
+      // std::cout << "f[" << u << "]=" << ip << "\n";
+      inserted = true;
+    }
+  } else {
+    throw std::invalid_argument("storeTime: df must be 0 or 1");
+  }
+  if (inserted) {
+    if (ci.hdc == -1 || ns < ci.hdc) {
+      ci.hd = top;
+      ci.hdc = ns;
+    }
+    if (ci.ic < w) {
+      ci.ic++;
+    } else {
+      std::cout << "H^" << ip << "=" << ci.hd.head() << "\n";
+      ci.h2 = top;
+      ip++;
+    }
+  }
+}
+void DFS::ReverseDFS::storeBeginTime(uint u) { storeTime(0, u); }
+void DFS::ReverseDFS::storeEndTime(uint u) { storeTime(1, u); }

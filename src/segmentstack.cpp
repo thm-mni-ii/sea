@@ -8,7 +8,6 @@
 using Sealib::SegmentStack;
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
-using Sealib::SimulationStack;
 
 //  -- SUPERCLASS --
 
@@ -234,108 +233,8 @@ bool ExtendedSegmentStack::isAligned() {
   return r;
 }
 
-//  -- SIMULATION --
-
-SimulationStack::SimulationStack(uint size, uint intervalCount, Graph *g,
-                                 CompactArray *c)
-    : ExtendedSegmentStack(size, g, c),
-      r(intervalCount),
-      w(static_cast<uint>(ceil(n / log2(n)))),
-      d(new CompactArray(size, r + 1)),
-      f(new CompactArray(size, r + 1)),
-      i(new IntervalData[r]),
-      ip(0) {
-  std::cout << "r=" << r << ", w=" << w << "\n";
-  for (uint a = 0; a < size; a++) {
-    d->insert(a, r + 1);
-    f->insert(a, r + 1);
-  }
-}
-
-void SimulationStack::reconstructPart(unsigned j) { std::cout << j; }
-
-void SimulationStack::storeTime(unsigned df, uint u) {
-  // std::cout << "storeTime " << df << " " << u << "\n";
-  if (ip >= r) throw std::out_of_range("too many intervals");
-  Pair top = hp > 0 ? high[hp - 1] : lp > 0 ? low[lp - 1] : Pair(0, 0);
-  bool inserted = false;
-  IntervalData &c = i[ip];
-  if (c.ic == 0) {
-    c.h1 = top;
-  }
-  if (df == 0) {
-    if (d->get(u) == r + 1) {
-      d->insert(u, ip);
-      std::cout << "d[" << u << "]=" << ip << "\n";
-      inserted = true;
-    }
-  } else if (df == 1) {
-    if (f->get(u) == r + 1) {
-      f->insert(u, ip);
-      std::cout << "f[" << u << "]=" << ip << "\n";
-      inserted = true;
-    }
-  } else {
-    throw std::invalid_argument("storeTime: df must be 0 or 1");
-  }
-  if (inserted) {
-    if (c.hdc == -1 || static_cast<int>(count) < c.hdc) {
-      c.hd = top;
-      c.hdc = static_cast<int>(count);
-    }
-    if (c.ic < w) {
-      c.ic++;
-    } else {
-      c.h2 = top;
-      ip++;
-    }
-  }
-}
-void SimulationStack::storeBeginTime(uint u) { storeTime(0, u); }
-void SimulationStack::storeEndTime(uint u) { storeTime(1, u); }
-
-int SimulationStack::push(Pair p) {
-  // std::cout << "pushing " << p.head() << ", ip=" << ip << "\n";
-  uint pu = p.head();
-
-  if (lp < q) {
-    table->insert(pu, tp);
-    low[lp++] = p;
-  } else if (hp < q) {
-    table->insert(pu, tp + 1);
-    high[hp++] = p;
-  } else {
-    trailers[tp].x = low[lp - 1];
-    storeEdges();
-
-    tp++;
-    Pair *tmp = low;
-    low = high;
-    high = tmp;
-    hp = 0;
-    high[hp++] = p;
-    table->insert(pu, tp + 1);
-  }
-
-  count++;
-
-  return 0;
-}
-
-int SimulationStack::pop(Pair *p) {
-  if (hp > 0) {
-    *p = high[--hp];
-  } else if (lp > 0) {
-    *p = low[--lp];
-  } else {
-    if (tp > 0) {
-      return DFS_DO_RESTORE;
-    } else {
-      return DFS_NO_MORE_NODES;
-    }
-  }
-
-  count--;
-
-  return 0;
+Pair ExtendedSegmentStack::top() {
+  Pair r =
+      hp > 0 ? high[hp - 1] : lp > 0 ? low[lp - 1] : Pair(INVALID, INVALID);
+  return r;
 }

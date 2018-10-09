@@ -108,6 +108,8 @@ TEST(ReverseDFSTest, init) {
   Graph *g = Sealib::GraphCreator::createRandomFixed(256, 2);
   DFS::ReverseDFS d(g);
   d.init();
+  DFS::UserCall a = d.next();
+  EXPECT_EQ(a.u, 42);
   SUCCEED();
 }
 

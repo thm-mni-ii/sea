@@ -1,6 +1,8 @@
 #ifndef SEALIB_DFS_H_
 #define SEALIB_DFS_H_
 
+#include <stack>
+#include <vector>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
@@ -90,15 +92,15 @@ class DFS {
                                       UserFunc1 postProcess,
                                       unsigned int startVertex);
 
-  class UserCall {
+  struct UserCall {
    public:
-    enum Type { preprocess, preexplore, postexplore, postprocess };
+    enum Type { preprocess = 0, preexplore, postexplore, postprocess };
     unsigned type;
     uint u, v;
-    UserCall(unsigned type, uint u, uint v = 0);
+    UserCall(unsigned p1, uint p2, uint p3 = 0) : type(p1), u(p2), v(p3) {}
   };
 
-  class ReverseDFS : Iterator<std::vector<UserCall>> {
+  class ReverseDFS : Iterator<UserCall> {
    public:
     explicit ReverseDFS(Graph *);
     ~ReverseDFS();
@@ -107,13 +109,35 @@ class DFS {
 
     bool more() override;
 
-    std::vector<UserCall> next() override;
+    UserCall next() override;
 
    private:
+    struct IntervalData {
+     public:
+      Pair h1, h2;   // top entries at start and end of the interval
+      Pair hd;       // value of deepest entry
+      int hdc = -1;  // index of deepest entry
+      uint ic = 0;   // call counter for the interval
+    };
+
     Graph *g;
-    uint n, r;
+    uint n, r, w;
     CompactArray *c;
-    SimulationStack *s;
+    ExtendedSegmentStack *s;  // used for recording run
+    CompactArray *d, *f;
+    int ns = 0;
+    IntervalData *i;
+    uint ip = 0;  // interval pointer (a.k.a. j)
+    std::vector<UserCall> seq;
+    uint sp;
+
+    void storeTime(unsigned df, uint u);
+    void storeBeginTime(uint u);
+    void storeEndTime(uint u);
+
+    std::stack<Pair> reconstructPart(uint j, Pair from, Pair to);
+
+    std::vector<UserCall> simulate(std::stack<Pair> sj);
   };
 };
 }  // namespace Sealib
