@@ -13,17 +13,14 @@
 #define DFS_BLACK 2
 #define DFS_RESERVED 3
 
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
-
 /**
  * These two functions symbolize a NOP: you can call a DFS which accepts
  * (preprocess,preexplore,postexplore,postprocess) with the arguments
  * (DFS_NOP_PROCESS,DFS_NOP_EXPLORE,DFS_NOP_EXPLORE,DFS_NOP_PROCESS) to run it
  * silently.
  */
-#define DFS_NOP_PROCESS (UserFunc1)0
-#define DFS_NOP_EXPLORE (UserFunc2)0
+#define DFS_NOP_PROCESS [](uint) {}        // NOLINT
+#define DFS_NOP_EXPLORE [](uint, uint) {}  // NOLINT
 
 namespace Sealib {
 /**
@@ -76,9 +73,10 @@ class DFS {
   * @param postexplore to be executed after exploring an edge (u,v)
   * @param postprocess to be executed after processing a node u
   */
-  static void nloglognBitDFS(Graph *g, UserFunc1 preprocess,
-                             UserFunc2 preexplore, UserFunc2 postexplore,
-                             UserFunc1 postprocess);
+  static void nloglognBitDFS(Graph *g, UserFunc1 preprocess = DFS_NOP_PROCESS,
+                             UserFunc2 preexplore = DFS_NOP_EXPLORE,
+                             UserFunc2 postexplore = DFS_NOP_EXPLORE,
+                             UserFunc1 postprocess = DFS_NOP_PROCESS);
 
   /**
    * Runs an inplace DFS in linear time over a graph that is given in a special

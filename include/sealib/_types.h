@@ -1,8 +1,11 @@
 #ifndef SEALIB__TYPES_H_
 #define SEALIB__TYPES_H_
-
+#include <functional>
 // the standard numeric type (used mainly for node names)
 typedef unsigned int uint;
+
+typedef std::function<void(uint)> UserFunc1;
+typedef std::function<void(uint, uint)> UserFunc2;
 
 // a pair of numbers (used mainly for stack management)
 // typedef std::tuple<uint, uint> Pair;

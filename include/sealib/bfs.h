@@ -11,11 +11,8 @@
 #define BFS_GRAY2 2
 #define BFS_BLACK 3
 
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
-
-#define BFS_NOP_PROCESS (UserFunc1)0
-#define BFS_NOP_EXPLORE (UserFunc2)0
+#define BFS_NOP_PROCESS [](uint) {}        // NOLINT
+#define BFS_NOP_EXPLORE [](uint, uint) {}  // NOLINT
 
 namespace Sealib {
 /**

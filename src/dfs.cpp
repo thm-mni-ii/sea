@@ -23,25 +23,25 @@ static void process_standard(uint u0, Graph *g, uint *color,
     uint u = x.head();
     uint k = x.tail();
     if (color[u] == DFS_WHITE) {
-      if (preProcess != DFS_NOP_PROCESS) preProcess(u);
+      preProcess(u);
       color[u] = DFS_GRAY;
     }
     if (k < g->getNodeDegree(u)) {
       s->push(Pair(u, k + 1));
       uint v = g->head(u, k);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
+      preExplore(u, v);
       if (color[v] == DFS_WHITE) {
         s->push(Pair(v, 0));
       } else {
-        if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
+        postExplore(u, v);
       }
     } else {
-      if (postExplore != DFS_NOP_EXPLORE && u != u0) {
+      if (u != u0) {
         uint pu = s->top().head();
         postExplore(pu, u);
       }
       color[u] = DFS_BLACK;
-      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
+      postProcess(u);
     }
   }
   delete s;
@@ -67,20 +67,20 @@ static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
     u = x.head();
     k = x.tail();
     if (color->get(u) == DFS_WHITE) {
-      if (preProcess != DFS_NOP_PROCESS) preProcess(u);
+      preProcess(u);
       color->insert(u, DFS_GRAY);
     }
     if (k < g->getNodeDegree(u)) {
       s->push(Pair(u, k + 1));
       uint v = g->head(u, k);
-      if (preExplore != DFS_NOP_EXPLORE) preExplore(u, v);
+      preExplore(u, v);
       if (color->get(v) == DFS_WHITE) {
         s->push(Pair(v, 0));
       } else {
-        if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
+        postExplore(u, v);
       }
     } else {
-      if (postExplore != DFS_NOP_EXPLORE && u != u0) {
+      if (u != u0) {
         Pair px;
         sr = s->pop(&px);
         if (sr == DFS_DO_RESTORE) {
@@ -92,7 +92,7 @@ static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
         s->push(px);
       }
       color->insert(u, DFS_BLACK);
-      if (postProcess != DFS_NOP_PROCESS) postProcess(u);
+      postProcess(u);
     }
   }
 }
