@@ -10,21 +10,21 @@
 #define DFS_DO_RESTORE (unsigned)12
 
 namespace Sealib {
-/*
-  Segment Stack:
-  - the segment stack has a low and a high segment
-  - the trailer (the last slot) of each segment is kept
-  - on push, both segments are filled from low to high
-    - if both segments are full, the low segment is dropped and a new segment is
-  placed above of the high segment
-  - on pop, values are taken from high and then low segment
-    - if the segments are empty and there are trailers left, a restoration
-  request is issued
-    - if the segments are empty and the trailers are empty, there is no more
-  data in the stack
-
-  @author Simon Heuser
-*/
+/**
+ * Segment Stack:
+ * - the segment stack has a low and a high segment
+ * - the trailer (the last slot) of each segment is kept
+ * - on push, both segments are filled from low to high
+ *   - if both segments are full, the low segment is dropped and a new segment
+ * is placed above of the high segment
+ * - on pop, values are taken from high and then low segment
+ *   - if the segments are empty and there are trailers left, a restoration
+ * request is issued
+ *   - if the segments are empty and the trailers are empty, there is no more
+ * data in the stack
+ *
+ * @author Simon Heuser
+ */
 class SegmentStack {
  public:
   virtual int push(Pair u) = 0;
@@ -105,6 +105,7 @@ class ExtendedSegmentStack : public SegmentStack {
   uint retrieveEdge(uint u, unsigned f);
 
   Pair top();
+  static constexpr unsigned INVALID = static_cast<unsigned>(-1);
 
  private:
   /**
@@ -128,7 +129,6 @@ class ExtendedSegmentStack : public SegmentStack {
   unsigned m, n;
   CompactArray *color;
 
-  static constexpr unsigned INVALID = static_cast<unsigned>(-1);
   void storeEdges();
 };
 }  // namespace Sealib

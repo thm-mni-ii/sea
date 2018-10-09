@@ -92,6 +92,10 @@ class DFS {
                                       UserFunc1 postProcess,
                                       unsigned int startVertex);
 
+  /**
+   * Representation of a user call. A sequence of these can be retrieved from
+   * the ReverseDFS iterator.
+   */
   struct UserCall {
    public:
     enum Type { preprocess = 0, preexplore, postexplore, postprocess };
@@ -100,15 +104,33 @@ class DFS {
     UserCall(unsigned p1, uint p2, uint p3 = 0) : type(p1), u(p2), v(p3) {}
   };
 
+  /**
+   * Reverse DFS iterator.
+   * - init():
+   * - more():
+   * - next():
+   */
   class ReverseDFS : Iterator<UserCall> {
    public:
     explicit ReverseDFS(Graph *);
     ~ReverseDFS();
 
+    /**
+     * Run a n*log(log(n))-Bit DFS to record data about the intervals
+     */
     void init() override;
 
+    /**
+     * @return true if there are more UserCalls in the DFS
+     */
     bool more() override;
 
+    /**
+     * Get the next user call from the interval.
+     * If necessary, first reconstruct the stack and simulate the DFS until the
+     * end of the interval.
+     * @return next user call from the reverse sequence
+     */
     UserCall next() override;
 
    private:
@@ -137,7 +159,7 @@ class DFS {
 
     std::stack<Pair> reconstructPart(uint j, Pair from, Pair to);
 
-    std::vector<UserCall> simulate(std::stack<Pair> sj);
+    std::vector<UserCall> simulate(std::stack<Pair> sj, Pair until);
   };
 };
 }  // namespace Sealib
