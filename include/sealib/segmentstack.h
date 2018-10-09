@@ -139,16 +139,20 @@ class SimulationStack : public ExtendedSegmentStack {
   int push(Pair p) override;
   int pop(Pair *p) override;
 
+  void storeBeginTime(uint u);
+  void storeEndTime(uint u);
+
  private:
   class IntervalData {
    public:
-    std::set<uint> d, f;
-    Pair h, hd;
-    int hdc = -1;
-    uint ic = 0;
+    Pair h1, h2;   // top entries at start and end of the interval
+    Pair hd;       // value of deepest entry
+    int hdc = -1;  // index of deepest entry
+    uint ic = 0;   // call counter for the interval
   };
   uint r, w;
   uint count;
+  CompactArray *d, *f;
   IntervalData *i;
   uint ip;
 

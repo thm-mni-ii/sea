@@ -238,7 +238,7 @@ DFS::UserCall::UserCall(unsigned p1, uint p2, uint p3)
 DFS::ReverseDFS::ReverseDFS(Graph *graph)
     : g(graph),
       n(g->getOrder()),
-      r(static_cast<uint>(ceil(log2(n)))),
+      r(static_cast<uint>(ceil(8 * log2(n)))),
       c(new CompactArray(n, 3)),
       s(new SimulationStack(n, r, g, c)) {}
 

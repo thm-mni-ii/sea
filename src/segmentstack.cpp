@@ -239,11 +239,17 @@ bool ExtendedSegmentStack::isAligned() {
 SimulationStack::SimulationStack(uint size, uint intervalCount, Graph *g,
                                  CompactArray *c)
     : ExtendedSegmentStack(size, g, c),
-      r(intervalCount + 1),
-      w(static_cast<uint>(ceil(4 * n / static_cast<double>(r)))),
+      r(intervalCount),
+      w(static_cast<uint>(ceil(n / log2(n)))),
+      d(new CompactArray(size, r + 1)),
+      f(new CompactArray(size, r + 1)),
       i(new IntervalData[r]),
       ip(0) {
   std::cout << "r=" << r << ", w=" << w << "\n";
+  for (uint a = 0; a < size; a++) {
+    d->insert(a, r + 1);
+    f->insert(a, r + 1);
+  }
 }
 
 void SimulationStack::reconstructPart(unsigned j) { std::cout << j; }
@@ -251,37 +257,42 @@ void SimulationStack::reconstructPart(unsigned j) { std::cout << j; }
 void SimulationStack::storeTime(unsigned df, uint u) {
   // std::cout << "storeTime " << df << " " << u << "\n";
   if (ip >= r) throw std::out_of_range("too many intervals");
+  Pair top = hp > 0 ? high[hp - 1] : lp > 0 ? low[lp - 1] : Pair(0, 0);
   bool inserted = false;
   IntervalData &c = i[ip];
+  if (c.ic == 0) {
+    c.h1 = top;
+  }
   if (df == 0) {
-    if (c.d.find(u) == c.d.end()) {
-      c.d.insert(u);
-      // std::cout << "d["<<u<<"]="<<ip<<"\n";
+    if (d->get(u) == r + 1) {
+      d->insert(u, ip);
+      std::cout << "d[" << u << "]=" << ip << "\n";
       inserted = true;
     }
   } else if (df == 1) {
-    if (c.f.find(u) == c.f.end()) {
-      c.f.insert(u);
-      // std::cout << "f["<<u<<"]="<<ip<<"\n";
+    if (f->get(u) == r + 1) {
+      f->insert(u, ip);
+      std::cout << "f[" << u << "]=" << ip << "\n";
       inserted = true;
     }
   } else {
     throw std::invalid_argument("storeTime: df must be 0 or 1");
   }
   if (inserted) {
+    if (c.hdc == -1 || static_cast<int>(count) < c.hdc) {
+      c.hd = top;
+      c.hdc = static_cast<int>(count);
+    }
     if (c.ic < w) {
       c.ic++;
     } else {
-      Pair top = hp > 0 ? high[hp - 1] : lp > 0 ? low[lp - 1] : Pair(0, 0);
-      c.h = top;
-      if (c.hdc == -1 || static_cast<int>(count) < c.hdc) {
-        c.hd = top;
-        c.hdc = static_cast<int>(count);
-      }
+      c.h2 = top;
       ip++;
     }
   }
 }
+void SimulationStack::storeBeginTime(uint u) { storeTime(0, u); }
+void SimulationStack::storeEndTime(uint u) { storeTime(1, u); }
 
 int SimulationStack::push(Pair p) {
   // std::cout << "pushing " << p.head() << ", ip=" << ip << "\n";
@@ -307,7 +318,6 @@ int SimulationStack::push(Pair p) {
   }
 
   count++;
-  storeTime(0, pu);
 
   return 0;
 }
@@ -326,7 +336,6 @@ int SimulationStack::pop(Pair *p) {
   }
 
   count--;
-  storeTime(1, p->head());
 
   return 0;
 }
