@@ -25,6 +25,17 @@ class SubGraphStack {
  private:
     std::vector<SubGraph *> clientList;
     unsigned long currentRef;
+    unsigned long tuned;
+
+    RankSelect *tunedPhi0;
+    RankSelect *tunedPsi0;
+    RankSelect *tunedPhi;
+    RankSelect *tunedPsi;
+
+    void tunephi0(unsigned long i);
+    void tunepsi0(unsigned long i);
+    void tunephi(unsigned long i);
+    void tunepsi(unsigned long i);
 
  public:
     explicit SubGraphStack(std::shared_ptr<BasicGraph> g_);
@@ -192,15 +203,28 @@ class SubGraphStack {
     /**
      * Speeds up the calls of phi, psi, g, gInv, head, mate, order and degree
      * for the graph G_l that is currently on the top of the stack.
-     * This is done by creating rankSelect structures for the direct translation between G_0 and G_l
+     * This is done by creating rankSelect structures for the direct translation between G_0 and G_l and G_l and G_l - 1
      */
-    void toptune();
+    inline void toptune() {
+        tune(clientList.size()-1);
+    };
+
+    /**
+     * Speeds up the calls of phi, psi, g, gInv, head, mate, order and degree
+     * for the graph G_i
+     * This is done by creating rankSelect structures for the direct translation between G_0 and G_i, and G_i and G_i - 1
+     *
+     * If there are previously initialized tuning structures, they are destroyed.
+     * @param i - idx of the Graph to be tuned
+     */
+    void tune(unsigned long i);
 
     inline unsigned long size() const {
         return clientList.size();
     }
 
     virtual ~SubGraphStack();
+
 };
 }  // namespace Sealib
 #endif  // SEALIB_SUBGRAPHSTACK_H_
