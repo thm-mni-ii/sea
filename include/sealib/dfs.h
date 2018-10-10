@@ -15,6 +15,10 @@
 #define DFS_BLACK 2
 #define DFS_RESERVED 3
 
+using Sealib::Pair;
+using Sealib::UserFunc1;
+using Sealib::UserFunc2;
+
 /**
  * These two functions symbolize a NOP: you can call a DFS which accepts
  * (preprocess,preexplore,postexplore,postprocess) with the arguments
@@ -106,9 +110,6 @@ class DFS {
 
   /**
    * Reverse DFS iterator.
-   * - init():
-   * - more():
-   * - next():
    */
   class ReverseDFS : Iterator<UserCall> {
    public:
@@ -136,26 +137,26 @@ class DFS {
    private:
     struct IntervalData {
      public:
-      Pair h1, h2;   // top entries at start and end of the interval
-      Pair hd;       // value of deepest entry
-      int hdc = -1;  // index of deepest entry
-      uint ic = 0;   // call counter for the interval
+      Pair h1 = Pair(INVALID, INVALID),
+           h2 = Pair(INVALID,
+                     INVALID);  // top entries at start and end of the interval
+      Pair hd;                  // value of deepest entry
+      uint hdc = std::numeric_limits<int>::max();  // index of deepest entry
+      uint size = 0;  // call counter for the interval
     };
 
     Graph *g;
     uint n, r, w;
     CompactArray *c;
-    ExtendedSegmentStack *s;  // used for recording run
     CompactArray *d, *f;
-    int ns = 0;
+    uint ns = 0;
     IntervalData *i;
     uint ip = 0;  // interval pointer (a.k.a. j)
     std::vector<UserCall> seq;
-    uint sp;
+    uint sp = 0;
 
     void storeTime(unsigned df, uint u);
-    void storeBeginTime(uint u);
-    void storeEndTime(uint u);
+    void updateInterval(Pair top, bool end = false);
 
     std::stack<Pair> reconstructPart(uint j, Pair from, Pair to);
 

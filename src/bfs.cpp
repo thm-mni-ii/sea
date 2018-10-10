@@ -5,6 +5,7 @@
 using Sealib::BFS;
 using Sealib::CompactArray;
 using Sealib::Graph;
+using Sealib::Pair;
 
 void BFS::init() {
   u = 0;

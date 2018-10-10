@@ -9,6 +9,8 @@
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
 
+using Sealib::Pair;
+
 namespace Sealib {
 /**
  * Segment Stack:
@@ -104,8 +106,7 @@ class ExtendedSegmentStack : public SegmentStack {
   unsigned approximateEdge(uint u, uint k);
   uint retrieveEdge(uint u, unsigned f);
 
-  Pair top();
-  static constexpr unsigned INVALID = static_cast<unsigned>(-1);
+  Pair top() const;
 
  private:
   /**

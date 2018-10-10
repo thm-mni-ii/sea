@@ -233,7 +233,7 @@ bool ExtendedSegmentStack::isAligned() {
   return r;
 }
 
-Pair ExtendedSegmentStack::top() {
+Pair ExtendedSegmentStack::top() const {
   Pair r =
       hp > 0 ? high[hp - 1] : lp > 0 ? low[lp - 1] : Pair(INVALID, INVALID);
   return r;
