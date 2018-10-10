@@ -94,6 +94,14 @@ class Graphrepresentations {
 		 */
 		static void standardToShifted(unsigned int *g);
 
+		/**
+		 * Transforms graph inplace from shifted to
+		 * standard representation.
+		 * @param g graph in shifted representation
+		 */
+		static void shiftedToStandard(unsigned int *g);
+
+
 };
 }  // namespace Sealib
 #endif // SEALIB_GRAPHREPRESENTATIONS_H_
