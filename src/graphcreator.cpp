@@ -132,12 +132,12 @@ Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
                                                         unsigned int seed) {
     std::unique_ptr<Sealib::BasicGraph> graph(new Sealib::BasicGraph(order1 + order2));
 
-    std::mt19937_64 rng_(seed);
+    std::mt19937_64 _rng(seed);
     std::uniform_real_distribution<double> unif(0.0, 1.0);
 
     for (unsigned int n1 = 0; n1 < order1; n1++) {
         for (unsigned int n2 = order1; n2 < order2; n2++) {
-            if (unif(rng_) < p) {
+            if (unif(_rng) < p) {
                 Sealib::Node &node1 = graph->getNode(n1);
                 Sealib::Node &node2 = graph->getNode(n2);
 
