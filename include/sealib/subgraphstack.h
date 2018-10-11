@@ -207,7 +207,7 @@ class SubGraphStack {
      */
     inline void toptune() {
         tune(clientList.size()-1);
-    };
+    }
 
     /**
      * Speeds up the calls of phi, psi, g, gInv, head, mate, order and degree
@@ -224,7 +224,6 @@ class SubGraphStack {
     }
 
     virtual ~SubGraphStack();
-
 };
 }  // namespace Sealib
 #endif  // SEALIB_SUBGRAPHSTACK_H_
