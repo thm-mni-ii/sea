@@ -39,12 +39,8 @@ class RankSelect {
 
     unsigned long size() const;
 
-    /**
-     * @return segment of the bitset
-     */
-    const Sealib::Bitset<unsigned char>& getBitset() const;
-
     ~RankSelect();
+    const Bitset<unsigned char> &getBitset() const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_RANKSELECT_H_

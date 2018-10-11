@@ -8,6 +8,7 @@ Sealib::BasicGraph::BasicGraph(Node *nodes_, unsigned int order_) : nodes(order_
         nodes[i] = nodes_[i];
     }
 }
+
 Sealib::BasicGraph::BasicGraph(const std::vector<Sealib::Node> &nodes_) : nodes(nodes_) {}
 
 Sealib::BasicGraph::BasicGraph() : nodes(0) {}

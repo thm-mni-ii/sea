@@ -11,7 +11,6 @@
 /**
  * Space efficient TrailStructure.
  * Each vertex in a graph has an object of this type to store trail information.
- * @author Johannes Meintrup
  */
 namespace Sealib {
 class TrailStructure {

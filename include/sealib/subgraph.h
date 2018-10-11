@@ -120,18 +120,18 @@ class SubGraph {
     std::tuple<unsigned long, unsigned long> gInv(unsigned long r) const {
         if (r == 0) {
             throw std::invalid_argument("r needs to be > 0 (r = "
-                                        + std::to_string(r) + ")");
+                                            + std::to_string(r) + ")");
         }
         unsigned long j = r == 1 ? 0 : rank_p(r - 1);  // pSelect.rank(r - 1);
         if (j == (unsigned long) -1) {
             throw std::out_of_range("out of range - no arc r exists! (r = "
-                                    + std::to_string(r) + ")");
+                                        + std::to_string(r) + ")");
         }
         j++;
         unsigned long a = select_q(j);  // qSelect.select(j);
         if (a == (unsigned long) -1) {
             throw std::out_of_range("out of range - no arc r exists! (r = "
-                                    + std::to_string(r) + ")");
+                                        + std::to_string(r) + ")");
         }
         unsigned long b = select_p(j - 1);  // pSelect.select(j - 1);
         b = b == (unsigned long) -1 ? 0 : b;
