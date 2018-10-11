@@ -13,9 +13,10 @@ class TikzPicture : public TikzElement {
  private:
     std::vector<std::shared_ptr<TikzElement>> elements;
     std::string options;
+    bool scope;
 
  public:
-    explicit TikzPicture(std::string options = "");
+    explicit TikzPicture(std::string options = "", bool scope=true);
     void add(std::shared_ptr<TikzElement> tikzElement);
 
  protected:

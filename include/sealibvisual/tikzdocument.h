@@ -17,7 +17,7 @@ class TikzDocument {
   bool lualatex;
   std::ofstream file;
   std::string mode;
-  const std::string blockName = "tikzContainer";
+  const std::string blockName = "tikzpicture";
 
   void initialize();
 

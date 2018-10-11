@@ -278,10 +278,10 @@ using SealibVisual::Examples;
 using SealibVisual::VisualDFS;
 using SealibVisual::VisualBFS;
 void tikz_exampleDFS() {
-  uint n = 10;
+  uint n = 20;
   BasicGraph *g = Sealib::GraphCreator::createRandomFixed(n, 3);
   Sealib::CompactArray c(n, 3);
-  VisualDFS d(g, &c, "out-dfs3.tex", "beamer");
+  VisualDFS d(g, &c, "out-dfs3.tex");
   d.run();
   delete g;
 }

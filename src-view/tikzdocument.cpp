@@ -26,7 +26,7 @@ void SealibVisual::TikzDocument::initialize() {
     file << "% Created by sealib TikzDocument" << endl << endl;
     if (lualatex) file << "\\RequirePackage{luatex85}" << endl;
     file << "\\documentclass[tikz,border=20pt]{standalone}" << endl;
-    file << "\\standaloneenv{" << blockName << "}" << endl;
+    // file << "\\standaloneenv{" << blockName << "}" << endl;
     file << "\\usepackage{tikz}" << endl;
     file << "\\usetikzlibrary{" << tikzLibraries << "}" << endl;
     if (gdLibraries != "")

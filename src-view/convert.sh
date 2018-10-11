@@ -19,5 +19,5 @@ elif test "$1" = "--list"; then
 fi
 
 printf "Converting ${Arg}.pdf to ${Format}... "
-convert -density 200 -delay 200 -background white -alpha remove ${Arg}.pdf ${Arg}.${Format}
+convert -density 200 -delay 150 -background white -alpha remove ${Arg}.pdf ${Arg}.${Format}
 printf "Done.\n"

@@ -34,7 +34,7 @@ VisualBFS::VisualBFS(BasicGraph *g, CompactArray *c, std::string filename,
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
-      pic(new TikzPicture("spring layout, sibling distance=15mm, node "
+      pic(new TikzPicture("spring electrical layout, sibling distance=15mm, node "
                           "distance=20mm, node sep=1cm, arrows={->}, line "
                           "width=1pt, color=black")) {
   pic->add(tg);
@@ -43,15 +43,15 @@ VisualBFS::VisualBFS(BasicGraph *g, CompactArray *c, std::string filename,
 void VisualBFS::emit() {
   doc->beginBlock();
   doc->add(pic);
-  doc->add(TikzGenerator::generateTikzElement(*c, "color"));
+  doc->add(TikzGenerator::generateTikzElement(*c, "color", "yshift=-8cm"));
   doc->endBlock();
 }
 
 void VisualBFS::run() {
   BFS b(g, c,
         [this](uint u) {
-          emit();
           tg->getNodes().at(u).setOptions(Examples::style_lightgray);
+          emit();
         },
         [this](uint u, uint v) {
           if (tg->getNodes().at(u).getOptions() != Examples::style_gray) {
@@ -80,7 +80,7 @@ VisualDFS::VisualDFS(BasicGraph *g, CompactArray *c, std::string filename,
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
-      pic(new TikzPicture("spring layout, sibling distance=15mm, node "
+      pic(new TikzPicture("spring electrical layout, sibling distance=15mm, node "
                           "distance=20mm, node sep=1cm, arrows={->}, line "
                           "width=1pt, color=black")) {
   pic->add(tg);
@@ -89,14 +89,17 @@ VisualDFS::VisualDFS(BasicGraph *g, CompactArray *c, std::string filename,
 void VisualDFS::emit() {
   doc->beginBlock();
   doc->add(pic);
-  doc->add(TikzGenerator::generateTikzElement(*c, "color"));
+  doc->add(TikzGenerator::generateTikzElement(*c, "color", "yshift=-8cm"));
   std::vector<uint> l, h, t;
   for (uint a = 0; a < lp; a++) l.push_back(low[a].head());
   for (uint a = 0; a < hp; a++) h.push_back(high[a].head());
   for (uint a = 0; a < tp; a++) t.push_back(trailers[a].x.head());
-  doc->add(TikzGenerator::generateTikzElement(l, "$S_L$", true));
-  doc->add(TikzGenerator::generateTikzElement(h, "$S_H$", true));
-  doc->add(TikzGenerator::generateTikzElement(t, "T", true));
+  doc->add(TikzGenerator::generateTikzElement(l, "$S_L$", true,
+                                              "yshift=-8cm, xshift=8cm, name=SL"));
+  doc->add(TikzGenerator::generateTikzElement(h, "$S_H$", true,
+                                              "yshift=-8cm, xshift=10cm, name=SH"));
+  doc->add(TikzGenerator::generateTikzElement(t, "T", true,
+                                              "yshift=-8cm, xshift=12cm, name=T"));
   doc->endBlock();
 }
 
