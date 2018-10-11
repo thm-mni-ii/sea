@@ -28,7 +28,7 @@ void CompactArray::insert(uint i, unsigned int p) {
       static_cast<unsigned>(floor(i / static_cast<double>(valuesPerGroup)));
   if (groupOffset >= groupCount) E_outofbounds(i);
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
-  Group a = *(group[groupOffset]);
+  Group a = group[groupOffset];
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
   Group b(groupWidth);
@@ -36,9 +36,7 @@ void CompactArray::insert(uint i, unsigned int p) {
   Group c = a & ~b;
   Group d(groupWidth);
   d.setBlock(0, p << gap);
-  Group r = c | d;
-  delete group[groupOffset];
-  group[groupOffset] = new Group(r);
+  group[groupOffset] = c | d;
 }
 
 unsigned int CompactArray::get(uint i) {
@@ -47,7 +45,7 @@ unsigned int CompactArray::get(uint i) {
   unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
   unsigned gap =
       static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
-  unsigned a = static_cast<unsigned>(group[groupOffset]->getBlock(0));
+  unsigned a = static_cast<unsigned>(group[groupOffset].getBlock(0));
   unsigned b = maxValue << gap;
   unsigned c = a & b;
   unsigned d = c >> gap;
@@ -76,8 +74,7 @@ CompactArray::CompactArray(unsigned int count, unsigned int v) {
   valueCount = count;
   groupCount =
       static_cast<unsigned>(ceil(count / static_cast<double>(valuesPerGroup)));
-  group = new Group *[groupCount];
-  for (unsigned a = 0; a < groupCount; a++) group[a] = new Group(groupWidth);
+  group = std::vector<Group>(groupCount, Group(groupWidth));
 }
 
-CompactArray::~CompactArray() { delete[] group; }
+CompactArray::~CompactArray() {}

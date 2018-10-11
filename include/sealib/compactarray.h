@@ -1,6 +1,7 @@
 #ifndef SEALIB_COMPACTARRAY_H_
 #define SEALIB_COMPACTARRAY_H_
 
+#include <vector>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
 
@@ -48,7 +49,7 @@ class CompactArray {
   unsigned valueWidth, maxValue, groupWidth, valuesPerGroup;
   unsigned valueCount, groupCount;
 
-  Group **group;
+  std::vector<Group> group;
 };
 }  // namespace Sealib
 #endif  // SEALIB_COMPACTARRAY_H_

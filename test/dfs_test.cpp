@@ -6,8 +6,10 @@
 #include <vector>
 #include "sealib/basicgraph.h"
 #include "sealib/graphcreator.h"
+#include "sealib/reversedfs.h"
 
 using Sealib::DFS;
+using Sealib::ReverseDFS;
 using Sealib::CompactArray;
 using Sealib::Graph;
 using Sealib::Basicgraph;
@@ -96,7 +98,23 @@ TEST_P(DFSTest, nloglognBitUserproc) {
   EXPECT_EQ(c4, order);
 }
 
-TEST(DFSTest, nloglognImbalanced) {
+TEST(DFSTest, standardImbalanced) {
+  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
+  DFS::standardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                      DFS_NOP_PROCESS);
+  SUCCEED();
+  delete g;
+}
+
+TEST(DFSTest, nBitImbalanced) {
+  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
+  DFS::nBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                      DFS_NOP_PROCESS);
+  SUCCEED();
+  delete g;
+}
+
+TEST(DFSTest, nloglognBitImbalanced) {
   Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
   DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                       DFS_NOP_PROCESS);
@@ -106,9 +124,10 @@ TEST(DFSTest, nloglognImbalanced) {
 
 TEST(ReverseDFSTest, init) {
   Graph *g = Sealib::GraphCreator::createRandomFixed(256, 2);
-  DFS::ReverseDFS d(g);
+  ReverseDFS d(g);
   d.init();
-  DFS::UserCall a = d.next();
+  while (d.more()) d.next();
+  std::cout << " ----- \n ";
   SUCCEED();
 }
 
