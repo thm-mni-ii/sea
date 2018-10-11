@@ -154,7 +154,7 @@ void testSubGraphStack() {
     std::shared_ptr<Sealib::BasicGraph> bg =
         Sealib::GraphCreator::createSharedGraphFromAdjacencyMatrix(adj_mtrx, order);
 
-    Sealib::SubgraphStack stack(bg);
+    Sealib::SubGraphStack stack(bg);
 }
 
 int main() {

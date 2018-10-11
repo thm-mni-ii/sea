@@ -36,3 +36,7 @@ unsigned int Sealib::BasicGraph::head(unsigned int u, unsigned int k) const {
 unsigned int Sealib::BasicGraph::getOrder() const {
     return static_cast<unsigned int>(nodes.size());
 }
+std::tuple<unsigned int, unsigned int>
+Sealib::BasicGraph::mate(unsigned int u, unsigned int k) const {
+    return {nodes[u].getAdj()[k].vertex, nodes[u].getAdj()[k].crossIndex};
+}

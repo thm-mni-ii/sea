@@ -4,6 +4,7 @@
 #include <sealib/graph.h>
 #include <sealib/node.h>
 #include <vector>
+#include <tuple>
 
 namespace Sealib {
 /**
@@ -83,6 +84,8 @@ class BasicGraph : public Graph {
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
     unsigned int getOrder() const override;
+
+    std::tuple<unsigned int, unsigned int> mate(unsigned int u, unsigned int k) const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BASICGRAPH_H_
