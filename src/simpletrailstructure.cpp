@@ -8,12 +8,12 @@ Sealib::SimpleTrailStructure::SimpleTrailStructure(unsigned int _degree) :
     lastClosed((unsigned int) -1),
     inAndOut(degree),
     matched(degree),
-    flags(3),
+    flags(4),
     unused(degree * 3) {
     nextUnused = 1;
     lastClosed = (unsigned int) -1;
 
-    if (degree % 2 != 0) flags[2] = 1;  // set it to grey if uneven
+    if (degree % 2 == 0) flags[2] = 1;  // set it to true if even
     if (degree == 0) flags[1] = 1;  // node with no edges is possible, set black
 
     for (unsigned int &i : married) {
@@ -50,10 +50,10 @@ unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
     if (temp == nextUnused) {  // no other element, this is last
         unsigned int retVal = nextUnused;
         nextUnused = 0;
-        flags[1] = !flags[1];
+        flags[1] = 1;
         return retVal;
     }
-unused[temp + 1] += nextLink;
+    unused[temp + 1] += nextLink;
 
     if (nextLink * 3 + nextUnused > degree * 3) {  // circle around
         temp = (nextLink * 3) - (degree * 3) + nextUnused;
@@ -69,7 +69,7 @@ unused[temp + 1] += nextLink;
     return retVal;
 }
 
-unsigned int Sealib::SimpleTrailStructure::getMatched(unsigned int idx) {
+unsigned int Sealib::SimpleTrailStructure::getMatched(unsigned int idx) const {
     // check if the idx is present in the married structure
     if (married[0] == idx) return married[1];
     if (married[1] == idx) return married[0];
@@ -112,7 +112,12 @@ unsigned int Sealib::SimpleTrailStructure::getMatched(unsigned int idx) {
 
 unsigned int Sealib::SimpleTrailStructure::leave() {
     unsigned int u = getNextUnused();
-    return u == 0 ? (unsigned int) -1 : unused[u];
+    if (u == (unsigned int) -1 || u == 0) {
+        return u;
+    } else {
+        flags[3] = 1;
+        return unused[u];
+    }
 }
 
 unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
@@ -171,7 +176,7 @@ unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
     }
 
     if (temp == i) {  // no other element, this is last
-        flags[1] = 0;
+        flags[1] = 1;
         nextUnused = 0;
 
         // unused is not needed anymore
@@ -207,15 +212,15 @@ unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
     return lastClosed;  // returns the leaver element.
 }
 
-bool Sealib::SimpleTrailStructure::isBlack() {
+bool Sealib::SimpleTrailStructure::isBlack() const {
     return flags[1];
 }
 
-bool Sealib::SimpleTrailStructure::isGrey() {
+bool Sealib::SimpleTrailStructure::isGrey() const {
     return flags[0];
 }
 
-bool Sealib::SimpleTrailStructure::isEven() {
+bool Sealib::SimpleTrailStructure::isEven() const {
     return flags[2];
 }
 
@@ -243,4 +248,24 @@ void Sealib::SimpleTrailStructure::marry(unsigned int i, unsigned int o) {
         married[2] = i;
         married[3] = o;
     }
+}
+
+unsigned int Sealib::SimpleTrailStructure::getLastClosed() const {
+    return lastClosed;
+}
+
+unsigned int Sealib::SimpleTrailStructure::getStartingArc() const {
+    if (!flags[3]) return (unsigned int) -1;
+
+    for (unsigned int i = 0; i < inAndOut.size(); i++) {
+        unsigned int match = getMatched(i);
+        if (match == i && !inAndOut[i]) {
+            return i;
+        }
+    }
+    return (unsigned int) -1;
+}
+
+bool Sealib::SimpleTrailStructure::hasStartingArc() const {
+    return flags[3];
 }

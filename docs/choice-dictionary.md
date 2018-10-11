@@ -33,9 +33,8 @@ delete cd;
 ChoiceDictionaryIterator
 ===
 
-An Iterator is used to iterate through all bits set to 1 in a choice dictionary.
-It supports the so-called *more* operation that returns true if the choice dictionary contains more bits set to 1, aswell as the *next* operation that returns the index of the next arbitrary bit.<br>
-If there are changes made to the choice dictionary during the iteration process, the iterator may return wrong results.
+A ChoiceDictionaryIterator is used to iterate through all bits set to 1 in a choice dictionary.
+It supports the so-called *more* operation that returns true if the choice dictionary contains more bits set to 1, aswell as the *next* operation that returns the index of the next arbitrary bit.
 
 ## Operations
 * init: Initializes the ChoiceDictionaryIterator.
