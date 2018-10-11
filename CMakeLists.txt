@@ -27,7 +27,7 @@ ExternalProject_Add(GTEST_PROJECT
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS -DINSTALL_GTEST=OFF -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++
         INSTALL_COMMAND ""
-        BUILD_COMMAND "${MAKE}" --build .)
+        BUILD_COMMAND "${MAKE}" -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++ --build .)
 
 ExternalProject_Get_Property(GTEST_PROJECT source_dir)
 ExternalProject_Get_Property(GTEST_PROJECT binary_dir)
@@ -59,7 +59,7 @@ add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(tests PRIVATE -std=c++11 -g -O3 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
+target_compile_options(tests PRIVATE -std=c++11 -g -O0 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")
@@ -73,4 +73,4 @@ endif ()
 file(GLOB MAIN "src-view/*.cpp")                                   # all test files
 add_executable(main ${LIB_SOURCES} ${MAIN})
 find_package(Threads)
-target_compile_options(main PRIVATE -std=c++11 -O3)
+target_compile_options(main PRIVATE -std=c++11 -O0)

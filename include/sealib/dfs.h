@@ -35,6 +35,7 @@ namespace Sealib {
  *  - standardDFS: the normal DFS, uses implicit recursion stack
  *  - nBitDFS: space-efficient DFS, explicit segmented stack
  *
+ * @author Simon Heuser
  */
 class DFS {
  public:

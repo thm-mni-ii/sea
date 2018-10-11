@@ -1,7 +1,9 @@
 #ifndef SEALIB_GRAPHREPRESENTATIONS_H_
 #define SEALIB_GRAPHREPRESENTATIONS_H_
+#include <sealib/compactgraph.h>
+#include <sealib/basicgraph.h>
 #include <random>
-#include "sealib/compactgraph.h"
+
 /**
  * This class contains static functions to change the
  * representation of graph structures and to generate
@@ -18,10 +20,9 @@
  * @author Simon Schniedenharn
  */
 namespace Sealib {
-
 class Graphrepresentations {
  public:
-    static uint* fastGraphGeneration(uint n, uint mPern);
+    static uint *fastGraphGeneration(uint n, uint mPern);
 
     /**	Generates a Gilbert graph G(n,p) in standard representation with n nodes
      *  and an occurence of every possible edge with a probability of
@@ -35,6 +36,7 @@ class Graphrepresentations {
     static Compactgraph *generateGilbertGraph(unsigned int n, double p,
                                               std::mt19937_64 *gen);
 
+
     /**	Generates a Gilbert graph G(n,p) in standard representation with n nodes
      *  and an occurence of every possible edge with a probability of
      *  0 < p < 1
@@ -44,7 +46,7 @@ class Graphrepresentations {
      *	@param p probability of an edge
      *	@param gen engine to generate a pseudo random sequence of numbers
      */
-    static uint* generateRawGilbertGraph(unsigned int n, double p,
+    static uint *generateRawGilbertGraph(unsigned int n, double p,
                                          std::mt19937_64 *gen);
 
     /**

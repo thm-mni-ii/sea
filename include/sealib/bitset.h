@@ -171,6 +171,12 @@ class Bitset {
     Bitset<BlockType>& operator-=(const Bitset<BlockType>& rhs);
 
     Bitset<BlockType> operator~() const;
+
+    /**
+     * resizes the bitset to hold up to size bits
+     * @param size - size of the bitset after resizing
+     */
+    void resize(unsigned long size);
 };
 
 template <typename Block>

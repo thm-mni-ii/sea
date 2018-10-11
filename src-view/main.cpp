@@ -1,3 +1,11 @@
+#include <sealib/graphcreator.h>
+#include <sealib/dfs.h>
+#include <sealib/graphrepresentations.h>
+#include <sealib/compactgraph.h>
+#include <sealib/runtimetest.h>
+#include <sealib/_types.h>
+#include <sealib/linkedliststack.h>
+#include <sealib/subgraphstack.h>
 #include <iostream>
 #include <chrono>
 #include <stack>
@@ -7,12 +15,6 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
-#include "sealib/graphcreator.h"
-#include "sealib/dfs.h"
-#include "sealib/graphrepresentations.h"
-#include "sealib/compactgraph.h"
-#include "sealib/runtimetest.h"
-#include "sealib/_types.h"
 
 using std::cout;
 using std::stack;
@@ -80,15 +82,17 @@ void runTests(double(*p)(double), std::string filename) {
         double n = 20000 * i;
         for (unsigned int j = 0; j < 2; ++j) {
             double pN = p(n);
-            double m =  n * (n-1) * pN;
+            double m = n * (n - 1) * pN;
             auto A = Graphrepresentations::generateRawGilbertGraph(n, pN, &gen);
             std::unique_ptr<Compactgraph> g(new Compactgraph(A));
-            test1.runTest([&g]() { DFS::standardDFS(g.get(), dummy,
-                                                    dummy2, dummy2, dummy); }, n, m);
+            test1.runTest([&g]() {
+              DFS::standardDFS(g.get(), dummy,
+                               dummy2, dummy2, dummy);
+            }, n, m);
             test2.runTest([&A]() {
-                Graphrepresentations::standardToBeginpointer(A);
-                Graphrepresentations::swapRepresentation(A);
-                DFS::runLinearTimeInplaceDFS(A, dummy, dummy, 1);
+              Graphrepresentations::standardToBeginpointer(A);
+              Graphrepresentations::swapRepresentation(A);
+              DFS::runLinearTimeInplaceDFS(A, dummy, dummy, 1);
             }, n, m);
         }
     }
@@ -105,7 +109,7 @@ void runTest(uint n, uint (*fm)(uint n)) {
             auto A = Graphrepresentations::fastGraphGeneration(_n, fm(_n));
             std::unique_ptr<Compactgraph> g(new Compactgraph(A));
             test1.runTest([&g]() {
-                DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy);
+              DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy);
             }, _n, fm(_n));
 //            test2.runTest([&A]() {
 //                Graphrepresentations::standardToBeginpointer(A);
