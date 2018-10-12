@@ -16,22 +16,22 @@ namespace Sealib {
  * @author Simon Schniedenharn 
  */
 class Compactgraph : public Graph {
- private:
-    std::unique_ptr<unsigned int[]> A;
+	private:
+		std::unique_ptr<unsigned int[]> A;
 
- public:
-    /**
-     * Creates a compactgraph object out of a pointer to an unsigned int array
-     * @param A pointer to a graph array in standard representation
-     */
-    explicit Compactgraph(unsigned int _A[]);
+	public:
+		/**
+		 * Creates a compactgraph object out of a pointer to an unsigned int array
+		 * @param A pointer to a graph array in standard representation
+		 */
+		explicit Compactgraph(unsigned int _A[]);
 
     /**
     * Returns the degree of the node that v points at.
     * @param u Vertex u 
     * @return Returns d that is the degree of node v.
     */
-    unsigned int getNodeDegree(unsigned int u) const override;
+		unsigned int getNodeDegree(unsigned int u) override;
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
@@ -39,17 +39,17 @@ class Compactgraph : public Graph {
     * @param k index in the adjacency vector of node u
     * @return Returns v that is the k-th neighbor of u.
     */
-    unsigned int head(unsigned int u, unsigned int k) const override;
+    unsigned int head(unsigned int u, unsigned int k) override;
 
     /**
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
-    unsigned int getOrder() const override;
+    unsigned int getOrder() override;
 
-    /**
-     * @return Returns the underlying array
-     */
-    unsigned int *getData();
+		/**
+		 * @return Returns the underlying array
+		 */
+		unsigned int* getData();
 };
 
 }  // namespace Sealib

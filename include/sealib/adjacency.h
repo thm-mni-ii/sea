@@ -1,7 +1,6 @@
 #ifndef SEALIB_ADJACENCY_H_
 #define SEALIB_ADJACENCY_H_
 
-#include <tuple>
 namespace Sealib {
 /**
  * An Adjacency object is used in the nodes class as a representation of an edges endpoint.
@@ -19,10 +18,6 @@ class Adjacency {
      * @param _vertex The vertex id
      */
     explicit Adjacency(unsigned int _vertex);
-
-    Adjacency();
-
-    std::tuple<unsigned int, unsigned int> toTuple() const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_ADJACENCY_H_

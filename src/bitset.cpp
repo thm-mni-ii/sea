@@ -56,12 +56,6 @@ typename Bitset<BlockType>::sizeType Bitset<BlockType>::size() const {
 }
 
 template<typename BlockType>
-void Bitset<BlockType>::resize(unsigned long size) {
-    bits = size;
-    mbits.resize((size / bitsPerBlock) + 1);
-}
-
-template<typename BlockType>
 typename Bitset<BlockType>::sizeType Bitset<BlockType>::blocks() const {
     return mbits.size();
 }
