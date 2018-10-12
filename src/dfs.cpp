@@ -5,10 +5,6 @@
 #include "./inplacerunner.h"
 #include "./segmentstack.h"
 
-#define GRADE_ZERO 0
-#define GRADE_ONE 1
-#define GRADE_AT_LEAST_TWO 2
-
 using Sealib::DFS;
 using Sealib::SegmentStack;
 using Sealib::BasicSegmentStack;
