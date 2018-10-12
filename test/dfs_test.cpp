@@ -8,13 +8,7 @@
 #include "sealib/graphcreator.h"
 #include "sealib/reversedfs.h"
 
-using Sealib::DFS;
-using Sealib::ReverseDFS;
-using Sealib::CompactArray;
-using Sealib::Graph;
-using Sealib::Basicgraph;
-using Sealib::Node;
-using Sealib::Adjacency;
+using namespace Sealib;  // NOLINT
 using std::vector;
 using std::stack;
 
@@ -124,11 +118,23 @@ TEST(DFSTest, nloglognBitImbalanced) {
 
 TEST(ReverseDFSTest, init) {
   Graph *g = Sealib::GraphCreator::createRandomFixed(256, 2);
+  std::vector<uint> ref;
+  DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                      [&ref](uint u) { ref.push_back(u); });
+  std::vector<uint> seq;
   ReverseDFS d(g);
   d.init();
-  while (d.more()) d.next();
+  while (d.more()) {
+    UserCall a = d.next();
+    if (a.type == UserCall::postprocess) {
+      seq.push_back(a.u);
+    }
+  }
   std::cout << " ----- \n ";
-  SUCCEED();
+  ASSERT_EQ(ref.size(), seq.size());
+  for (uint a = 0; a < ref.size(); a++) {
+    EXPECT_EQ(seq[a], ref[ref.size() - 1 - a]);
+  }
 }
 
 auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,

@@ -54,7 +54,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
          h2 = Pair(INVALID,
                    INVALID);  // top entries at start and end of the interval
     Pair hd;                  // value of deepest entry
-    uint hdc = std::numeric_limits<int>::max();  // index of deepest entry
+    uint hdc = std::numeric_limits<uint>::max();  // index of deepest entry
     uint size = 0;  // call counter for the interval
   };
 
@@ -62,14 +62,17 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   uint n, r, w;
   CompactArray c;
   CompactArray d, f;
+  ExtendedSegmentStack s;  // only used for recording run
   uint ns = 0;
   IntervalData *i;
   uint j = 0;  // interval pointer
   std::vector<UserCall> seq;
   uint sp = 0;
 
+  void process_recording(uint u0);
+
   void storeTime(unsigned df, uint u);
-  void updateInterval(Pair top, UserCall call, bool end = false);
+  void updateInterval(/*UserCall call, */ bool end = false);
 
   std::stack<Pair> reconstructPart(Pair from, Pair to);
 
