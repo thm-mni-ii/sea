@@ -101,7 +101,7 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 TEST(DFSTest, standardImbalanced) {
   Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
   DFS::standardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                      DFS_NOP_PROCESS);
+                   DFS_NOP_PROCESS);
   SUCCEED();
   delete g;
 }
@@ -109,7 +109,7 @@ TEST(DFSTest, standardImbalanced) {
 TEST(DFSTest, nBitImbalanced) {
   Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
   DFS::nBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                      DFS_NOP_PROCESS);
+               DFS_NOP_PROCESS);
   SUCCEED();
   delete g;
 }

@@ -69,7 +69,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   uint sp = 0;
 
   void storeTime(unsigned df, uint u);
-  void updateInterval(Pair top, bool end = false);
+  void updateInterval(Pair top, UserCall call, bool end = false);
 
   std::stack<Pair> reconstructPart(Pair from, Pair to);
 
