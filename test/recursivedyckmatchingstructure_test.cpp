@@ -33,6 +33,7 @@ TEST(RecursiveDyckMatchingStructureTest, testWords) {
             Sealib::DyckMatchingStructure::getMatchNaive(word, i);
         unsigned long segMatch =
             Sealib::DyckMatchingStructure::getMatchNaive(segmentizedWord, i, 7);
+        ASSERT_EQ(match, segMatch);
         if (match != segMatch) {
             std::cout << "match " << i << ": " << match << std::endl;
             std::cout << "seg match " << i << ": " << segMatch << std::endl;

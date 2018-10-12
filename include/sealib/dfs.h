@@ -35,6 +35,7 @@ namespace Sealib {
  *  - standardDFS: the normal DFS, uses implicit recursion stack
  *  - nBitDFS: space-efficient DFS, explicit segmented stack
  *
+ * @author Simon Heuser
  */
 class DFS {
  public:
@@ -84,6 +85,7 @@ class DFS {
    * EFFICIENCY: O(n+m) time, O(log n) bits
    * @param graph Graph A graph in a swapped begin pointer representation.
    * @param startVertex startVertex The begin of the DFS tree.
+   * @author Simon Schniedenharn
    */
   static void runLinearTimeInplaceDFS(unsigned int *graph, UserFunc1 preProcess,
                                       UserFunc1 postProcess,
