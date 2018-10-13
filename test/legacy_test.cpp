@@ -2,7 +2,10 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
+#ifdef __clang__
+/* G++ will complain about this (the tests should be successful anyway): */
 extern "C" {
+#endif
 
 #define cset Sealib_ChoiceDictionary_set
 #define cget Sealib_ChoiceDictionary_get
@@ -54,4 +57,7 @@ TEST(LegacyTest, dfs) {
   Sealib_DFS_nloglognBitDFS(g, count, NULL, NULL, NULL);
   EXPECT_EQ(c, 5050);
 }
+
+#ifdef __clang__
 }
+#endif
