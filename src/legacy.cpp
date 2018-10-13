@@ -1,6 +1,7 @@
 #include "sealib/legacy.h"
 #include "sealib/bitset.h"
 #include "sealib/choicedictionaryiterator.h"
+#include "sealib/dfs.h"
 #include "sealib/graphcreator.h"
 #include "sealib/rankselect.h"
 
@@ -10,6 +11,9 @@ void *Sealib_Graph_new(unsigned int **m, unsigned int order) {
   return GraphCreator::createGraphFromAdjacencyMatrix(m, order);
 }
 void Sealib_Graph_delete(void *self) { delete static_cast<Graph *>(self); }
+void *Sealib_Graph_generateRandom(unsigned int order) {
+  return GraphCreator::createRandomGenerated(order);
+}
 
 void *Sealib_ChoiceDictionary_new(unsigned int size) {
   return new ChoiceDictionary(size);
@@ -47,6 +51,9 @@ unsigned long Sealib_ChoiceDictionaryIterator_next(void *self) {
 void *Sealib_Bitset_new(unsigned long size) {
   return new Bitset<unsigned char>(size);
 }
+void Sealib_Bitset_delete(void *self) {
+  delete static_cast<Bitset<unsigned char> *>(self);
+}
 void Sealib_Bitset_set(void *self, unsigned long index) {
   Bitset<unsigned char> &b = *static_cast<Bitset<unsigned char> *>(self);
   b[index] = 1;
@@ -69,4 +76,12 @@ unsigned long Sealib_RankSelect_select(void *self, unsigned long bit) {
 }
 unsigned long Sealib_RankSelect_size(void *self) {
   return static_cast<RankSelect *>(self)->size();
+}
+
+void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(unsigned int),
+                               void (*preexplore)(unsigned int, unsigned int),
+                               void (*postexplore)(unsigned int, unsigned int),
+                               void (*postprocess)(unsigned int)) {
+  DFS::nloglognBitDFS(static_cast<Graph *>(graph), preprocess, preexplore,
+                      postexplore, postprocess);
 }
