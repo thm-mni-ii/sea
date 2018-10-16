@@ -24,17 +24,21 @@ before_install:
   - pip install --user cpp-coveralls
   - pip install --user cpplint
 
-script:
+before_script:
   - cpplint ./src/*.*
   - cpplint ./include/*/*.*
   - cpplint ./src-view/*.*
   - cpplint ./test/*.*
   - cppcheck --std=c++11 --error-exitcode=1 --quiet -Iinclude src/ src-view/
-  - sonar-scanner
-  - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 . && make && ./bin/tests
+
+script:
+  - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 .
+  - build-wrapper-linux-x86-64 --out-dir bw-output make
+  - ./bin/tests
 
 after_success:
   - coveralls --root .  -E ".*CMakeFiles.*" -e test -e third-party -e src-view -e include --gcov-options '\-lp'
+  - sonar-scanner
 
 before_deploy:
   # tar the header files and the library
