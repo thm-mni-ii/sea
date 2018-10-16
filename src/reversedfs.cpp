@@ -117,7 +117,7 @@ void ReverseDFS::init() {
   updateInterval(true);
 }
 
-bool ReverseDFS::more() { return !(j == 0 && sp == seq.size() - 1); }
+bool ReverseDFS::more() { return !(j == 0 && majorI==major.rend()); }
 
 std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
   std::cout << "reconstruct " << j << " " << from.head() << " " << to.head()
@@ -201,7 +201,7 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
         if (sj->size() > 0 && sj->top() == until) break;
       } else {
         // no postexplore: will be simulated later
-        std::cout << " == minor call here == \n";
+        std::cout << " == pre+postexplore " << u << "," << v << " == \n";
       }
     } else {
       c.insert(u, DFS_BLACK);
@@ -229,51 +229,46 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
 }
 
 UserCall ReverseDFS::next() {
-  static bool doMinor = true;
-  if (sp < seq.size()) {
-    if (sp < seq.size() - 1 && doMinor) {
-      UserCall &cc = seq.at(seq.size() - sp), &nc = seq.at(seq.size() - sp - 1);
-      if (cc.type == UserCall::postexplore &&
-          nc.type == UserCall::preexplore) {  // implies: cc.u==nc.u
-        for (uint a = 0; a < g->getNodeDegree(cc.u); a++) {
-          if (g->head(cc.u, a) == cc.v && g->head(cc.u, a + 1) != nc.v) {
-            std::cout << "=== inserting minor call (pe) === \n";
-            for (a = a + 1; g->head(cc.u, a) != nc.v; a++) {
-              minor.emplace_back(
-                  UserCall(UserCall::preexplore, cc.u, g->head(cc.u, a)));
-              minor.emplace_back(
-                  UserCall(UserCall::postexplore, cc.u, g->head(cc.u, a)));
+  if (majorI != major.rend()) {
+    if (takeMajor) {
+      UserCall &cc = *majorI;
+      if (cc.type == UserCall::preexplore || cc.type == UserCall::postprocess) {
+        if (previous.u == cc.u) {
+          uint k0 = 0;
+          if (previous.type == UserCall::postexplore) {
+            while (g->head(cc.u, k0) != previous.v) {
+              k0++;
             }
-            break;
+          } else if (previous.type == UserCall::preprocess) {
+            // start from edge 0
+          } else if (previous.type == UserCall::postprocess) {
+            throw std::logic_error("previous type cannot be postprocess!");
           }
-        }
-      } else if (cc.type == UserCall::postexplore &&
-                 nc.type == UserCall::postprocess) {
-        for (uint a = 0; a < g->getNodeDegree(cc.u); a++) {
-          if (g->head(cc.u, a) == cc.v) {
-            std::cout << "=== inserting minor call (pp) === \n";
-            for (a = a + 1; a < g->getNodeDegree(cc.u); a++) {
-              minor.emplace_back(
-                  UserCall(UserCall::preexplore, cc.u, g->head(cc.u, a)));
-              minor.emplace_back(
-                  UserCall(UserCall::postexplore, cc.u, g->head(cc.u, a)));
+          for (uint k = k0; k < g->getNodeDegree(cc.u); k++) {
+            uint v = g->head(cc.u, k);
+            if (cc.type == UserCall::preexplore && v == cc.v) {
+              break;
             }
-            break;
+            minor.emplace_back(UserCall(UserCall::preexplore, cc.u, v));
+            minor.emplace_back(UserCall(UserCall::postexplore, cc.u, v));
+            std::cout << " <<< pre+postexplore " << cc.u << "," << v
+                      << " >>> \n";
+          }
+          if (minor.size() > 0) {
+            takeMajor = false;
           }
         }
       }
     }
-    UserCall next;
-    if (minor.size() > 0) {
-      doMinor = false;
-      next = minor.front();
-      minor.pop_front();
+    if (minor.size() == 0) {
+      previous = *majorI;
+      takeMajor = true;
+      return *(majorI++);
     } else {
-      sp++;
-      doMinor = true;
-      next = seq.at(seq.size() - sp);
+      UserCall m = minor.front();
+      minor.pop_front();
+      return m;
     }
-    return next;
   } else {  // build new sequence
     j--;
     for (uint a = 0; a < n; a++) {
@@ -286,13 +281,10 @@ UserCall ReverseDFS::next() {
       }
     }
     std::stack<Pair> sj = reconstructPart(i[j].hd, i[j].h1);
-    seq = simulate(&sj, i[j].h2, i[j].c1);
+    major = simulate(&sj, i[j].h2, i[j].c1);
     std::cout << "end of simulation " << j << "\n";
-    sp = 1;
-    if (seq.size() > 0)
-      return seq.at(seq.size() - 1);
-    else
-      return next();
+    majorI = major.rbegin();
+    return next();
   }
 }
 

@@ -71,9 +71,13 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   uint ns = 0;
   IntervalData *i;
   uint j = 0;  // interval pointer
-  std::vector<UserCall> seq;
-  uint sp = 0;
+  std::vector<UserCall> major;
   std::deque<UserCall> minor;
+  bool takeMajor = true;
+  uint sp = 0;
+  UserCall previous;
+  std::vector<UserCall>::reverse_iterator majorI = major.rend();
+  std::deque<UserCall>::iterator minorI = minor.end();
 
   void process_recording(uint u0);
 
