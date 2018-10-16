@@ -2,14 +2,10 @@
 #include <math.h>
 #include <iostream>
 
-using Sealib::Pair;
-using Sealib::DFS;
-using Sealib::ReverseDFS;
-using Sealib::UserCall;
+using namespace Sealib;  // NOLINT
 
 void ReverseDFS::storeTime(unsigned df, uint u) {
   // std::cout << "storeTime " << df << " " << u << "\n";
-  if (j >= r) throw std::out_of_range("too many intervals");
   if (df == 0) {
     if (d.get(u) == r + 1) {
       d.insert(u, j);
@@ -23,18 +19,18 @@ void ReverseDFS::storeTime(unsigned df, uint u) {
   }
 }
 
-void ReverseDFS::updateInterval(/*UserCall call, */ bool end) {
+void ReverseDFS::updateInterval(bool end) {
   IntervalData &ci = i[j];
   Pair top = s.top();
-  if (ci.size <= 1 && ci.h1.head() == INVALID) {  // allow one right-shift
+  if (ci.size == 0) {
     ci.h1 = top;
   }
+  ci.size++;
   if (ns < ci.hdc && ns > 0) {
     ci.hd = top;
     ci.hdc = ns;
   }
-  ci.size++;
-  if (ci.size == w || end) {
+  if (ci.size == w + 1 || end) {
     ci.h2 = top;
     std::cout << "H" << j << " = (" << ci.h1.head() << "," << ci.h1.tail()
               << ")\n";
@@ -42,8 +38,16 @@ void ReverseDFS::updateInterval(/*UserCall call, */ bool end) {
               << ")\n";
     std::cout << "H'" << j << " = (" << ci.h2.head() << "," << ci.h2.tail()
               << ")\n";
+    std::cout << "c" << j << " = " << ci.c1.type << ":" << ci.c1.u << ":"
+              << ci.c1.v << "\n";
     j++;
+    if (j >= r) throw std::out_of_range("too many intervals");
     updateInterval();
+  }
+}
+void ReverseDFS::setCall(UserCall call) {
+  if (call != UserCall() && i[j].c1 == UserCall()) {
+    i[j].c1 = call;
   }
 }
 
@@ -51,11 +55,10 @@ void ReverseDFS::process_recording(uint u0) {
   updateInterval();
   s.push(Pair(u0, 0));
   ns = 1;
+  updateInterval();
   Pair x;
   while (!s.isEmpty()) {
-    updateInterval();
     int sr = s.pop(&x);
-    ns--;
     if (sr == DFS_DO_RESTORE) {
       restore_top(u0, g, &c, &s);
       s.pop(&x);
@@ -65,40 +68,44 @@ void ReverseDFS::process_recording(uint u0) {
     uint u = x.head(), k = x.tail();
     if (c.get(u) == DFS_WHITE) {
       // preprocess(u);
+      setCall({UserCall::preprocess, u});
       storeTime(0, u);
       c.insert(u, DFS_GRAY);
     }
+    updateInterval();
     if (k < g->getNodeDegree(u)) {
-      updateInterval();
       s.push(Pair(u, k + 1));
-      ns++;
+      updateInterval();
       uint v = g->head(u, k);
       // preexplore(u, v);
+      setCall({UserCall::preexplore, u, v});
       if (c.get(v) == DFS_WHITE) {
-        updateInterval();
         s.push(Pair(v, 0));
         ns++;
+        updateInterval();
       } else {
         // postexplore(u, v);
+        setCall({UserCall::postexplore, u, v});
       }
     } else {
       c.insert(u, DFS_BLACK);
       storeTime(1, u);
       // postprocess(u);
+      setCall({UserCall::postprocess, u});
       if (u != u0) {
         Pair px;
         sr = s.pop(&px);
-        ns--;
         if (sr == DFS_DO_RESTORE) {
           restore_top(u0, g, &c, &s);
           s.pop(&px);
         }
-        // uint pu = px.head();
+        uint pu = px.head();
         // postexplore(pu, u);
-        updateInterval();
+        setCall({UserCall::postexplore, pu, u});
         s.push(px);
-        ns++;
       }
+      ns--;
+      updateInterval();
     }
   }
 }
@@ -116,22 +123,26 @@ std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
   std::cout << "reconstruct " << j << " " << from.head() << " " << to.head()
             << "\n";
   std::stack<Pair> rs;
-  if (from.head() != INVALID && to.head() != INVALID) {
+  std::set<uint> tmp;
+  if (to.head() != INVALID) {
     Pair a = Pair(from.head(), from.tail() - 1);
     do {
       uint u = a.head();
+      std::cout << "u=" << u << "  ";
       if (u == to.head()) {
         rs.push(to);
       } else {
         bool found = false;
         for (uint k = a.tail(); k < g->getNodeDegree(u); k++) {
           uint v = g->head(u, k);
-          std::cout << u << " -> " << v << "(c" << c.get(v) << ",d" << d.get(v)
+          std::cout << " -> " << v << "(c" << c.get(v) << ",d" << d.get(v)
                     << ",f" << f.get(v) << ")\n";
-          if (c.get(v) == DFS_WHITE) {
-            c.insert(v, DFS_GRAY);
+          if (f.get(v) == j &&
+              tmp.find(v) == tmp.end()) {  // we need a fast way for recoloring;
+                                           // until then: using a temp. set
             a = Pair(v, 0);
             rs.push(Pair(u, k + 1));
+            tmp.insert(v);
             found = true;
             break;
           }
@@ -142,14 +153,32 @@ std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
       }
     } while (rs.top() != to);
   } else {
-    throw std::logic_error("reconstruction: H/Ĥ is invalid (bottom of stack)");
+    std::cout << "skipping reconstruction: H is invalid (bottom of stack)\n";
   }
   return rs;
 }
 
-std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until) {
-  std::cout << "simulate " << sj->top().head() << " " << until.head() << "\n";
+std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
+                                           UserCall first) {
+  std::cout << "simulate " << j << " " << until.head() << "\n";
   std::vector<UserCall> ret;
+  if (sj->empty() || first.u != sj->top().head()) {
+    if (first.type == UserCall::preprocess) {
+      sj->push(Pair(first.u, 0));
+    } else if (first.type == UserCall::preexplore) {
+      for (uint k = 0; k < g->getNodeDegree(first.u); k++) {
+        if (g->head(first.u, k) == first.v) {
+          sj->push(Pair(first.u, k));
+          break;
+        }
+      }
+    } else if (first.type == UserCall::postprocess) {
+      ret.emplace_back(first);
+      return ret;
+    } else {
+      throw std::logic_error("first.u != top, unknown type");
+    }
+  }
   while (sj->top() != until) {
     Pair x = sj->top();
     uint u = x.head(), k = x.tail();
@@ -163,21 +192,20 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until) {
     }
     if (k < g->getNodeDegree(u)) {
       sj->push(Pair(u, k + 1));
-      std::cout << "+ " << u << "," << k + 1 << "\n";
       if (sj->size() > 0 && sj->top() == until) break;
       uint v = g->head(u, k);
       if (c.get(v) == DFS_WHITE) {
         // std::cout << "preexp " << u << "," << v << "\n";
         ret.emplace_back(UserCall(UserCall::Type::preexplore, u, v));
         sj->push(Pair(v, 0));
-        std::cout << "+ " << v << "," << 0 << "\n";
         if (sj->size() > 0 && sj->top() == until) break;
       } else {
         // no postexplore: will be simulated later
+        std::cout << " == minor call here == \n";
       }
     } else {
       c.insert(u, DFS_BLACK);
-      std::cout << "postproc " << u << "\n";
+      // std::cout << "postproc " << u << "\n";
       ret.emplace_back(UserCall(UserCall::Type::postprocess, u));
       if (sj->size() > 0) {
         uint pu = sj->top().head();
@@ -201,9 +229,51 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until) {
 }
 
 UserCall ReverseDFS::next() {
+  static bool doMinor = true;
   if (sp < seq.size()) {
-    sp++;
-    return seq.at(seq.size() - sp);
+    if (sp < seq.size() - 1 && doMinor) {
+      UserCall &cc = seq.at(seq.size() - sp), &nc = seq.at(seq.size() - sp - 1);
+      if (cc.type == UserCall::postexplore &&
+          nc.type == UserCall::preexplore) {  // implies: cc.u==nc.u
+        for (uint a = 0; a < g->getNodeDegree(cc.u); a++) {
+          if (g->head(cc.u, a) == cc.v && g->head(cc.u, a + 1) != nc.v) {
+            std::cout << "=== inserting minor call (pe) === \n";
+            for (a = a + 1; g->head(cc.u, a) != nc.v; a++) {
+              minor.emplace_back(
+                  UserCall(UserCall::preexplore, cc.u, g->head(cc.u, a)));
+              minor.emplace_back(
+                  UserCall(UserCall::postexplore, cc.u, g->head(cc.u, a)));
+            }
+            break;
+          }
+        }
+      } else if (cc.type == UserCall::postexplore &&
+                 nc.type == UserCall::postprocess) {
+        for (uint a = 0; a < g->getNodeDegree(cc.u); a++) {
+          if (g->head(cc.u, a) == cc.v) {
+            std::cout << "=== inserting minor call (pp) === \n";
+            for (a = a + 1; a < g->getNodeDegree(cc.u); a++) {
+              minor.emplace_back(
+                  UserCall(UserCall::preexplore, cc.u, g->head(cc.u, a)));
+              minor.emplace_back(
+                  UserCall(UserCall::postexplore, cc.u, g->head(cc.u, a)));
+            }
+            break;
+          }
+        }
+      }
+    }
+    UserCall next;
+    if (minor.size() > 0) {
+      doMinor = false;
+      next = minor.front();
+      minor.pop_front();
+    } else {
+      sp++;
+      doMinor = true;
+      next = seq.at(seq.size() - sp);
+    }
+    return next;
   } else {  // build new sequence
     j--;
     for (uint a = 0; a < n; a++) {
@@ -213,20 +283,16 @@ UserCall ReverseDFS::next() {
         c.insert(a, DFS_GRAY);
       } else {
         c.insert(a, DFS_WHITE);
-        std::cout << a << " ";
-      }
-    }
-    std::cout << "\n";
-    for (uint a = 0; a < n; a++) {
-      if (c.get(a) == DFS_GRAY && f.get(a) == j) {
-        c.insert(a, DFS_WHITE);
       }
     }
     std::stack<Pair> sj = reconstructPart(i[j].hd, i[j].h1);
-    seq = simulate(&sj, i[j].h2);
+    seq = simulate(&sj, i[j].h2, i[j].c1);
     std::cout << "end of simulation " << j << "\n";
     sp = 1;
-    return seq.at(seq.size() - 1);
+    if (seq.size() > 0)
+      return seq.at(seq.size() - 1);
+    else
+      return next();
   }
 }
 

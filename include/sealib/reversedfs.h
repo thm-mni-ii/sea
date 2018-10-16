@@ -1,5 +1,6 @@
 #ifndef SEALIB_REVERSEDFS_H_
 #define SEALIB_REVERSEDFS_H_
+#include <deque>
 #include <stack>
 #include <vector>
 #include "sealib/_types.h"
@@ -15,10 +16,13 @@ namespace Sealib {
 */
 struct UserCall {
  public:
-  enum Type { preprocess = 0, preexplore, postexplore, postprocess };
+  enum Type { preprocess = 0, preexplore, postexplore, postprocess, nop };
   unsigned type;
   uint u, v;
   UserCall(unsigned p1, uint p2, uint p3 = 0) : type(p1), u(p2), v(p3) {}
+  constexpr UserCall() : type(nop), u(0), v(0) {}
+  bool operator==(UserCall p) { return type == p.type && u == p.u && v == p.v; }
+  bool operator!=(UserCall p) { return !(*this == p); }
 };
 
 /**
@@ -55,6 +59,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
                    INVALID);  // top entries at start and end of the interval
     Pair hd;                  // value of deepest entry
     uint hdc = std::numeric_limits<uint>::max();  // index of deepest entry
+    UserCall c1 = UserCall();
     uint size = 0;  // call counter for the interval
   };
 
@@ -68,15 +73,18 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   uint j = 0;  // interval pointer
   std::vector<UserCall> seq;
   uint sp = 0;
+  std::deque<UserCall> minor;
 
   void process_recording(uint u0);
 
   void storeTime(unsigned df, uint u);
-  void updateInterval(/*UserCall call, */ bool end = false);
+  void updateInterval(bool end = false);
+  void setCall(UserCall call);
 
   std::stack<Pair> reconstructPart(Pair from, Pair to);
 
-  std::vector<UserCall> simulate(std::stack<Pair> *sj, Pair until);
+  std::vector<UserCall> simulate(std::stack<Pair> *sj, Pair until,
+                                 UserCall first);
 };
 }  // namespace Sealib
 #endif  // SEALIB_REVERSEDFS_H_
