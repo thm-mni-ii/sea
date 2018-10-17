@@ -23,10 +23,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # --------------------------------------------------- #
 ExternalProject_Add(GTEST_PROJECT
         GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG 440527a61e1c91188195f7de212c63c77e8f0a45
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
-        CMAKE_ARGS "-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=OFF -DINSTALL_GMOCK=OFF"
+        CMAKE_ARGS -DINSTALL_GTEST=OFF -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++
         INSTALL_COMMAND ""
-        BUILD_COMMAND "${MAKE}" -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++ --build .)
+        BUILD_COMMAND "${MAKE}" --build .)
 
 ExternalProject_Get_Property(GTEST_PROJECT source_dir)
 ExternalProject_Get_Property(GTEST_PROJECT binary_dir)
@@ -58,7 +59,7 @@ add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(tests PRIVATE -std=c++11 -g -O0 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
+target_compile_options(tests PRIVATE -std=c++11 -g -O3 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")

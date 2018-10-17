@@ -5,10 +5,6 @@
 #include "./inplacerunner.h"
 #include "./segmentstack.h"
 
-#define GRADE_ZERO 0
-#define GRADE_ONE 1
-#define GRADE_AT_LEAST_TWO 2
-
 using Sealib::DFS;
 using Sealib::SegmentStack;
 using Sealib::BasicSegmentStack;
@@ -200,8 +196,8 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
   double e = 0.2;
   unsigned q = static_cast<unsigned>(ceil(
       ceil(e / 6 * n) /
-          (8 *
-              sizeof(Pair))));  // 2q entries on S shall take up at most (e/3)n bits
+      (8 *
+       sizeof(Pair))));  // 2q entries on S shall take up at most (e/3)n bits
   unsigned qs = 3;       // stable segment size (?)
   if (q < qs) q = qs;
 
