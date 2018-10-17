@@ -48,10 +48,10 @@ Sealib::NaiveTrail::NaiveTrail(const Sealib::NaiveTrail::graphptr_t &graph) {
             for(unsigned int i = 0; i < trails.size(); i++) {
                 unsigned long j = 0;
                 for(const auto &a: trails[i]) {
-                    if(a == u && j % 2 == 0 && j != t.size() - 1) {
+                    /*if(a == u && j % 2 == 0 && j != t.size() - 1) {
                         kOld = {i, j};
                     }
-                    j++;
+                    j++;*/
                 }
             }
         }

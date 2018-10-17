@@ -32,6 +32,9 @@ class GraphCreator {
     static BasicGraph createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
                                                      unsigned int order);
 
+    static BasicGraph *createGraphPointerFromAdjacencyMatrix(unsigned int **adjMatrix,
+                                                     unsigned int order);
+
     /**
      * Create a random graph with a fixed number of neighbours per node.
      * @param order number of nodes the graph should contain
