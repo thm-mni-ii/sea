@@ -1,8 +1,8 @@
 #ifndef SEALIB_NAIVETRAIL_H_
 #define SEALIB_NAIVETRAIL_H_
 
-#include <memory>
 #include <sealib/basicgraph.h>
+#include <memory>
 #include <ostream>
 #include <vector>
 #include <tuple>

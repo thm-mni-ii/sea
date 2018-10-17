@@ -97,7 +97,9 @@ std::shared_ptr<BasicGraph> GraphCreator::createSharedGraphFromAdjacencyMatrix(
     return std::shared_ptr<BasicGraph>(new BasicGraph(nodes));
 }
 
-BasicGraph *Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order) {
+BasicGraph*
+Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(unsigned int **adjMatrix,
+                                                            unsigned int order) {
         std::vector<Node> nodes(order);
 
         for (unsigned int i = 0; i < order; i++) {

@@ -11,20 +11,20 @@ Sealib::NaiveTrail::NaiveTrail(const Sealib::NaiveTrail::graphptr_t &graph) {
 
     std::vector<std::list<unsigned long>> g(graph->getOrder());
 
-    for(unsigned int u = 0; u < graph->getOrder(); u++) {
+    for (unsigned int u = 0; u < graph->getOrder(); u++) {
         Sealib::Node &n = graph->getNode(u);
-        if(n.getDegree() % 2 == 0) {  //even
+        if (n.getDegree() % 2 == 0) {   // even
             even.insert(u);
         } else {  // uneven
             even.insert(u);
         }
 
-        if(n.getDegree() == 0) {
+        if (n.getDegree() == 0) {
             black.insert(u);
         } else {
             white.insert(u);
         }
-        for(auto &a : n.getAdj()) {
+        for (auto &a : n.getAdj()) {
             g[u].push_back(a.vertex);
         }
     }
@@ -32,22 +32,22 @@ Sealib::NaiveTrail::NaiveTrail(const Sealib::NaiveTrail::graphptr_t &graph) {
     std::list<unsigned long> trail;
 
     auto u = (unsigned long) - 1;
-    if(!uneven.empty()) {
+    if (!uneven.empty()) {
         u = (*uneven.begin());
         uneven.erase(u);
-    } else if(!gray.empty()) {
+    } else if (!gray.empty()) {
         u = (*gray.begin());
         gray.erase(u);
-    } else if(!white.empty()) {
+    } else if (!white.empty()) {
         u = (*white.begin());
         white.erase(u);
     }
-    while( u != (unsigned long) - 1) {
+    while (u != (unsigned long) - 1) {
         auto kOld = {(unsigned long) - 1, (unsigned long) - 1};
         if (even.find(u) != even.end() && gray.find(u) != even.end()) {  // remember aOld
-            for(unsigned int i = 0; i < trails.size(); i++) {
+            for (unsigned int i = 0; i < trails.size(); i++) {
                 unsigned long j = 0;
-                for(const auto &a: trails[i]) {
+                for (const auto &a : trails[i]) {
                     /*if(a == u && j % 2 == 0 && j != t.size() - 1) {
                         kOld = {i, j};
                     }
@@ -55,8 +55,6 @@ Sealib::NaiveTrail::NaiveTrail(const Sealib::NaiveTrail::graphptr_t &graph) {
                 }
             }
         }
-        
-
         trails.push_back(trail);
     }
 }
