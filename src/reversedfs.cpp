@@ -162,28 +162,30 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
                                            UserCall first) {
   std::cout << "simulate " << j << " " << until.head() << "\n";
   std::vector<UserCall> ret;
-  if (sj->empty() || first.u != sj->top().head()) {
-    if (first.type == UserCall::preprocess) {
-      sj->push(Pair(first.u, 0));
-    } else if (first.type == UserCall::preexplore) {
-      for (uint k = 0; k < g->getNodeDegree(first.u); k++) {
-        if (g->head(first.u, k) == first.v) {
-          sj->push(Pair(first.u, k));
-          break;
-        }
+  if (first.type == UserCall::preprocess && sj->empty()) {
+    sj->push(Pair(first.u, 0));
+  } else if (first.type == UserCall::preexplore &&
+             (sj->empty() || first.u != sj->top().head())) {
+    for (uint k = 0; k < g->getNodeDegree(first.u); k++) {
+      if (g->head(first.u, k) == first.v) {
+        sj->push(Pair(first.u, k));
+        break;
       }
-    } else if (first.type == UserCall::postprocess) {
-      ret.emplace_back(first);
-      return ret;
-    } else {
-      throw std::logic_error("first.u != top, unknown type");
     }
+  } else if (first.type == UserCall::postprocess && sj->empty()) {
+    sj->push(Pair(first.u, g->getNodeDegree(first.u)));
   }
+  if (sj->empty()) {
+    std::cout << "stack empty: first=" << first.type << ":" << first.u << ","
+              << first.v << "\n";
+    throw std::logic_error("error");
+  }
+
   while (sj->top() != until) {
     Pair x = sj->top();
+    sj->pop();
     uint u = x.head(), k = x.tail();
     // std::cout << "top: " << u << "," << k << "\n";
-    sj->pop();
     if (sj->size() > 0 && sj->top() == until) break;
     if (c.get(u) == DFS_WHITE) {
       // std::cout << "preproc " << u << "\n";
@@ -201,7 +203,10 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
         if (sj->size() > 0 && sj->top() == until) break;
       } else {
         // no postexplore: will be simulated later
-        std::cout << " == pre+postexplore " << u << "," << v << " == \n";
+        /*std::cout << " == pre+postexplore " << u << "," << v << " == \n";*/
+
+        ret.emplace_back(UserCall(UserCall::preexplore, u, v));
+        ret.emplace_back(UserCall(UserCall::postexplore, u, v));
       }
     } else {
       c.insert(u, DFS_BLACK);
@@ -214,7 +219,7 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
                                   u));  // this postexplore is necessary
       } else {
         bool a = false;
-        for (uint b = u; b < n; b++) {
+        for (uint b = 0; b < n; b++) {
           if (c.get(b) == DFS_WHITE && d.get(b) == j) {
             sj->push(Pair(b, 0));
             a = true;
@@ -230,16 +235,25 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
 
 UserCall ReverseDFS::next() {
   if (majorI != major.rend()) {
-    if (!waitStep) {
+    /*if (!waitStep) {
       UserCall &cc = *majorI;
       if (previous.u == cc.u && (cc.type == UserCall::preprocess ||
                                  cc.type == UserCall::postexplore)) {
         int k = static_cast<int>(g->getNodeDegree(cc.u)) - 1;
         if (previous.type == UserCall::preexplore) {
-          while (k > 0 && g->head(cc.u, k) != previous.v) {
+          while (g->head(cc.u, k) != previous.v) {
             k--;
           }
           k--;
+        }
+        if (k >= 0) {
+          std::cout << "this: "
+                    << (cc.type == UserCall::preprocess ? "preproc" : "postexp")
+                    << " " << cc.u << "," << cc.v << ";  previous: "
+                    << (previous.type == UserCall::preexplore ? "preexp"
+                                                              : "postproc")
+                    << " " << previous.u << "," << previous.v << ";  k=" << k
+                    << "\n";
         }
         while (k >= 0) {
           if (cc.type == UserCall::postexplore && g->head(cc.u, k) != cc.v)
@@ -256,7 +270,7 @@ UserCall ReverseDFS::next() {
           waitStep = true;
         }
       }
-    }
+    }*/
     if (minor.size() == 0) {
       previous = *majorI;
       waitStep = false;

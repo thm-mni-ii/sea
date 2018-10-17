@@ -121,6 +121,7 @@ TEST(ReverseDFSTest, init) {
   std::vector<uint> ref;
   DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                       [&ref](uint u) { ref.push_back(u); });
+  std::reverse(ref.begin(),ref.end());
   std::vector<uint> seq;
   ReverseDFS d(g);
   d.init();
@@ -130,10 +131,12 @@ TEST(ReverseDFSTest, init) {
       seq.push_back(a.u);
     }
   }
-  std::cout << " ----- \n ";
+  for(uint a:ref) std::cout << a << " ";
+  std::cout << "\n---\n";
+  for(uint a:seq) std::cout << a << " ";
   ASSERT_EQ(ref.size(), seq.size());
   for (uint a = 0; a < ref.size(); a++) {
-    EXPECT_EQ(seq[a], ref[ref.size() - 1 - a]);
+    EXPECT_EQ(seq[a], ref[a]);
   }
 }
 
