@@ -22,6 +22,9 @@ void DFS::process_standard(uint u0, Graph *g, uint *color, UserFunc1 preprocess,
     s->pop();
     uint u = x.head();
     uint k = x.tail();
+    if (k > 0) {
+      postexplore(u, g->head(u, k - 1));
+    }
     if (color[u] == DFS_WHITE) {
       preprocess(u);
       color[u] = DFS_GRAY;
@@ -32,16 +35,10 @@ void DFS::process_standard(uint u0, Graph *g, uint *color, UserFunc1 preprocess,
       preexplore(u, v);
       if (color[v] == DFS_WHITE) {
         s->push(Pair(v, 0));
-      } else {
-        postexplore(u, v);
       }
     } else {
       color[u] = DFS_BLACK;
       postprocess(u);
-      if (u != u0) {
-        uint pu = s->top().head();
-        postexplore(pu, u);
-      }
     }
   }
   delete s;
@@ -66,6 +63,9 @@ void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
     uint u, k;
     u = x.head();
     k = x.tail();
+    if (k > 0) {
+      postexplore(u, g->head(u, k - 1));
+    }
     if (color->get(u) == DFS_WHITE) {
       preprocess(u);
       color->insert(u, DFS_GRAY);
@@ -76,23 +76,10 @@ void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
       preexplore(u, v);
       if (color->get(v) == DFS_WHITE) {
         s->push(Pair(v, 0));
-      } else {
-        postexplore(u, v);
       }
     } else {
       color->insert(u, DFS_BLACK);
       postprocess(u);
-      if (u != u0) {
-        Pair px;
-        sr = s->pop(&px);
-        if (sr == DFS_DO_RESTORE) {
-          restoration(u0, g, color, s);
-          s->pop(&px);
-        }
-        uint pu = px.head();
-        postexplore(pu, u);
-        s->push(px);
-      }
     }
   }
 }

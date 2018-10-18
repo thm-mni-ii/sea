@@ -55,7 +55,6 @@ void ReverseDFS::process_recording(uint u0) {
   updateInterval();
   s.push(Pair(u0, 0));
   ns = 1;
-  updateInterval();
   Pair x;
   while (!s.isEmpty()) {
     int sr = s.pop(&x);
@@ -72,38 +71,21 @@ void ReverseDFS::process_recording(uint u0) {
       storeTime(0, u);
       c.insert(u, DFS_GRAY);
     }
-    updateInterval();
     if (k < g->getNodeDegree(u)) {
       s.push(Pair(u, k + 1));
-      updateInterval();
       uint v = g->head(u, k);
       // preexplore(u, v);
       setCall({UserCall::preexplore, u, v});
       if (c.get(v) == DFS_WHITE) {
         s.push(Pair(v, 0));
         ns++;
-        updateInterval();
-      } else {
-        // postexplore(u, v);
-        setCall({UserCall::postexplore, u, v});
       }
+      updateInterval();
     } else {
       c.insert(u, DFS_BLACK);
       storeTime(1, u);
       // postprocess(u);
       setCall({UserCall::postprocess, u});
-      if (u != u0) {
-        Pair px;
-        sr = s.pop(&px);
-        if (sr == DFS_DO_RESTORE) {
-          restore_top(u0, g, &c, &s);
-          s.pop(&px);
-        }
-        uint pu = px.head();
-        // postexplore(pu, u);
-        setCall({UserCall::postexplore, pu, u});
-        s.push(px);
-      }
       ns--;
       updateInterval();
     }
