@@ -26,12 +26,14 @@ void ReverseDFS::updateInterval(bool end) {
     ci.h1 = top;
   }
   ci.size++;
-  if (ns < ci.hdc && ns > 0) {
+  if (ns < ci.hdc && s.top().head() != INVALID) {
     ci.hd = top;
     ci.hdc = ns;
   }
   if (ci.size == w + 1 || end) {
     ci.h2 = top;
+    ci.c1 = firstCall;
+    firstCall = UserCall();
     std::cout << "H" << j << " = (" << ci.h1.head() << "," << ci.h1.tail()
               << ")\n";
     std::cout << "Ĥ" << j << " = (" << ci.hd.head() << "," << ci.hd.tail()
@@ -46,8 +48,8 @@ void ReverseDFS::updateInterval(bool end) {
   }
 }
 void ReverseDFS::setCall(UserCall call) {
-  if (call != UserCall() && i[j].c1 == UserCall()) {
-    i[j].c1 = call;
+  if (firstCall == UserCall()) {
+    firstCall = call;
   }
 }
 
@@ -115,6 +117,7 @@ std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
       rs.push(to);  // is this enough?
     } else {
       Pair a = Pair(from.head(), from.tail() - 1);
+      tmp.insert(a.head());
       do {
         uint u = a.head();
         std::cout << "u=" << u << "  ";

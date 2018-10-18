@@ -69,6 +69,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   CompactArray d, f;
   ExtendedSegmentStack s;  // only used for recording run
   uint ns = 0;
+  UserCall firstCall;
   IntervalData *i;
   uint j = 0;  // interval pointer
   std::vector<UserCall> major;
