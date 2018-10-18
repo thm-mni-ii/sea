@@ -80,15 +80,15 @@ void ReverseDFS::process_recording(uint u0) {
         s.push(Pair(v, 0));
         ns++;
       }
-      updateInterval();
+      // (postexplore can never be a first call in an interval)
     } else {
       c.insert(u, DFS_BLACK);
       storeTime(1, u);
       // postprocess(u);
       setCall({UserCall::postprocess, u});
       ns--;
-      updateInterval();
     }
+    updateInterval();
   }
 }
 
@@ -104,36 +104,44 @@ bool ReverseDFS::more() { return !(j == 0 && majorI == major.rend()); }
 std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
   std::cout << "reconstruct " << j << " " << from.head() << " " << to.head()
             << "\n";
+  for (uint a = 0; a < n; a++) {
+    if (d.get(a) == j) std::cout << a << " ";
+  }
+  std::cout << "\n";
   std::stack<Pair> rs;
   std::set<uint> tmp;
   if (to.head() != INVALID) {
-    Pair a = Pair(from.head(), from.tail() - 1);
-    do {
-      uint u = a.head();
-      std::cout << "u=" << u << "  ";
-      if (u == to.head()) {
-        rs.push(to);
-      } else {
-        bool found = false;
-        for (uint k = a.tail(); k < g->getNodeDegree(u); k++) {
-          uint v = g->head(u, k);
-          std::cout << " -> " << v << "(c" << c.get(v) << ",d" << d.get(v)
-                    << ",f" << f.get(v) << ")\n";
-          if (f.get(v) == j &&
-              tmp.find(v) == tmp.end()) {  // we need a fast way for recoloring;
-                                           // until then: using a temp. set
-            a = Pair(v, 0);
-            rs.push(Pair(u, k + 1));
-            tmp.insert(v);
-            found = true;
-            break;
+    if (from.head() == INVALID) {
+      rs.push(to);  // is this enough?
+    } else {
+      Pair a = Pair(from.head(), from.tail() - 1);
+      do {
+        uint u = a.head();
+        std::cout << "u=" << u << "  ";
+        if (u == to.head()) {
+          rs.push(to);
+        } else {
+          bool found = false;
+          for (uint k = a.tail(); k < g->getNodeDegree(u); k++) {
+            uint v = g->head(u, k);
+            std::cout << " -> " << v << "(c" << c.get(v) << ",d" << d.get(v)
+                      << ",f" << f.get(v) << ")\n";
+            if (f.get(v) == j && tmp.find(v) == tmp.end()) {
+              // we need a fast way for recoloring;
+              // until then: using a temp. set
+              a = Pair(v, 0);
+              rs.push(Pair(u, k + 1));
+              tmp.insert(v);
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            throw std::logic_error("no white path found in reconstruction");
           }
         }
-        if (!found) {
-          throw std::logic_error("no white path found in reconstruction");
-        }
-      }
-    } while (rs.top() != to);
+      } while (rs.top() != to);
+    }
   } else {
     std::cout << "skipping reconstruction: H is invalid (bottom of stack)\n";
   }
@@ -158,7 +166,7 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
     uint u = x.head(), k = x.tail();
     // std::cout << "top: " << u << "," << k << "\n";
     if (c.get(u) == DFS_WHITE) {
-      // std::cout << "preproc " << u << "\n";
+      std::cout << "preproc " << u << "\n";
       ret.emplace_back(UserCall(UserCall::Type::preprocess, u));
       c.insert(u, DFS_GRAY);
     }
@@ -166,7 +174,7 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
       sj->push(Pair(u, k + 1));
       uint v = g->head(u, k);
       if (c.get(v) == DFS_WHITE) {
-        // std::cout << "preexp " << u << "," << v << "\n";
+        std::cout << "preexp " << u << "," << v << "\n";
         ret.emplace_back(UserCall(UserCall::Type::preexplore, u, v));
         sj->push(Pair(v, 0));
       } else {
@@ -178,11 +186,11 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
       }
     } else {
       c.insert(u, DFS_BLACK);
-      // std::cout << "postproc " << u << "\n";
+      std::cout << "postproc " << u << "\n";
       ret.emplace_back(UserCall(UserCall::Type::postprocess, u));
       if (sj->size() > 0) {
         uint pu = sj->top().head();
-        // std::cout << "postexp " << pu << "," << u << "\n";
+        std::cout << "postexp " << pu << "," << u << "\n";
         ret.emplace_back(UserCall(UserCall::Type::postexplore, pu,
                                   u));  // this postexplore is necessary
       }
