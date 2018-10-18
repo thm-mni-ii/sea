@@ -3,7 +3,7 @@
 #include <include/sealib/dyckwordlexicon.h>
 
 TEST(RecursiveDyckMatchingStructureTest, testAllWordsLength10) {
-    for (unsigned int i = 2; i < 28; i += 2) {
+    for (unsigned int i = 2; i < 23; i += 2) {
         Sealib::DyckWordLexicon lex(i);
         for (const Sealib::Bitset<unsigned char> &word : lex.getLexicon()) {
             Sealib::DyckMatchingStructure d(word);

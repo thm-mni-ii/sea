@@ -10,7 +10,6 @@ class DyckMatchingStructure {
     static unsigned long getMatchNaive(
         const Sealib::Bitset<unsigned char> &word_,
         unsigned long idx);
-
     static unsigned long getMatchNaive(
         const Sealib::Bitset<unsigned char> &word,
         unsigned long idx, unsigned long skip);
