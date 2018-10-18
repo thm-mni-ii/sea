@@ -4,9 +4,7 @@
 #include "sealib/graph.h"
 #include "sealib/graphcreator.h"
 
-using Sealib::BFS;
-using Sealib::Graph;
-using Sealib::GraphCreator;
+using namespace Sealib;  // NOLINT
 
 static uint c1 = 0, c2 = 0;
 static uint tmp = 0;

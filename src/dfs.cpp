@@ -143,8 +143,10 @@ void DFS::restore_top(uint u0, Graph *g, CompactArray *color,
   if (s->getRestoreTrailer(&x) == 1) {
     color->insert(u, DFS_WHITE);
   } else {
-    u = x.head(), k = x.tail() - 1;
-    u = g->head(u, k), k = s->getOutgoingEdge(u);
+    u = x.head();
+    k = x.tail() - 1;
+    u = g->head(u, k);
+    k = s->getOutgoingEdge(u);
     color->insert(u, DFS_WHITE);
   }
   while (!s->isAligned()) {
@@ -187,7 +189,6 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
   unsigned qs = 3;       // stable segment size (?)
   if (q < qs) q = qs;
 
-  // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);
   BasicSegmentStack s(q);
   CompactArray color(n, 3);
   for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);

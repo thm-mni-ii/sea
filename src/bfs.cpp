@@ -2,10 +2,14 @@
 #include <stdexcept>
 #include <vector>
 
-using Sealib::BFS;
-using Sealib::CompactArray;
-using Sealib::Graph;
-using Sealib::Pair;
+using namespace Sealib;  // NOLINT
+
+class E_noGrayNodes : std::exception {
+  const char *what() {
+    return "BFS: no more gray nodes found; did you forget to call "
+           "nextComponent()?";
+  }
+};
 
 void BFS::init() {
   u = 0;
@@ -60,9 +64,7 @@ uint BFS::getGrayNode() {
       return a;
     }
   }
-  throw std::logic_error(
-      "BFS: no more gray nodes found; did you forget to call "
-      "nextComponent()?");
+  throw E_noGrayNodes();
 }
 
 bool BFS::more() { return hasGrayNode(); }

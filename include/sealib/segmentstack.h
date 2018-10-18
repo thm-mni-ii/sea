@@ -115,7 +115,8 @@ class ExtendedSegmentStack : public SegmentStack {
    * first managed vertex can be accessed via big[trailers[tp-1].bi].
    * bc is freely available to increment during restoration.
    */
-  struct Trailer {
+  class Trailer {
+   public:
     Pair x;
     unsigned bi, bc;
     Trailer() : bi(INVALID), bc(0) {}

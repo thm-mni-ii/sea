@@ -9,6 +9,14 @@ using Sealib::SegmentStack;
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
 
+class E_noTrailers : std::exception {
+ public:
+  const char *what() {
+    return "SegmentStack: the trailer stack is empty, but you called a method "
+           "which needs existing trailers";
+  }
+};
+
 //  -- SUPERCLASS --
 
 SegmentStack::SegmentStack(unsigned segmentSize)
@@ -78,7 +86,7 @@ void BasicSegmentStack::saveTrailer() {
     savedTrailer = last;
     alignTarget = tp == 1 ? 1 : 2;
   } else {
-    throw std::logic_error("segmentstack: cannot save from empty trailers");
+    throw E_noTrailers();
   }
 }
 
@@ -190,8 +198,7 @@ uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
       t->bc += 1;
       return x.tail();
     } else {
-      throw std::logic_error(
-          "can't get edge from big vertex because there are no trailers");
+      throw E_noTrailers();
     }
   } else {
     return retrieveEdge(u, edges->get(u));
