@@ -111,7 +111,7 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
         // increment circular
         j = j == degree - 1 ? 0 : j + 1;
     } while (j != start);
-
+    
     return idx;
 }
 
