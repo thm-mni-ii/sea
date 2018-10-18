@@ -35,7 +35,7 @@ class NaiveTrail {
     };
 
  public:
-    explicit NaiveTrail(const graphptr_t &graph);
+    explicit NaiveTrail(const graphptr_t&);
 
     friend std::ostream &operator<<(std::ostream &os,
                                     const NaiveTrail &naiveTrail) {

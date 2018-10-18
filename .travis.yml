@@ -24,14 +24,12 @@ before_install:
   - pip install --user cpp-coveralls
   - pip install --user cpplint
 
-before_script:
+script:
   - cpplint ./src/*.*
   - cpplint ./include/*/*.*
   - cpplint ./src-view/*.*
   - cpplint ./test/*.*
   - cppcheck --std=c++11 --error-exitcode=1 --quiet -Iinclude src/ src-view/
-
-script:
   - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 .
   - 'if test $TRAVIS_PULL_REQUEST = false; then build-wrapper-linux-x86-64 --out-dir bw-output make; else make; fi'
   - ./bin/tests

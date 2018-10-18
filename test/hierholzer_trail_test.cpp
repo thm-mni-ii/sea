@@ -2,14 +2,13 @@
 #include <sealib/graphcreator.h>
 #include <sealib/graphalgorithm.h>
 #include <sealib/simpletrailstructure.h>
-#include <include/sealib/eulertrail.h>
+#include <sealib/eulertrail.h>
 #include <stdlib.h>
 
 using Sealib::GraphCreator;
 using Sealib::BasicGraph;
 using Sealib::GraphAlgorithm;
 using Sealib::Graph;
-using trail_t = Sealib::TrailStructure;
 
 TEST(GraphTest, hierholzer) {
     unsigned int order = 4;
@@ -21,7 +20,8 @@ TEST(GraphTest, hierholzer) {
 
     BasicGraph g = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
 
-    std::unique_ptr<std::vector<trail_t>> trail = GraphAlgorithm::hierholzer<trail_t>(g);
+    std::unique_ptr<std::vector<Sealib::TrailStructure>> trail
+        = GraphAlgorithm::hierholzer<Sealib::TrailStructure>(g);
 }
 
 TEST(GraphTest, hierholzer_trail) {
@@ -36,5 +36,5 @@ TEST(GraphTest, hierholzer_trail) {
 
     std::shared_ptr<BasicGraph>
         graph_ptr(new BasicGraph(GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order)));
-    Sealib::EulerTrail<trail_t> et(graph_ptr);
+    Sealib::EulerTrail<Sealib::TrailStructure> et(graph_ptr);
 }

@@ -3,6 +3,7 @@
 #include <sealib/bitset.h>
 #include <sealib/rankselect.h>
 #include <sealib/subgraphstack.h>
+#include <string>
 #include <tuple>
 
 namespace Sealib {

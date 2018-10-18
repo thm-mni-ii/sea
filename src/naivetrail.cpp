@@ -2,7 +2,9 @@
 #include <set>
 #include <map>
 
-Sealib::NaiveTrail::NaiveTrail(const Sealib::NaiveTrail::graphptr_t &graph) {
+Sealib::NaiveTrail::NaiveTrail(const Sealib::NaiveTrail::graphptr_t &t_graph) {
+    graph = t_graph;
+
     std::set<unsigned long> white;
     std::set<unsigned long> gray;
     std::set<unsigned long> black;
