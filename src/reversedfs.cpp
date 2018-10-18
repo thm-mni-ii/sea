@@ -144,23 +144,12 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
                                            UserCall first) {
   std::cout << "simulate " << j << " " << until.head() << "\n";
   std::vector<UserCall> ret;
+
   if (first.type == UserCall::preprocess && sj->empty()) {
     sj->push(Pair(first.u, 0));
-  } else if (first.type == UserCall::preexplore &&
-             (sj->empty() || first.u != sj->top().head())) {
-    for (uint k = 0; k < g->getNodeDegree(first.u); k++) {
-      if (g->head(first.u, k) == first.v) {
-        sj->push(Pair(first.u, k));
-        break;
-      }
-    }
-  } else if (first.type == UserCall::postprocess && sj->empty()) {
-    sj->push(Pair(first.u, g->getNodeDegree(first.u)));
   }
   if (sj->empty()) {
-    std::cout << "stack empty: first=" << first.type << ":" << first.u << ","
-              << first.v << "\n";
-    throw std::logic_error("error");
+    throw std::logic_error("stack empty");
   }
 
   while (sj->top() != until) {
@@ -168,7 +157,6 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
     sj->pop();
     uint u = x.head(), k = x.tail();
     // std::cout << "top: " << u << "," << k << "\n";
-    if (sj->size() > 0 && sj->top() == until) break;
     if (c.get(u) == DFS_WHITE) {
       // std::cout << "preproc " << u << "\n";
       ret.emplace_back(UserCall(UserCall::Type::preprocess, u));
@@ -176,13 +164,11 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
     }
     if (k < g->getNodeDegree(u)) {
       sj->push(Pair(u, k + 1));
-      if (sj->size() > 0 && sj->top() == until) break;
       uint v = g->head(u, k);
       if (c.get(v) == DFS_WHITE) {
         // std::cout << "preexp " << u << "," << v << "\n";
         ret.emplace_back(UserCall(UserCall::Type::preexplore, u, v));
         sj->push(Pair(v, 0));
-        if (sj->size() > 0 && sj->top() == until) break;
       } else {
         // no postexplore: will be simulated later
         /*std::cout << " == pre+postexplore " << u << "," << v << " == \n";*/
@@ -199,17 +185,18 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
         // std::cout << "postexp " << pu << "," << u << "\n";
         ret.emplace_back(UserCall(UserCall::Type::postexplore, pu,
                                   u));  // this postexplore is necessary
-      } else {
-        bool a = false;
-        for (uint b = 0; b < n; b++) {
-          if (c.get(b) == DFS_WHITE && d.get(b) == j) {
-            sj->push(Pair(b, 0));
-            a = true;
-            break;
-          }
-        }
-        if (!a) break;
       }
+    }
+    if (sj->empty()) {
+      bool a = false;
+      for (uint b = 0; b < n; b++) {
+        if (c.get(b) == DFS_WHITE && d.get(b) == j) {
+          sj->push(Pair(b, 0));
+          a = true;
+          break;
+        }
+      }
+      if (!a) break;
     }
   }
   return ret;

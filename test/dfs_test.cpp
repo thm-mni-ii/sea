@@ -13,16 +13,17 @@ using std::vector;
 using std::stack;
 
 static unsigned c1 = 0, c2 = 0, c3 = 0, c4 = 0;
+static std::vector<unsigned> v1, v4;
 static unsigned tmp = 0;
 
 static void incr1(uint u) {
   c1++;
-  tmp = u;
+  v1[u]++;
 }
 
 static void incr4(uint u) {
   c4++;
-  tmp = u;
+  v4[u]++;
 }
 
 static void incr2(uint u, uint v) {
@@ -58,8 +59,12 @@ static std::vector<std::shared_ptr<Graph>> makeGraphs() {
 
 class DFSTest : public ::testing::TestWithParam<std::shared_ptr<Graph>> {
  protected:
-  virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
-                                                   // TEST_P
+  virtual void SetUp() {
+    c1 = c2 = c3 = c4 = 0;
+    v1 = std::vector<unsigned>(order);
+    v4 = std::vector<unsigned>(order);
+  }  // executed before each
+     // TEST_P
 };
 
 INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
@@ -69,27 +74,45 @@ TEST_P(DFSTest, stdUserproc) {
   Graph *g = GetParam().get();
   DFS::standardDFS(g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
+  for (unsigned a : v1) {
+    EXPECT_EQ(a, 1);
+  }
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
+  for (unsigned a : v1) {
+    EXPECT_EQ(a, 1);
+  }
 }
 
 TEST_P(DFSTest, nBitUserproc) {
   Graph *g = GetParam().get();
   DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
+  for (unsigned a : v1) {
+    EXPECT_EQ(a, 1);
+  }
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
+  for (unsigned a : v1) {
+    EXPECT_EQ(a, 1);
+  }
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
   Graph *g = GetParam().get();
   DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
+  for (unsigned a : v1) {
+    EXPECT_EQ(a, 1);
+  }
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
   EXPECT_EQ(c4, order);
+  for (unsigned a : v4) {
+    EXPECT_EQ(a, 1);
+  }
 }
 
 TEST(DFSTest, standardImbalanced) {
@@ -116,7 +139,7 @@ TEST(DFSTest, nloglognBitImbalanced) {
   delete g;
 }
 
-TEST(ReverseDFSTest, init) {
+TEST(ReverseDFSTest, postprocess) {
   Graph *g = Sealib::GraphCreator::createRandomFixed(256, 2);
   std::vector<uint> ref;
   DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
