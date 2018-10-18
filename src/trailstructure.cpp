@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <memory>
 #include "sealib/trailstructure.h"
 
 using std::vector;
@@ -95,7 +96,7 @@ unsigned int TrailStructure::getMatched(unsigned int idx) {
 
     unsigned int j = start;
     unsigned int p = 0;
-    unsigned int *stack = static_cast<unsigned int *>(malloc((sizeof(unsigned int) * degree / 2)));
+    std::unique_ptr<unsigned int[]> stack(new unsigned int[degree/2]);
     do {
         if (matched[j]) {  // only push matched index
             if (inAndOut[j]) {  // '('
