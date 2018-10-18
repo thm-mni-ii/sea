@@ -169,7 +169,7 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
     uint u = x.head(), k = x.tail();
     // std::cout << "top: " << u << "," << k << "\n";
     if (c.get(u) == DFS_WHITE) {
-      std::cout << "preproc " << u << "\n";
+      // std::cout << "preproc " << u << "\n";
       ret.emplace_back(UserCall(UserCall::Type::preprocess, u));
       c.insert(u, DFS_GRAY);
     }
@@ -177,23 +177,23 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
       sj->push(Pair(u, k + 1));
       uint v = g->head(u, k);
       if (c.get(v) == DFS_WHITE) {
-        std::cout << "preexp " << u << "," << v << "\n";
+        // std::cout << "preexp " << u << "," << v << "\n";
         ret.emplace_back(UserCall(UserCall::Type::preexplore, u, v));
         sj->push(Pair(v, 0));
       } else {
         // no postexplore: will be simulated later
-        /*std::cout << " == pre+postexplore " << u << "," << v << " == \n";*/
+        std::cout << " == pre+postexplore " << u << "," << v << " == \n";
 
-        ret.emplace_back(UserCall(UserCall::preexplore, u, v));
-        ret.emplace_back(UserCall(UserCall::postexplore, u, v));
+        // ret.emplace_back(UserCall(UserCall::preexplore, u, v));
+        // ret.emplace_back(UserCall(UserCall::postexplore, u, v));
       }
     } else {
       c.insert(u, DFS_BLACK);
-      std::cout << "postproc " << u << "\n";
+      // std::cout << "postproc " << u << "\n";
       ret.emplace_back(UserCall(UserCall::Type::postprocess, u));
       if (sj->size() > 0) {
         uint pu = sj->top().head();
-        std::cout << "postexp " << pu << "," << u << "\n";
+        // std::cout << "postexp " << pu << "," << u << "\n";
         ret.emplace_back(UserCall(UserCall::Type::postexplore, pu,
                                   u));  // this postexplore is necessary
       }
@@ -215,20 +215,24 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
 
 UserCall ReverseDFS::next() {
   if (majorI != major.rend()) {
-    /*if (!waitStep) {
+    if (!waitStep) {
       UserCall &cc = *majorI;
       if (previous.u == cc.u && (cc.type == UserCall::preprocess ||
                                  cc.type == UserCall::postexplore)) {
-        int k = static_cast<int>(g->getNodeDegree(cc.u)) - 1;
+        int k = static_cast<int>(g->getNodeDegree(cc.u) - 1);
         if (previous.type == UserCall::preexplore) {
           while (g->head(cc.u, k) != previous.v) {
             k--;
           }
           k--;
         }
-        if (k >= 0) {
-          std::cout << "this: "
-                    << (cc.type == UserCall::preprocess ? "preproc" : "postexp")
+        if (k >= 0 && cc.type == UserCall::postexplore &&
+            previous.type == UserCall::postprocess) {
+          std::cout << "this: " << (cc.type == UserCall::preprocess
+                                        ? "preproc"
+                                        : cc.type == UserCall::postexplore
+                                              ? "postexp"
+                                              : "?")
                     << " " << cc.u << "," << cc.v << ";  previous: "
                     << (previous.type == UserCall::preexplore ? "preexp"
                                                               : "postproc")
@@ -236,21 +240,23 @@ UserCall ReverseDFS::next() {
                     << "\n";
         }
         while (k >= 0) {
-          if (cc.type == UserCall::postexplore && g->head(cc.u, k) != cc.v)
+          uint v = g->head(cc.u, k);
+          if (cc.type == UserCall::postexplore && (v == cc.v || k == 0)) {
             break;
-          minor.emplace_back(
-              UserCall(UserCall::preexplore, cc.u, g->head(cc.u, k)));
-          minor.emplace_back(
-              UserCall(UserCall::postexplore, cc.u, g->head(cc.u, k)));
-          std::cout << " >>> minor: " << cc.u << "," << g->head(cc.u, k)
-                    << "\n";
+          }
+          if (cc.type == UserCall::preprocess &&
+              previous.type == UserCall::preexplore && v == previous.v)
+            break;
+          minor.emplace_back(UserCall(UserCall::preexplore, cc.u, v));
+          minor.emplace_back(UserCall(UserCall::postexplore, cc.u, v));
+          // std::cout << " >>> minor: " << cc.u << "," << v << "\n";
           k--;
         }
         if (minor.size() > 0) {
           waitStep = true;
         }
       }
-    }*/
+    }
     if (minor.size() == 0) {
       previous = *majorI;
       waitStep = false;
