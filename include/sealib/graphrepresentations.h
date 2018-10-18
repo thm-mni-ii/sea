@@ -15,6 +15,8 @@
  * standard			 	-> begin pointer
  * cross pointer 	-> swapped cross pointer
  * begin pointer 	-> swapped begin pointer
+ * standard				-> shifted
+ * shifted 				-> standard
  *
  * @author Simon Schniedenharn
  */
