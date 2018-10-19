@@ -19,18 +19,18 @@ void ReverseDFS::storeTime(unsigned df, uint u) {
   }
 }
 
-void ReverseDFS::updateInterval(bool end) {
+void ReverseDFS::updateInterval(uint actions, bool end) {
   IntervalData &ci = i[j];
   Pair top = s.top();
-  if (ci.size == 0) {
+  if (ci.size == 0 && ci.h1.head() == INVALID) {
     ci.h1 = top;
   }
-  ci.size++;
+  ci.size += actions;
   if (ns < ci.hdc && s.top().head() != INVALID) {
     ci.hd = top;
     ci.hdc = ns;
   }
-  if (ci.size == w + 1 || end) {
+  if (ci.size > w || end) {
     ci.h2 = top;
     ci.c1 = firstCall;
     firstCall = UserCall();
@@ -43,8 +43,9 @@ void ReverseDFS::updateInterval(bool end) {
     std::cout << "c" << j << " = " << ci.c1.type << ":" << ci.c1.u << ":"
               << ci.c1.v << "\n";
     j++;
+    jmax = j;
     if (j >= r) throw std::out_of_range("too many intervals");
-    updateInterval();
+    updateInterval(0);
   }
 }
 void ReverseDFS::setCall(UserCall call) {
@@ -54,11 +55,12 @@ void ReverseDFS::setCall(UserCall call) {
 }
 
 void ReverseDFS::process_recording(uint u0) {
-  updateInterval();
+  updateInterval(0);
   s.push(Pair(u0, 0));
   ns = 1;
   Pair x;
   while (!s.isEmpty()) {
+    uint actions = 1;
     int sr = s.pop(&x);
     if (sr == DFS_DO_RESTORE) {
       restore_top(u0, g, &c, &s);
@@ -75,11 +77,13 @@ void ReverseDFS::process_recording(uint u0) {
     }
     if (k < g->getNodeDegree(u)) {
       s.push(Pair(u, k + 1));
+      actions++;
       uint v = g->head(u, k);
       // preexplore(u, v);
       setCall({UserCall::preexplore, u, v});
       if (c.get(v) == DFS_WHITE) {
         s.push(Pair(v, 0));
+        actions++;
         ns++;
       }
       // (postexplore can never be a first call in an interval)
@@ -90,7 +94,7 @@ void ReverseDFS::process_recording(uint u0) {
       setCall({UserCall::postprocess, u});
       ns--;
     }
-    updateInterval();
+    updateInterval(actions);
   }
 }
 
@@ -101,13 +105,11 @@ void ReverseDFS::init() {
   updateInterval(true);
 }
 
-bool ReverseDFS::more() { return !(j == 0 && majorI == major.rend()); }
-
 std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
   std::cout << "reconstruct " << j << " " << from.head() << " " << to.head()
             << "\n";
   for (uint a = 0; a < n; a++) {
-    if (d.get(a) == j) std::cout << a << " ";
+    if (f.get(a) == j) std::cout << a << " ";
   }
   std::cout << "\n";
   std::stack<Pair> rs;
@@ -116,7 +118,7 @@ std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
     if (from.head() == INVALID) {
       rs.push(to);  // is this enough?
     } else {
-      Pair a = Pair(from.head(), from.tail() - 1);
+      Pair a = Pair(from.head(), /*from.tail() - 1*/ 0);
       tmp.insert(a.head());
       do {
         uint u = a.head();
@@ -182,10 +184,7 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
         sj->push(Pair(v, 0));
       } else {
         // no postexplore: will be simulated later
-        std::cout << " == pre+postexplore " << u << "," << v << " == \n";
-
-        // ret.emplace_back(UserCall(UserCall::preexplore, u, v));
-        // ret.emplace_back(UserCall(UserCall::postexplore, u, v));
+        // std::cout << " == pre+postexplore " << u << "," << v << " == \n";
       }
     } else {
       c.insert(u, DFS_BLACK);
@@ -210,8 +209,11 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *sj, Pair until,
       if (!a) break;
     }
   }
+  if (j == jmax - 1) ret.emplace_back(UserCall(UserCall::postprocess, 0));
   return ret;
 }
+
+bool ReverseDFS::more() { return !(j == 0 && majorI == major.rend()); }
 
 UserCall ReverseDFS::next() {
   if (majorI != major.rend()) {
@@ -226,7 +228,7 @@ UserCall ReverseDFS::next() {
           }
           k--;
         }
-        if (k >= 0 && cc.type == UserCall::postexplore &&
+        /*if (k >= 0 && cc.type == UserCall::postexplore &&
             previous.type == UserCall::postprocess) {
           std::cout << "this: " << (cc.type == UserCall::preprocess
                                         ? "preproc"
@@ -238,7 +240,7 @@ UserCall ReverseDFS::next() {
                                                               : "postproc")
                     << " " << previous.u << "," << previous.v << ";  k=" << k
                     << "\n";
-        }
+        }*/
         while (k >= 0) {
           uint v = g->head(cc.u, static_cast<uint>(k));
           if (cc.type == UserCall::postexplore && (v == cc.v || k == 0)) {
@@ -288,7 +290,7 @@ UserCall ReverseDFS::next() {
 ReverseDFS::ReverseDFS(Graph *graph)
     : g(graph),
       n(g->getOrder()),
-      r(static_cast<uint>(ceil(8 * log2(n)))),
+      r(static_cast<uint>(ceil(50 * log2(n)))),
       w(static_cast<uint>(ceil(n / log2(n)))),
       c(n, 3),
       d(n, r + 1),

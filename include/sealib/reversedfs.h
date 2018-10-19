@@ -72,6 +72,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   UserCall firstCall;
   IntervalData *i;
   uint j = 0;  // interval pointer
+  uint jmax = 0;
   std::vector<UserCall> major;
   std::deque<UserCall> minor;
   bool waitStep = true;
@@ -82,7 +83,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   void process_recording(uint u0);
 
   void storeTime(unsigned df, uint u);
-  void updateInterval(bool end = false);
+  void updateInterval(uint actions, bool end = false);
   void setCall(UserCall call);
 
   std::stack<Pair> reconstructPart(Pair from, Pair to);

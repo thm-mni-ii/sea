@@ -139,8 +139,9 @@ TEST(DFSTest, nloglognBitImbalanced) {
   delete g;
 }
 
-TEST(ReverseDFSTest, postprocess) {
-  Graph *g = Sealib::GraphCreator::createRandomFixed(256, 2);
+TEST_P(DFSTest, reverse_postprocess) {
+  Graph *g =
+      GetParam().get(); /*Sealib::GraphCreator::createRandomFixed(256, 2);*/
   std::vector<uint> ref;
   DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                       [&ref](uint u) { ref.push_back(u); });
@@ -157,7 +158,21 @@ TEST(ReverseDFSTest, postprocess) {
   for (uint a : ref) std::cout << a << " ";
   std::cout << "\n---\n";
   for (uint a : seq) std::cout << a << " ";
-  ASSERT_EQ(ref.size(), seq.size());
+  EXPECT_EQ(ref.size(), seq.size());
+  if (seq.size() < ref.size()) {
+    std::vector<uint> b;
+    for (uint a = 0; a < ref.size(); a++) {
+      if (seq[a] != ref[a]) {
+        b.emplace_back(ref[a]);
+        seq.emplace(seq.begin() + a, ref[a]);
+      }
+    }
+    std::cout << "missing in seq: ";
+    for (uint a : b) {
+      std::cout << a << " ";
+    }
+    std::cout << "\n";
+  }
   for (uint a = 0; a < ref.size(); a++) {
     EXPECT_EQ(seq[a], ref[a]);
   }
