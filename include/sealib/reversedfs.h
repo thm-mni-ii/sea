@@ -75,7 +75,6 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   std::vector<UserCall> major;
   std::deque<UserCall> minor;
   bool waitStep = true;
-  uint sp = 0;
   UserCall previous;
   std::vector<UserCall>::reverse_iterator majorI = major.rend();
   std::deque<UserCall>::iterator minorI = minor.end();

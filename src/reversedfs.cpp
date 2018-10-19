@@ -1,5 +1,5 @@
 #include "sealib/reversedfs.h"
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 using namespace Sealib;  // NOLINT
@@ -221,7 +221,7 @@ UserCall ReverseDFS::next() {
                                  cc.type == UserCall::postexplore)) {
         int k = static_cast<int>(g->getNodeDegree(cc.u) - 1);
         if (previous.type == UserCall::preexplore) {
-          while (g->head(cc.u, k) != previous.v) {
+          while (g->head(cc.u, static_cast<uint>(k)) != previous.v) {
             k--;
           }
           k--;
@@ -240,7 +240,7 @@ UserCall ReverseDFS::next() {
                     << "\n";
         }
         while (k >= 0) {
-          uint v = g->head(cc.u, k);
+          uint v = g->head(cc.u, static_cast<uint>(k));
           if (cc.type == UserCall::postexplore && (v == cc.v || k == 0)) {
             break;
           }

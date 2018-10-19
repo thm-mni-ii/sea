@@ -2,10 +2,12 @@
 #include <stdexcept>
 #include <vector>
 
-using namespace Sealib;  // NOLINT
+using Sealib::BFS;
+using Sealib::Pair;
+using Sealib::CompactArray;
 
 class E_noGrayNodes : std::exception {
-  const char *what() {
+  const char *what() const throw() {
     return "BFS: no more gray nodes found; did you forget to call "
            "nextComponent()?";
   }

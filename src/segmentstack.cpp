@@ -1,7 +1,5 @@
 #include "sealib/segmentstack.h"
-#include <math.h>
-#include <iostream>
-#include <sstream>
+#include <cmath>
 #include <stack>
 #include <stdexcept>
 
@@ -10,8 +8,7 @@ using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
 
 class E_noTrailers : std::exception {
- public:
-  const char *what() {
+  const char *what() const throw() {
     return "SegmentStack: the trailer stack is empty, but you called a method "
            "which needs existing trailers";
   }

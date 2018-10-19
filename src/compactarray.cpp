@@ -1,5 +1,5 @@
 #include "sealib/compactarray.h"
-#include <math.h>
+#include <cmath>
 #include <sstream>
 #include <stdexcept>
 

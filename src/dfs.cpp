@@ -1,5 +1,5 @@
 #include "sealib/dfs.h"
-#include <math.h>
+#include <cmath>
 #include <sstream>
 #include <stack>
 #include "./inplacerunner.h"

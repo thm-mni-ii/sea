@@ -82,6 +82,10 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(unsigned int),
                                void (*preexplore)(unsigned int, unsigned int),
                                void (*postexplore)(unsigned int, unsigned int),
                                void (*postprocess)(unsigned int)) {
+  if(preprocess==nullptr) preprocess=DFS_NOP_PROCESS;
+  if(preexplore==nullptr) preexplore=DFS_NOP_EXPLORE;                            
+  if(postexplore==nullptr) postexplore=DFS_NOP_EXPLORE;                            
+  if(postprocess==nullptr) postprocess=DFS_NOP_PROCESS;                                 
   DFS::nloglognBitDFS(static_cast<Graph *>(graph), preprocess, preexplore,
                       postexplore, postprocess);
 }

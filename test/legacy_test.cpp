@@ -54,8 +54,9 @@ static void count(unsigned int u) { c += u; }
 
 TEST(LegacyTest, dfs) {
   void *g = Sealib_Graph_generateRandom(101);
-  Sealib_DFS_nloglognBitDFS(g, count, NULL, NULL, NULL);
+  Sealib_DFS_nloglognBitDFS(g, count, nullptr, nullptr, nullptr);
   EXPECT_EQ(c, 5050);
+  ASSERT_NO_FATAL_FAILURE(Sealib_Graph_delete(g));
 }
 
 #ifdef __clang__
