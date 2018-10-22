@@ -18,10 +18,10 @@ struct UserCall {
  public:
   enum Type { preprocess = 0, preexplore, postexplore, postprocess, nop };
   unsigned type;
-  uint u, v;
-  UserCall(unsigned p1, uint p2, uint p3 = 0) : type(p1), u(p2), v(p3) {}
-  constexpr UserCall() : type(nop), u(0), v(0) {}
-  bool operator==(UserCall p) { return type == p.type && u == p.u && v == p.v; }
+  uint u, k;
+  UserCall(unsigned p1, uint p2, uint p3 = 0) : type(p1), u(p2), k(p3) {}
+  constexpr UserCall() : type(nop), u(0), k(0) {}
+  bool operator==(UserCall p) { return type == p.type && u == p.u && k == p.k; }
   bool operator!=(UserCall p) { return !(*this == p); }
 };
 
@@ -72,13 +72,11 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   UserCall firstCall;
   IntervalData *i;
   uint j = 0;  // interval pointer
-  uint jmax = 0;
-  std::vector<UserCall> major;
+  std::vector<UserCall> *major;
   std::deque<UserCall> minor;
   bool waitStep = true;
   UserCall previous;
-  std::vector<UserCall>::reverse_iterator majorI = major.rend();
-  std::deque<UserCall>::iterator minorI = minor.end();
+  std::vector<UserCall>::reverse_iterator majorI;
 
   void process_recording(uint u0);
 
@@ -86,10 +84,10 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   void updateInterval(uint actions, bool end = false);
   void setCall(UserCall call);
 
-  std::stack<Pair> reconstructPart(Pair from, Pair to);
+  std::stack<Pair> *reconstructPart(Pair from, Pair to);
 
-  std::vector<UserCall> simulate(std::stack<Pair> *sj, Pair until,
-                                 UserCall first);
+  std::vector<UserCall> *simulate(std::stack<Pair> *sj, Pair until,
+                                  UserCall first);
 };
 }  // namespace Sealib
 #endif  // SEALIB_REVERSEDFS_H_
