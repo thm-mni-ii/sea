@@ -38,17 +38,6 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
         }
         degRSum += degR;
     }
-
-    /*for(unsigned long i = 0; i < p.size(); i++) {
-        std::cout << p[i] << " ";
-    }
-    std::cout << std::endl;
-
-    for(unsigned long i = 0; i < q.size(); i++) {
-        std::cout << q[i] << " ";
-    }
-    std::cout << std::endl;*/
-
     pSelect = new RankSelect(p);
     qSelect = new RankSelect(q);
 }

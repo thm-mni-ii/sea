@@ -1,28 +1,12 @@
 #include <gtest/gtest.h>
 #include <sealib/graphcreator.h>
-#include <sealib/graphalgorithm.h>
 #include <sealib/simpletrailstructure.h>
 #include <sealib/eulertrail.h>
 #include <stdlib.h>
 
 using Sealib::GraphCreator;
 using Sealib::BasicGraph;
-using Sealib::GraphAlgorithm;
 using Sealib::Graph;
-
-TEST(GraphTest, hierholzer) {
-    unsigned int order = 4;
-    auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * 4 * 4);
-    adj_mtrx[0] = new unsigned int[order]{0, 1, 0, 1};
-    adj_mtrx[1] = new unsigned int[order]{1, 0, 1, 0};
-    adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
-    adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
-
-    BasicGraph g = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
-
-    std::unique_ptr<std::vector<Sealib::TrailStructure>> trail
-        = GraphAlgorithm::hierholzer<Sealib::TrailStructure>(g);
-}
 
 TEST(GraphTest, hierholzer_trail) {
     unsigned int order = 6;
