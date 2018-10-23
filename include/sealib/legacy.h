@@ -6,7 +6,7 @@ extern "C" {
 
 void *Sealib_Graph_new(unsigned int **m, unsigned int order);
 void Sealib_Graph_delete(void *self);
-void *Sealib_Graph_generateRandom(unsigned int order);
+void *Sealib_Graph_generateRandom(unsigned int order, unsigned int degree);
 
 void *Sealib_ChoiceDictionary_new(unsigned int size);
 void Sealib_ChoiceDictionary_delete(void *self);

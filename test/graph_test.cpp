@@ -26,7 +26,7 @@ TEST(GraphTest, graph_integrity) {
     adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
     adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
 
-    BasicGraph g = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
+    BasicGraph g = *GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
 
     // verify correct order and degree of nodes
     ASSERT_EQ(g.getOrder(), order);

@@ -53,7 +53,7 @@ static unsigned long c = 0;
 static void count(unsigned int u) { c += u; }
 
 TEST(LegacyTest, dfs) {
-  void *g = Sealib_Graph_generateRandom(101);
+  void *g = Sealib_Graph_generateRandom(101, 6);
   Sealib_DFS_nloglognBitDFS(g, count, NULL, NULL, NULL);
   EXPECT_EQ(c, 5050);
 }

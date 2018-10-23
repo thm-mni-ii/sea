@@ -5,7 +5,7 @@
 #include <random>
 #include <set>
 
-Sealib::BasicGraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
+Sealib::BasicGraph *Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
     unsigned int **adjMatrix, unsigned int order) {
   std::vector<Node> nodes;
 
@@ -49,7 +49,7 @@ Sealib::BasicGraph Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
     }
   }
 
-  return BasicGraph(nodes);
+  return new BasicGraph(nodes);
 }
 
 std::unique_ptr<Sealib::BasicGraph>

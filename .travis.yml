@@ -2,14 +2,16 @@ dist: trusty
 sudo: false
 language: cpp
 
+compiler: clang
+
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-trusty-5.0
+    #sources:
+    #  - ubuntu-toolchain-r-test
+    #  - llvm-toolchain-trusty-5.0
     packages:
-      - g++-6
-      - clang-5.0
+      #- g++-6
+      #- clang-5.0
       - cppcheck
   sonarcloud:
     organization: "andrej-sajenko-github"

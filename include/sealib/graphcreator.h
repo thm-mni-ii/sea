@@ -28,7 +28,7 @@ class GraphCreator {
    * @param adj_matrix NxN adjacency matrix representation of the graph.
    * @param _order Order of the graph, order equals the number of nodes.
    */
-  static Sealib::BasicGraph createGraphFromAdjacencyMatrix(
+  static Sealib::BasicGraph *createGraphFromAdjacencyMatrix(
       unsigned int **adjMatrix, unsigned int order);
 
   /**
@@ -68,7 +68,7 @@ class GraphCreator {
    * @param seed for the rng
    * @return unique_ptr to the graph
    */
-  std::unique_ptr<Sealib::BasicGraph> generateRandomBasicGraph(
+  static std::unique_ptr<Sealib::BasicGraph> generateRandomBasicGraph(
       unsigned int order, double p, unsigned int seed);
 
   /**
@@ -80,7 +80,7 @@ class GraphCreator {
   * @param seed for the rng
   * @return unique_ptr to the graph
   */
-  std::unique_ptr<Sealib::BasicGraph> generateRandomBipartiteBasicGraph(
+  static std::unique_ptr<Sealib::BasicGraph> generateRandomBipartiteBasicGraph(
       unsigned int n1, unsigned int n2, double p, unsigned int seed);
 };
 }  // namespace Sealib

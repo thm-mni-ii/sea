@@ -11,8 +11,8 @@ void *Sealib_Graph_new(unsigned int **m, unsigned int order) {
   return GraphCreator::createGraphFromAdjacencyMatrix(m, order);
 }
 void Sealib_Graph_delete(void *self) { delete static_cast<Graph *>(self); }
-void *Sealib_Graph_generateRandom(unsigned int order) {
-  return GraphCreator::createRandomGenerated(order);
+void *Sealib_Graph_generateRandom(unsigned int order, unsigned int degree) {
+  return GraphCreator::createRandomFixed(order, degree);
 }
 
 void *Sealib_ChoiceDictionary_new(unsigned int size) {
@@ -82,6 +82,10 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(unsigned int),
                                void (*preexplore)(unsigned int, unsigned int),
                                void (*postexplore)(unsigned int, unsigned int),
                                void (*postprocess)(unsigned int)) {
+  if (preprocess == nullptr) preprocess = DFS_NOP_PROCESS;
+  if (preexplore == nullptr) preexplore = DFS_NOP_EXPLORE;
+  if (postexplore == nullptr) postexplore = DFS_NOP_EXPLORE;
+  if (postprocess == nullptr) postprocess = DFS_NOP_PROCESS;
   DFS::nloglognBitDFS(static_cast<Graph *>(graph), preprocess, preexplore,
                       postexplore, postprocess);
 }
