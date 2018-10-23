@@ -34,9 +34,10 @@ VisualBFS::VisualBFS(BasicGraph *g, CompactArray *c, std::string filename,
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
-      pic(new TikzPicture("spring electrical layout, sibling distance=15mm, node "
-                          "distance=20mm, node sep=1cm, arrows={->}, line "
-                          "width=1pt, color=black")) {
+      pic(new TikzPicture(
+          "spring electrical layout, sibling distance=15mm, node "
+          "distance=20mm, node sep=1cm, arrows={->}, line "
+          "width=1pt, color=black")) {
   pic->add(tg);
 }
 
@@ -80,9 +81,10 @@ VisualDFS::VisualDFS(BasicGraph *g, CompactArray *c, std::string filename,
       c(c),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
-      pic(new TikzPicture("spring electrical layout, sibling distance=15mm, node "
-                          "distance=20mm, node sep=1cm, arrows={->}, line "
-                          "width=1pt, color=black")) {
+      pic(new TikzPicture(
+          "spring electrical layout, sibling distance=15mm, node "
+          "distance=20mm, node sep=1cm, arrows={->}, line "
+          "width=1pt, color=black")) {
   pic->add(tg);
 }
 
@@ -94,12 +96,12 @@ void VisualDFS::emit() {
   for (uint a = 0; a < lp; a++) l.push_back(low[a].head());
   for (uint a = 0; a < hp; a++) h.push_back(high[a].head());
   for (uint a = 0; a < tp; a++) t.push_back(trailers[a].x.head());
-  doc->add(TikzGenerator::generateTikzElement(l, "$S_L$", true,
-                                              "yshift=-8cm, xshift=8cm, name=SL"));
-  doc->add(TikzGenerator::generateTikzElement(h, "$S_H$", true,
-                                              "yshift=-8cm, xshift=10cm, name=SH"));
-  doc->add(TikzGenerator::generateTikzElement(t, "T", true,
-                                              "yshift=-8cm, xshift=12cm, name=T"));
+  doc->add(TikzGenerator::generateTikzElement(
+      l, "$S_L$", true, "yshift=-8cm, xshift=8cm, name=SL"));
+  doc->add(TikzGenerator::generateTikzElement(
+      h, "$S_H$", true, "yshift=-8cm, xshift=10cm, name=SH"));
+  doc->add(TikzGenerator::generateTikzElement(
+      t, "T", true, "yshift=-8cm, xshift=12cm, name=T"));
   doc->endBlock();
 }
 

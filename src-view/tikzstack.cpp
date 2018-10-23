@@ -7,7 +7,7 @@ TikzStack::TikzStack(const std::vector<std::string> &content, std::string name,
 
 std::ostream &TikzStack::out(std::ostream &os) const {
   if (content.size() == 0) {
-    os << "\\node("<<name<<")[draw=none,fill=none] {(empty)};\n";
+    os << "\\node(" << name << ")[draw=none,fill=none] {(empty)};\n";
   } else {
     os << "\\matrix"
        << "(" << name << ")"

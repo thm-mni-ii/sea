@@ -102,7 +102,7 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
     u.push_back(std::to_string(c.get(a)));
   }
   std::shared_ptr<TikzElement> array(new TikzArray(u, "C", "array", true));
-  std::shared_ptr<TikzNode> label(new TikzNode("","below=0.1cm of C",name));
+  std::shared_ptr<TikzNode> label(new TikzNode("", "below=0.1cm of C", name));
 
   std::stringstream opts;
   if (positionOpts != "") opts << positionOpts << ",";
@@ -139,11 +139,13 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
   }
   std::shared_ptr<TikzElement> array;
   if (vertical) {
-    array = std::shared_ptr<TikzElement>(new TikzStack(s, "S", "array,anchor=south", true));
+    array = std::shared_ptr<TikzElement>(
+        new TikzStack(s, "S", "array,anchor=south", true));
   } else {
     array = std::shared_ptr<TikzElement>(new TikzArray(s, "S", "array", true));
   }
-  std::shared_ptr<TikzNode> label=std::make_shared<TikzNode>("","below=0.1cm of S",name);
+  std::shared_ptr<TikzNode> label =
+      std::make_shared<TikzNode>("", "below=0.1cm of S", name);
 
   std::stringstream arrayStyle;
   if (positionOpts != "") arrayStyle << positionOpts << ",";
