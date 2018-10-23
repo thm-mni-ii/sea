@@ -1,22 +1,21 @@
 #include <sealibvisual/tikzpicture.h>
-#include <utility>
 #include <sstream>
+#include <utility>
 
 std::ostream &SealibVisual::TikzPicture::out(std::ostream &os) const {
-    os << "\\begin{"<<(scope?"scope":"tikzpicture")<<"}" <<
-       "[" << options << "]" << std::endl;
-    for (const std::shared_ptr<TikzElement> &e : elements) {
-        os << (*e);
-    }
-    os << "\\end{"<<(scope?"scope":"tikzpicture")<<"}" << std::endl;
-    os << "%\\hspace{0cm}";
-    return os;
+  os << "\\begin{" << (scope ? "scope" : "tikzpicture") << "}"
+     << "[" << options << "]" << std::endl;
+  for (const std::shared_ptr<TikzElement> &e : elements) {
+    os << (*e);
+  }
+  os << "\\end{" << (scope ? "scope" : "tikzpicture") << "}" << std::endl;
+  os << "%\\hspace{0cm}";
+  return os;
 }
 
-SealibVisual::TikzPicture::TikzPicture(std::string options, bool scope) :
-    elements(),
-    options(std::move(options)), scope(scope) {}
+SealibVisual::TikzPicture::TikzPicture(std::string options, bool scope)
+    : elements(), options(std::move(options)), scope(scope) {}
 
 void SealibVisual::TikzPicture::add(std::shared_ptr<TikzElement> tikzElement) {
-    elements.emplace_back(tikzElement);
+  elements.emplace_back(tikzElement);
 }

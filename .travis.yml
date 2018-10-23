@@ -8,7 +8,7 @@ addons:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-trusty-5.0
     packages:
-    #  - g++-6
+      - g++-6
       - clang-5.0
       - cppcheck
   sonarcloud:
@@ -32,7 +32,7 @@ before_script:
   - cppcheck --std=c++11 --error-exitcode=1 --quiet -Iinclude src/ src-view/
 
 script:
-  - CXX=/usr/bin/g++-6 CC=/usr/bin/gcc-6 cmake -DCOVERAGE=1 .
+  - cmake -DCOVERAGE=1 .
   - 'if test $TRAVIS_PULL_REQUEST = false; then build-wrapper-linux-x86-64 --out-dir bw-output make; else make; fi'
   - ./bin/tests
 
