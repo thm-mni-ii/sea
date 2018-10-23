@@ -6,10 +6,6 @@
 #include <random>
 #include <stack>
 #include <vector>
-#include "sealib/basicgraph.h"
-#include "sealib/graphcreator.h"
-#include "sealib/reversedfs.h"
-#include "sealib/runtimetest.h"
 
 using Sealib::DFS;
 using Sealib::CompactArray;
@@ -53,25 +49,21 @@ void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }*/
 static std::random_device rnd;
 static const unsigned GRAPHCOUNT = 4;  // how many random graphs to generate?
 static const unsigned DEGREE = 15;     // how many outneighbours per node?
-static const unsigned ORDER = 200;
+static const unsigned order = 200;
 
 static std::vector<std::shared_ptr<Graph>> makeGraphs() {
   std::vector<std::shared_ptr<Graph>> g;
   for (uint c = 0; c < GRAPHCOUNT; c++) {
     g.push_back(std::shared_ptr<Graph>(
-        Sealib::GraphCreator::createRandomFixed(ORDER, DEGREE)));
+        Sealib::GraphCreator::createRandomFixed(order, DEGREE)));
   }
   return g;
 }
 
 class DFSTest : public ::testing::TestWithParam<std::shared_ptr<Graph>> {
  protected:
-  virtual void SetUp() {
-    c1 = c2 = c3 = c4 = 0;
-    v1 = std::vector<unsigned>(ORDER);
-    v4 = std::vector<unsigned>(ORDER);
-  }  // executed before each
-     // TEST_P
+  virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
+                                                   // TEST_P
 };
 
 INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
@@ -80,88 +72,32 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
 TEST_P(DFSTest, stdUserproc) {
   Graph *g = GetParam().get();
   DFS::standardDFS(g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, ORDER);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
-  EXPECT_EQ(c2, DEGREE * ORDER);
-  EXPECT_EQ(c3, DEGREE * ORDER);
-  EXPECT_EQ(c4, ORDER);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
+  EXPECT_EQ(c1, order);
+  EXPECT_EQ(c2, DEGREE * order);
+  EXPECT_EQ(c3, DEGREE * order);
+  EXPECT_EQ(c4, order);
 }
 
 TEST_P(DFSTest, nBitUserproc) {
   Graph *g = GetParam().get();
   DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, ORDER);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
-  EXPECT_EQ(c2, DEGREE * ORDER);
-  EXPECT_EQ(c3, DEGREE * ORDER);
-  EXPECT_EQ(c4, ORDER);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
+  EXPECT_EQ(c1, order);
+  EXPECT_EQ(c2, DEGREE * order);
+  EXPECT_EQ(c3, DEGREE * order);
+  EXPECT_EQ(c4, order);
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
   Graph *g = GetParam().get();
   DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, ORDER);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
-  EXPECT_EQ(c2, DEGREE * ORDER);
-  EXPECT_EQ(c3, DEGREE * ORDER);
-  EXPECT_EQ(c4, ORDER);
-  for (unsigned a : v4) {
-    EXPECT_EQ(a, 1);
-  }
+  EXPECT_EQ(c1, order);
+  EXPECT_EQ(c2, DEGREE * order);
+  EXPECT_EQ(c3, DEGREE * order);
+  EXPECT_EQ(c4, order);
 }
 
-TEST(DFSTest, runtime) {
-  uint deg = 5;
-  RuntimeTest t1, t2;
-  for (uint n = 10000; n < 1000000; n += 10000) {
-    Graph *g = Sealib::GraphCreator::createRandomFixed(n, deg);
-    // t1.runTest(
-    //    [&g]() {
-    //      DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-    //                          DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
-    //    },
-    //    n, n * deg);
-    t2.runTest(
-        [&g]() {
-          DFS::standardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                           DFS_NOP_PROCESS);
-        },
-        n, n * deg);
-  }
-  // t1.saveCSV("nloglogn-dfs.csv");
-  t2.saveCSV("standard-dfs.csv");
-}
-
-TEST(DFSTest, standardImbalanced) {
-  Graph *g = Sealib::GraphCreator::createRandomImbalanced(ORDER);
-  DFS::standardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                   DFS_NOP_PROCESS);
-  SUCCEED();
-  delete g;
-}
-
-TEST(DFSTest, nBitImbalanced) {
-  Graph *g = Sealib::GraphCreator::createRandomImbalanced(ORDER);
-  DFS::nBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-               DFS_NOP_PROCESS);
-  SUCCEED();
-  delete g;
-}
-
-TEST(DFSTest, nloglognBitImbalanced) {
-  Graph *g = Sealib::GraphCreator::createRandomImbalanced(ORDER);
+TEST(DFSTest, nloglognImbalanced) {
+  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
   DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                       DFS_NOP_PROCESS);
   SUCCEED();
