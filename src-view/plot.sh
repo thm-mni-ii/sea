@@ -8,7 +8,7 @@ Title="Runtime test"
 Files=""
 Outfile="runtime-plot.jpg"
 
-while getopts "t:h" opt; do
+while getopts "t:o:h" opt; do
 	case $opt in
 	t) 
 		Title="$OPTARG" 
