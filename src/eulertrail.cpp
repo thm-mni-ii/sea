@@ -4,13 +4,6 @@
 
 using Sealib::EulerTrail;
 
-namespace Sealib {
-template
-class EulerTrail<SimpleTrailStructure>;
-template
-class EulerTrail<TrailStructure>;
-}
-
 template<class TrailStructureType>
 EulerTrail<TrailStructureType>::iterator::iterator(
     const EulerTrail<TrailStructureType> &eulerTrail_, unsigned int nIndex_) :
@@ -163,3 +156,10 @@ EulerTrail<TrailStructureType>::findTrailStarts() {
     }
     return bs;
 }
+
+namespace Sealib {
+template
+class EulerTrail<SimpleTrailStructure>;
+template
+class EulerTrail<TrailStructure>;
+}  // namespace Sealib

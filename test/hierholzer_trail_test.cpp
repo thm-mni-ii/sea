@@ -4,10 +4,6 @@
 #include <sealib/eulertrail.h>
 #include <stdlib.h>
 
-using Sealib::GraphCreator;
-using Sealib::BasicGraph;
-using Sealib::Graph;
-
 TEST(GraphTest, hierholzer_trail) {
     unsigned int order = 6;
     auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * order * order);
@@ -18,7 +14,10 @@ TEST(GraphTest, hierholzer_trail) {
     adj_mtrx[4] = new unsigned int[order]{1, 0, 0, 0, 0, 0};
     adj_mtrx[5] = new unsigned int[order]{1, 0, 0, 0, 0, 0};
 
-    std::shared_ptr<BasicGraph>
-        graph_ptr(new BasicGraph(GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order)));
+    std::shared_ptr<Sealib::BasicGraph>
+        graph_ptr(
+            new Sealib::BasicGraph(Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
+                adj_mtrx,
+                order)));
     Sealib::EulerTrail<Sealib::TrailStructure> et(graph_ptr);
 }
