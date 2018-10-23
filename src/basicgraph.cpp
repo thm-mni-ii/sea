@@ -35,5 +35,6 @@ unsigned int Sealib::BasicGraph::getOrder() const {
 }
 std::tuple<unsigned int, unsigned int>
 Sealib::BasicGraph::mate(unsigned int u, unsigned int k) const {
-    return {nodes[u].getAdj()[k].vertex, nodes[u].getAdj()[k].crossIndex};
+    return std::tuple<unsigned int, unsigned int>(nodes[u].getAdj()[k].vertex,
+                                                  nodes[u].getAdj()[k].crossIndex);
 }

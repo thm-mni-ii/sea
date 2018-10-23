@@ -136,7 +136,7 @@ class SubGraph {
         }
         unsigned long b = select_p(j - 1);  // pSelect.select(j - 1);
         b = b == (unsigned long) -1 ? 0 : b;
-        return {a, r - b};
+        return std::tuple<unsigned long, unsigned long>(a, r - b);
     }
 
     virtual unsigned long phi(unsigned long u) const = 0;
