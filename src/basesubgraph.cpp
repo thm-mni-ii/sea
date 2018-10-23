@@ -1,4 +1,4 @@
-#include <sealib/basesubgraph.h>
+#include <src/basesubgraph.h>
 #include <iostream>
 
 /**

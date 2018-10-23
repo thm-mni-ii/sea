@@ -12,20 +12,14 @@
 namespace Sealib {
 template<class TrailStructureType>
 class EulerTrail {
-    typedef typename Sealib::RankSelect rankselect_t;
-    typedef typename Sealib::BasicGraph graph_t;
-    typedef typename std::shared_ptr<graph_t> graphptr_t;
-    typedef typename Sealib::Bitset<unsigned char> bitset_t;
-    typedef typename std::vector<TrailStructureType> array_t;
-
  private:
-    graphptr_t graph;
-    array_t trail;
-    rankselect_t trailStarts;
+    std::shared_ptr<Sealib::BasicGraph> graph;
+    std::vector<TrailStructureType>  trail;
+    Sealib::RankSelect trailStarts;
 
     unsigned int findStartingNode();
-    array_t initializeTrail();
-    bitset_t findTrailStarts();
+    std::vector<TrailStructureType> initializeTrail();
+    Sealib::Bitset<unsigned char> findTrailStarts();
 
     class iterator {
      public:
@@ -43,7 +37,7 @@ class EulerTrail {
     };
 
  public:
-    explicit EulerTrail(const graphptr_t &graph);
+    explicit EulerTrail(const std::shared_ptr<Sealib::BasicGraph> &graph);
 
     friend std::ostream &operator<<(std::ostream &os,
                                     const EulerTrail<TrailStructureType> &eulerTrail) {

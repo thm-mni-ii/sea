@@ -1,6 +1,6 @@
 #ifndef SEALIB_BASESUBGRAPH_H_
 #define SEALIB_BASESUBGRAPH_H_
-#include <sealib/subgraph.h>
+#include <src/subgraph.h>
 #include <sealib/rankselect.h>
 #include <sealib/basicgraph.h>
 #include <tuple>

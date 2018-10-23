@@ -1,6 +1,6 @@
 #ifndef SEALIB_RECURSIVESUBGRAPH_H_
 #define SEALIB_RECURSIVESUBGRAPH_H_
-#include <sealib/subgraph.h>
+#include <src/subgraph.h>
 #include <sealib/rankselect.h>
 #include <tuple>
 

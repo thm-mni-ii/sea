@@ -16,6 +16,14 @@ class RecursiveSubGraph;
 }
 
 namespace Sealib {
+/**
+ * A space efficient implementation of a subgraph stack.
+ * A SubGraphStack object maintains a list of Graphs (G_0,...,G_l),
+ * such that for 0 < i <= l G_i is a subgraph of G_i-1.
+ * All operations can be evaluated in effectively constant time, the subgraphs that are being pushed
+ * are represented by various bitsets with at most O(|V_0| + 2|E_0|) size
+ * for which we construct additional rank-select structures.
+ */
 class SubGraphStack {
     static unsigned long refs[6];
 
@@ -219,6 +227,9 @@ class SubGraphStack {
      */
     void tune(unsigned long i);
 
+    /**
+     * @return the number of graphs currently on the stack
+     */
     inline unsigned long size() const {
         return clientList.size();
     }

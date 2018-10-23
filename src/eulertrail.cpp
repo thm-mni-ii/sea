@@ -72,7 +72,7 @@ typename EulerTrail<TrailStructureType>::iterator EulerTrail<TrailStructureType>
 }
 
 template<class TrailStructureType>
-EulerTrail<TrailStructureType>::EulerTrail(const graphptr_t &graph_)
+EulerTrail<TrailStructureType>::EulerTrail(const std::shared_ptr<Sealib::BasicGraph> &graph_)
     : graph(graph_), trail(initializeTrail()), trailStarts(findTrailStarts()) {
 }
 
@@ -106,9 +106,9 @@ unsigned int EulerTrail<TrailStructureType>::findStartingNode() {
 }
 
 template<class TrailStructureType>
-typename EulerTrail<TrailStructureType>::array_t
+std::vector<TrailStructureType>
 EulerTrail<TrailStructureType>::initializeTrail() {
-    EulerTrail<TrailStructureType>::array_t trail_;
+    std::vector<TrailStructureType> trail_;
 
     unsigned int order = graph->getOrder();
     trail_.reserve(order);
@@ -150,9 +150,9 @@ EulerTrail<TrailStructureType>::initializeTrail() {
 }
 
 template<class TrailStructureType>
-typename EulerTrail<TrailStructureType>::bitset_t
+Sealib::Bitset<unsigned char>
 EulerTrail<TrailStructureType>::findTrailStarts() {
-    EulerTrail<TrailStructureType>::bitset_t bs(graph->getOrder());
+    Sealib::Bitset<unsigned char> bs(graph->getOrder());
     for (unsigned int i = 0; i < graph->getOrder(); i++) {
         bool hasStarting = trail.at(i).hasStartingArc();
         if (hasStarting) {

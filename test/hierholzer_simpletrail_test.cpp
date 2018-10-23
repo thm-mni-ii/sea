@@ -6,7 +6,6 @@
 
 using Sealib::GraphCreator;
 using Sealib::BasicGraph;
-using Sealib::GraphAlgorithm;
 using Sealib::Graph;
 
 TEST(GraphTest, hierholzer_simple_trail) {
