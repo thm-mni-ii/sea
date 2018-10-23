@@ -1,5 +1,5 @@
-#ifndef SEALIB_RECURSIVESUBGRAPH_H_
-#define SEALIB_RECURSIVESUBGRAPH_H_
+#ifndef SRC_RECURSIVESUBGRAPH_H_
+#define SRC_RECURSIVESUBGRAPH_H_
 #include <src/subgraph.h>
 #include <sealib/rankselect.h>
 #include <tuple>
@@ -46,4 +46,4 @@ class RecursiveSubGraph : public SubGraph {
     ~RecursiveSubGraph() override;
 };
 }  // namespace Sealib
-#endif  // SEALIB_RECURSIVESUBGRAPH_H_
+#endif  // SRC_RECURSIVESUBGRAPH_H_
