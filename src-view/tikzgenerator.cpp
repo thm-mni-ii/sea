@@ -1,17 +1,18 @@
-#include <sealibvisual/tikzarray.h>
-#include <sealibvisual/tikzdocument.h>
-#include <sealibvisual/tikzgenerator.h>
-#include <sealibvisual/tikzgraph.h>
-#include <sealibvisual/tikznode.h>
-#include <sealibvisual/tikzpicture.h>
-#include <sealibvisual/tikzstack.h>
-
-#include <sealib/basicgraph.h>
-#include <sealib/bitset.h>
-#include <sealib/compactarray.h>
+#include "sealibvisual/tikzgenerator.h"
 
 #include <sstream>
 #include <tuple>
+
+#include "sealibvisual/tikzarray.h"
+#include "sealibvisual/tikzdocument.h"
+#include "sealibvisual/tikzgraph.h"
+#include "sealibvisual/tikznode.h"
+#include "sealibvisual/tikzpicture.h"
+#include "sealibvisual/tikzstack.h"
+
+#include "sealib/basicgraph.h"
+#include "sealib/bitset.h"
+#include "sealib/compactarray.h"
 
 namespace Sealib {
 typedef Bitset<unsigned char> bitset_t;

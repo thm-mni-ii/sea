@@ -5,15 +5,6 @@
 #include <sealib/graphcreator.h>
 #include <sealib/graphrepresentations.h>
 #include <sealib/runtimetest.h>
-#include <sealibvisual/examples.h>
-#include <sealibvisual/tikzarray.h>
-#include <sealibvisual/tikzdocument.h>
-#include <sealibvisual/tikzfigure.h>
-#include <sealibvisual/tikzgenerator.h>
-#include <sealibvisual/tikzgraph.h>
-#include <sealibvisual/tikznode.h>
-#include <sealibvisual/tikzpicture.h>
-#include <sealibvisual/tikzstyle.h>
 #include <chrono>
 #include <cmath>
 #include <ctime>
@@ -23,6 +14,15 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include "sealibvisual/examples.h"
+#include "sealibvisual/tikzarray.h"
+#include "sealibvisual/tikzdocument.h"
+#include "sealibvisual/tikzfigure.h"
+#include "sealibvisual/tikzgenerator.h"
+#include "sealibvisual/tikzgraph.h"
+#include "sealibvisual/tikznode.h"
+#include "sealibvisual/tikzpicture.h"
+#include "sealibvisual/tikzstyle.h"
 
 using std::cout;
 using std::stack;

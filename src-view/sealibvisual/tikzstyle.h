@@ -1,7 +1,7 @@
 #ifndef SEALIBVISUAL_TIKZSTYLE_H_
 #define SEALIBVISUAL_TIKZSTYLE_H_
 
-#include <sealibvisual/tikzelement.h>
+#include "./tikzelement.h"
 #include <string>
 
 namespace SealibVisual {

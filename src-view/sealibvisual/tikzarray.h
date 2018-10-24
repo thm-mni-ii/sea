@@ -1,7 +1,7 @@
 #ifndef SEALIBVISUAL_TIKZARRAY_H_
 #define SEALIBVISUAL_TIKZARRAY_H_
 
-#include <sealibvisual/tikzelement.h>
+#include "./tikzelement.h"
 #include <string>
 #include <vector>
 

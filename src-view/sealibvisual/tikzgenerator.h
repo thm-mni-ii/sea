@@ -1,10 +1,10 @@
 #ifndef SEALIBVISUAL_TIKZGENERATOR_H_
 #define SEALIBVISUAL_TIKZGENERATOR_H_
 
-#include <sealibvisual/tikzelement.h>
-#include <sealibvisual/tikzgraph.h>
-#include <sealibvisual/tikznode.h>
-#include <sealibvisual/tikzpicture.h>
+#include "./tikzelement.h"
+#include "./tikzgraph.h"
+#include "./tikznode.h"
+#include "./tikzpicture.h"
 
 #include <sealib/basicgraph.h>
 #include <sealib/bitset.h>

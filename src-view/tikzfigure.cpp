@@ -1,4 +1,4 @@
-#include <sealibvisual/tikzfigure.h>
+#include "sealibvisual/tikzfigure.h"
 
 std::ostream &SealibVisual::TikzFigure::out(std::ostream &os) const {
     os << "\\begin{figure}" << std::endl <<

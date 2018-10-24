@@ -1,4 +1,4 @@
-#include <sealibvisual/tikzedge.h>
+#include "sealibvisual/tikzedge.h"
 SealibVisual::TikzEdge::TikzEdge(
     const std::string &from,
     const std::string &to,

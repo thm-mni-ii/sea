@@ -1,4 +1,4 @@
-#include <sealibvisual/tikzgraph.h>
+#include "sealibvisual/tikzgraph.h"
 using SealibVisual::TikzGraph;
 using std::vector;
 

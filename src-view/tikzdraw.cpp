@@ -1,4 +1,4 @@
-#include <sealibvisual/tikzdraw.h>
+#include "sealibvisual/tikzdraw.h"
 #include <vector>
 
 const std::string &SealibVisual::TikzDraw::getOptions() const {

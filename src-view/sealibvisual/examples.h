@@ -5,9 +5,9 @@
 #include <sealib/compactarray.h>
 #include <sealib/dfs.h>
 #include <sealib/segmentstack.h>
-#include <sealibvisual/tikzdocument.h>
-#include <sealibvisual/tikzgraph.h>
-#include <sealibvisual/tikzpicture.h>
+#include "./tikzdocument.h"
+#include "./tikzgraph.h"
+#include "./tikzpicture.h"
 #include <string>
 
 namespace SealibVisual {

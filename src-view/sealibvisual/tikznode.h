@@ -1,7 +1,7 @@
 #ifndef SEALIBVISUAL_TIKZNODE_H_
 #define SEALIBVISUAL_TIKZNODE_H_
 
-#include <sealibvisual/tikzelement.h>
+#include "./tikzelement.h"
 #include <string>
 
 namespace SealibVisual {

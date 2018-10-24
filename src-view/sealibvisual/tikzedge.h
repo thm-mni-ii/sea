@@ -1,7 +1,7 @@
 #ifndef SEALIBVISUAL_TIKZEDGE_H_
 #define SEALIBVISUAL_TIKZEDGE_H_
 
-#include <sealibvisual/tikzelement.h>
+#include "./tikzelement.h"
 #include <string>
 #include <vector>
 

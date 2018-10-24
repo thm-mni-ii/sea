@@ -1,4 +1,4 @@
-#include <sealibvisual/tikznode.h>
+#include "sealibvisual/tikznode.h"
 #include <utility>
 #include <sstream>
 #include <vector>

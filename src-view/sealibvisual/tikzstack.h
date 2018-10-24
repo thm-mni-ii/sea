@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "sealibvisual/tikzarray.h"
+#include "./tikzarray.h"
 
 namespace SealibVisual {
 /**

@@ -1,8 +1,8 @@
 #ifndef SEALIBVISUAL_TIKZFIGURE_H_
 #define SEALIBVISUAL_TIKZFIGURE_H_
 
-#include <sealibvisual/tikzpicture.h>
-#include <sealibvisual/tikzelement.h>
+#include "./tikzpicture.h"
+#include "./tikzelement.h"
 #include <iostream>
 #include <sstream>
 #include <string>

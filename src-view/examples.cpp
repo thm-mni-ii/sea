@@ -1,24 +1,16 @@
-#include <sealib/basicgraph.h>
-#include <sealib/bfs.h>
-#include <sealib/dfs.h>
-#include <sealib/graphcreator.h>
-#include <sealibvisual/examples.h>
-#include <sealibvisual/tikzgenerator.h>
-#include <sealibvisual/tikzgraph.h>
+#include "sealibvisual/examples.h"
+
 #include <iostream>
-using SealibVisual::Examples;
-using SealibVisual::VisualDFS;
-using SealibVisual::VisualBFS;
-using SealibVisual::TikzDocument;
-using SealibVisual::TikzPicture;
-using SealibVisual::TikzGenerator;
-using SealibVisual::TikzGraph;
-using Sealib::Graph;
-using Sealib::BasicGraph;
-using Sealib::BFS;
-using Sealib::DFS;
-using Sealib::CompactArray;
-using Sealib::ExtendedSegmentStack;
+
+#include "sealib/basicgraph.h"
+#include "sealib/bfs.h"
+#include "sealib/dfs.h"
+#include "sealib/graphcreator.h"
+#include "sealibvisual/tikzgenerator.h"
+#include "sealibvisual/tikzgraph.h"
+
+using namespace SealibVisual;   // NOLINT
+using namespace Sealib;   // NOLINT
 
 const char *Examples::style_white = "circle,draw=black,fill=white",
            *Examples::style_lightgray = "circle,draw=black,fill=gray!50",
