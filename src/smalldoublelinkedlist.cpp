@@ -1,4 +1,4 @@
-#include <src/smalldoublelinkedlist.h>
+#include <include/sealib/smalldoublelinkedlist.h>
 
 Sealib::SmallDoubleLinkedList::SmallDoubleLinkedList(unsigned char size) :
     links(size * 2, 1),
@@ -54,10 +54,3 @@ unsigned int Sealib::SmallDoubleLinkedList::remove(unsigned int idx) {
 bool Sealib::SmallDoubleLinkedList::isEmpty() {
     return current == (unsigned char) -1;
 }
-
-void Sealib::SmallDoubleLinkedList::clear() {
-    current = (unsigned char) - 1;
-    links.resize(0);
-    links.shrink_to_fit();
-}
-

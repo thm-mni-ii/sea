@@ -1,4 +1,4 @@
-#include <src/largedoublelinkedlist.h>
+#include <include/sealib/largedoublelinkedlist.h>
 #include <iostream>
 
 Sealib::LargeDoubleLinkedList::LargeDoubleLinkedList(unsigned int size) :
@@ -50,9 +50,4 @@ unsigned int Sealib::LargeDoubleLinkedList::remove(unsigned int idx) {
 
 bool Sealib::LargeDoubleLinkedList::isEmpty() {
     return current == (unsigned int) -1;
-}
-void Sealib::LargeDoubleLinkedList::clear() {
-    current = (unsigned int) - 1;
-    links.resize(0);
-    links.shrink_to_fit();
 }

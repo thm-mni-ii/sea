@@ -5,7 +5,7 @@
 #include <sealib/rankselect.h>
 #include <sealib/simplerankselect.h>
 #include <sealib/dyckmatchingstructure.h>
-#include <src/largedoublelinkedlist.h>
+#include <include/sealib/largedoublelinkedlist.h>
 #include <vector>
 
 /**
