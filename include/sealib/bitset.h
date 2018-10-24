@@ -31,7 +31,7 @@ class Bitset {
     static const BlockType BlockTypeOne = BlockType(1);
 
     sizeType bits;
-    std::vector<BlockType> mbits;
+    std::vector<BlockType, AllocatorType> mbits;
 
     inline bitType get(const BlockType &i, sizeType b) const {
         return static_cast<bitType>(i & (BlockTypeOne << b));
@@ -168,6 +168,13 @@ class Bitset {
      * @param block value to be set
      */
     void setBlock(sizeType idx,  BlockType block);
+
+    /**
+     * @return allocator used for allocation of the internal storage
+     */
+    AllocatorType get_allocator() const {
+        return mbits.get_allocator();
+    }
 
     //  basic bitset operations
     Bitset<BlockType, AllocatorType>& operator&=(const Bitset<BlockType, AllocatorType>& rhs);
