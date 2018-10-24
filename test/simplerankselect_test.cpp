@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <include/sealib/simplerankselect.h>
-#include <include/sealib/sharedrankselect.h>
+#include <sealib/simplerankselect.h>
+#include <sealib/sharedrankselect.h>
 
 TEST(SimpleRankSelectTest, simpleRankSelect) {
     std::shared_ptr<Sealib::Bitset<unsigned char>> bits(new Sealib::Bitset<unsigned char>(1));
