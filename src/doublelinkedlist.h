@@ -1,5 +1,5 @@
-#ifndef SEALIB_DOUBLELINKEDLIST_H_
-#define SEALIB_DOUBLELINKEDLIST_H_
+#ifndef SRC_DOUBLELINKEDLIST_H_
+#define SRC_DOUBLELINKEDLIST_H_
 
 namespace Sealib {
 class DoubleLinkedList {
@@ -12,4 +12,4 @@ class DoubleLinkedList {
     virtual void clear() = 0;
 };
 }  // namespace Sealib
-#endif  // SEALIB_DOUBLELINKEDLIST_H_
+#endif  // SRC_DOUBLELINKEDLIST_H_

@@ -1,4 +1,4 @@
-#include <sealib/largedoublelinkedlist.h>
+#include <src/largedoublelinkedlist.h>
 #include <iostream>
 
 Sealib::LargeDoubleLinkedList::LargeDoubleLinkedList(unsigned int size) :

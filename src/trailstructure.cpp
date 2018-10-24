@@ -1,8 +1,8 @@
 #include <sealib/bitset.h>
 #include <sealib/rankselect.h>
 #include <sealib/recursivedyckmatchingstructure.h>
-#include <sealib/smalldoublelinkedlist.h>
-#include <sealib/largedoublelinkedlist.h>
+#include <src/smalldoublelinkedlist.h>
+#include <src/largedoublelinkedlist.h>
 #include <sealib/trailstructure.h>
 #include <cstdlib>
 #include <iostream>

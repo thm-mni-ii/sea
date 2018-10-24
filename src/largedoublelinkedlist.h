@@ -1,7 +1,7 @@
-#ifndef SEALIB_LARGEDOUBLELINKEDLIST_H_
-#define SEALIB_LARGEDOUBLELINKEDLIST_H_
+#ifndef SRC_LARGEDOUBLELINKEDLIST_H_
+#define SRC_LARGEDOUBLELINKEDLIST_H_
 
-#include <sealib/doublelinkedlist.h>
+#include <src/doublelinkedlist.h>
 #include <vector>
 #include <ostream>
 
@@ -20,4 +20,4 @@ class LargeDoubleLinkedList : public DoubleLinkedList {
     void clear() override;
 };
 }  // namespace Sealib
-#endif  //  SEALIB_LARGEDOUBLELINKEDLIST_H_
+#endif  //  SRC_LARGEDOUBLELINKEDLIST_H_
