@@ -30,7 +30,7 @@ class BitArray {
 
  private:
   std::vector<uint8_t> data;
-  uint8_t maxValue, valueWidth, valuesPerGroup, valueMask;
+  uint8_t valueWidth, valuesPerGroup, valueMask;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BITARRAY_H_

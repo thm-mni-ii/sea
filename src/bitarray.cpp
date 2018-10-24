@@ -27,7 +27,6 @@ uint8_t BitArray::get(uint i) {
 
 BitArray::BitArray(uint size, uint8_t values)
     : data(size),
-      maxValue(values - 1),
       valueWidth(static_cast<uint8_t>(ceil(log2(values)))),
       valueMask((1 << valueWidth) - 1) {
   if (values < 2) {
