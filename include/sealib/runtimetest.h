@@ -18,7 +18,7 @@
 class RuntimeTest {
  private:
     std::vector<std::tuple<unsigned int, unsigned int>> parameters;
-    std::vector<unsigned int> runtimes;  // Runtime in seconds
+    std::vector<uint64_t> runtimes;  // Runtime in seconds
  public:
     /**
      * Runs a test with a given function and saves the results
@@ -49,9 +49,9 @@ void RuntimeTest::runTest(Testfunction testfunction, unsigned int order, unsigne
     parameters.push_back(funcParameters);
     const clk::time_point runStart = clk::now();
     std::cout << "Running test: "<< parameters.size()
-              << " n: "<< order << " w: "<< size << std::endl;
+              << " n: "<< order << " m: "<< size << std::endl;
     testfunction();
-    const auto runTime = std::chrono::duration_cast<std::chrono::milliseconds>
+    const clk::duration::rep runTime = std::chrono::duration_cast<std::chrono::milliseconds>
                          (clk::now() - runStart).count();
 
     runtimes.push_back(runTime);

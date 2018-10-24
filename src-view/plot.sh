@@ -7,8 +7,24 @@ ScriptHome=$(dirname $(readlink -e "$0"))
 Title="Runtime test"
 Files=""
 Outfile="runtime-plot.jpg"
+Scale="ms"
 
-while getopts "t:o:h" opt; do
+printHelp() {
+	printf "plot.sh [options] <file basename(s)>\n"
+	printf "Options:\n"
+	printf "\t-t <name>		Title for your plot\n"
+	printf "\t-o <file>		Output filename\n"
+	printf "\t-s <unit>		Unit of time measure (default: ms)\n"
+	printf "\n"
+	printf "Example:\nPlot data from standard.csv and efficient.csv in one plot\n"
+	printf " -> plot.sh -t 'Algorithm comparison' -o comparison.jpg standard efficient\n"
+	exit 0
+}
+if test $# -eq 0; then
+	printHelp
+fi
+
+while getopts "t:o:s:h" opt; do
 	case $opt in
 	t) 
 		Title="$OPTARG" 
@@ -16,15 +32,12 @@ while getopts "t:o:h" opt; do
 		;;
 	o)
 		Outfile="$OPTARG"
-		printf "Outfile: $Outfile\n"
 		;;
-	?)
-		printf "plot.sh [options] <file basename(s)>\n"
-		printf "Options:\n"
-		printf "\t-t <name>		Title for your plot\n"
-		printf "\t-o <file>		Output filename\n"
-		printf "\n"
-		exit 0
+	s)
+		Scale="$OPTARG"
+		;;
+	h|?)
+		printHelp
 		;;
 	esac
 done
@@ -36,4 +49,4 @@ done
 printf "Plotting files: $Files\n"
 printf "Output file: $Outfile\n"
 
-gnuplot -e "infiles='$Files'; outfile='$Outfile'; title='$Title'" -c "$ScriptHome/plot_helper.gp"
+gnuplot -e "infiles='$Files'; outfile='$Outfile'; title='$Title'; scale='$Scale'" -c "$ScriptHome/plot_helper.gp"

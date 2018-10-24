@@ -6,7 +6,7 @@
 if (!exists("title")) title="Runtime test"
 set title title
 set xlabel "order"
-set ylabel "time (ms)"
+set ylabel "time (".scale.")"
 set style data lines
 set grid xtics ytics
 set terminal jpeg size 800,800

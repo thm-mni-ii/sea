@@ -26,12 +26,7 @@
 
 using std::cout;
 using std::stack;
-using Sealib::BasicGraph;
-using Sealib::Compactgraph;
-using Sealib::DFS;
-using Sealib::Graphrepresentations;
-using Sealib::ChoiceDictionary;
-using Sealib::ChoiceDictionaryIterator;
+using namespace Sealib;  // NOLINT
 
 using SealibVisual::TikzElement;
 using SealibVisual::TikzGenerator;
@@ -145,17 +140,19 @@ void runTest(uint n, uint (*fm)(uint n)) {
 
 void runtime_choice() {
   std::random_device rnd;
-  RuntimeTest t1, t2;
-  for (uint64_t n = 1e6; n <= 1e7; n += 10000) {
+  RuntimeTest t1, t2, t3;
+  for (uint64_t n = 1e6; n <= 2e6; n += 10000) {
     std::uniform_int_distribution<uint64_t> dist(0, n - 1);
-    ChoiceDictionary c(n);
+    ChoiceDictionary cd(n);
     std::unique_ptr<char[]> l(new char[n]);
+    CompactArray c(n, 2);
     for (uint64_t a = 0; a < n / 100; a++) {
       uint64_t b = dist(rnd);
-      c.insert(b);
+      cd.insert(b);
       l[b] = 1;
+      c.insert(a, 1);
     }
-    ChoiceDictionaryIterator i(&c);
+    ChoiceDictionaryIterator i(&cd);
     i.init();
     t1.runTest(
         [&i]() {
@@ -173,9 +170,20 @@ void runtime_choice() {
           }
         },
         n, 0);
+    t3.runTest(
+        [&c, n]() {
+          std::vector<uint64_t> r;
+          for (uint64_t a = 0; a < n; a++) {
+            if (c.get(a) == 1) {
+              r.push_back(a);
+            }
+          }
+        },
+        n, 0);
   }
-  t1.saveCSV("choice-iterator.csv");
-  t2.saveCSV("choice-array.csv");
+  t1.saveCSV("iterate-cd.csv");
+  t2.saveCSV("iterate-array.csv");
+  t3.saveCSV("iterate-compactarray.csv");
 }
 
 void tikz_example() {
