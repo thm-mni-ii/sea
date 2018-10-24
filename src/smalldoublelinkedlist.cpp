@@ -1,4 +1,4 @@
-#include <include/sealib/smalldoublelinkedlist.h>
+#include <sealib/smalldoublelinkedlist.h>
 
 Sealib::SmallDoubleLinkedList::SmallDoubleLinkedList(unsigned char size) :
     links(size * 2, 1),

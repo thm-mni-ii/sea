@@ -1,8 +1,8 @@
 #include <sealib/subgraphstack.h>
-#include <src/subgraph.h>
-#include <src/recursivesubgraph.h>
-#include <src/basesubgraph.h>
 #include <iostream>
+#include "./subgraph.h"
+#include "./recursivesubgraph.h"
+#include "./basesubgraph.h"
 
 using Sealib::SubGraph;
 using Sealib::BaseSubGraph;

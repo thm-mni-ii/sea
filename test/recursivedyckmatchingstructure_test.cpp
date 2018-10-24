@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <include/sealib/recursivedyckmatchingstructure.h>
-#include <include/sealib/dyckwordlexicon.h>
+#include <sealib/recursivedyckmatchingstructure.h>
+#include <sealib/dyckwordlexicon.h>
 
 TEST(RecursiveDyckMatchingStructureTest, testAllWordsLength10) {
     for (unsigned int i = 2; i < 23; i += 2) {

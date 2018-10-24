@@ -1,8 +1,8 @@
 #ifndef SRC_RECURSIVESUBGRAPH_H_
 #define SRC_RECURSIVESUBGRAPH_H_
-#include <src/subgraph.h>
 #include <sealib/rankselect.h>
 #include <tuple>
+#include "./subgraph.h"
 
 namespace Sealib {
 class RecursiveSubGraph : public SubGraph {

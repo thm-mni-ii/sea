@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <sealib/trailstructure.h>
-#include <include/sealib/dyckwordlexicon.h>
-#include <include/sealib/simpletrailstructure.h>
+#include <sealib/dyckwordlexicon.h>
+#include <sealib/simpletrailstructure.h>
 
 using Sealib::TrailStructure;
 

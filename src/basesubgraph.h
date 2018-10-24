@@ -1,9 +1,9 @@
 #ifndef SRC_BASESUBGRAPH_H_
 #define SRC_BASESUBGRAPH_H_
-#include <src/subgraph.h>
 #include <sealib/rankselect.h>
 #include <sealib/basicgraph.h>
 #include <tuple>
+#include "./subgraph.h"
 
 namespace Sealib {
 class BaseSubGraph : public SubGraph {
