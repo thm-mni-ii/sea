@@ -1,4 +1,5 @@
 #include <sealib/_types.h>
+#include "sealib/bitarray.h"
 #include <sealib/choicedictionaryiterator.h>
 #include <sealib/compactgraph.h>
 #include <sealib/dfs.h>
@@ -23,6 +24,7 @@
 #include "sealibvisual/tikznode.h"
 #include "sealibvisual/tikzpicture.h"
 #include "sealibvisual/tikzstyle.h"
+
 
 using std::cout;
 using std::stack;
@@ -138,14 +140,15 @@ void runTest(uint n, uint (*fm)(uint n)) {
   test2.printResults();
 }
 
-void runtime_choice() {
+void runtime_iterate() {
   std::random_device rnd;
-  RuntimeTest t1, t2, t3;
+  RuntimeTest t1, t2, t3, t4;
   for (uint64_t n = 1e6; n <= 2e6; n += 10000) {
     std::uniform_int_distribution<uint64_t> dist(0, n - 1);
     ChoiceDictionary cd(n);
     std::unique_ptr<char[]> l(new char[n]);
     CompactArray c(n, 2);
+    BitArray b(n,2);
     for (uint64_t a = 0; a < n / 100; a++) {
       uint64_t b = dist(rnd);
       cd.insert(b);
@@ -180,10 +183,21 @@ void runtime_choice() {
           }
         },
         n, 0);
+       t4.runTest(
+        [&b, n]() {
+          std::vector<uint64_t> r;
+          for (uint64_t a = 0; a < n; a++) {
+            if (b.get(a) == 1) {
+              r.push_back(a);
+            }
+          }
+        },
+        n, 0); 
   }
   t1.saveCSV("iterate-cd.csv");
   t2.saveCSV("iterate-array.csv");
   t3.saveCSV("iterate-compactarray.csv");
+  t4.saveCSV("iterate-bitarray.csv");
 }
 
 void tikz_example() {
@@ -345,5 +359,5 @@ int main() {
   // tikz_example();
   // tikz_exampleDFS();
   // tikz_exampleBFS();
-  runtime_choice();
+  runtime_iterate();
 }
