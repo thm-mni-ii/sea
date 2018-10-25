@@ -146,11 +146,11 @@ void runtime_iterate() {
     std::uniform_int_distribution<uint64_t> dist(0, n - 1);
     uint64_t p = n / 100;
     std::vector<uint64_t> pos(p);
-    for(uint64_t a; a<p; a++) pos.emplace_back(dist(rnd));
+    for (uint64_t a; a < p; a++) pos.emplace_back(dist(rnd));
     // CompactArray c(n, 2);
     {
       ChoiceDictionary cd(n);
-      for (uint64_t a:pos) cd.insert(a);
+      for (uint64_t a : pos) cd.insert(a);
       ChoiceDictionaryIterator i(&cd);
       i.init();
       t1.runTest(
@@ -162,7 +162,7 @@ void runtime_iterate() {
     }
     {
       std::unique_ptr<char[]> l(new char[n]);
-      for (uint64_t a:pos) l[a]=1;
+      for (uint64_t a : pos) l[a] = 1;
       t2.runTest(
           [&l, n]() {
             std::vector<uint64_t> r;
@@ -186,7 +186,7 @@ void runtime_iterate() {
         n, 0);*/
     {
       BitArray b(n, 2);
-      for (uint64_t a:pos) b.insert(a,1);
+      for (uint64_t a : pos) b.insert(a, 1);
       t4.runTest(
           [&b, n]() {
             std::vector<uint64_t> r;
@@ -208,8 +208,8 @@ void runtime_iterate() {
 void runtime_dfs() {
   RuntimeTest t1;
   for (uint64_t n = 1e5; n <= 1e6; n += 10000) {
-    Graph *g=GraphCreator::createRandomFixed(n,5);
-    t1.runTest([g](){DFS::nloglognBitDFS(g);},n,0);
+    Graph *g = GraphCreator::createRandomFixed(n, 5);
+    t1.runTest([g]() { DFS::nloglognBitDFS(g); }, n, 0);
   }
   t1.saveCSV("nloglogn-ca.csv");
 }
@@ -373,6 +373,6 @@ int main() {
   // tikz_example();
   // tikz_exampleDFS();
   // tikz_exampleBFS();
-  //runtime_iterate();
+  // runtime_iterate();
   runtime_dfs();
 }
