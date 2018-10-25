@@ -16,9 +16,7 @@
 
 using std::cout;
 using std::stack;
-using Sealib::Compactgraph;
-using Sealib::DFS;
-using Sealib::Graphrepresentations;
+using namespace Sealib;   // NOLINT
 
 #define VERY_SPARSE ([](double n) { return (5. * n) / (n * (n - 1.)); })
 #define SPARSE      ([](double n) { return (n * std::log2(n)) / (n * (n - 1.)); })
@@ -119,6 +117,15 @@ void runTest(uint n, uint (*fm)(uint n)) {
     test2.printResults();
 }
 
+void runtime_dfs() {
+  RuntimeTest t1;
+  for(uint n=1e5; n<=1e6; n+=10000) {
+    Graph *g=GraphCreator::createRandomFixed(n,5);
+    t1.runTest([g](){DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE, DFS_NOP_PROCESS); },n,0);
+  }
+  t1.saveCSV("nloglogn-ca.csv");
+}
+
 int main() {
-    return 0;
+    runtime_dfs();
 }
