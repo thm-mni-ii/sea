@@ -5,33 +5,29 @@
 
 using Sealib::BitArray;
 
-void BitArray::insert(uint i, uint8_t v) {
+void BitArray::insert(uint i, uint v) {
   uint gi = i / valuesPerGroup;
-  uint8_t vi = i & (valuesPerGroup - 1);
-  uint8_t s = (valuesPerGroup - vi - 1) * valueWidth;
-  uint8_t a = data[gi];
+  uint vi = i % valuesPerGroup;
+  uint s = (valuesPerGroup - vi - 1) * valueWidth;
+  uint a = data[gi];
   a &= ~(valueMask << s);
-  uint8_t b = v << s;
-  uint8_t c = a | b;
+  uint b = v << s;
+  uint c = a | b;
   data[gi] = c;
 }
 
-uint8_t BitArray::get(uint i) {
-  uint gi = i / valuesPerGroup;
-  uint8_t vi = i & (valuesPerGroup - 1);
-  uint8_t a = data[gi];
-  uint8_t b = a >> ((valuesPerGroup - vi - 1) * valueWidth);
-  uint8_t c = b & valueMask;
-  return c;
+static constexpr uint safeDiv(uint p1, uint p2) {
+  return p2 == 0 ? 0 : p1 / p2;
 }
 
-BitArray::BitArray(uint size, uint8_t values)
-    : data(size),
-      valueWidth(static_cast<uint8_t>(ceil(log2(values)))),
-      valueMask((1 << valueWidth) - 1) {
-  if (values < 2) {
-    throw std::domain_error("v < 2, maybe an overflow happened? (max v: 255)");
-  } else {
-    valuesPerGroup = 8 * sizeof(uint8_t) / valueWidth;
+BitArray::BitArray(uint size, uint values)
+    : valueWidth(static_cast<uint>(ceil(log2(values)))),
+      valuesPerGroup(safeDiv(8 * sizeof(uint), valueWidth)),
+      valueMask((1 << valueWidth) - 1),
+      data(new uint[safeDiv(size, valuesPerGroup) + 1]) {
+  if (valueWidth >= sizeof(uint) * 8) {
+    throw std::domain_error("v is too big (max v = bitsize(uint))");
   }
 }
+
+BitArray::~BitArray() { delete[] data; }

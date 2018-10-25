@@ -3,14 +3,21 @@
 
 using Sealib::BitArray;
 
-TEST(BitArray, byteSized) {
-  for (uint8_t b = 2; b < 255; b++) {
-    BitArray a(2500, b);
-    a.insert(50, b - 1);
-    EXPECT_EQ(a.get(50), b - 1);
-    a.insert(49, 1);
-    EXPECT_EQ(a.get(49), 1);
-    EXPECT_EQ(a.get(50), b - 1);
+TEST(BitArray, alternate) {
+  for (uint b = 2; b < static_cast<uint>(1 << (sizeof(uint) * 8 - 1)); b *= 2) {
+    uint n = 2500;
+    BitArray a(n, b);
+    for (uint c = 0; c < n; c++) {
+      if (c % 2 == 0)
+        a.insert(c, 1);
+      else
+        a.insert(c, b - 1);
+    }
+    for (uint c = 0; c < n; c++) {
+      if (c % 2 == 0)
+        EXPECT_EQ(a.get(c), 1);
+      else
+        EXPECT_EQ(a.get(c), b - 1);
+    }
   }
-  EXPECT_ANY_THROW(BitArray a(2500, static_cast<uint8_t>(256)));
 }
