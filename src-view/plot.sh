@@ -7,15 +7,16 @@ ScriptHome=$(dirname $(readlink -e "$0"))
 Title="Runtime test"
 Files=""
 Outfile="runtime-plot.jpg"
-Scale="ms"
+Scale="µs"
 Ratio=F
 
 printHelp() {
 	printf "plot.sh [options] <file basename(s)>\n"
 	printf "Options:\n"
 	printf "\t-t <name>		Title for your plot\n"
-	printf "\t-o <file>		Output filename\n"
-	printf "\t-s <unit>		Unit of time measure (default: ms)\n"
+	printf "\t-o <file>		Output filename (default: $Outfile)\n"
+	printf "\t-s <unit>		Unit of time measure (default: $Scale)\n"
+	printf "\t-r			Enable ratio plotting of two data files\n"
 	printf "\n"
 	printf "Example:\nPlot data from standard.csv and efficient.csv in one plot\n"
 	printf " -> plot.sh -t 'Algorithm comparison' -o comparison.jpg standard efficient\n"

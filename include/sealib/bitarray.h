@@ -1,6 +1,7 @@
 #ifndef SEALIB_BITARRAY_H_
 #define SEALIB_BITARRAY_H_
 #include <vector>
+#include <memory>
 #include "sealib/_types.h"
 
 namespace Sealib {
@@ -43,11 +44,9 @@ class BitArray {
    */
   BitArray(uint size, uint v);
 
-  ~BitArray();
-
  private:
   const uint valueWidth, valuesPerGroup, valueMask;
-  uint *data;
+  std::unique_ptr<uint[]> data;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BITARRAY_H_

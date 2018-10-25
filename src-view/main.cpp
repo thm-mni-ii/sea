@@ -205,6 +205,15 @@ void runtime_iterate() {
   t4.saveCSV("iterate-bitarray.csv");
 }
 
+void runtime_dfs() {
+  RuntimeTest t1;
+  for (uint64_t n = 1e5; n <= 1e6; n += 10000) {
+    Graph *g=GraphCreator::createRandomFixed(n,5);
+    t1.runTest([g](){DFS::nloglognBitDFS(g);},n,0);
+  }
+  t1.saveCSV("nloglogn-ca.csv");
+}
+
 void tikz_example() {
   std::vector<std::string> numbers1(10);
   for (unsigned int i = 0; i < 10; i++) {
@@ -364,5 +373,6 @@ int main() {
   // tikz_example();
   // tikz_exampleDFS();
   // tikz_exampleBFS();
-  runtime_iterate();
+  //runtime_iterate();
+  runtime_dfs();
 }

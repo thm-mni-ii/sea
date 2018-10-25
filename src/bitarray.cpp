@@ -29,5 +29,3 @@ BitArray::BitArray(uint size, uint values)
     throw std::domain_error("v is too big (max v = bitsize(uint))");
   }
 }
-
-BitArray::~BitArray() { delete[] data; }
