@@ -75,6 +75,7 @@ class ExtendedSegmentStackTest2 : public ::testing::Test {
     unsigned n = 128;
     g = Sealib::GraphCreator::createRandomImbalanced(n);
     c = new CompactArray(n, 3);
+    for (uint a = 0; a < n; a++) c->insert(a, 0);
     s = new ExtendedSegmentStack(n, g, c);
     q = static_cast<unsigned>(ceil(n / log2(n)));
   }
