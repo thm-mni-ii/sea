@@ -4,13 +4,14 @@
 #include <sealib/bytecounter.h>
 #include <cstdlib>
 #include <memory>
+#include <limits>
 
 namespace Sealib {
 /**
  * Implementation of the allocator interface with the added functionality to track the
  * space that was allocated in bytes. The Counter used to store this information is accesses via the
- * ByteCounter class. All functions are the same as the regular std::allocator, except that
- * we update the ByteCounter during allocate and deallocate.
+ * ByteCounter class. All functions are the same as the regular std::allocator,
+ * except that we update the ByteCounter during allocate and deallocate.
  */
 template<class T>
 class TrackingAllocator {
@@ -23,8 +24,16 @@ class TrackingAllocator {
     using size_type = size_t;
     using difference_type = std::ptrdiff_t;
 
+    template<class U>
+    struct rebind {
+      using other = TrackingAllocator<U>;
+    };
+
     TrackingAllocator() = default;
     ~TrackingAllocator() = default;
+
+    template<class U>
+    TrackingAllocator(const TrackingAllocator<U> &other) {}
 
     pointer allocate(size_type numObjects) {
         ByteCounter::get() += sizeof(T) * numObjects;
@@ -38,6 +47,10 @@ class TrackingAllocator {
     void deallocate(pointer p, size_type numObjects) {
         ByteCounter::get() -= sizeof(T) * numObjects;
         operator delete(p);
+    }
+
+    size_type max_size() const {
+        return std::numeric_limits<size_type>::max();
     }
 
     template<class U, class... Args>
