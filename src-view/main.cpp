@@ -7,6 +7,7 @@
 #include <memory>
 #include <ctime>
 #include <cmath>
+#include "sealib/trackingallocator.h"
 #include "sealib/graphcreator.h"
 #include "sealib/dfs.h"
 #include "sealib/graphrepresentations.h"
@@ -119,6 +120,18 @@ void runTest(uint n, uint (*fm)(uint n)) {
     test2.printResults();
 }
 
-int main() {
+int testTrackingAllocator() {
+    std::cout << Sealib::ByteCounter::get() << std::endl;
+    std::vector<int, Sealib::TrackingAllocator<int>> a(5);
+    std::cout << Sealib::ByteCounter::get() << std::endl;
+    std::vector<unsigned int, Sealib::TrackingAllocator<unsigned int>> b(5);
+    std::cout << Sealib::ByteCounter::get() << std::endl;
+    std::vector<unsigned char, Sealib::TrackingAllocator<unsigned char>> c(5);
+    std::cout << Sealib::ByteCounter::get() << std::endl;
     return 0;
+}
+
+int main() {
+    testTrackingAllocator();
+    testTrackingAllocator();
 }
