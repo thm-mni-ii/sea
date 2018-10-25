@@ -26,22 +26,28 @@ class BitArray {
    * @return value stored at the given index
    * @throws nothing, but might die when going out of bounds
    */
-  uint get(uint i);
+  constexpr uint get(uint i) const {
+    return (data[i / valuesPerGroup] >>
+            ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
+           valueMask;
+  }
 
   /**
    * Construct a bit array with the given size and value states.
-   * Recommended: ld(v) divides bitsize(uint). (e.g. groups of 4 bits
-   * fit into a 32 bit integer perfectly)
    * @param size number of values the bit array should hold
    * @param v number of states for one value (e.g. v=2 for a binary array, v=4
-   * for states 0,1,2,3)
+   * for states 0,1,2,3). Recommended: ld(v) should divide bitsize(uint) (e.g.
+   * groups of 4 bits
+   * fit into a 32 bit integer perfectly)
    * @throws std::domain_error when ld(v) exceeds bitsize(uint)
    */
   BitArray(uint size, uint v);
 
+  ~BitArray();
+
  private:
-  uint valueWidth, valuesPerGroup, valueMask;
-  std::vector<uint> data;
+  const uint valueWidth, valuesPerGroup, valueMask;
+  uint *data;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BITARRAY_H_
