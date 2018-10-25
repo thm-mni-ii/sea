@@ -40,6 +40,7 @@ class RankSelect {
     unsigned long size() const;
 
     ~RankSelect();
+    const Bitset<unsigned char> &getBitset() const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_RANKSELECT_H_

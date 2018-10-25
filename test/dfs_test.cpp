@@ -10,7 +10,7 @@
 using Sealib::DFS;
 using Sealib::CompactArray;
 using Sealib::Graph;
-using Sealib::Basicgraph;
+using Sealib::BasicGraph;
 using Sealib::Node;
 using Sealib::Adjacency;
 using std::vector;

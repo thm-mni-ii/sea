@@ -7,7 +7,7 @@ Compactgraph::Compactgraph(unsigned int _A[]) {
 	this->A = std::unique_ptr<unsigned int[]>(_A);
 }
 
-unsigned int Compactgraph::getNodeDegree(unsigned int u) {
+unsigned int Compactgraph::getNodeDegree(unsigned int u) const {
 	// Fix index u = u+1
 	++u;
 	// Following node
@@ -34,11 +34,11 @@ unsigned int Compactgraph::getNodeDegree(unsigned int u) {
 	}
 }
 
-unsigned int Compactgraph::head(unsigned int u, unsigned int k) {
+unsigned int Compactgraph::head(unsigned int u, unsigned int k) const {
 	return A[A[u+1]+k];
 }
 
-unsigned int Compactgraph::getOrder() {
+unsigned int Compactgraph::getOrder() const {
 	return A[0];
 }
 
