@@ -8,6 +8,7 @@
 #include <stack>
 #include <string>
 #include "sealib/_types.h"
+#include "sealib/bitarray.h"
 #include "sealib/compactgraph.h"
 #include "sealib/dfs.h"
 #include "sealib/graphcreator.h"
@@ -135,4 +136,62 @@ void runtime_dfs() {
   t1.saveCSV("nloglogn-ba.csv");
 }
 
-int main() { runtime_dfs(); }
+void runtime_randomAccess() {
+  RuntimeTest t1, t2;
+  std::random_device rnd;
+  for (uint n = 1e5; n <= 1e6; n += 10000) {
+    std::uniform_int_distribution<uint> dist(0, n - 1);
+    std::vector<uint> pos(5 * n);
+    for (uint a = 0; a < 5 * n; a++) {
+      pos.emplace_back(dist(rnd));
+    }
+    {
+      CompactArray c(n, 3);
+      t1.runTest(
+          [&c, pos]() {
+            for (uint a : pos) c.get(a);
+          },
+          n, 0);
+    }
+    {
+      BitArray c(n, 3);
+      t2.runTest(
+          [&c, pos]() {
+            for (uint a : pos) c.get(a);
+          },
+          n, 0);
+    }
+  }
+  t1.saveCSV("randomaccess-ca.csv");
+  t2.saveCSV("randomaccess-ba.csv");
+}
+
+void runtime_seqAccess() {
+  RuntimeTest t1, t2;
+  for (uint n = 1e5; n <= 1e6; n += 10000) {
+    {
+      CompactArray c(n, 3);
+      t1.runTest(
+          [&c, n]() {
+            for (uint b = 0; b < 5; b++) {
+              for (uint a = 0; a < n; a++) c.get(a);
+            }
+          },
+          n, 0);
+    }
+    {
+      BitArray c(n, 3);
+      t2.runTest(
+          [&c, n]() {
+            for (uint b = 0; b < 5; b++) {
+              for (uint a = 0; a < n; a++) c.get(a);
+            }
+          },
+          n, 0);
+    }
+  }
+  t1.saveCSV("seqaccess-ca.csv");
+  t2.saveCSV("seqaccess-ba.csv");
+}
+
+int main() { runtime_seqAccess(); }
