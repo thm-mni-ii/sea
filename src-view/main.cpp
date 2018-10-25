@@ -1,5 +1,4 @@
 #include <sealib/_types.h>
-#include "sealib/bitarray.h"
 #include <sealib/choicedictionaryiterator.h>
 #include <sealib/compactgraph.h>
 #include <sealib/dfs.h>
@@ -15,6 +14,7 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include "sealib/bitarray.h"
 #include "sealibvisual/examples.h"
 #include "sealibvisual/tikzarray.h"
 #include "sealibvisual/tikzdocument.h"
@@ -24,7 +24,6 @@
 #include "sealibvisual/tikznode.h"
 #include "sealibvisual/tikzpicture.h"
 #include "sealibvisual/tikzstyle.h"
-
 
 using std::cout;
 using std::stack;
@@ -143,37 +142,39 @@ void runTest(uint n, uint (*fm)(uint n)) {
 void runtime_iterate() {
   std::random_device rnd;
   RuntimeTest t1, t2, t3, t4;
-  for (uint64_t n = 1e6; n <= 2e6; n += 10000) {
+  for (uint64_t n = 1e6; n <= 1e7; n += 10000) {
     std::uniform_int_distribution<uint64_t> dist(0, n - 1);
-    ChoiceDictionary cd(n);
-    std::unique_ptr<char[]> l(new char[n]);
-    CompactArray c(n, 2);
-    BitArray b(n,2);
-    for (uint64_t a = 0; a < n / 100; a++) {
-      uint64_t b = dist(rnd);
-      cd.insert(b);
-      l[b] = 1;
-      c.insert(a, 1);
+    uint64_t p = n / 100;
+    std::vector<uint64_t> pos(p);
+    for(uint64_t a; a<p; a++) pos.emplace_back(dist(rnd));
+    // CompactArray c(n, 2);
+    {
+      ChoiceDictionary cd(n);
+      for (uint64_t a:pos) cd.insert(a);
+      ChoiceDictionaryIterator i(&cd);
+      i.init();
+      t1.runTest(
+          [&i]() {
+            std::vector<unsigned long> r;
+            while (i.more()) r.push_back(i.next());
+          },
+          n, 0);
     }
-    ChoiceDictionaryIterator i(&cd);
-    i.init();
-    t1.runTest(
-        [&i]() {
-          std::vector<unsigned long> r;
-          while (i.more()) r.push_back(i.next());
-        },
-        n, 0);
-    t2.runTest(
-        [&l, n]() {
-          std::vector<uint64_t> r;
-          for (uint64_t a = 0; a < n; a++) {
-            if (l[a] == 1) {
-              r.push_back(a);
+    {
+      std::unique_ptr<char[]> l(new char[n]);
+      for (uint64_t a:pos) l[a]=1;
+      t2.runTest(
+          [&l, n]() {
+            std::vector<uint64_t> r;
+            for (uint64_t a = 0; a < n; a++) {
+              if (l[a] == 1) {
+                r.push_back(a);
+              }
             }
-          }
-        },
-        n, 0);
-    t3.runTest(
+          },
+          n, 0);
+    }
+    /*t3.runTest(
         [&c, n]() {
           std::vector<uint64_t> r;
           for (uint64_t a = 0; a < n; a++) {
@@ -182,21 +183,25 @@ void runtime_iterate() {
             }
           }
         },
-        n, 0);
-       t4.runTest(
-        [&b, n]() {
-          std::vector<uint64_t> r;
-          for (uint64_t a = 0; a < n; a++) {
-            if (b.get(a) == 1) {
-              r.push_back(a);
+        n, 0);*/
+    {
+      BitArray b(n, 2);
+      for (uint64_t a:pos) b.insert(a,1);
+      t4.runTest(
+          [&b, n]() {
+            std::vector<uint64_t> r;
+            for (uint64_t a = 0; a < n; a++) {
+              if (b.get(a) == 1) {
+                r.push_back(a);
+              }
             }
-          }
-        },
-        n, 0); 
+          },
+          n, 0);
+    }
   }
   t1.saveCSV("iterate-cd.csv");
   t2.saveCSV("iterate-array.csv");
-  t3.saveCSV("iterate-compactarray.csv");
+  // t3.saveCSV("iterate-compactarray.csv");
   t4.saveCSV("iterate-bitarray.csv");
 }
 

@@ -51,7 +51,7 @@ void RuntimeTest::runTest(Testfunction testfunction, unsigned int order, unsigne
     std::cout << "Running test: "<< parameters.size()
               << " n: "<< order << " m: "<< size << std::endl;
     testfunction();
-    const clk::duration::rep runTime = std::chrono::duration_cast<std::chrono::milliseconds>
+    const clk::duration::rep runTime = std::chrono::duration_cast<std::chrono::microseconds>
                          (clk::now() - runStart).count();
 
     runtimes.push_back(runTime);

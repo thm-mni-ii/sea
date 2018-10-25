@@ -8,6 +8,7 @@ Title="Runtime test"
 Files=""
 Outfile="runtime-plot.jpg"
 Scale="ms"
+Ratio=F
 
 printHelp() {
 	printf "plot.sh [options] <file basename(s)>\n"
@@ -24,7 +25,7 @@ if test $# -eq 0; then
 	printHelp
 fi
 
-while getopts "t:o:s:h" opt; do
+while getopts "t:o:s:rh" opt; do
 	case $opt in
 	t) 
 		Title="$OPTARG" 
@@ -36,6 +37,10 @@ while getopts "t:o:s:h" opt; do
 	s)
 		Scale="$OPTARG"
 		;;
+	r)
+		Ratio=T 
+		printf "Ratio: yes\n"
+		;;
 	h|?)
 		printHelp
 		;;
@@ -43,10 +48,15 @@ while getopts "t:o:s:h" opt; do
 done
 shift $((OPTIND-1))
 
-for file in "$@"; do
-	Files="$Files$file "
-done
-printf "Plotting files: $Files\n"
 printf "Output file: $Outfile\n"
 
-gnuplot -e "infiles='$Files'; outfile='$Outfile'; title='$Title'; scale='$Scale'" -c "$ScriptHome/plot_helper.gp"
+if test $Ratio = F; then
+	for file in "$@"; do
+		Files="$Files$file "
+	done
+	printf "Plotting files: $Files\n"
+	gnuplot -e "infiles='$Files'; outfile='$Outfile'; title='$Title'; scale='$Scale'" -c "$ScriptHome/plot_helper.gp"
+else
+	printf "Plotting ratio: $1 / $2\n"
+	gnuplot -e "infile1='$1'; infile2='$2'; outfile='$Outfile'; title='$Title'; ratio='yes'" -c "$ScriptHome/plot_helper.gp"
+fi
