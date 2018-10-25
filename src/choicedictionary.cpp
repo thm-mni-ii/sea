@@ -11,18 +11,18 @@ struct emptyChoiceDictionary : public std::exception {
     }
 };
 
-ChoiceDictionary::ChoiceDictionary(unsigned long int size) {
+ChoiceDictionary::ChoiceDictionary(uint64_t size) {
     pointer = 0;
-    wordSize = sizeof(unsigned long int) * 8;
+    wordSize = sizeof(uint64_t) * 8;
     createDataStructure(size);
 }
 
-void ChoiceDictionary::insert(unsigned long int index) {
-    unsigned long int primaryWord;
-    unsigned long int targetBit;
+void ChoiceDictionary::insert(uint64_t index) {
+    uint64_t primaryWord;
+    uint64_t targetBit;
 
-    unsigned long int primaryIndex = index / (unsigned long int)wordSize;
-    unsigned long int primaryInnerIndex = index % (unsigned long int)wordSize;
+    uint64_t primaryIndex = index / (uint64_t)wordSize;
+    uint64_t primaryInnerIndex = index % (uint64_t)wordSize;
 
     if (isInitialized(primaryIndex))
         primaryWord = primary[primaryIndex];
@@ -35,12 +35,12 @@ void ChoiceDictionary::insert(unsigned long int index) {
     updateSecondary(primaryIndex);
 }
 
-bool ChoiceDictionary::get(unsigned long int index) {
-    unsigned long int primaryWord;
-    unsigned long int targetBit;
+bool ChoiceDictionary::get(uint64_t index) {
+    uint64_t primaryWord;
+    uint64_t targetBit;
 
-    unsigned long int primaryIndex = index / (unsigned long int)wordSize;
-    unsigned long int primaryInnerIndex = index % (unsigned long int)wordSize;
+    uint64_t primaryIndex = index / (uint64_t)wordSize;
+    uint64_t primaryInnerIndex = index % (uint64_t)wordSize;
 
     primaryWord = primary[primaryIndex];
     targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryInnerIndex);
@@ -48,39 +48,39 @@ bool ChoiceDictionary::get(unsigned long int index) {
     return (primaryWord & targetBit) != 0;
 }
 
-unsigned long int ChoiceDictionary::choice() {
-    unsigned long int colorIndex;
-    unsigned long int primaryWord;
-    unsigned long int primaryIndex;
-    unsigned long int secondaryWord;
-    unsigned long int primaryInnerIndex;
+uint64_t ChoiceDictionary::choice() {
+    uint64_t colorIndex;
+    uint64_t primaryWord;
+    uint64_t primaryIndex;
+    uint64_t secondaryWord;
+    uint64_t primaryInnerIndex;
 
     if (pointer == 0) throw emptyChoiceDictionary();
 
-    unsigned long int secondaryIndex = validator[pointer - POINTER_OFFSET] - TUPEL_OFFSET;
+    uint64_t secondaryIndex = validator[pointer - POINTER_OFFSET] - TUPEL_OFFSET;
     secondaryWord = secondary[secondaryIndex];
 
     primaryIndex = (secondaryIndex / TUPEL_FACTOR) * wordSize +
-                   (unsigned long int)__builtin_clzl(secondaryWord);
+                   (uint64_t)__builtin_clzl(secondaryWord);
 
     primaryWord = primary[primaryIndex];
 
-    colorIndex = (unsigned long int)primaryIndex * (unsigned long int)wordSize;
-    primaryInnerIndex = (unsigned long int)__builtin_clzl(primaryWord);
+    colorIndex = (uint64_t)primaryIndex * (uint64_t)wordSize;
+    primaryInnerIndex = (uint64_t)__builtin_clzl(primaryWord);
 
     colorIndex += primaryInnerIndex;
     return colorIndex;
 }
 
-void ChoiceDictionary::remove(unsigned long int index) {
-    unsigned long int primaryWord;
-    unsigned long int newPrimaryWord;
-    unsigned long int targetBit;
+void ChoiceDictionary::remove(uint64_t index) {
+    uint64_t primaryWord;
+    uint64_t newPrimaryWord;
+    uint64_t targetBit;
 
     if (pointer == 0) throw emptyChoiceDictionary();
 
-    unsigned long int primaryIndex = index / (unsigned long int)wordSize;
-    unsigned long int primaryInnerIndex = index % (unsigned long int)wordSize;
+    uint64_t primaryIndex = index / (uint64_t)wordSize;
+    uint64_t primaryInnerIndex = index % (uint64_t)wordSize;
 
     if (!isInitialized(primaryIndex)) return;
 
@@ -95,22 +95,22 @@ void ChoiceDictionary::remove(unsigned long int index) {
     }
 }
 
-unsigned long int ChoiceDictionary::getPrimaryWord(unsigned long int primaryIndex) {
+uint64_t ChoiceDictionary::getPrimaryWord(uint64_t primaryIndex) {
     return primary[primaryIndex];
 }
 
-unsigned long int ChoiceDictionary::getSecondaryWord(unsigned long int secondaryIndex) {
+uint64_t ChoiceDictionary::getSecondaryWord(uint64_t secondaryIndex) {
     return secondary[secondaryIndex];
 }
 
-unsigned long int ChoiceDictionary::getPointerTarget(unsigned long int nextPointer) {
+uint64_t ChoiceDictionary::getPointerTarget(uint64_t nextPointer) {
     return validator[nextPointer] - TUPEL_OFFSET;
 }
 
-bool ChoiceDictionary::pointerIsValid(unsigned long int nextPointer) {
+bool ChoiceDictionary::pointerIsValid(uint64_t nextPointer) {
     if (nextPointer >= pointer) return false;
 
-    unsigned long int secondaryIndex = validator[nextPointer];
+    uint64_t secondaryIndex = validator[nextPointer];
     if (secondaryIndex > (wordCount / wordSize + 1) * TUPEL_FACTOR) return false;
 
     if (nextPointer == secondary[secondaryIndex])
@@ -119,40 +119,40 @@ bool ChoiceDictionary::pointerIsValid(unsigned long int nextPointer) {
         return false;
 }
 
-unsigned int ChoiceDictionary::getWordSize() { return wordSize; }
+uint32_t ChoiceDictionary::getWordSize() { return wordSize; }
 
-unsigned long int ChoiceDictionary::getSecondarySize() {
-    return wordCount / (unsigned long int)wordSize + 1;
+uint64_t ChoiceDictionary::getSecondarySize() {
+    return wordCount / (uint64_t)wordSize + 1;
 }
 
-void ChoiceDictionary::createDataStructure(unsigned long int size) {
-    unsigned long int secondarySize;
+void ChoiceDictionary::createDataStructure(uint64_t size) {
+    uint64_t secondarySize;
 
     wordCount = size / wordSize + 1;
-    secondarySize = wordCount / (unsigned long int)wordSize + 1;
+    secondarySize = wordCount / (uint64_t)wordSize + 1;
 
     createPrimary();
     createSecondary(secondarySize);
     createValidator(secondarySize);
 }
 
-void ChoiceDictionary::createPrimary() { primary = new unsigned long int[wordCount]; }
+void ChoiceDictionary::createPrimary() { primary = new uint64_t[wordCount]; }
 
-void ChoiceDictionary::createSecondary(unsigned long int secondarySize) {
-    secondary = new unsigned long int[secondarySize * TUPEL_FACTOR];
+void ChoiceDictionary::createSecondary(uint64_t secondarySize) {
+    secondary = new uint64_t[secondarySize * TUPEL_FACTOR];
 }
 
-void ChoiceDictionary::createValidator(unsigned long int validatorSize) {
-    validator = new unsigned long int[validatorSize];
+void ChoiceDictionary::createValidator(uint64_t validatorSize) {
+    validator = new uint64_t[validatorSize];
 }
 
-void ChoiceDictionary::updateSecondary(unsigned long int primaryIndex) {
-    unsigned long int targetBit;
-    unsigned long int secondaryWord;
-    unsigned long int secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
-    unsigned long int linkTarget = secondary[secondaryIndex + TUPEL_OFFSET];
+void ChoiceDictionary::updateSecondary(uint64_t primaryIndex) {
+    uint64_t targetBit;
+    uint64_t secondaryWord;
+    uint64_t secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
+    uint64_t linkTarget = secondary[secondaryIndex + TUPEL_OFFSET];
 
-    if (linkTarget <= wordCount / (unsigned long int)wordSize &&
+    if (linkTarget <= wordCount / (uint64_t)wordSize &&
         validator[linkTarget] == secondaryIndex + TUPEL_OFFSET && pointer > 0) {
         secondaryWord = secondary[secondaryIndex];
     } else {
@@ -164,12 +164,12 @@ void ChoiceDictionary::updateSecondary(unsigned long int primaryIndex) {
     secondary[secondaryIndex] = secondaryWord | targetBit;
 }
 
-void ChoiceDictionary::removeFromSecondary(unsigned long int primaryIndex) {
-    unsigned long int targetBit;
-    unsigned long int secondaryWord;
-    unsigned long int newSecondaryWord;
+void ChoiceDictionary::removeFromSecondary(uint64_t primaryIndex) {
+    uint64_t targetBit;
+    uint64_t secondaryWord;
+    uint64_t newSecondaryWord;
 
-    unsigned long int secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
+    uint64_t secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
 
     secondaryWord = secondary[secondaryIndex];
     targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryIndex);
@@ -179,8 +179,8 @@ void ChoiceDictionary::removeFromSecondary(unsigned long int primaryIndex) {
     if (newSecondaryWord == 0) breakLink(secondaryIndex);
 }
 
-unsigned long int ChoiceDictionary::makeLink(unsigned long int secondaryIndex) {
-    unsigned long int validatorIndex;
+uint64_t ChoiceDictionary::makeLink(uint64_t secondaryIndex) {
+    uint64_t validatorIndex;
 
     pointer++;
 
@@ -190,33 +190,33 @@ unsigned long int ChoiceDictionary::makeLink(unsigned long int secondaryIndex) {
     return validatorIndex;
 }
 
-void ChoiceDictionary::breakLink(unsigned long int secondaryIndex) {
-    unsigned long int validatorIndex = secondary[secondaryIndex + TUPEL_OFFSET];
+void ChoiceDictionary::breakLink(uint64_t secondaryIndex) {
+    uint64_t validatorIndex = secondary[secondaryIndex + TUPEL_OFFSET];
     secondary[secondaryIndex + TUPEL_OFFSET] = 0;
     validator[validatorIndex] = 0;
     shrinkValidator(validatorIndex);
 }
 
-void ChoiceDictionary::shrinkValidator(unsigned long int validatorIndex) {
+void ChoiceDictionary::shrinkValidator(uint64_t validatorIndex) {
     if (validatorIndex < pointer - 1) {
-        unsigned long int secondaryTarget = validator[pointer - 1];
+        uint64_t secondaryTarget = validator[pointer - 1];
         validator[validatorIndex] = secondaryTarget;
         secondary[secondaryTarget] = validatorIndex;
     }
     pointer--;
 }
 
-bool ChoiceDictionary::isInitialized(unsigned long int primaryIndex) {
-    unsigned long int secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
-    unsigned long int secondaryWord = secondary[secondaryIndex];
-    unsigned long int targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryIndex);
+bool ChoiceDictionary::isInitialized(uint64_t primaryIndex) {
+    uint64_t secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
+    uint64_t secondaryWord = secondary[secondaryIndex];
+    uint64_t targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryIndex);
 
     return (secondaryWord & targetBit) != 0 && hasColor(primaryIndex) && pointer > 0;
 }
 
-bool ChoiceDictionary::hasColor(unsigned long int primaryIndex) {
-    unsigned long int secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
-    unsigned long int link = secondary[secondaryIndex + TUPEL_OFFSET];
+bool ChoiceDictionary::hasColor(uint64_t primaryIndex) {
+    uint64_t secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
+    uint64_t link = secondary[secondaryIndex + TUPEL_OFFSET];
 
     if (link > wordCount / wordSize) {
         return false;

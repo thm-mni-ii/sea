@@ -130,11 +130,11 @@ BlockType Sealib::Bitset<BlockType>::getShiftedBlock(Bitset::sizeType idx) const
 namespace Sealib {
 
 template
-class Bitset<unsigned long>;
+class Bitset<uint64_t>;
 template
-class Bitset<unsigned int>;
+class Bitset<uint32_t>;
 template
-class Bitset<unsigned short>;
+class Bitset<uint16_t>;
 template
-class Bitset<unsigned char>;
+class Bitset<uint8_t>;
 }  // namespace Sealib

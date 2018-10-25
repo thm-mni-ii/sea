@@ -86,9 +86,9 @@ class DFS {
    * @param startVertex startVertex The begin of the DFS tree.
    * @author Simon Schniedenharn
    */
-  static void runLinearTimeInplaceDFS(unsigned int *graph, UserFunc1 preProcess,
+  static void runLinearTimeInplaceDFS(uint32_t *graph, UserFunc1 preProcess,
                                       UserFunc1 postProcess,
-                                      unsigned int startVertex);
+                                      uint32_t startVertex);
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_

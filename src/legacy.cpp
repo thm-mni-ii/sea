@@ -7,27 +7,27 @@
 
 using namespace Sealib;  // NOLINT
 
-void *Sealib_Graph_new(unsigned int **m, unsigned int order) {
+void *Sealib_Graph_new(uint32_t **m, uint32_t order) {
   return GraphCreator::createGraphPointerFromAdjacencyMatrix(m, order);
 }
 void Sealib_Graph_delete(void *self) { delete static_cast<Graph *>(self); }
-void *Sealib_Graph_generateRandom(unsigned int order) {
+void *Sealib_Graph_generateRandom(uint32_t order) {
   return GraphCreator::createRandomGenerated(order);
 }
 
-void *Sealib_ChoiceDictionary_new(unsigned int size) {
+void *Sealib_ChoiceDictionary_new(uint32_t size) {
   return new ChoiceDictionary(size);
 }
 void Sealib_ChoiceDictionary_delete(void *self) {
   delete static_cast<ChoiceDictionary *>(self);
 }
-void Sealib_ChoiceDictionary_set(void *self, unsigned long index) {
+void Sealib_ChoiceDictionary_set(void *self, uint64_t index) {
   static_cast<ChoiceDictionary *>(self)->insert(index);
 }
-int Sealib_ChoiceDictionary_get(void *self, unsigned long index) {
+int Sealib_ChoiceDictionary_get(void *self, uint64_t index) {
   return static_cast<ChoiceDictionary *>(self)->get(index);
 }
-unsigned long Sealib_ChoiceDictionary_choice(void *self) {
+uint64_t Sealib_ChoiceDictionary_choice(void *self) {
   return static_cast<ChoiceDictionary *>(self)->choice();
 }
 
@@ -44,44 +44,42 @@ void Sealib_ChoiceDictionaryIterator_init(void *self) {
 int Sealib_ChoiceDictionaryIterator_more(void *self) {
   return static_cast<ChoiceDictionaryIterator *>(self)->more();
 }
-unsigned long Sealib_ChoiceDictionaryIterator_next(void *self) {
+uint64_t Sealib_ChoiceDictionaryIterator_next(void *self) {
   return static_cast<ChoiceDictionaryIterator *>(self)->next();
 }
 
-void *Sealib_Bitset_new(unsigned long size) {
-  return new Bitset<unsigned char>(size);
-}
+void *Sealib_Bitset_new(uint64_t size) { return new Bitset<uint8_t>(size); }
 void Sealib_Bitset_delete(void *self) {
-  delete static_cast<Bitset<unsigned char> *>(self);
+  delete static_cast<Bitset<uint8_t> *>(self);
 }
-void Sealib_Bitset_set(void *self, unsigned long index) {
-  Bitset<unsigned char> &b = *static_cast<Bitset<unsigned char> *>(self);
+void Sealib_Bitset_set(void *self, uint64_t index) {
+  Bitset<uint8_t> &b = *static_cast<Bitset<uint8_t> *>(self);
   b[index] = 1;
 }
-int Sealib_Bitset_get(void *self, unsigned long index) {
-  return static_cast<Bitset<unsigned char> *>(self)->get(index);
+int Sealib_Bitset_get(void *self, uint64_t index) {
+  return static_cast<Bitset<uint8_t> *>(self)->get(index);
 }
 
 void *Sealib_RankSelect_new(void *bitset) {
-  return new RankSelect(*static_cast<Bitset<unsigned char> *>(bitset));
+  return new RankSelect(*static_cast<Bitset<uint8_t> *>(bitset));
 }
 void Sealib_RankSelect_delete(void *self) {
   delete static_cast<RankSelect *>(self);
 }
-unsigned long Sealib_RankSelect_rank(void *self, unsigned long index) {
+uint64_t Sealib_RankSelect_rank(void *self, uint64_t index) {
   return static_cast<RankSelect *>(self)->rank(index);
 }
-unsigned long Sealib_RankSelect_select(void *self, unsigned long bit) {
+uint64_t Sealib_RankSelect_select(void *self, uint64_t bit) {
   return static_cast<RankSelect *>(self)->select(bit);
 }
-unsigned long Sealib_RankSelect_size(void *self) {
+uint64_t Sealib_RankSelect_size(void *self) {
   return static_cast<RankSelect *>(self)->size();
 }
 
-void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(unsigned int),
-                               void (*preexplore)(unsigned int, unsigned int),
-                               void (*postexplore)(unsigned int, unsigned int),
-                               void (*postprocess)(unsigned int)) {
+void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint32_t),
+                               void (*preexplore)(uint32_t, uint32_t),
+                               void (*postexplore)(uint32_t, uint32_t),
+                               void (*postprocess)(uint32_t)) {
   DFS::nloglognBitDFS(static_cast<Graph *>(graph), preprocess, preexplore,
                       postexplore, postprocess);
 }

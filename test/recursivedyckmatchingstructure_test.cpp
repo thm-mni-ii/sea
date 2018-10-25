@@ -3,14 +3,14 @@
 #include <sealib/dyckwordlexicon.h>
 
 TEST(RecursiveDyckMatchingStructureTest, testAllWordsLength10) {
-    for (unsigned int i = 2; i < 23; i += 2) {
+    for (uint32_t i = 2; i < 23; i += 2) {
         Sealib::DyckWordLexicon lex(i);
-        for (const Sealib::Bitset<unsigned char> &word : lex.getLexicon()) {
+        for (const Sealib::Bitset<uint8_t> &word : lex.getLexicon()) {
             Sealib::DyckMatchingStructure d(word);
             Sealib::RecursiveDyckMatchingStructure dRec(word);
-            for (unsigned int j = 0; j < i; j++) {
-                unsigned long dMatch = d.getMatch(j);
-                unsigned long dRecMatch = dRec.getMatch(j);
+            for (uint32_t j = 0; j < i; j++) {
+                uint64_t dMatch = d.getMatch(j);
+                uint64_t dRecMatch = dRec.getMatch(j);
                 ASSERT_NE(dMatch, j);
                 ASSERT_NE(dRecMatch, j);
                 ASSERT_EQ(dMatch, dRecMatch);
@@ -20,18 +20,18 @@ TEST(RecursiveDyckMatchingStructureTest, testAllWordsLength10) {
 }
 
 TEST(RecursiveDyckMatchingStructureTest, testWords) {
-    Sealib::Bitset<unsigned char> word(16);
-    word.setBlock(0, (unsigned char) -1);
+    Sealib::Bitset<uint8_t> word(16);
+    word.setBlock(0, (uint8_t) -1);
 
-    Sealib::Bitset<unsigned char> word1(2);
+    Sealib::Bitset<uint8_t> word1(2);
     word1[0] = 1;
     Sealib::RecursiveDyckMatchingStructure d1(word1);
 
     ASSERT_EQ(d1.getMatch(0), 1);
     ASSERT_EQ(d1.getMatch(1), 0);
 
-    Sealib::Bitset<unsigned char> word2(10);
-    for (unsigned int i = 0; i < 5; i++) {
+    Sealib::Bitset<uint8_t> word2(10);
+    for (uint32_t i = 0; i < 5; i++) {
         word2[i] = 1;
     }
     Sealib::RecursiveDyckMatchingStructure d2(word2);

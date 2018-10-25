@@ -32,12 +32,12 @@ class SegmentStack {
   virtual bool isAligned() = 0;
 
  protected:
-  explicit SegmentStack(unsigned segmentSize);
+  explicit SegmentStack(uint32_t segmentSize);
   virtual ~SegmentStack();
 
-  unsigned q;
+  uint32_t q;
   Pair *low, *high;
-  unsigned lp, hp, tp;
+  uint32_t lp, hp, tp;
 };
 
 /**
@@ -51,7 +51,7 @@ class SegmentStack {
  */
 class BasicSegmentStack : public SegmentStack {
  public:
-  explicit BasicSegmentStack(unsigned segmentSize);
+  explicit BasicSegmentStack(uint32_t segmentSize);
 
   int push(Pair u) override;
   // is the restoration finished? (i.e. saved trailer and actual trailer are
@@ -98,10 +98,10 @@ class ExtendedSegmentStack : public SegmentStack {
   int getTopTrailer(Pair *r);
   // recolor all vertices in the low segment to the given color (used after a
   // restoration when the low segment is actually the top segment of S)
-  void recolorLow(unsigned v);
+  void recolorLow(uint32_t v);
 
-  unsigned approximateEdge(uint u, uint k);
-  uint retrieveEdge(uint u, unsigned f);
+  uint32_t approximateEdge(uint u, uint k);
+  uint retrieveEdge(uint u, uint32_t f);
 
  private:
   /**
@@ -112,20 +112,20 @@ class ExtendedSegmentStack : public SegmentStack {
    */
   struct Trailer {
     Pair x;
-    unsigned bi, bc;
+    uint32_t bi, bc;
     Trailer() : bi(INVALID), bc(0) {}
   };
 
   Trailer *trailers;
-  unsigned l;
+  uint32_t l;
   CompactArray *table, *edges;
   Pair *big;
-  unsigned bp;
+  uint32_t bp;
   Graph *graph;
-  unsigned m, n;
+  uint32_t m, n;
   CompactArray *color;
 
-  static constexpr unsigned INVALID = static_cast<unsigned>(-1);
+  static constexpr uint32_t INVALID = static_cast<unsigned>(-1);
   void storeEdges();
 };
 }  // namespace Sealib

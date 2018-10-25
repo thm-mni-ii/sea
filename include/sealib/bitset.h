@@ -1,6 +1,7 @@
 #ifndef SEALIB_BITSET_H_
 #define SEALIB_BITSET_H_
 
+#include <cstdint>
 #include <vector>
 #include <cassert>
 #include <limits>
@@ -13,13 +14,13 @@ namespace Sealib {
  * Partly based on dynamic_bitset from the boost library.
  * @author Johannes Meintrup
  */
-template<typename BlockType = unsigned long>
+template<typename BlockType = uint64_t>
 class Bitset {
-    typedef unsigned long sizeType;
+    typedef uint64_t sizeType;
     typedef bool bitType;
 
  private:
-    static const unsigned int bitsPerBlock = sizeof(BlockType) * 8;
+    static const uint32_t bitsPerBlock = sizeof(BlockType) * 8;
     static const BlockType BlockTypeOne = BlockType(1);
 
     sizeType bits;
@@ -176,7 +177,7 @@ class Bitset {
      * resizes the bitset to hold up to size bits
      * @param size - size of the bitset after resizing
      */
-    void resize(unsigned long size);
+    void resize(uint64_t size);
 };
 
 template <typename Block>

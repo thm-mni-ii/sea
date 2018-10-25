@@ -18,7 +18,7 @@ uint* Graphrepresentations::fastGraphGeneration(uint n, uint mPern) {
   uint M = n * mPern;
   uint N = n + M + 2;
 
-  unsigned int *A = new unsigned int[N];
+  uint32_t *A = new uint32_t[N];
   A[0] = n;
   A[n + 1] = M;
   std::random_device rd;
@@ -52,31 +52,31 @@ uint* Graphrepresentations::fastGraphGeneration(uint n, uint mPern) {
   return A;
 }
 
-Compactgraph* Graphrepresentations::generateGilbertGraph(unsigned int order,
+Compactgraph* Graphrepresentations::generateGilbertGraph(uint32_t order,
                                                     double p,
                                                     std::mt19937_64* gen) {
   return new Compactgraph(generateRawGilbertGraph(order, p, gen));
 }
 
-uint* Graphrepresentations::generateRawGilbertGraph(unsigned int order,
+uint* Graphrepresentations::generateRawGilbertGraph(uint32_t order,
                                                          double p,
                                                          std::mt19937_64* gen) {
-  unsigned int size = 0;
-  unsigned int* edgeArray = new unsigned int[order];
-  std::binomial_distribution<unsigned int> dist(order - 1, p);
-  for (unsigned int i = 0; i < order; ++i) {
-    unsigned int edges = dist(*gen);
+  uint32_t size = 0;
+  uint32_t* edgeArray = new uint32_t[order];
+  std::binomial_distribution<uint32_t> dist(order - 1, p);
+  for (uint32_t i = 0; i < order; ++i) {
+    uint32_t edges = dist(*gen);
     dist.reset();
     size += edges;
     edgeArray[i] = edges;
   }
-  unsigned int* graph = new unsigned int[order + size + 2];
+  uint32_t* graph = new uint32_t[order + size + 2];
 
   graph[0] = order;
   graph[order + 1] = size;
 
-  unsigned int lastPosition = order + 2;
-  for (unsigned int i = 1; i <= order; ++i) {
+  uint32_t lastPosition = order + 2;
+  for (uint32_t i = 1; i <= order; ++i) {
     if (edgeArray[i - 1] == 0) {
       graph[i] = i;
     } else {
@@ -89,22 +89,22 @@ uint* Graphrepresentations::generateRawGilbertGraph(unsigned int order,
     initialBit = 1;
   }
   std::vector<bool> bitVector(order, initialBit);
-  for (unsigned int i = 0; i < order; ++i) {
-    unsigned int numBitsSet = 0;
+  for (uint32_t i = 0; i < order; ++i) {
+    uint32_t numBitsSet = 0;
     // a[i] = number of edges from i
-    unsigned int bitsToSet = edgeArray[i];
+    uint32_t bitsToSet = edgeArray[i];
     if (initialBit == 1) {
       bitsToSet = order - bitsToSet;
     }
     while (edgeArray[i] > numBitsSet) {
-      unsigned int rnd = std::rand() % order;
+      uint32_t rnd = std::rand() % order;
       if (bitVector[rnd] == initialBit && rnd != i) {
         bitVector[rnd] = !initialBit;
         numBitsSet += 1;
       }
     }
-    unsigned int pos = graph[i + 1];
-    for (unsigned int j = 0; j < order; ++j) {
+    uint32_t pos = graph[i + 1];
+    for (uint32_t j = 0; j < order; ++j) {
       if (bitVector[j] == !initialBit) {
         graph[pos++] = j + 1;
         bitVector[j] = initialBit;
@@ -116,22 +116,22 @@ uint* Graphrepresentations::generateRawGilbertGraph(unsigned int order,
 }
 
 /*
-unsigned int* Graphrepresentations::graphToStandard(Graph* g) {
-  unsigned int order = g->getOrder();
-  unsigned int numEdges = 0;
-  for (unsigned int i = 0; i < order; ++i) {
+uint32_t* Graphrepresentations::graphToStandard(Graph* g) {
+  uint32_t order = g->getOrder();
+  uint32_t numEdges = 0;
+  for (uint32_t i = 0; i < order; ++i) {
     numEdges += g->getNode(i)->getDegree();
   }
-  unsigned int* standardgraph = new unsigned int[order + 2 + numEdges];
+  uint32_t* standardgraph = new uint32_t[order + 2 + numEdges];
   standardgraph[0] = order;
   standardgraph[order + 1] = numEdges;
-  unsigned int adjptr = order + 2;
-  for (unsigned int i = 1; i <= order; ++i) {
+  uint32_t adjptr = order + 2;
+  for (uint32_t i = 1; i <= order; ++i) {
     Node* node = g->getNode(i - 1);
-    unsigned int degree = node->getDegree();
+    uint32_t degree = node->getDegree();
     Adjacency* adj = node->getAdj();
     standardgraph[i] = adjptr;
-    for (unsigned int j = 0; j < degree; ++j) {
+    for (uint32_t j = 0; j < degree; ++j) {
       standardgraph[adjptr + j] = adj[j].vertex + 1;
     }
     adjptr += degree;
@@ -139,30 +139,30 @@ unsigned int* Graphrepresentations::graphToStandard(Graph* g) {
   return standardgraph;
 }
 
-Graph* Graphrepresentations::standardToGraph(unsigned int* a) {
-  unsigned int order = a[0];
-  unsigned int size = a[order + 1];
+Graph* Graphrepresentations::standardToGraph(uint32_t* a) {
+  uint32_t order = a[0];
+  uint32_t size = a[order + 1];
   // save the total number of size of the array so we dont have to
   // determine the last vertex in a special case
   a[order + 1] = order + size + 2;
   Node* nodes = static_cast<Node*>(malloc(sizeof(Node) * order));
-  for (unsigned int i = 0; i < order; ++i) {
+  for (uint32_t i = 0; i < order; ++i) {
     // vertex names in standard representations start at 1
-    unsigned int v = i + 1;
+    uint32_t v = i + 1;
     // if a node points to itself it has no edges
     if (a[v] == v) {
       nodes[i] = Node(nullptr, 0);
     } else {
       // if the neighboring nodes are pointing on themself
       // we have to skip them to determine the degree
-      unsigned int pos = 1;
+      uint32_t pos = 1;
       while (a[v + pos] < order + 1) {
         ++pos;
       }
-      unsigned int degree = a[v + pos] - a[v];
+      uint32_t degree = a[v + pos] - a[v];
       Adjacency* adj =
           static_cast<Adjacency*>(malloc(sizeof(Adjacency) * degree));
-      for (unsigned int j = 0; j < degree; ++j) {
+      for (uint32_t j = 0; j < degree; ++j) {
         // a[a[v]] points to adj array of v
         adj[j] = Adjacency(a[a[v] + j] - 1);
       }
@@ -173,8 +173,8 @@ Graph* Graphrepresentations::standardToGraph(unsigned int* a) {
 }
 */
 
-void Graphrepresentations::standardToCrosspointer(unsigned int* a) {
-  unsigned int n = a[0], v, u, pv, pu;
+void Graphrepresentations::standardToCrosspointer(uint32_t* a) {
+  uint32_t n = a[0], v, u, pv, pu;
   // n = order of the graph
   v = u = pv = pu = 0;
   u = 1;
@@ -200,11 +200,11 @@ void Graphrepresentations::standardToCrosspointer(unsigned int* a) {
   return;
 }
 
-void Graphrepresentations::standardToBeginpointer(unsigned int* a) {
-  unsigned int order = a[0];
-  unsigned int numEdges = a[order + 1];
-  unsigned int graphSize = order + numEdges + 2;
-  for (unsigned int i = order + 2; i < graphSize; ++i) {
+void Graphrepresentations::standardToBeginpointer(uint32_t* a) {
+  uint32_t order = a[0];
+  uint32_t numEdges = a[order + 1];
+  uint32_t graphSize = order + numEdges + 2;
+  for (uint32_t i = order + 2; i < graphSize; ++i) {
     // checks if a[i] is not a node of order 0
     if (a[a[i]] != a[a[i] - 1] || i == order + 2) {
       a[i] = a[a[i]];
@@ -213,24 +213,24 @@ void Graphrepresentations::standardToBeginpointer(unsigned int* a) {
   return;
 }
 
-void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a) {
-  unsigned int order = a[0];
-  unsigned int numEdges = a[order + 1];
-  unsigned int graphSize = order + numEdges + 2;
-  for (unsigned int i = order + 2; i < graphSize; ++i) {
+void Graphrepresentations::swappedBeginpointerToStandard(uint32_t* a) {
+  uint32_t order = a[0];
+  uint32_t numEdges = a[order + 1];
+  uint32_t graphSize = order + numEdges + 2;
+  for (uint32_t i = order + 2; i < graphSize; ++i) {
     if (a[i] > order) {
       a[i] = a[a[i]];
     }
   }
-  for (unsigned int i = 1; i <= order; ++i) {
+  for (uint32_t i = 1; i <= order; ++i) {
     a[i] = a[a[i]];
   }
 
-  unsigned int v = order;
+  uint32_t v = order;
   while (a[v] == v) {
     --v;
   }
-  for (unsigned int i = graphSize - 1; i > order + 1; --i) {
+  for (uint32_t i = graphSize - 1; i > order + 1; --i) {
     if (a[i] == v) {
       a[i] = a[v];
       a[v] = i;
@@ -248,10 +248,10 @@ void Graphrepresentations::swappedBeginpointerToStandard(unsigned int* a) {
  * swapped cross or beginpointer representation
  * @param a graph in cross or beginpointer representation
  */
-void Graphrepresentations::swapRepresentation(unsigned int* a) {
-  unsigned int order = a[0];
-  for (unsigned int i = 1; i <= order; ++i) {
-    unsigned int temp = a[a[i]];
+void Graphrepresentations::swapRepresentation(uint32_t* a) {
+  uint32_t order = a[0];
+  for (uint32_t i = 1; i <= order; ++i) {
+    uint32_t temp = a[a[i]];
     a[a[i]] = i;
     a[i] = temp;
   }

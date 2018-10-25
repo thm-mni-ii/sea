@@ -2,34 +2,34 @@
 #include <cstdlib>
 #include <iostream>
 
-Sealib::SimpleTrailStructure::SimpleTrailStructure(unsigned int _degree) :
+Sealib::SimpleTrailStructure::SimpleTrailStructure(uint32_t _degree) :
     degree(_degree),
     nextUnused(1),
-    lastClosed((unsigned int) -1),
+    lastClosed((uint32_t) -1),
     inAndOut(degree),
     matched(degree),
     flags(4),
     unused(degree * 3) {
     nextUnused = 1;
-    lastClosed = (unsigned int) -1;
+    lastClosed = (uint32_t) -1;
 
     if (degree % 2 == 0) flags[2] = 1;  // set it to true if even
     if (degree == 0) flags[1] = 1;  // node with no edges is possible, set black
 
-    for (unsigned int &i : married) {
-        i = (unsigned int) -1;
+    for (uint32_t &i : married) {
+        i = (uint32_t) -1;
     }
     // [1][0][1] [1][1][1] [1][2][1] ... [1][degree-1][1]
-    for (unsigned int i = 0; i < degree; i++) {
+    for (uint32_t i = 0; i < degree; i++) {
         unused[i * 3] = 1;
         unused[i * 3 + 1] = i;
         unused[i * 3 + 2] = 1;
     }
 }
 
-unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
+uint32_t Sealib::SimpleTrailStructure::getNextUnused() {
     if (flags[1]) {  // black node
-        return (unsigned int) -1;
+        return (uint32_t) -1;
     }
 
     if (!flags[0]) {
@@ -37,10 +37,10 @@ unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
         flags[0] = 1;
     }
     // set to grey
-    unsigned int prevLink = unused[nextUnused - 1];
-    unsigned int nextLink = unused[nextUnused + 1];
+    uint32_t prevLink = unused[nextUnused - 1];
+    uint32_t nextLink = unused[nextUnused + 1];
 
-    unsigned int temp;
+    uint32_t temp;
 
     if (prevLink * 3 > nextUnused) {  // circle around
         temp = (degree * 3) - (prevLink * 3) + nextUnused;
@@ -48,7 +48,7 @@ unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
         temp = nextUnused - prevLink * 3;
     }
     if (temp == nextUnused) {  // no other element, this is last
-        unsigned int retVal = nextUnused;
+        uint32_t retVal = nextUnused;
         nextUnused = 0;
         flags[1] = 1;
         return retVal;
@@ -61,7 +61,7 @@ unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
         temp = nextUnused + nextLink * 3;
     }
     unused[temp - 1] += prevLink;
-    unsigned int retVal = nextUnused;
+    uint32_t retVal = nextUnused;
     nextUnused = temp;
     // taking an arc flips the parity
     flags[2] = !flags[2];
@@ -69,7 +69,7 @@ unsigned int Sealib::SimpleTrailStructure::getNextUnused() {
     return retVal;
 }
 
-unsigned int Sealib::SimpleTrailStructure::getMatched(unsigned int idx) const {
+uint32_t Sealib::SimpleTrailStructure::getMatched(uint32_t idx) const {
     // check if the idx is present in the married structure
     if (married[0] == idx) return married[1];
     if (married[1] == idx) return married[0];
@@ -79,7 +79,7 @@ unsigned int Sealib::SimpleTrailStructure::getMatched(unsigned int idx) const {
     if (!matched[idx]) return idx;  // has no match
 
     // get start idx for the dyck word
-    unsigned int start = lastClosed + 1 == degree ? 0 : lastClosed + 1;
+    uint32_t start = lastClosed + 1 == degree ? 0 : lastClosed + 1;
 
     while (!matched[start]) {  // start is the first opening bracket after the last one closed.
         if (start == degree - 1) {
@@ -89,15 +89,15 @@ unsigned int Sealib::SimpleTrailStructure::getMatched(unsigned int idx) const {
         }
     }
 
-    unsigned int j = start;
-    unsigned int p = 0;
-    std::vector<unsigned int> stack(degree / 2);
+    uint32_t j = start;
+    uint32_t p = 0;
+    std::vector<uint32_t> stack(degree / 2);
     do {
         if (matched[j]) {  // only push matched index
             if (inAndOut[j]) {  // '('
                 stack[p++] = j;
             } else {
-                unsigned int i = stack[--p];
+                uint32_t i = stack[--p];
                 if (idx == i) return j;
                 if (idx == j) return i;
             }
@@ -110,9 +110,9 @@ unsigned int Sealib::SimpleTrailStructure::getMatched(unsigned int idx) const {
     return idx;
 }
 
-unsigned int Sealib::SimpleTrailStructure::leave() {
-    unsigned int u = getNextUnused();
-    if (u == (unsigned int) -1 || u == 0) {
+uint32_t Sealib::SimpleTrailStructure::leave() {
+    uint32_t u = getNextUnused();
+    if (u == (uint32_t) -1 || u == 0) {
         return u;
     } else {
         flags[3] = 1;
@@ -120,19 +120,19 @@ unsigned int Sealib::SimpleTrailStructure::leave() {
     }
 }
 
-unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
+uint32_t Sealib::SimpleTrailStructure::enter(uint32_t i) {
     i = i * 3 + 1;  // multiply index so it works with the actual array.
 
     if (flags[1]) {  // black node, should not be called here. something went wrong
-        return (unsigned int) -1;
+        return (uint32_t) -1;
     }
 
     if (!flags[0]) flags[0] = 1;  // set to grey
 
-    unsigned int prevLink = unused[i - 1];
-    unsigned int nextLink = unused[i + 1];
+    uint32_t prevLink = unused[i - 1];
+    uint32_t nextLink = unused[i + 1];
 
-    unsigned int temp;
+    uint32_t temp;
 
     if (prevLink * 3 > i) {  // circle around
         temp = (degree * 3) - (prevLink * 3) + i;
@@ -147,7 +147,7 @@ unsigned int Sealib::SimpleTrailStructure::enter(unsigned int i) {
         nextUnused = 0;
         unused.resize(0);
         unused.shrink_to_fit();
-        return (unsigned int) -1;  // returns non-value
+        return (uint32_t) -1;  // returns non-value
     }
     unused[temp + 1] += nextLink;
 
@@ -224,11 +224,11 @@ bool Sealib::SimpleTrailStructure::isEven() const {
     return flags[2];
 }
 
-void Sealib::SimpleTrailStructure::marry(unsigned int i, unsigned int o) {
-    if (married[0] == (unsigned int) -1) {  // first call of marry
+void Sealib::SimpleTrailStructure::marry(uint32_t i, uint32_t o) {
+    if (married[0] == (uint32_t) -1) {  // first call of marry
         // unmatch previous matches
-        unsigned int iMatch = getMatched(i);
-        unsigned int oMatch = getMatched(o);
+        uint32_t iMatch = getMatched(i);
+        uint32_t oMatch = getMatched(o);
         matched[iMatch].flip();
         matched[i].flip();
         matched[oMatch].flip();
@@ -238,8 +238,8 @@ void Sealib::SimpleTrailStructure::marry(unsigned int i, unsigned int o) {
         married[1] = o;
     } else {  // second call of marry, should be maximum
         // unmatch previous matches
-        unsigned int iMatch = getMatched(i);
-        unsigned int oMatch = getMatched(o);
+        uint32_t iMatch = getMatched(i);
+        uint32_t oMatch = getMatched(o);
         matched[iMatch].flip();
         matched[i].flip();
         matched[oMatch].flip();
@@ -250,20 +250,20 @@ void Sealib::SimpleTrailStructure::marry(unsigned int i, unsigned int o) {
     }
 }
 
-unsigned int Sealib::SimpleTrailStructure::getLastClosed() const {
+uint32_t Sealib::SimpleTrailStructure::getLastClosed() const {
     return lastClosed;
 }
 
-unsigned int Sealib::SimpleTrailStructure::getStartingArc() const {
-    if (!flags[3]) return (unsigned int) -1;
+uint32_t Sealib::SimpleTrailStructure::getStartingArc() const {
+    if (!flags[3]) return (uint32_t) -1;
 
-    for (unsigned int i = 0; i < inAndOut.size(); i++) {
-        unsigned int match = getMatched(i);
+    for (uint32_t i = 0; i < inAndOut.size(); i++) {
+        uint32_t match = getMatched(i);
         if (match == i && !inAndOut[i]) {
             return i;
         }
     }
-    return (unsigned int) -1;
+    return (uint32_t) -1;
 }
 
 bool Sealib::SimpleTrailStructure::hasStartingArc() const {

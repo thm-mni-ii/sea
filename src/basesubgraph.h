@@ -12,14 +12,14 @@ class BaseSubGraph : public SubGraph {
     rgraph_t rGraph;
 
  public:
-    unsigned long head(unsigned long u, unsigned long k) const override;
+    uint64_t head(uint64_t u, uint64_t k) const override;
 
-    std::tuple<unsigned long, unsigned long> mate(unsigned long u, unsigned long k) const override;
+    std::tuple<uint64_t, uint64_t> mate(uint64_t u, uint64_t k) const override;
 
-    unsigned long phi(unsigned long u) const override;
-    unsigned long psi(unsigned long a) const override;
-    unsigned long phiInv(unsigned long u) const override;
-    unsigned long psiInv(unsigned long a) const override;
+    uint64_t phi(uint64_t u) const override;
+    uint64_t psi(uint64_t a) const override;
+    uint64_t phiInv(uint64_t u) const override;
+    uint64_t psiInv(uint64_t a) const override;
     explicit BaseSubGraph(stack_t *stack, std::shared_ptr<BasicGraph> rGraph);
     ~BaseSubGraph() override;
 };

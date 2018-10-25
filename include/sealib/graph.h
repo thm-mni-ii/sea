@@ -1,5 +1,6 @@
 #ifndef SEALIB_GRAPH_H_
 #define SEALIB_GRAPH_H_
+#include <cstdint>
 
 namespace Sealib {
 /**
@@ -14,7 +15,7 @@ class Graph {
     * @param v Vertex v
     * @return Returns d that is the degree of node v.
     */
-    virtual unsigned int getNodeDegree(unsigned int v) const = 0;
+    virtual uint32_t getNodeDegree(uint32_t v) const = 0;
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
@@ -22,12 +23,12 @@ class Graph {
     * @param k index in the adjacency vector of node u
     * @return Returns v that is the k-th neighbor of u.
     */
-    virtual unsigned int head(unsigned int u, unsigned int k) const = 0;
+    virtual uint32_t head(uint32_t u, uint32_t k) const = 0;
 
     /**
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
-    virtual unsigned int getOrder() const = 0;
+    virtual uint32_t getOrder() const = 0;
 
     virtual ~Graph() {}
 };

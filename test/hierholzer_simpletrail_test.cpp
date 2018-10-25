@@ -5,14 +5,14 @@
 #include <stdlib.h>
 
 TEST(GraphTest, hierholzer_simple_trail) {
-    unsigned int order = 6;
-    auto **adj_mtrx = (unsigned int **) malloc(sizeof(unsigned int) * order * order);
-    adj_mtrx[0] = new unsigned int[order]{0, 1, 0, 1, 1, 1};
-    adj_mtrx[1] = new unsigned int[order]{1, 0, 1, 0, 0, 0};
-    adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1, 0, 0};
-    adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0, 0, 0};
-    adj_mtrx[4] = new unsigned int[order]{1, 0, 0, 0, 0, 0};
-    adj_mtrx[5] = new unsigned int[order]{1, 0, 0, 0, 0, 0};
+    uint32_t order = 6;
+    auto **adj_mtrx = reinterpret_cast<uint32_t **>(malloc(sizeof(uint32_t) * order * order));
+    adj_mtrx[0] = new uint32_t[order]{0, 1, 0, 1, 1, 1};
+    adj_mtrx[1] = new uint32_t[order]{1, 0, 1, 0, 0, 0};
+    adj_mtrx[2] = new uint32_t[order]{0, 1, 0, 1, 0, 0};
+    adj_mtrx[3] = new uint32_t[order]{1, 0, 1, 0, 0, 0};
+    adj_mtrx[4] = new uint32_t[order]{1, 0, 0, 0, 0, 0};
+    adj_mtrx[5] = new uint32_t[order]{1, 0, 0, 0, 0, 0};
 
     std::shared_ptr<Sealib::BasicGraph>
         graph_ptr(

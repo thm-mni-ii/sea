@@ -7,8 +7,8 @@ using Sealib::BasicGraph;
 using Sealib::Graph;
 
 TEST(GraphTest, graph_integrity) {
-    unsigned int order = 4;
-    unsigned int **adj_mtrx = new unsigned int *[order];
+    uint32_t order = 4;
+    uint32_t **adj_mtrx = new uint32_t *[order];
     /**
      * (n)       0       1       2       3
      *      **********************************
@@ -21,10 +21,10 @@ TEST(GraphTest, graph_integrity) {
      *  3   *    1   *   0   *   1   *   0   *
      *      **********************************
      */
-    adj_mtrx[0] = new unsigned int[order]{0, 2, 0, 1};
-    adj_mtrx[1] = new unsigned int[order]{2, 0, 1, 0};
-    adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
-    adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
+    adj_mtrx[0] = new uint32_t[order]{0, 2, 0, 1};
+    adj_mtrx[1] = new uint32_t[order]{2, 0, 1, 0};
+    adj_mtrx[2] = new uint32_t[order]{0, 1, 0, 1};
+    adj_mtrx[3] = new uint32_t[order]{1, 0, 1, 0};
 
     BasicGraph g = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
 

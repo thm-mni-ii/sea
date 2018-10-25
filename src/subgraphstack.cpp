@@ -9,11 +9,11 @@ using Sealib::BaseSubGraph;
 using Sealib::RecursiveSubGraph;
 using Sealib::SubGraphStack;
 
-unsigned long SubGraphStack::refs[6] = {0, 1, 3, 15, 65535, (unsigned long) -1};
+uint64_t SubGraphStack::refs[6] = {0, 1, 3, 15, 65535, (uint64_t) -1};
 
 SubGraphStack::SubGraphStack(std::shared_ptr<BasicGraph> g_) : clientList(),
                                                                currentRef(0),
-                                                               tuned((unsigned long) -1),
+                                                               tuned((uint64_t) -1),
                                                                tunedPhi0(nullptr),
                                                                tunedPsi0(nullptr),
                                                                tunedPhi(nullptr),
@@ -31,8 +31,8 @@ SubGraphStack::~SubGraphStack() {
     if (tunedPsi) delete tunedPsi;
 }
 
-void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &v,
-                                 const Sealib::Bitset<unsigned char> &a) {
+void Sealib::SubGraphStack::push(const Sealib::Bitset<uint8_t> &v,
+                                 const Sealib::Bitset<uint8_t> &a) {
     if (clientList.size() - 1 == Sealib::SubGraphStack::refs[currentRef + 1]) {
         currentRef++;
     }
@@ -46,41 +46,41 @@ void Sealib::SubGraphStack::pop() {
     clientList.pop_back();
 }
 
-unsigned long Sealib::SubGraphStack::order(unsigned long i) const {
+uint64_t Sealib::SubGraphStack::order(uint64_t i) const {
     return clientList[i]->order();
 }
 
-unsigned long Sealib::SubGraphStack::degree(unsigned long i,
-                                            unsigned long u) const {
+uint64_t Sealib::SubGraphStack::degree(uint64_t i,
+                                            uint64_t u) const {
     return clientList[i]->degree(u);
 }
 
-unsigned long Sealib::SubGraphStack::head(unsigned long i,
-                                          unsigned long u,
-                                          unsigned long k) const {
+uint64_t Sealib::SubGraphStack::head(uint64_t i,
+                                          uint64_t u,
+                                          uint64_t k) const {
     return clientList[i]->head(u, k);
 }
 
-std::tuple<unsigned long, unsigned long> Sealib::SubGraphStack::mate(unsigned long i,
-                                                                     unsigned long u,
-                                                                     unsigned long k) const {
+std::tuple<uint64_t, uint64_t> Sealib::SubGraphStack::mate(uint64_t i,
+                                                                     uint64_t u,
+                                                                     uint64_t k) const {
     return clientList[i]->mate(u, k);
 }
 
-unsigned long Sealib::SubGraphStack::g(unsigned long i,
-                                       unsigned long u,
-                                       unsigned long k) const {
+uint64_t Sealib::SubGraphStack::g(uint64_t i,
+                                       uint64_t u,
+                                       uint64_t k) const {
     return clientList[i]->g(u, k);
 }
 
-std::tuple<unsigned long, unsigned long>
-Sealib::SubGraphStack::gInv(unsigned long i, unsigned long r) const {
+std::tuple<uint64_t, uint64_t>
+Sealib::SubGraphStack::gInv(uint64_t i, uint64_t r) const {
     return clientList[i]->gInv(r);
 }
 
-unsigned long Sealib::SubGraphStack::phi(unsigned long i,
-                                         unsigned long j,
-                                         unsigned long u) const {
+uint64_t Sealib::SubGraphStack::phi(uint64_t i,
+                                         uint64_t j,
+                                         uint64_t u) const {
     if (i == j) return u;
 
     /** tuned check */
@@ -98,8 +98,8 @@ unsigned long Sealib::SubGraphStack::phi(unsigned long i,
     /** tuned end */
 
     if (i > j) {
-        unsigned long rIdx = clientList[i]->getRidx();
-        unsigned long uR = clientList[i]->phi(u);
+        uint64_t rIdx = clientList[i]->getRidx();
+        uint64_t uR = clientList[i]->phi(u);
 
         while (rIdx != clientList[j]->getRidx()) {
             uR = clientList[refs[rIdx]]->phi(uR);
@@ -107,8 +107,8 @@ unsigned long Sealib::SubGraphStack::phi(unsigned long i,
         }
         return clientList[j]->phiInv(uR);
     } else {
-        unsigned long uR = clientList[i]->phi(u);
-        unsigned long rIdx = clientList[i]->getRidx();
+        uint64_t uR = clientList[i]->phi(u);
+        uint64_t rIdx = clientList[i]->getRidx();
 
         while (rIdx != clientList[j]->getRidx()) {
             rIdx++;
@@ -119,9 +119,9 @@ unsigned long Sealib::SubGraphStack::phi(unsigned long i,
     }
 }
 
-unsigned long Sealib::SubGraphStack::psi(unsigned long i,
-                                         unsigned long j,
-                                         unsigned long a) const {
+uint64_t Sealib::SubGraphStack::psi(uint64_t i,
+                                         uint64_t j,
+                                         uint64_t a) const {
     if (i == j) {
         return a;
     }
@@ -141,8 +141,8 @@ unsigned long Sealib::SubGraphStack::psi(unsigned long i,
     /** tuned end */
 
     if (i > j) {
-        unsigned long rIdx = clientList[i]->getRidx();
-        unsigned long uR = clientList[i]->psi(a);
+        uint64_t rIdx = clientList[i]->getRidx();
+        uint64_t uR = clientList[i]->psi(a);
 
         while (rIdx != clientList[j]->getRidx()) {
             uR = clientList[refs[rIdx]]->psi(uR);
@@ -150,8 +150,8 @@ unsigned long Sealib::SubGraphStack::psi(unsigned long i,
         }
         return clientList[j]->psiInv(uR);
     } else {
-        unsigned long uR = clientList[i]->psi(a);
-        unsigned long rIdx = clientList[i]->getRidx();
+        uint64_t uR = clientList[i]->psi(a);
+        uint64_t rIdx = clientList[i]->getRidx();
 
         while (rIdx != clientList[j]->getRidx()) {
             rIdx++;
@@ -162,22 +162,22 @@ unsigned long Sealib::SubGraphStack::psi(unsigned long i,
     }
 }
 
-void Sealib::SubGraphStack::push(const Sealib::Bitset<unsigned char> &a) {
-    Sealib::Bitset<unsigned char> v(clientList[clientList.size() - 1]->order());
-    for (unsigned long i = 0; i < a.size(); i++) {
+void Sealib::SubGraphStack::push(const Sealib::Bitset<uint8_t> &a) {
+    Sealib::Bitset<uint8_t> v(clientList[clientList.size() - 1]->order());
+    for (uint64_t i = 0; i < a.size(); i++) {
         if (a[i]) {
-            unsigned long vi = std::get<0>(clientList[clientList.size() - 1]->gInv(i + 1));
+            uint64_t vi = std::get<0>(clientList[clientList.size() - 1]->gInv(i + 1));
             v[vi - 1] = 1;
         }
     }
     push(v, a);
 }
 
-unsigned long Sealib::SubGraphStack::gMax(unsigned long i) const {
+uint64_t Sealib::SubGraphStack::gMax(uint64_t i) const {
     return clientList[i]->gMax();
 }
 
-void Sealib::SubGraphStack::tune(unsigned long i) {
+void Sealib::SubGraphStack::tune(uint64_t i) {
     if (i == 0)
         return;  // G_0 is always tuned
     tunephi0(i);
@@ -186,36 +186,36 @@ void Sealib::SubGraphStack::tune(unsigned long i) {
     tunepsi(i);
 }
 
-void Sealib::SubGraphStack::tunephi0(unsigned long i) {
-    Sealib::Bitset<unsigned char> phi0bs(clientList[0]->order());
-    for (unsigned long u = 1; u <= clientList[i]->order(); u++) {
+void Sealib::SubGraphStack::tunephi0(uint64_t i) {
+    Sealib::Bitset<uint8_t> phi0bs(clientList[0]->order());
+    for (uint64_t u = 1; u <= clientList[i]->order(); u++) {
         phi0bs[phi(i, u) - 1] = 1;
     }
     if (tunedPhi0) delete tunedPhi0;
     tunedPhi0 = new RankSelect(phi0bs);
 }
 
-void Sealib::SubGraphStack::tunepsi0(unsigned long i) {
-    Sealib::Bitset<unsigned char> psi0bs(clientList[0]->gMax());
-    for (unsigned long u = 1; u <= clientList[i]->gMax(); u++) {
+void Sealib::SubGraphStack::tunepsi0(uint64_t i) {
+    Sealib::Bitset<uint8_t> psi0bs(clientList[0]->gMax());
+    for (uint64_t u = 1; u <= clientList[i]->gMax(); u++) {
         psi0bs[psi(i, u) - 1] = 1;
     }
     if (tunedPsi0) delete tunedPsi0;
     tunedPsi0 = new RankSelect(psi0bs);
 }
 
-void Sealib::SubGraphStack::tunephi(unsigned long i) {
-    Sealib::Bitset<unsigned char> phibs(clientList[i - 1]->order());
-    for (unsigned long u = 1; u <= clientList[i]->order(); u++) {
+void Sealib::SubGraphStack::tunephi(uint64_t i) {
+    Sealib::Bitset<uint8_t> phibs(clientList[i - 1]->order());
+    for (uint64_t u = 1; u <= clientList[i]->order(); u++) {
         phibs[phi(i, i - 1, u) - 1] = 1;
     }
     if (tunedPhi) delete tunedPhi;
     tunedPhi = new RankSelect(phibs);
 }
 
-void Sealib::SubGraphStack::tunepsi(unsigned long i) {
-    Sealib::Bitset<unsigned char> psibs(clientList[i - 1]->gMax());
-    for (unsigned long u = 1; u <= clientList[i]->gMax(); u++) {
+void Sealib::SubGraphStack::tunepsi(uint64_t i) {
+    Sealib::Bitset<uint8_t> psibs(clientList[i - 1]->gMax());
+    for (uint64_t u = 1; u <= clientList[i]->gMax(); u++) {
         psibs[psi(i, i - 1, u) - 1] = 1;
     }
     if (tunedPsi) delete tunedPsi;

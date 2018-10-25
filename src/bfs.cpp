@@ -69,7 +69,7 @@ bool BFS::more() { return hasGrayNode(); }
 Pair BFS::next() {
   u = getGrayNode();
   if (color->get(u) == outerGray) {
-    unsigned tmp = innerGray;
+    uint32_t tmp = innerGray;
     innerGray = outerGray;
     outerGray = tmp;
     dist++;

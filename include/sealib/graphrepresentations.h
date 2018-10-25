@@ -32,7 +32,7 @@ class Graphrepresentations {
      *	@param p probability of an edge
      *	@param gen engine to generate a pseudo random sequence of numbers
      */
-    static Compactgraph *generateGilbertGraph(unsigned int n, double p,
+    static Compactgraph *generateGilbertGraph(uint32_t n, double p,
                                               std::mt19937_64 *gen);
 
     /**	Generates a Gilbert graph G(n,p) in standard representation with n nodes
@@ -44,7 +44,7 @@ class Graphrepresentations {
      *	@param p probability of an edge
      *	@param gen engine to generate a pseudo random sequence of numbers
      */
-    static uint* generateRawGilbertGraph(unsigned int n, double p,
+    static uint* generateRawGilbertGraph(uint32_t n, double p,
                                          std::mt19937_64 *gen);
 
     /**
@@ -52,39 +52,39 @@ class Graphrepresentations {
      * representation used for inplace DFS and BFS
      * @param g Graph to be transformed.
      */
-    //  static unsigned int* graphToStandard(Graph* g);
+    //  static uint32_t* graphToStandard(Graph* g);
     /**
      * Copies a graph from standard representation to a graph object
      * declared in graph.h
      * @param g graph in standard representation
      */
-    // static Graph* standardToGraph(unsigned int* g);
+    // static Graph* standardToGraph(uint32_t* g);
     /**
      * Transforms a graph inplace from standard to crosspointer representation
      * @param g graph in standard representation
      * TODO: handle cases of nodes with degree 0 and 1
      */
-    static void standardToCrosspointer(unsigned int *g);
+    static void standardToCrosspointer(uint32_t *g);
 
     /**
      * Transforms a graph inplace from standard to beginpointer representation
      * @param g graph in standard representation
      */
-    static void standardToBeginpointer(unsigned int *g);
+    static void standardToBeginpointer(uint32_t *g);
 
     /**
      * Transforms graph inplace from beginpointer to
      * standard representation
      * @param g graph in standard representation
      */
-    static void swappedBeginpointerToStandard(unsigned int *g);
+    static void swappedBeginpointerToStandard(uint32_t *g);
 
     /**
      * Transforms graph inplace from cross or beginpointer to
      * a swapped cross or beginpointer representation
      * @param g graph in cross or beginpointer representation
      */
-    static void swapRepresentation(unsigned int *g);
+    static void swapRepresentation(uint32_t *g);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHREPRESENTATIONS_H_

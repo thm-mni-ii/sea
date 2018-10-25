@@ -2,10 +2,10 @@
 #include <sealib/sharedrankstructure.h>
 
 Sealib::LocalRankTable::LocalRankTable() : localRankLookupTable(256) {
-    for (unsigned int i = 0; i <= (unsigned char) -1; i++) {
-        unsigned char rank = 0;
-        localRankLookupTable[i] = std::vector<unsigned char>(8);
-        for (unsigned char j = 0; j < 8; j++) {
+    for (uint32_t i = 0; i <= (uint8_t) -1; i++) {
+        uint8_t rank = 0;
+        localRankLookupTable[i] = std::vector<uint8_t>(8);
+        for (uint8_t j = 0; j < 8; j++) {
             if (CHECK_BIT(i, j)) {
                 rank++;
             }
@@ -14,7 +14,7 @@ Sealib::LocalRankTable::LocalRankTable() : localRankLookupTable(256) {
     }
 }
 
-unsigned char Sealib::LocalRankTable::getLocalRank(unsigned char segment, unsigned char localIdx) {
+uint8_t Sealib::LocalRankTable::getLocalRank(uint8_t segment, uint8_t localIdx) {
     static LocalRankTable instance;
     return instance.localRankLookupTable[segment][localIdx];
 }

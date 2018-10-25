@@ -1,22 +1,22 @@
 #include "sealib/simplerankselect.h"
 
-unsigned long Sealib::SimpleRankSelect::select(unsigned long k) const {
-    if (k == 0 || k > selects.size()) return (unsigned long) -1;
+uint64_t Sealib::SimpleRankSelect::select(uint64_t k) const {
+    if (k == 0 || k > selects.size()) return (uint64_t) -1;
     return selects[k - 1];
 }
 
-unsigned long Sealib::SimpleRankSelect::rank(unsigned long k) const {
-    if (k == 0 || k > ranks.size()) return (unsigned long) -1;
+uint64_t Sealib::SimpleRankSelect::rank(uint64_t k) const {
+    if (k == 0 || k > ranks.size()) return (uint64_t) -1;
     return ranks[k - 1];
 }
 
 Sealib::SimpleRankSelect::SimpleRankSelect(
-    std::shared_ptr<const Sealib::Bitset<unsigned char>> bitset_) :
+    std::shared_ptr<const Sealib::Bitset<uint8_t>> bitset_) :
     bitset(std::move(bitset_)),
     ranks(bitset->size()),
-    selects(bitset->size(), (unsigned long) -1) {
-    unsigned int rank = 0;
-    for (unsigned int i = 0; i < bitset->size(); i++) {
+    selects(bitset->size(), (uint64_t) -1) {
+    uint32_t rank = 0;
+    for (uint32_t i = 0; i < bitset->size(); i++) {
         if ((*bitset)[i]) {
             selects[rank++] = i + 1;
         }

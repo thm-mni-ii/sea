@@ -1,12 +1,12 @@
 #include <sealib/dyckmatchingstructure.h>
 #include <iostream>
 
-unsigned long Sealib::DyckMatchingStructure::getMatchNaive(
-    const Sealib::Bitset<unsigned char> &word,
-    unsigned long idx) {
-    unsigned int j = 0;
-    unsigned int p = 0;
-    std::vector<unsigned int> stack(word.size());
+uint64_t Sealib::DyckMatchingStructure::getMatchNaive(
+    const Sealib::Bitset<uint8_t> &word,
+    uint64_t idx) {
+    uint32_t j = 0;
+    uint32_t p = 0;
+    std::vector<uint32_t> stack(word.size());
     do {
         if (word[j]) {  // '('
             stack[p++] = j;
@@ -14,7 +14,7 @@ unsigned long Sealib::DyckMatchingStructure::getMatchNaive(
             if (p == 0) {
                 return idx;
             }
-            unsigned int i = stack[--p];
+            uint32_t i = stack[--p];
             if (idx == i) {
                 return j;
             }
@@ -28,13 +28,13 @@ unsigned long Sealib::DyckMatchingStructure::getMatchNaive(
     return idx;;
 }
 
-const Sealib::Bitset<unsigned char> &Sealib::DyckMatchingStructure::getWord() const {
+const Sealib::Bitset<uint8_t> &Sealib::DyckMatchingStructure::getWord() const {
     return word;
 }
 
-Sealib::DyckMatchingStructure::DyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_) :
+Sealib::DyckMatchingStructure::DyckMatchingStructure(const Sealib::Bitset<uint8_t> &word_) :
     word(word_) {}
 
-unsigned long Sealib::DyckMatchingStructure::getMatch(unsigned long idx) {
+uint64_t Sealib::DyckMatchingStructure::getMatch(uint64_t idx) {
     return getMatchNaive(word, idx);
 }

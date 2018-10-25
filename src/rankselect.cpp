@@ -4,42 +4,42 @@
 #include <utility>
 
 Sealib::RankSelect::RankSelect(
-    const Sealib::Bitset<unsigned char> &bitset_) :
+    const Sealib::Bitset<uint8_t> &bitset_) :
     rankStructure(bitset_),
     firstInSegment(generateFirstInBlockBitSet(rankStructure)) {
 }
 
-unsigned long Sealib::RankSelect::select(unsigned long k) const {
+uint64_t Sealib::RankSelect::select(uint64_t k) const {
     if (k == 0 || rankStructure.getSegmentCount() == 0) {
-        return (unsigned long) -1;
+        return (uint64_t) -1;
     }
-    unsigned long firstInSegmentRank = firstInSegment.rank(k);
-    if (firstInSegmentRank == (unsigned long) -1) {
-        return (unsigned long) -1;
+    uint64_t firstInSegmentRank = firstInSegment.rank(k);
+    if (firstInSegmentRank == (uint64_t) -1) {
+        return (uint64_t) -1;
     }
-    unsigned long h = rankStructure.getNonEmptySegments()[firstInSegmentRank - 1];
-    unsigned char segment = rankStructure.getBitset().getBlock(h);
-    auto localIndex = static_cast<unsigned char>(k - rankStructure.setBefore(h) - 1);
-    unsigned char localSelect = LocalSelectTable::getLocalSelect(segment, localIndex);
+    uint64_t h = rankStructure.getNonEmptySegments()[firstInSegmentRank - 1];
+    uint8_t segment = rankStructure.getBitset().getBlock(h);
+    auto localIndex = static_cast<uint8_t>(k - rankStructure.setBefore(h) - 1);
+    uint8_t localSelect = LocalSelectTable::getLocalSelect(segment, localIndex);
     return localSelect + rankStructure.getSegmentLength() * h + 1;
 }
 
 Sealib::RankSelect::RankSelect() = default;
 
-const Sealib::Bitset<unsigned char> Sealib::RankSelect::generateFirstInBlockBitSet(
+const Sealib::Bitset<uint8_t> Sealib::RankSelect::generateFirstInBlockBitSet(
     const RankStructure &rs) {
-    unsigned long size = rs.rank(rs.size());
-    if (size == (unsigned long) -1) {
+    uint64_t size = rs.rank(rs.size());
+    if (size == (uint64_t) -1) {
         size = 0;
     }
-    Bitset<unsigned char> firstInBlockBitSet(size);
+    Bitset<uint8_t> firstInBlockBitSet(size);
 
-    for (unsigned long i = 0; i < rs.getSegmentCount(); i++) {
-        unsigned char segment = rs.getBitset().getBlock(i);
-        unsigned char localFirst = LocalSelectTable::getLocalSelect(segment, 0);
-        if (localFirst != (unsigned char) -1) {  // has a local first, i.e. is not an empty segment
+    for (uint64_t i = 0; i < rs.getSegmentCount(); i++) {
+        uint8_t segment = rs.getBitset().getBlock(i);
+        uint8_t localFirst = LocalSelectTable::getLocalSelect(segment, 0);
+        if (localFirst != (uint8_t) -1) {  // has a local first, i.e. is not an empty segment
             // setBefore gives us the index in firstInBlockBitset
-            unsigned int before = rs.setBefore(i);
+            uint32_t before = rs.setBefore(i);
             firstInBlockBitSet[before] = 1;
         }
     }
@@ -49,12 +49,12 @@ const Sealib::Bitset<unsigned char> Sealib::RankSelect::generateFirstInBlockBitS
 
 Sealib::RankSelect::~RankSelect() = default;
 
-unsigned long Sealib::RankSelect::rank(unsigned long k) const {
+uint64_t Sealib::RankSelect::rank(uint64_t k) const {
     return rankStructure.rank(k);
 }
-unsigned long Sealib::RankSelect::size() const {
+uint64_t Sealib::RankSelect::size() const {
     return rankStructure.size();
 }
-const Sealib::Bitset<unsigned char> &Sealib::RankSelect::getBitset() const {
+const Sealib::Bitset<uint8_t> &Sealib::RankSelect::getBitset() const {
     return rankStructure.getBitset();
 }

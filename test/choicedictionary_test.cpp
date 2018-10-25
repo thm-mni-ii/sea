@@ -8,15 +8,15 @@
 using Sealib::ChoiceDictionary;
 
 TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
-    const unsigned long int size = 25000;
-    const unsigned long int setSize = 5000;
+    const uint64_t size = 25000;
+    const uint64_t setSize = 5000;
     ChoiceDictionary *c = new ChoiceDictionary(size);
-    std::array<unsigned long int, setSize> set;
+    std::array<uint64_t, setSize> set;
 
-    unsigned long int num = 0;
-    unsigned seed = 0;
+    uint64_t num = 0;
+    uint32_t seed = 0;
 
-    for (unsigned long int i = 0; i < setSize; i++) {
+    for (uint64_t i = 0; i < setSize; i++) {
         set[i] = num;
         num += 5;
     }
@@ -62,7 +62,7 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
     ASSERT_FALSE(c->get(8));
     ASSERT_FALSE(c->get(111));
 
-    for (unsigned long int number : set) {
+    for (uint64_t number : set) {
         c->insert(number);
         ASSERT_TRUE(c->get(number));
     }

@@ -16,8 +16,8 @@ using Sealib::Adjacency;
 using std::vector;
 using std::stack;
 
-static unsigned c1 = 0, c2 = 0, c3 = 0, c4 = 0;
-static unsigned tmp = 0;
+static uint32_t c1 = 0, c2 = 0, c3 = 0, c4 = 0;
+static uint32_t tmp = 0;
 
 static void incr1(uint u) {
   c1++;
@@ -47,9 +47,9 @@ void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
 void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }*/
 
 static std::random_device rnd;
-static const unsigned GRAPHCOUNT = 4;  // how many random graphs to generate?
-static const unsigned DEGREE = 15;      // how many outneighbours per node?
-static const unsigned order = 200;
+static const uint32_t GRAPHCOUNT = 4;  // how many random graphs to generate?
+static const uint32_t DEGREE = 15;     // how many outneighbours per node?
+static const uint32_t order = 200;
 
 static std::vector<std::shared_ptr<Graph>> makeGraphs() {
   std::vector<std::shared_ptr<Graph>> g;
@@ -104,17 +104,17 @@ TEST(DFSTest, nloglognImbalanced) {
   delete g;
 }
 
-auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
-                                   12, 14, 3, 14, 4, 12, 17, 5, 14};
-unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
-stack<unsigned int> controllStack;
-void preTwo(unsigned int a) {
+auto *graph = new uint32_t[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
+                               12, 14, 3, 14, 4, 12, 17, 5, 14};
+uint32_t controllSum = (2 * (1 + 2 + 3 + 4 + 5));
+stack<uint32_t> controllStack;
+void preTwo(uint32_t a) {
   controllSum = controllSum - a;
   controllStack.push(a);
 }
-void postTwo(unsigned int a) {
+void postTwo(uint32_t a) {
   controllSum = controllSum - a;
-  unsigned int ex = controllStack.top();
+  uint32_t ex = controllStack.top();
   controllStack.pop();
   EXPECT_EQ(ex, a);
 }

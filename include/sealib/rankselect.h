@@ -13,14 +13,14 @@ class RankSelect {
  private:
     RankStructure rankStructure;
     RankStructure firstInSegment;
-    const Bitset<unsigned char> generateFirstInBlockBitSet(
+    const Bitset<uint8_t> generateFirstInBlockBitSet(
         const RankStructure &RankStructure);
 
  public:
     /**
      * @param Sealib::Bitset used for RankSelect
      */
-    explicit RankSelect(const Bitset<unsigned char> &bitset);
+    explicit RankSelect(const Bitset<uint8_t> &bitset);
     RankSelect();
 
     /**
@@ -28,19 +28,19 @@ class RankSelect {
      * @param k idx
      * @return k-th set bit
      */
-    unsigned long select(unsigned long k) const;
+    uint64_t select(uint64_t k) const;
 
     /**
      * Rank of the k-th idx
      * @param k idx
      * @return rank of k-th idx
      */
-    unsigned long rank(unsigned long k) const;
+    uint64_t rank(uint64_t k) const;
 
-    unsigned long size() const;
+    uint64_t size() const;
 
     ~RankSelect();
-    const Bitset<unsigned char> &getBitset() const;
+    const Bitset<uint8_t> &getBitset() const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_RANKSELECT_H_

@@ -8,9 +8,9 @@
 #include <iostream>
 #include <cmath>
 
-Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
-    lastClosed((unsigned int) -1),
-    dyckStart((unsigned int) -1),
+Sealib::TrailStructure::TrailStructure(uint32_t _degree) :
+    lastClosed((uint32_t) -1),
+    dyckStart((uint32_t) -1),
     inAndOut(_degree),
     matched(_degree),
     flags(4),
@@ -18,7 +18,7 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
     married(nullptr),
     unused(nullptr) {
     if (_degree < 255) {
-        unused.reset(new SmallDoubleLinkedList(static_cast<unsigned char>(_degree)));
+        unused.reset(new SmallDoubleLinkedList(static_cast<uint8_t>(_degree)));
     } else {
         unused.reset(new LargeDoubleLinkedList(_degree));
     }
@@ -31,15 +31,15 @@ Sealib::TrailStructure::TrailStructure(unsigned int _degree) :
     }  // node with no edges is possible, set black
 }
 
-inline unsigned int Sealib::TrailStructure::getNextUnused() {
+inline uint32_t Sealib::TrailStructure::getNextUnused() {
     if (flags[1]) {  // black node
-        return (unsigned int) -1;
+        return (uint32_t) -1;
     }
     if (!flags[0]) {
         flags[0].flip();
     }  // set to grey
 
-    unsigned int next = unused->get();
+    uint32_t next = unused->get();
     if (unused->isEmpty()) {
         flags[1].flip();
         flags[2] = 1;
@@ -49,9 +49,9 @@ inline unsigned int Sealib::TrailStructure::getNextUnused() {
     return next;
 }
 
-unsigned int Sealib::TrailStructure::leave() {
-    unsigned int u = getNextUnused();
-    if (u != (unsigned int) -1) {
+uint32_t Sealib::TrailStructure::leave() {
+    uint32_t u = getNextUnused();
+    if (u != (uint32_t) -1) {
         lastClosed = u;
         flags[3] = 1;
     }
@@ -62,11 +62,11 @@ unsigned int Sealib::TrailStructure::leave() {
     return u;
 }
 
-unsigned int Sealib::TrailStructure::enter(unsigned int i) {
+uint32_t Sealib::TrailStructure::enter(uint32_t i) {
     if (flags[1]) {
-        return (unsigned int) -1;
+        return (uint32_t) -1;
     }
-    unsigned int next = unused->remove(i);
+    uint32_t next = unused->remove(i);
     inAndOut[i] = 1;
     flags[2].flip();
     if (next == i) {  //  no elements left
@@ -75,7 +75,7 @@ unsigned int Sealib::TrailStructure::enter(unsigned int i) {
         //  black now, unused is not needed anymore
         unused.release();
         initDyckStructure();
-        return (unsigned int) -1;
+        return (uint32_t) -1;
     }
 
     matched[i] = 1;
@@ -102,13 +102,13 @@ bool Sealib::TrailStructure::isEven() const {
     return flags[2];
 }
 
-void Sealib::TrailStructure::marry(unsigned int i, unsigned int o) {
+void Sealib::TrailStructure::marry(uint32_t i, uint32_t o) {
     // initialize married table if it's the first call
     if (married == nullptr) {
-        married.reset(new std::vector<unsigned int>(4, (unsigned int) -1));
+        married.reset(new std::vector<uint32_t>(4, (uint32_t) -1));
 
-        unsigned int iMatch = getMatched(i);
-        unsigned int oMatch = getMatched(o);
+        uint32_t iMatch = getMatched(i);
+        uint32_t oMatch = getMatched(o);
         matched[iMatch].flip();
         matched[i].flip();
 
@@ -117,11 +117,11 @@ void Sealib::TrailStructure::marry(unsigned int i, unsigned int o) {
 
         (*married)[0] = i;
         (*married)[1] = o;
-        (*married)[2] = (unsigned int) -1;
-        (*married)[3] = (unsigned int) -1;
+        (*married)[2] = (uint32_t) -1;
+        (*married)[3] = (uint32_t) -1;
     } else {  // second call of marry, should be maximum
-        unsigned int iMatch = getMatched(i);
-        unsigned int oMatch = getMatched(o);
+        uint32_t iMatch = getMatched(i);
+        uint32_t oMatch = getMatched(o);
 
         matched[iMatch].flip();
         matched[i].flip();
@@ -133,30 +133,30 @@ void Sealib::TrailStructure::marry(unsigned int i, unsigned int o) {
     }
 }
 
-unsigned int Sealib::TrailStructure::getStartingArc() const {
-    if (!flags[3]) return (unsigned int) -1;
+uint32_t Sealib::TrailStructure::getStartingArc() const {
+    if (!flags[3]) return (uint32_t) -1;
 
-    for (unsigned int i = 0; i < inAndOut.size(); i++) {
-        unsigned int match = getMatched(i);
+    for (uint32_t i = 0; i < inAndOut.size(); i++) {
+        uint32_t match = getMatched(i);
         if (match == i && !inAndOut[i]) {
             return i;
         }
     }
-    return (unsigned int) -1;
+    return (uint32_t) -1;
 }
 
-bool Sealib::TrailStructure::isEndingArc(unsigned int i) const {
+bool Sealib::TrailStructure::isEndingArc(uint32_t i) const {
     return (getMatched(i) == i && inAndOut[i]);
 }
 
 inline void Sealib::TrailStructure::initDyckStructure() {
     //  only matched indices are part of the dyckword
-    unsigned long cnt = 0;
-    for (unsigned long i = 0; i < matched.size(); i++) {
+    uint64_t cnt = 0;
+    for (uint64_t i = 0; i < matched.size(); i++) {
         if (matched[i]) cnt++;
     }
 
-    Sealib::Bitset<unsigned char> dyckWord(cnt);
+    Sealib::Bitset<uint8_t> dyckWord(cnt);
     dyckStart = lastClosed + 1 == inAndOut.size() ? 0 : lastClosed + 1;
 
     if (dyckWord.size() > 0) {
@@ -168,8 +168,8 @@ inline void Sealib::TrailStructure::initDyckStructure() {
                 dyckStart += 1;
             }
         }
-        unsigned int j = dyckStart;
-        unsigned int dyckIndex = 0;
+        uint32_t j = dyckStart;
+        uint32_t dyckIndex = 0;
         do {
             if (matched[j]) {  // only consider matched index
                 dyckWord[dyckIndex++] = inAndOut[j];
@@ -181,11 +181,11 @@ inline void Sealib::TrailStructure::initDyckStructure() {
     }
 }
 
-unsigned int Sealib::TrailStructure::getDyckStart() const {
+uint32_t Sealib::TrailStructure::getDyckStart() const {
     return dyckStart;
 }
 
-unsigned int Sealib::TrailStructure::getMatchedNaive(unsigned int idx) {
+uint32_t Sealib::TrailStructure::getMatchedNaive(uint32_t idx) {
     // check if the idx is present in the married structure
     if (married != nullptr) {
         if ((*married)[0] == idx) return (*married)[1];
@@ -198,7 +198,7 @@ unsigned int Sealib::TrailStructure::getMatchedNaive(unsigned int idx) {
     if (!matched[idx]) return idx;
 
     // get start idx for the dyck word
-    unsigned int start = lastClosed + 1 == inAndOut.size() ? 0 : lastClosed + 1;
+    uint32_t start = lastClosed + 1 == inAndOut.size() ? 0 : lastClosed + 1;
 
     // start is the first opening bracket after the last one closed.
     while (!matched[start]) {
@@ -209,16 +209,16 @@ unsigned int Sealib::TrailStructure::getMatchedNaive(unsigned int idx) {
         }
     }
 
-    unsigned int j = start;
-    unsigned int p = 0;
-    std::vector<unsigned int> stack(inAndOut.size() / 2);
+    uint32_t j = start;
+    uint32_t p = 0;
+    std::vector<uint32_t> stack(inAndOut.size() / 2);
     do {
         // only push matched index
         if (matched[j]) {
             if (inAndOut[j]) {  // '('
                 stack[p++] = j;
             } else {
-                unsigned int i = stack[--p];
+                uint32_t i = stack[--p];
                 if (idx == i) return j;
                 if (idx == j) return i;
             }
@@ -231,7 +231,7 @@ unsigned int Sealib::TrailStructure::getMatchedNaive(unsigned int idx) {
     return idx;
 }
 
-unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) const {
+uint32_t Sealib::TrailStructure::getMatched(uint32_t idx) const {
     // check if the idx is present in the married structure
     if (married != nullptr) {
         if ((*married)[0] == idx) return (*married)[1];
@@ -243,8 +243,8 @@ unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) const {
     if (!matched[idx]) return idx;  // has no match
 
     // calculate startidx of dyckword
-    unsigned int dyckIdx = 0;
-    unsigned int s = dyckStart;
+    uint32_t dyckIdx = 0;
+    uint32_t s = dyckStart;
 
     while (s != idx) {
         if (matched[s]) {
@@ -253,12 +253,12 @@ unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) const {
         s = (s == (inAndOut.size() - 1)) ? 0 : s + 1;
     }
 
-    unsigned long match = dyckMatchingStructure->getMatch(dyckIdx);
+    uint64_t match = dyckMatchingStructure->getMatch(dyckIdx);
     if (match == dyckIdx) {
         return idx;
     }
     s = dyckStart;
-    unsigned int i = 0;
+    uint32_t i = 0;
     while (i < match) {
         if (matched[s]) {
             i++;
@@ -271,19 +271,19 @@ unsigned int Sealib::TrailStructure::getMatched(unsigned int idx) const {
     return s;
 }
 
-unsigned int Sealib::TrailStructure::getDegree() const {
-    return static_cast<unsigned int>(inAndOut.size());
+uint32_t Sealib::TrailStructure::getDegree() const {
+    return static_cast<uint32_t>(inAndOut.size());
 }
 
-const Sealib::Bitset<unsigned char> &Sealib::TrailStructure::getInAndOut() const {
+const Sealib::Bitset<uint8_t> &Sealib::TrailStructure::getInAndOut() const {
     return inAndOut;
 }
 
-const Sealib::Bitset<unsigned char> &Sealib::TrailStructure::getMatchedBitset() const {
+const Sealib::Bitset<uint8_t> &Sealib::TrailStructure::getMatchedBitset() const {
     return matched;
 }
 
-unsigned int Sealib::TrailStructure::getLastClosed() const {
+uint32_t Sealib::TrailStructure::getLastClosed() const {
     return lastClosed;
 }
 

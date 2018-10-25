@@ -17,21 +17,21 @@ namespace Sealib {
  */
 class Compactgraph : public Graph {
 	private:
-		std::unique_ptr<unsigned int[]> A;
+		std::unique_ptr<uint32_t[]> A;
 
 	public:
 		/**
-		 * Creates a compactgraph object out of a pointer to an unsigned int array
+		 * Creates a compactgraph object out of a pointer to an uint32_t array
 		 * @param A pointer to a graph array in standard representation
 		 */
-		explicit Compactgraph(unsigned int _A[]);
+		explicit Compactgraph(uint32_t _A[]);
 
     /**
     * Returns the degree of the node that v points at.
     * @param u Vertex u 
     * @return Returns d that is the degree of node v.
     */
-		unsigned int getNodeDegree(unsigned int u) const override;
+		uint32_t getNodeDegree(uint32_t u) const override;
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
@@ -39,17 +39,17 @@ class Compactgraph : public Graph {
     * @param k index in the adjacency vector of node u
     * @return Returns v that is the k-th neighbor of u.
     */
-    unsigned int head(unsigned int u, unsigned int k) const override;
+    uint32_t head(uint32_t u, uint32_t k) const override;
 
     /**
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
-    unsigned int getOrder() const override;
+    uint32_t getOrder() const override;
 
 		/**
 		 * @return Returns the underlying array
 		 */
-		unsigned int* getData();
+		uint32_t* getData();
 };
 
 }  // namespace Sealib

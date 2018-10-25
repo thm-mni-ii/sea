@@ -1,22 +1,22 @@
 #include <sealib/dyckwordlexicon.h>
 #include <iostream>
 
-Sealib::DyckWordLexicon::DyckWordLexicon(unsigned int wordLength_) : wordLength(wordLength_) {
+Sealib::DyckWordLexicon::DyckWordLexicon(uint32_t wordLength_) : wordLength(wordLength_) {
     if (wordLength < 2) {
         wordLength = 2;
     } else if (wordLength % 2 != 0) {
         wordLength--;
     }
 
-    Sealib::Bitset<unsigned char> baseWord(wordLength);
+    Sealib::Bitset<uint8_t> baseWord(wordLength);
     baseWord[0] = 1;  // "("
     generateWords(baseWord, 1, 1, 0);
 }
 
-void Sealib::DyckWordLexicon::generateWords(Sealib::Bitset<unsigned char> word,
-                                            unsigned int i,
-                                            unsigned int mOpen,
-                                            unsigned int mClosed) {
+void Sealib::DyckWordLexicon::generateWords(Sealib::Bitset<uint8_t> word,
+                                            uint32_t i,
+                                            uint32_t mOpen,
+                                            uint32_t mClosed) {
     if (mOpen < wordLength / 2
         && mClosed < wordLength / 2
         && mOpen > mClosed) {  // can add "(" or ")"
@@ -41,9 +41,9 @@ void Sealib::DyckWordLexicon::generateWords(Sealib::Bitset<unsigned char> word,
     }
 }
 
-const std::vector<Sealib::Bitset<unsigned char>> &Sealib::DyckWordLexicon::getLexicon() {
+const std::vector<Sealib::Bitset<uint8_t>> &Sealib::DyckWordLexicon::getLexicon() {
     return lexicon;
 }
-unsigned int Sealib::DyckWordLexicon::getWordLength() {
+uint32_t Sealib::DyckWordLexicon::getWordLength() {
     return wordLength;
 }

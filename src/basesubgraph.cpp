@@ -10,10 +10,10 @@ Sealib::BaseSubGraph::~BaseSubGraph() = default;
 Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
     SubGraph(0, 0, stack_),
     rGraph(rGraph_) {
-    unsigned long dSum = 0;
+    uint64_t dSum = 0;
     bitset_t q(rGraph->getOrder());
-    for (unsigned int i = 0; i < rGraph->getOrder(); i++) {
-        unsigned long deg = rGraph->getNodeDegree(i);
+    for (uint32_t i = 0; i < rGraph->getOrder(); i++) {
+        uint64_t deg = rGraph->getNodeDegree(i);
         dSum += deg;
         if (deg > 0) {
             q[i] = 1;
@@ -21,8 +21,8 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
     }
 
     bitset_t p(dSum);
-    unsigned long deg = 0;
-    for (unsigned int i = 0; i < rGraph->getOrder(); i++) {
+    uint64_t deg = 0;
+    for (uint32_t i = 0; i < rGraph->getOrder(); i++) {
         if (rGraph->getNodeDegree(i) > 0) {
             deg += rGraph->getNodeDegree(i);
             p[deg - 1] = 1;
@@ -32,42 +32,42 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
     pSelect = new RankSelect(p);
 }
 
-unsigned long Sealib::BaseSubGraph::head(unsigned long u,
-                                         unsigned long k) const {
-    return rGraph->head(static_cast<unsigned int>(u - 1), static_cast<unsigned int>(k - 1)) + 1;
+uint64_t Sealib::BaseSubGraph::head(uint64_t u,
+                                         uint64_t k) const {
+    return rGraph->head(static_cast<uint32_t>(u - 1), static_cast<uint32_t>(k - 1)) + 1;
 }
 
-std::tuple<unsigned long, unsigned long>
-Sealib::BaseSubGraph::mate(unsigned long u, unsigned long k) const {
-    std::tuple<unsigned long, unsigned long>
+std::tuple<uint64_t, uint64_t>
+Sealib::BaseSubGraph::mate(uint64_t u, uint64_t k) const {
+    std::tuple<uint64_t, uint64_t>
         mate = rGraph->mate(
-            static_cast<unsigned int>(u - 1),
-            static_cast<unsigned int>(k - 1));
+            static_cast<uint32_t>(u - 1),
+            static_cast<uint32_t>(k - 1));
     return
-        std::tuple<unsigned long, unsigned long>(
+        std::tuple<uint64_t, uint64_t>(
             std::get<0>(mate) + 1,
             std::get<1>(mate) + 1);
 }
 
-unsigned long Sealib::BaseSubGraph::phi(unsigned long u) const {
+uint64_t Sealib::BaseSubGraph::phi(uint64_t u) const {
     if (u == 0) {
         throw std::invalid_argument("u needs to be > 0");
     }
     return u;
 }
-unsigned long Sealib::BaseSubGraph::psi(unsigned long a) const {
+uint64_t Sealib::BaseSubGraph::psi(uint64_t a) const {
     if (a == 0) {
         throw std::invalid_argument("a needs to be > 0");
     }
     return a;
 }
-unsigned long Sealib::BaseSubGraph::phiInv(unsigned long u) const {
+uint64_t Sealib::BaseSubGraph::phiInv(uint64_t u) const {
     if (u == 0) {
         throw std::invalid_argument("u needs to be > 0");
     }
     return u;
 }
-unsigned long Sealib::BaseSubGraph::psiInv(unsigned long a) const {
+uint64_t Sealib::BaseSubGraph::psiInv(uint64_t a) const {
     if (a == 0) {
         throw std::invalid_argument("a needs to be > 0");
     }

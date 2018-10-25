@@ -72,7 +72,7 @@ class BFS : Iterator<Pair> {
   uint n;
   CompactArray *color;
   uint u, dist;
-  unsigned innerGray, outerGray;
+  uint32_t innerGray, outerGray;
   UserFunc1 preprocess;
   UserFunc2 preexplore;
 

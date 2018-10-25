@@ -8,9 +8,9 @@ using Sealib::ExtendedSegmentStack;
 using Sealib::CompactArray;
 
 #define pushn(i, n) \
-  for (unsigned a = (i); a < (n); a++) s->push(Pair((a), K))
+  for (uint32_t a = (i); a < (n); a++) s->push(Pair((a), K))
 #define popexp(n, exp) \
-  for (unsigned a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
+  for (uint32_t a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 
 static Pair r;
 static const uint K = 5;
@@ -52,11 +52,11 @@ TEST_F(BasicSegmentStackTest, highAlign) {
 class ExtendedSegmentStackTest : public ::testing::Test {
  protected:
   ExtendedSegmentStack *s;
-  unsigned q;
+  uint32_t q;
   CompactArray *c;
   Sealib::Graph *g;
   virtual void SetUp() {
-    unsigned n = 256;
+    uint32_t n = 256;
     g = Sealib::GraphCreator::createRandomFixed(n, 10);
     c = new CompactArray(n, 3);
     s = new ExtendedSegmentStack(n, g, c);
@@ -68,11 +68,11 @@ class ExtendedSegmentStackTest : public ::testing::Test {
 class ExtendedSegmentStackTest2 : public ::testing::Test {
  protected:
   ExtendedSegmentStack *s;
-  unsigned q;
+  uint32_t q;
   CompactArray *c;
   Sealib::Graph *g;
   virtual void SetUp() {
-    unsigned n = 128;
+    uint32_t n = 128;
     g = Sealib::GraphCreator::createRandomImbalanced(n);
     c = new CompactArray(n, 3);
     s = new ExtendedSegmentStack(n, g, c);

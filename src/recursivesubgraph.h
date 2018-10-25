@@ -13,36 +13,36 @@ class RecursiveSubGraph : public SubGraph {
     bitset_t initializeVSelect(const bitset_t &v);
     bitset_t initializeASelect(const bitset_t &v);
 
-    inline unsigned long select_v(unsigned long i) const {
+    inline uint64_t select_v(uint64_t i) const {
         return vSelect.select(i);
     }
 
-    inline unsigned long select_a(unsigned long i) const {
+    inline uint64_t select_a(uint64_t i) const {
         return aSelect.select(i);
     }
 
-    inline unsigned long rank_v(unsigned long i) const {
+    inline uint64_t rank_v(uint64_t i) const {
         return vSelect.rank(i);
     }
 
-    inline unsigned long rank_a(unsigned long i) const {
+    inline uint64_t rank_a(uint64_t i) const {
         return aSelect.rank(i);
     }
 
  public:
     RecursiveSubGraph(stack_t *stack,
-                      unsigned long sidx_,
-                      unsigned long ridx_,
-                      const Sealib::Bitset<unsigned char> &v,
-                      const Sealib::Bitset<unsigned char> &a);
+                      uint64_t sidx_,
+                      uint64_t ridx_,
+                      const Sealib::Bitset<uint8_t> &v,
+                      const Sealib::Bitset<uint8_t> &a);
 
-    unsigned long head(unsigned long u, unsigned long k) const override;
-    std::tuple<unsigned long, unsigned long> mate(unsigned long u, unsigned long k) const override;
+    uint64_t head(uint64_t u, uint64_t k) const override;
+    std::tuple<uint64_t, uint64_t> mate(uint64_t u, uint64_t k) const override;
 
-    unsigned long phi(unsigned long u) const override;
-    unsigned long psi(unsigned long a) const override;
-    unsigned long phiInv(unsigned long u) const override;
-    unsigned long psiInv(unsigned long a) const override;
+    uint64_t phi(uint64_t u) const override;
+    uint64_t psi(uint64_t a) const override;
+    uint64_t phiInv(uint64_t u) const override;
+    uint64_t psiInv(uint64_t a) const override;
     ~RecursiveSubGraph() override;
 };
 }  // namespace Sealib

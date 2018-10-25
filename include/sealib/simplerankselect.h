@@ -12,9 +12,9 @@ namespace Sealib {
  */
 class SimpleRankSelect {
  private:
-    std::shared_ptr<const Bitset<unsigned char>> bitset;
-    std::vector<unsigned long> ranks;
-    std::vector<unsigned long> selects;
+    std::shared_ptr<const Bitset<uint8_t>> bitset;
+    std::vector<uint64_t> ranks;
+    std::vector<uint64_t> selects;
 
  public:
     /**
@@ -22,16 +22,16 @@ class SimpleRankSelect {
      * @param k idx
      * @return k-th set bit
      */
-    unsigned long select(unsigned long k) const;
+    uint64_t select(uint64_t k) const;
 
     /**
      * Rank of the k-th idx
      * @param k idx
      * @return rank of k-th idx
      */
-    unsigned long rank(unsigned long k) const;
+    uint64_t rank(uint64_t k) const;
 
-    explicit SimpleRankSelect(std::shared_ptr<const Bitset<unsigned char>> bitset);
+    explicit SimpleRankSelect(std::shared_ptr<const Bitset<uint8_t>> bitset);
     SimpleRankSelect();
     ~SimpleRankSelect();
 };

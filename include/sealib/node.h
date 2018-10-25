@@ -2,6 +2,7 @@
 #define SEALIB_NODE_H_
 
 #include <sealib/adjacency.h>
+#include <cstdint>
 #include <vector>
 
 namespace Sealib {
@@ -19,7 +20,7 @@ class Node {
      * @param _adj array of adjacencies.
      * @param _deg degree of this node.
     */
-    Node(const Adjacency *adj_, unsigned long deg_);
+    Node(const Adjacency *adj_, uint64_t deg_);
 
     /**
      * Creates a node out of its adjacencies.
@@ -37,19 +38,19 @@ class Node {
     /**
      * @return Returns the degree of the node.
      */
-    unsigned int getDegree() const;
+    uint32_t getDegree() const;
 
     /**
      * Sets the crossindex in the adjacency
      */
-     void setCrossIndex(unsigned int adjIndex, unsigned int crossIndex);
+     void setCrossIndex(uint32_t adjIndex, uint32_t crossIndex);
 
      /**
       * Adds a new Adjacency.
       * @param vertex - vertex of the Adjacency.
       * Set the crossindex manually after adding a new adjacency
       */
-      void addAdjacency(unsigned int vertex);
+      void addAdjacency(uint32_t vertex);
 };
 }  // namespace Sealib
 #endif  // SEALIB_NODE_H_

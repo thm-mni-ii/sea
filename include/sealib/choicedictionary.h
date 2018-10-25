@@ -1,5 +1,6 @@
 #ifndef SEALIB_CHOICEDICTIONARY_H_
 #define SEALIB_CHOICEDICTIONARY_H_
+#include <cstdint>
 
 #define SHIFT_OFFSET 1UL
 #define POINTER_OFFSET 1UL
@@ -37,81 +38,81 @@ class ChoiceDictionary {
      *
      * @param wordSize Either 32 or 64 depending on system architecture
      */
-    unsigned long int *primary, *secondary, *validator, wordCount, pointer;
-    unsigned int wordSize;
+    uint64_t *primary, *secondary, *validator, wordCount, pointer;
+    uint32_t wordSize;
 
-    void createDataStructure(unsigned long int size);
+    void createDataStructure(uint64_t size);
 
     void createPrimary();
 
-    void createSecondary(unsigned long int secondarySize);
+    void createSecondary(uint64_t secondarySize);
 
-    void createValidator(unsigned long int validatorSize);
+    void createValidator(uint64_t validatorSize);
 
     /**
      * Updates secondary to represent updates in primary.
      * @param primaryIndex Index of the updated Word in primary.
      */
-    void updateSecondary(unsigned long int primaryIndex);
+    void updateSecondary(uint64_t primaryIndex);
 
-    void removeFromSecondary(unsigned long int primaryIndex);
+    void removeFromSecondary(uint64_t primaryIndex);
 
     /**
      * Creates a link between a tupel in secondary and validator.
      *
      * @param secondaryIndex Index of the new secondary word.
      */
-    unsigned long int makeLink(unsigned long int secondaryIndex);
+    uint64_t makeLink(uint64_t secondaryIndex);
 
-    void breakLink(unsigned long int secondaryIndex);
+    void breakLink(uint64_t secondaryIndex);
 
-    void shrinkValidator(unsigned long int startIndex);
+    void shrinkValidator(uint64_t startIndex);
 
-    bool isInitialized(unsigned long int primaryIndex);
+    bool isInitialized(uint64_t primaryIndex);
 
-    bool hasColor(unsigned long int primaryIndex);
+    bool hasColor(uint64_t primaryIndex);
 
  public:
     /**
      * Creates choice dictionary with given size
      * @param length Length of the choice dictionary
      */
-    explicit ChoiceDictionary(unsigned long int size);
+    explicit ChoiceDictionary(uint64_t size);
 
     /**
      * Sets a bit at specified index to 1.
      * @param index Index of bit that should be set to 1.
      */
-    void insert(unsigned long int index);
+    void insert(uint64_t index);
 
     /**
      * Returns the bit at specified index.
      * @param index Index to read.
      */
-    bool get(unsigned long int index);
+    bool get(uint64_t index);
 
     /**
      * Returns an arbitrary bit position that is set to 1.
      */
-    unsigned long int choice();
+    uint64_t choice();
 
     /**
      * Sets a bit at specified index to 0.
      * @param index Index of bit that should be set to 0.
      */
-    void remove(unsigned long int index);
+    void remove(uint64_t index);
 
-    unsigned long int getPrimaryWord(unsigned long int primaryIndex);
+    uint64_t getPrimaryWord(uint64_t primaryIndex);
 
-    unsigned long int getSecondaryWord(unsigned long int secondaryIndex);
+    uint64_t getSecondaryWord(uint64_t secondaryIndex);
 
-    unsigned long int getPointerTarget(unsigned long int nextPointer);
+    uint64_t getPointerTarget(uint64_t nextPointer);
 
-    bool pointerIsValid(unsigned long int nextPointer);
+    bool pointerIsValid(uint64_t nextPointer);
 
-    unsigned int getWordSize();
+    uint32_t getWordSize();
 
-    unsigned long int getSecondarySize();
+    uint64_t getSecondarySize();
 
     ~ChoiceDictionary();
 };

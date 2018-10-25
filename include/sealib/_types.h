@@ -1,8 +1,9 @@
 #ifndef SEALIB__TYPES_H_
 #define SEALIB__TYPES_H_
+#include <cstdint>
 
 // the standard numeric type (used mainly for node names)
-typedef unsigned int uint;
+typedef uint32_t uint;
 
 // a pair of numbers (used mainly for stack management)
 // typedef std::tuple<uint, uint> Pair;

@@ -1,5 +1,6 @@
 #ifndef SEALIB_ADJACENCY_H_
 #define SEALIB_ADJACENCY_H_
+#include <cstdint>
 
 namespace Sealib {
 /**
@@ -9,15 +10,15 @@ namespace Sealib {
  */
 class Adjacency {
  public:
-    unsigned int vertex;
-    unsigned int crossIndex;
+    uint32_t vertex;
+    uint32_t crossIndex;
 
     /**
      * Creates an adjacency with the given endpoint _vertex.
      * Note: The construction will leave the crossIndex uninitialized.
      * @param _vertex The vertex id
      */
-    explicit Adjacency(unsigned int _vertex);
+    explicit Adjacency(uint32_t _vertex);
 
     Adjacency();
 };

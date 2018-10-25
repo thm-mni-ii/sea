@@ -24,7 +24,7 @@ class CompactArray {
    * @param count number of values this compact array can hold
    * @param v the highest possible value (default: 3)
    */
-  explicit CompactArray(unsigned int count, unsigned int v = 3);
+  explicit CompactArray(uint32_t count, uint32_t v = 3);
 
   ~CompactArray();
 
@@ -33,18 +33,18 @@ class CompactArray {
    * @param i the destination index
    * @param p the value to insert (in [0,v])
    */
-  void insert(uint i, unsigned int p);
+  void insert(uint i, uint32_t p);
 
   /**
    * Get a value from the compact array.
    * @param i index to get the value from
    * @return the found value
    */
-  unsigned int get(uint i);
+  uint32_t get(uint i);
 
  private:
-  unsigned valueWidth, maxValue, groupWidth, valuesPerGroup;
-  unsigned groupCount;
+  uint32_t valueWidth, maxValue, groupWidth, valuesPerGroup;
+  uint32_t groupCount;
 
   Group **group;
 };

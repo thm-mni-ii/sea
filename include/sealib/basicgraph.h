@@ -24,7 +24,7 @@ class BasicGraph : public Graph {
      * @param _nodes Array of nodes.
      * @param _order Order of the graph (equals the length of the nodes array).
      */
-    BasicGraph(Node *nodes_, unsigned int order_);
+    BasicGraph(Node *nodes_, uint32_t order_);
 
     /**
      * Created a new graph object with the nodes provided by the nodes_ vector
@@ -41,7 +41,7 @@ class BasicGraph : public Graph {
      * Created a graph with the specified order and without any edges.
      * @param order - order of the graph
      */
-    explicit BasicGraph(unsigned int order);
+    explicit BasicGraph(uint32_t order);
 
     /**
      * Adds a new node to the graph
@@ -54,7 +54,7 @@ class BasicGraph : public Graph {
      * @param u index in the nodes array.
      * @return Pointer to the Node in the nodes array.
      */
-    const Node &getNode(unsigned int u) const;
+    const Node &getNode(uint32_t u) const;
 
     ~BasicGraph() override = default;
 
@@ -63,14 +63,14 @@ class BasicGraph : public Graph {
      * @param u index in the nodes array.
      * @return Pointer to the Node in the nodes array.
      */
-    Node &getNode(unsigned int u);
+    Node &getNode(uint32_t u);
 
     /**
     * Returns the degree of the node that u points at.
     * @param u Vertex u 
     * @return Returns d that is the degree of node v.
     */
-    unsigned int getNodeDegree(unsigned int u) const override;
+    uint32_t getNodeDegree(uint32_t u) const override;
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
@@ -78,14 +78,14 @@ class BasicGraph : public Graph {
     * @param k index in the adjacency vector of node u
     * @return Returns v that is the k-th neighbor of u.
     */
-    unsigned int head(unsigned int u, unsigned int k) const override;
+    uint32_t head(uint32_t u, uint32_t k) const override;
 
     /**
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
-    unsigned int getOrder() const override;
+    uint32_t getOrder() const override;
 
-    std::tuple<unsigned int, unsigned int> mate(unsigned int u, unsigned int k) const;
+    std::tuple<uint32_t, uint32_t> mate(uint32_t u, uint32_t k) const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BASICGRAPH_H_
