@@ -1,5 +1,6 @@
 #ifndef SEALIB_BITARRAY_H_
 #define SEALIB_BITARRAY_H_
+#include <memory>
 #include <vector>
 #include "sealib/_types.h"
 
@@ -20,17 +21,21 @@ class BitArray {
    */
   void insert(uint i, uint v);
 
-  /**
-   * Get a value from the bit array.
-   * @param i index to get the value from
-   * @return value stored at the given index
-   * @throws nothing, but might die when going out of bounds
-   */
+/**
+ * Get a value from the bit array.
+ * @param i index to get the value from
+ * @return value stored at the given index
+ * @throws nothing, but might die when going out of bounds
+ */
+#ifdef __clang__
   constexpr uint get(uint i) const {
     return (data[i / valuesPerGroup] >>
             ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
            valueMask;
   }
+#else
+  uint get(uint i) const;
+#endif
 
   /**
    * Construct a bit array with the given size and value states.
@@ -43,11 +48,9 @@ class BitArray {
    */
   BitArray(uint size, uint v);
 
-  ~BitArray();
-
  private:
   const uint valueWidth, valuesPerGroup, valueMask;
-  uint *data;
+  std::unique_ptr<uint[]> data;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BITARRAY_H_
