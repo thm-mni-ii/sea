@@ -122,7 +122,7 @@ void runTest(uint n, uint (*fm)(uint n)) {
 }
 
 void runtime_dfs() {
-  RuntimeTest t1;
+  RuntimeTest t1, t2, t3;
   for (uint n = 1e5; n <= 1e6; n += 10000) {
     Graph *g = GraphCreator::createRandomFixed(n, 5);
     t1.runTest(
@@ -131,8 +131,22 @@ void runtime_dfs() {
                               DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         },
         n, 0);
+        t2.runTest(
+        [g]() {
+          DFS::nBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+        },
+        n, 0);
+        t3.runTest(
+        [g]() {
+          DFS::standardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+        },
+        n, 0);
   }
-  t1.saveCSV("nloglogn-ba.csv");
+  t1.saveCSV("nloglogn-dfs.csv");
+  t2.saveCSV("n-dfs.csv");
+  t3.saveCSV("standard-dfs.csv");
 }
 
-int main() { return 0; }
+int main() { runtime_dfs(); }

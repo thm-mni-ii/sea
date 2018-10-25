@@ -7,7 +7,7 @@ ScriptHome=$(dirname $(readlink -e "$0"))
 Title="Runtime test"
 Files=""
 Outfile="runtime-plot.jpg"
-Scale="µs"
+Scale="ms"
 Ratio=F
 
 printHelp() {
