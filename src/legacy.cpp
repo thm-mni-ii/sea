@@ -12,7 +12,18 @@ void *Sealib_Graph_new(uint32_t **m, uint32_t order) {
 }
 void Sealib_Graph_delete(void *self) { delete static_cast<Graph *>(self); }
 void *Sealib_Graph_generateRandom(uint32_t order) {
-  return GraphCreator::createRandomGenerated(order);
+  std::vector<Node> n(order);
+  static std::random_device rng;
+  std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
+  for (uint32_t a = 0; a < order; a++) {
+    uint32_t deg = rnd(rng);
+    std::vector<Adjacency> ad(deg);
+    for (uint32_t b = 0; b < deg; b++) {
+      ad[b] = Adjacency(rnd(rng));
+    }
+    n[a] = Node(ad);
+  }
+  return new BasicGraph(n);
 }
 
 void *Sealib_ChoiceDictionary_new(uint32_t size) {

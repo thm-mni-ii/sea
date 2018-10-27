@@ -51,16 +51,15 @@ static const uint32_t GRAPHCOUNT = 4;  // how many random graphs to generate?
 static const uint32_t DEGREE = 15;     // how many outneighbours per node?
 static const uint32_t order = 200;
 
-static std::vector<std::shared_ptr<Graph>> makeGraphs() {
-  std::vector<std::shared_ptr<Graph>> g;
+static std::vector<BasicGraph> makeGraphs() {
+  std::vector<BasicGraph> g;
   for (uint c = 0; c < GRAPHCOUNT; c++) {
-    g.push_back(std::shared_ptr<Graph>(
-        Sealib::GraphCreator::createRandomFixed(order, DEGREE)));
+    g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
   }
   return g;
 }
 
-class DFSTest : public ::testing::TestWithParam<std::shared_ptr<Graph>> {
+class DFSTest : public ::testing::TestWithParam<BasicGraph> {
  protected:
   virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
                                                    // TEST_P
@@ -70,8 +69,8 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
 TEST_P(DFSTest, stdUserproc) {
-  Graph *g = GetParam().get();
-  DFS::standardDFS(g, incr1, incr2, incr3, incr4);
+  BasicGraph g = GetParam();
+  DFS::standardDFS(&g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
@@ -79,8 +78,8 @@ TEST_P(DFSTest, stdUserproc) {
 }
 
 TEST_P(DFSTest, nBitUserproc) {
-  Graph *g = GetParam().get();
-  DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
+  BasicGraph g = GetParam();
+  DFS::nBitDFS(&g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
@@ -88,8 +87,8 @@ TEST_P(DFSTest, nBitUserproc) {
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
-  Graph *g = GetParam().get();
-  DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
+  BasicGraph g = GetParam();
+  DFS::nloglognBitDFS(&g, incr1, incr2, incr3, incr4);
   EXPECT_EQ(c1, order);
   EXPECT_EQ(c2, DEGREE * order);
   EXPECT_EQ(c3, DEGREE * order);
@@ -97,11 +96,10 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 }
 
 TEST(DFSTest, nloglognImbalanced) {
-  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
-  DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+  BasicGraph g = Sealib::GraphCreator::createRandomImbalanced(order);
+  DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                       DFS_NOP_PROCESS);
   SUCCEED();
-  delete g;
 }
 
 auto *graph = new uint32_t[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,

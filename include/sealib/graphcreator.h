@@ -35,6 +35,9 @@ class GraphCreator {
   static BasicGraph *createGraphPointerFromAdjacencyMatrix(uint32_t **adjMatrix,
                                                            uint32_t order);
 
+  static std::shared_ptr<BasicGraph> createSharedGraphFromAdjacencyMatrix(
+      uint32_t **adjMatrix, uint32_t order);
+
   /**
    * Create a random graph with a fixed number of neighbours per node.
    * @param order number of nodes the graph should contain
@@ -43,7 +46,7 @@ class GraphCreator {
    * @return the resulting graph G (n = order, m = degreePerNode*order)
    * @author Simon Heuser
    */
-  static BasicGraph *createRandomFixed(uint32_t order, uint32_t degreePerNode);
+  static BasicGraph createRandomFixed(uint32_t order, uint32_t degreePerNode);
 
   /**
    * Create a completely random graph with a given number of nodes. Each node
@@ -52,7 +55,7 @@ class GraphCreator {
    * @return the resulting graph: n = order, m = O(n^2)
    * @author Simon Heuser
    */
-  static BasicGraph *createRandomGenerated(uint32_t order);
+  static BasicGraph createRandomGenerated(uint32_t order);
 
   /**
    * Create a random "imbalanced" graph, which contains a handful of very large
@@ -61,12 +64,10 @@ class GraphCreator {
    * @return the resulting graph: some nodes have a very large degree (they are
    * "big")
    */
-  static BasicGraph *createRandomImbalanced(uint32_t order);
+  static BasicGraph createRandomImbalanced(uint32_t order);
 
   static std::unique_ptr<BasicGraph> generateRandomBipartiteBasicGraph(
       uint32_t order1, uint32_t order2, double p, uint32_t seed);
-  static std::shared_ptr<BasicGraph> createSharedGraphFromAdjacencyMatrix(
-      uint32_t **adjMatrix, uint32_t order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_

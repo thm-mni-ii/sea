@@ -6,6 +6,7 @@
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
 using Sealib::CompactArray;
+using Sealib::BasicGraph;
 
 #define pushn(i, n) \
   for (uint32_t a = (i); a < (n); a++) s->push(Pair((a), K))
@@ -54,12 +55,12 @@ class ExtendedSegmentStackTest : public ::testing::Test {
   ExtendedSegmentStack *s;
   uint32_t q;
   CompactArray *c;
-  Sealib::Graph *g;
+  BasicGraph g;
   virtual void SetUp() {
     uint32_t n = 256;
     g = Sealib::GraphCreator::createRandomFixed(n, 10);
     c = new CompactArray(n, 3);
-    s = new ExtendedSegmentStack(n, g, c);
+    s = new ExtendedSegmentStack(n, &g, c);
     q = static_cast<unsigned>(ceil(n / log2(n)));
   }
   virtual void TearDown() { delete s; }
@@ -70,12 +71,12 @@ class ExtendedSegmentStackTest2 : public ::testing::Test {
   ExtendedSegmentStack *s;
   uint32_t q;
   CompactArray *c;
-  Sealib::Graph *g;
+  BasicGraph g;
   virtual void SetUp() {
     uint32_t n = 128;
     g = Sealib::GraphCreator::createRandomImbalanced(n);
     c = new CompactArray(n, 3);
-    s = new ExtendedSegmentStack(n, g, c);
+    s = new ExtendedSegmentStack(n, &g, c);
     q = static_cast<unsigned>(ceil(n / log2(n)));
   }
   virtual void TearDown() { delete s; }
@@ -158,9 +159,9 @@ TEST_F(ExtendedSegmentStackTest, outgoingEdgeSmall) {
 TEST_F(ExtendedSegmentStackTest2, outgoingEdgeBig) {
   uint m = 0;
   std::set<uint> big;
-  for (uint u = 0; u < g->getOrder(); u++) m += g->getNodeDegree(u);
-  for (uint u = 0; u < g->getOrder(); u++) {
-    if (g->getNodeDegree(u) > m / q) {
+  for (uint u = 0; u < g.getOrder(); u++) m += g.getNodeDegree(u);
+  for (uint u = 0; u < g.getOrder(); u++) {
+    if (g.getNodeDegree(u) > m / q) {
       big.insert(u);
     }
   }
