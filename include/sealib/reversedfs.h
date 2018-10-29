@@ -1,6 +1,7 @@
 #ifndef SEALIB_REVERSEDFS_H_
 #define SEALIB_REVERSEDFS_H_
 #include <deque>
+#include <limits>
 #include <stack>
 #include <vector>
 #include "sealib/_types.h"
@@ -28,15 +29,23 @@ struct UserCall {
 };
 
 /**
-* Reverse DFS iterator.
-*/
+ * Reverse DFS iterator which returns a sequence of all the user calls in
+ * reverse order.
+ * To accomplish this in lower space, the forward run of a DFS is split into
+ * log(n) intervals and those are simulated in reverse order. <br>
+ * As usual, call init() first, and check with more() before getting the next
+ * element.
+ *
+ * EFFICIENCY: O(n+m) time, O(n log(log(n))) bits
+ */
 class ReverseDFS : Iterator<UserCall>, DFS {
  public:
     explicit ReverseDFS(Graph *);
     ~ReverseDFS();
 
     /**
-     * Run a n*log(log(n))-Bit DFS to record data about the intervals
+     * Run a normal DFS to record data about the intervals.
+     * EFFICIENCY: O(n+m) time, O(n log(log(n))) bits
      */
     void init() override;
 
