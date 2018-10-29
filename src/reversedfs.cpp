@@ -18,8 +18,9 @@ void ReverseDFS::storeTime(unsigned df, uint u) {
 void ReverseDFS::updateInterval(uint actions, bool end) {
   IntervalData &ci = i[j];
   Pair top = s.top();
-  if (ci.size == 0 && ci.h1.head() == INVALID) {
+  if (ci.size == 0 && ci.inUse == false) {
     ci.h1 = top;
+    ci.inUse = true;
   }
   ci.size += actions;
   if (ns < ci.hdc && s.top().head() != INVALID) {
@@ -87,7 +88,8 @@ void ReverseDFS::init() {
   for (uint u = 0; u < n; u++) {
     if (c.get(u) == DFS_WHITE) process_recording(u);
   }
-  updateInterval(true);
+  updateInterval(0, true);
+  while (i[j].size == 0) j--;  // discard empty intervals
 }
 
 std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
@@ -95,7 +97,7 @@ std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
   std::set<uint> tmp;
   if (to.head() != INVALID) {
     if (from.head() == INVALID) {
-      sj.push(to);  // is this enough?
+      sj.push(to);
     } else {
       Pair a = Pair(from.head(), 0);
       tmp.insert(a.head());
@@ -130,11 +132,14 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *const sj,
                                            Pair until, UserCall first) {
   std::vector<UserCall> ret;
 
-  if (first.type == UserCall::preprocess && sj->empty()) {
-    sj->push(Pair(first.u, 0));
-  }
   if (sj->empty()) {
-    throw std::logic_error("stack empty");
+    if (first.type == UserCall::preprocess) {
+      sj->push(Pair(first.u, 0));
+    } else if (first.type == UserCall::preexplore) {
+      sj->push(Pair(first.u, first.k));
+    } else {
+      throw std::logic_error("stack empty");
+    }
   }
 
   while (sj->top() != until) {
@@ -168,6 +173,10 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *const sj,
       for (uint b = 0; b < n; b++) {
         if (c.get(b) == DFS_WHITE && d.get(b) == j) {
           sj->push(Pair(b, 0));
+          a = true;
+          break;
+        } else if (c.get(b) == DFS_GRAY && f.get(b) == j) {
+          sj->push(Pair(b, g->getNodeDegree(b)));
           a = true;
           break;
         }
@@ -210,7 +219,6 @@ UserCall ReverseDFS::next() {
     }
     return ret;
   } else {  // build new sequence
-    j--;
     for (uint a = 0; a < n; a++) {
       if (f.get(a) < j) {
         c.insert(a, DFS_BLACK);
@@ -223,6 +231,7 @@ UserCall ReverseDFS::next() {
     std::stack<Pair> sj = reconstructPart(i[j].hd, i[j].h1);
     major = simulate(&sj, i[j].h2, i[j].c1);
     majorI = major.rbegin();
+    j--;
     return next();
   }
 }

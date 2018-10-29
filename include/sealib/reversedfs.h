@@ -54,13 +54,12 @@ class ReverseDFS : Iterator<UserCall>, DFS {
  private:
   struct IntervalData {
    public:
-    Pair h1 = Pair(INVALID, INVALID),
-         h2 = Pair(INVALID,
-                   INVALID);  // top entries at start and end of the interval
-    Pair hd;                  // value of deepest entry
+    Pair h1, h2;  // top entries at start and end of the interval
+    Pair hd;      // value of deepest entry
     uint hdc = std::numeric_limits<uint>::max();  // index of deepest entry
     UserCall c1 = UserCall();
     uint size = 0;  // call counter for the interval
+    bool inUse = false;
   };
 
   Graph *g;

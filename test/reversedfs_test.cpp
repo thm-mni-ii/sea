@@ -5,7 +5,7 @@
 using namespace Sealib;  // NOLINT
 
 TEST(ReverseDFSTest, postprocess) {
-  Graph *g = Sealib::GraphCreator::createRandomFixed(8, 0);
+  Graph *g = Sealib::GraphCreator::createRandomFixed(1024, 16);
   std::vector<uint> ref;
   DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                       [&ref](uint u) { ref.push_back(u); });
@@ -19,27 +19,8 @@ TEST(ReverseDFSTest, postprocess) {
       seq.push_back(a.u);
     }
   }
-  for (uint a : ref) std::cout << a << " ";
-  std::cout << "\n---\n";
-  for (uint a : seq) std::cout << a << " ";
-  EXPECT_EQ(ref.size(), seq.size());
-  /*ASSERT_GT(seq.size(), 0);
-  if (seq.size() < ref.size()) {
-    std::vector<uint> b;
-    for (uint a = 0; a < ref.size(); a++) {
-      if (seq[a] != ref[a]) {
-        b.emplace_back(ref[a]);
-        seq.emplace(seq.begin() + a, ref[a]);
-      }
-    }
-    std::cout << "missing in seq: ";
-    for (uint a : b) {
-      std::cout << a << " ";
-    }
-    std::cout << "\n";
-  } else {
-    for (uint a = 0; a < ref.size(); a++) {
-      EXPECT_EQ(seq[a], ref[a]);
-    }
-  }*/
+  ASSERT_EQ(ref.size(), seq.size());
+  for (uint a = 0; a < ref.size(); a++) {
+    EXPECT_EQ(seq[a], ref[a]);
+  }
 }
