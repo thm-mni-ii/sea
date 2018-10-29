@@ -12,6 +12,7 @@ namespace Sealib {
  * Groups of bits, packed into an array of uints.
  * To get a bitset, create with v=2. To get a color vector, create with v=3 or
  * v=4.
+ * Attention: The compact array is constructed UNINITIALIZED.
  * For optimal space usage, see constructor comments.
  * @author Simon Heuser
  */
@@ -49,10 +50,10 @@ class CompactArray {
   uint get(uint i) const;
 #endif
 
-  unsigned int size();
+  uint size() const { return valueCount; }
 
  private:
-  const uint valueWidth, valuesPerGroup, valueMask;
+  const uint valueCount, valueWidth, valuesPerGroup, valueMask;
   std::unique_ptr<uint[]> data;
 };
 }  // namespace Sealib

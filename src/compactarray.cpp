@@ -29,7 +29,8 @@ static constexpr uint safeDiv(uint p1, uint p2) {
 }
 
 CompactArray::CompactArray(uint size, uint values)
-    : valueWidth(static_cast<uint>(ceil(log2(values)))),
+    : valueCount(size),
+      valueWidth(static_cast<uint>(ceil(log2(values)))),
       valuesPerGroup(safeDiv(8 * sizeof(uint), valueWidth)),
       valueMask((1 << valueWidth) - 1),
       data(new uint[safeDiv(size, valuesPerGroup) + 1]) {

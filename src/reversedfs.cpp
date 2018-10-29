@@ -56,7 +56,7 @@ void ReverseDFS::process_recording(uint u0) {
       return;
     }
     uint u = x.head(), k = x.tail();
-    if (c.get(u) == DFS_WHITE) {
+    if (k == 0 && c.get(u) == DFS_WHITE) {
       setCall({UserCall::preprocess, u});
       storeTime(0, u);
       c.insert(u, DFS_GRAY);
@@ -126,8 +126,8 @@ std::stack<Pair> ReverseDFS::reconstructPart(Pair from, Pair to) {
   return sj;
 }
 
-std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> * const sj, Pair until,
-                                           UserCall first) {
+std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> *const sj,
+                                           Pair until, UserCall first) {
   std::vector<UserCall> ret;
 
   if (first.type == UserCall::preprocess && sj->empty()) {
@@ -141,7 +141,7 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<Pair> * const sj, Pair unt
     Pair x = sj->top();
     sj->pop();
     uint u = x.head(), k = x.tail();
-    if (c.get(u) == DFS_WHITE) {
+    if (k == 0 && c.get(u) == DFS_WHITE) {
       ret.emplace_back(UserCall(UserCall::Type::preprocess, u));
       c.insert(u, DFS_GRAY);
     }
@@ -206,7 +206,6 @@ UserCall ReverseDFS::next() {
     }
     if (mu == INVALID) {
       previous = *majorI;
-      waitStep = false;
       ret = *(majorI++);
     }
     return ret;
@@ -241,6 +240,7 @@ ReverseDFS::ReverseDFS(Graph *graph)
       major{0},
       majorI(major.rend()) {
   for (uint a = 0; a < n; a++) {
+    c.insert(a, 0);
     d.insert(a, r + 1);
     f.insert(a, r + 1);
   }

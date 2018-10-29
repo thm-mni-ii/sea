@@ -25,7 +25,7 @@ void DFS::process_standard(uint u0, Graph *g, uint *color, UserFunc1 preprocess,
     if (k > 0) {
       postexplore(u, g->head(u, k - 1));
     }
-    if (color[u] == DFS_WHITE) {
+    if (k == 0 && color[u] == DFS_WHITE) {
       preprocess(u);
       color[u] = DFS_GRAY;
     }
@@ -66,7 +66,7 @@ void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
     if (k > 0) {
       postexplore(u, g->head(u, k - 1));
     }
-    if (color->get(u) == DFS_WHITE) {
+    if (k == 0 && color->get(u) == DFS_WHITE) {
       preprocess(u);
       color->insert(u, DFS_GRAY);
     }
