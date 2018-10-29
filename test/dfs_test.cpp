@@ -17,25 +17,25 @@ static std::vector<unsigned> v1, v4;
 static unsigned tmp = 0;
 
 static void incr1(uint u) {
-  c1++;
-  v1[u]++;
+    c1++;
+    v1[u]++;
 }
 
 static void incr4(uint u) {
-  c4++;
-  v4[u]++;
+    c4++;
+    v4[u]++;
 }
 
 static void incr2(uint u, uint v) {
-  c2++;
-  tmp = u;
-  tmp = v;
+    c2++;
+    tmp = u;
+    tmp = v;
 }
 
 static void incr3(uint u, uint v) {
-  c3++;
-  tmp = u;
-  tmp = v;
+    c3++;
+    tmp = u;
+    tmp = v;
 }
 
 /*void p0(uint u) { printf("preprocess %u\n", u); }
@@ -49,94 +49,94 @@ static const unsigned DEGREE = 15;     // how many outneighbours per node?
 static const unsigned order = 200;
 
 static std::vector<std::shared_ptr<Graph>> makeGraphs() {
-  std::vector<std::shared_ptr<Graph>> g;
-  for (uint c = 0; c < GRAPHCOUNT; c++) {
-    g.push_back(std::shared_ptr<Graph>(
-        Sealib::GraphCreator::createRandomFixed(order, DEGREE)));
-  }
-  return g;
+    std::vector<std::shared_ptr<Graph>> g;
+    for (uint c = 0; c < GRAPHCOUNT; c++) {
+        g.push_back(std::shared_ptr<Graph>(
+            Sealib::GraphCreator::createRandomFixed(order, DEGREE)));
+    }
+    return g;
 }
 
 class DFSTest : public ::testing::TestWithParam<std::shared_ptr<Graph>> {
  protected:
-  virtual void SetUp() {
-    c1 = c2 = c3 = c4 = 0;
-    v1 = std::vector<unsigned>(order);
-    v4 = std::vector<unsigned>(order);
-  }  // executed before each
-     // TEST_P
+    virtual void SetUp() {
+        c1 = c2 = c3 = c4 = 0;
+        v1 = std::vector<unsigned>(order);
+        v4 = std::vector<unsigned>(order);
+    }  // executed before each
+       // TEST_P
 };
 
 INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
 TEST_P(DFSTest, stdUserproc) {
-  Graph *g = GetParam().get();
-  DFS::standardDFS(g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, order);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
-  EXPECT_EQ(c2, DEGREE * order);
-  EXPECT_EQ(c3, DEGREE * order);
-  EXPECT_EQ(c4, order);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
+    Graph *g = GetParam().get();
+    DFS::standardDFS(g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, order);
+    for (unsigned a : v1) {
+        EXPECT_EQ(a, 1);
+    }
+    EXPECT_EQ(c2, DEGREE * order);
+    EXPECT_EQ(c3, DEGREE * order);
+    EXPECT_EQ(c4, order);
+    for (unsigned a : v1) {
+        EXPECT_EQ(a, 1);
+    }
 }
 
 TEST_P(DFSTest, nBitUserproc) {
-  Graph *g = GetParam().get();
-  DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, order);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
-  EXPECT_EQ(c2, DEGREE * order);
-  EXPECT_EQ(c3, DEGREE * order);
-  EXPECT_EQ(c4, order);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
+    Graph *g = GetParam().get();
+    DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, order);
+    for (unsigned a : v1) {
+        EXPECT_EQ(a, 1);
+    }
+    EXPECT_EQ(c2, DEGREE * order);
+    EXPECT_EQ(c3, DEGREE * order);
+    EXPECT_EQ(c4, order);
+    for (unsigned a : v1) {
+        EXPECT_EQ(a, 1);
+    }
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
-  Graph *g = GetParam().get();
-  DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, order);
-  for (unsigned a : v1) {
-    EXPECT_EQ(a, 1);
-  }
-  EXPECT_EQ(c2, DEGREE * order);
-  EXPECT_EQ(c3, DEGREE * order);
-  EXPECT_EQ(c4, order);
-  for (unsigned a : v4) {
-    EXPECT_EQ(a, 1);
-  }
+    Graph *g = GetParam().get();
+    DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, order);
+    for (unsigned a : v1) {
+        EXPECT_EQ(a, 1);
+    }
+    EXPECT_EQ(c2, DEGREE * order);
+    EXPECT_EQ(c3, DEGREE * order);
+    EXPECT_EQ(c4, order);
+    for (unsigned a : v4) {
+        EXPECT_EQ(a, 1);
+    }
 }
 
 TEST(DFSTest, standardImbalanced) {
-  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
-  DFS::standardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                   DFS_NOP_PROCESS);
-  SUCCEED();
-  delete g;
+    Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
+    DFS::standardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                     DFS_NOP_PROCESS);
+    SUCCEED();
+    delete g;
 }
 
 TEST(DFSTest, nBitImbalanced) {
-  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
-  DFS::nBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-               DFS_NOP_PROCESS);
-  SUCCEED();
-  delete g;
+    Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
+    DFS::nBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                 DFS_NOP_PROCESS);
+    SUCCEED();
+    delete g;
 }
 
 TEST(DFSTest, nloglognBitImbalanced) {
-  Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
-  DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                      DFS_NOP_PROCESS);
-  SUCCEED();
-  delete g;
+    Graph *g = Sealib::GraphCreator::createRandomImbalanced(order);
+    DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                        DFS_NOP_PROCESS);
+    SUCCEED();
+    delete g;
 }
 
 auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
@@ -144,17 +144,17 @@ auto *graph = new unsigned int[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
 unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
 stack<unsigned int> controllStack;
 void preTwo(unsigned int a) {
-  controllSum = controllSum - a;
-  controllStack.push(a);
+    controllSum = controllSum - a;
+    controllStack.push(a);
 }
 void postTwo(unsigned int a) {
-  controllSum = controllSum - a;
-  unsigned int ex = controllStack.top();
-  controllStack.pop();
-  EXPECT_EQ(ex, a);
+    controllSum = controllSum - a;
+    unsigned int ex = controllStack.top();
+    controllStack.pop();
+    EXPECT_EQ(ex, a);
 }
 
 TEST(DFSTest, inplace_dfs_all_of_grade_ge_2) {
-  DFS::runLinearTimeInplaceDFS(graph, preTwo, postTwo, 1);
-  EXPECT_EQ(0, controllSum);
+    DFS::runLinearTimeInplaceDFS(graph, preTwo, postTwo, 1);
+    EXPECT_EQ(0, controllSum);
 }

@@ -27,54 +27,54 @@ namespace Sealib {
  */
 class BFS : Iterator<Pair> {
  public:
-  /**
-   * Initialize or reset the BFS to the beginning.
-   */
-  void init() override;
+    /**
+     * Initialize or reset the BFS to the beginning.
+     */
+    void init() override;
 
-  /**
-   * Check if there is a component that has not been evaluated. If so, the BFS
-   * will continue there.
-   * @return true if a component was found, false if all nodes have been
-   * evaluated
-   */
-  bool nextComponent();
+    /**
+     * Check if there is a component that has not been evaluated. If so, the BFS
+     * will continue there.
+     * @return true if a component was found, false if all nodes have been
+     * evaluated
+     */
+    bool nextComponent();
 
-  /**
-   * @return true if this component has unevaluated nodes, false if the
-   * component is all black
-   */
-  bool more() override;
+    /**
+     * @return true if this component has unevaluated nodes, false if the
+     * component is all black
+     */
+    bool more() override;
 
-  /**
-   * Get the next node from the current component.
-   * @return a tuple (u,d) where d is the distance of u to the component's
-   * starting node
-   * @throws std::logic_error if no next node is available
-   */
-  Pair next() override;
+    /**
+     * Get the next node from the current component.
+     * @return a tuple (u,d) where d is the distance of u to the component's
+     * starting node
+     * @throws std::logic_error if no next node is available
+     */
+    Pair next() override;
 
-  /**
-   * Create a new BFS iterator.
-  * @param g the graph to run the BFS over
-  * @param preprocess to be executed before processing a node u
-  * @param preexplore to be executed before exploring an edge (u,v)
-  */
-  BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe);
+    /**
+     * Create a new BFS iterator.
+    * @param g the graph to run the BFS over
+    * @param preprocess to be executed before processing a node u
+    * @param preexplore to be executed before exploring an edge (u,v)
+    */
+    BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe);
 
-  ~BFS();
+    ~BFS();
 
  private:
-  Graph *g;
-  uint n;
-  CompactArray *color;
-  uint u, dist;
-  unsigned innerGray, outerGray;
-  UserFunc1 preprocess;
-  UserFunc2 preexplore;
+    Graph *g;
+    uint n;
+    CompactArray *color;
+    uint u, dist;
+    unsigned innerGray, outerGray;
+    UserFunc1 preprocess;
+    UserFunc2 preexplore;
 
-  bool hasGrayNode();
-  uint getGrayNode();
+    bool hasGrayNode();
+    uint getGrayNode();
 };
 
 }  // namespace Sealib

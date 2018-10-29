@@ -19,44 +19,44 @@ extern "C" {
 #define select Sealib_RankSelect_select
 
 TEST(LegacyTest, choiceDictionaryAndIterator) {
-  void *cd = Sealib_ChoiceDictionary_new(100);
-  cset(cd, 14);
-  cset(cd, 32);
-  cset(cd, 20);
-  ASSERT_TRUE(choice(cd) == 14 || choice(cd) == 20 || choice(cd) == 32);
-  void *i = Sealib_ChoiceDictionaryIterator_new(cd);
-  init(i);
-  EXPECT_EQ(next(i), 14);
-  EXPECT_EQ(next(i), 20);
-  EXPECT_EQ(next(i), 32);
-  EXPECT_FALSE(more(i));
-  ASSERT_NO_FATAL_FAILURE(Sealib_ChoiceDictionaryIterator_delete(i));
-  ASSERT_NO_FATAL_FAILURE(Sealib_ChoiceDictionary_delete(cd));
+    void *cd = Sealib_ChoiceDictionary_new(100);
+    cset(cd, 14);
+    cset(cd, 32);
+    cset(cd, 20);
+    ASSERT_TRUE(choice(cd) == 14 || choice(cd) == 20 || choice(cd) == 32);
+    void *i = Sealib_ChoiceDictionaryIterator_new(cd);
+    init(i);
+    EXPECT_EQ(next(i), 14);
+    EXPECT_EQ(next(i), 20);
+    EXPECT_EQ(next(i), 32);
+    EXPECT_FALSE(more(i));
+    ASSERT_NO_FATAL_FAILURE(Sealib_ChoiceDictionaryIterator_delete(i));
+    ASSERT_NO_FATAL_FAILURE(Sealib_ChoiceDictionary_delete(cd));
 }
 
 TEST(LegacyTest, bitsetAndRankSelect) {
-  void *b = Sealib_Bitset_new(100);
-  bset(b, 40);
-  bset(b, 21);
-  bset(b, 65);
-  ASSERT_TRUE(bget(b, 21) & bget(b, 40) & bget(b, 65));
-  void *rs = Sealib_RankSelect_new(b);
-  EXPECT_EQ(rank(rs, 21), 0);
-  EXPECT_EQ(rank(rs, 22), 1);
-  EXPECT_EQ(select(rs, 2), 41);
-  EXPECT_EQ(select(rs, 4), (unsigned long)-1);
-  ASSERT_NO_FATAL_FAILURE(Sealib_RankSelect_delete(rs));
-  ASSERT_NO_FATAL_FAILURE(Sealib_Bitset_delete(b));
+    void *b = Sealib_Bitset_new(100);
+    bset(b, 40);
+    bset(b, 21);
+    bset(b, 65);
+    ASSERT_TRUE(bget(b, 21) & bget(b, 40) & bget(b, 65));
+    void *rs = Sealib_RankSelect_new(b);
+    EXPECT_EQ(rank(rs, 21), 0);
+    EXPECT_EQ(rank(rs, 22), 1);
+    EXPECT_EQ(select(rs, 2), 41);
+    EXPECT_EQ(select(rs, 4), (unsigned long)-1);
+    ASSERT_NO_FATAL_FAILURE(Sealib_RankSelect_delete(rs));
+    ASSERT_NO_FATAL_FAILURE(Sealib_Bitset_delete(b));
 }
 
 static unsigned long c = 0;
 static void count(unsigned int u) { c += u; }
 
 TEST(LegacyTest, dfs) {
-  void *g = Sealib_Graph_generateRandom(101);
-  Sealib_DFS_nloglognBitDFS(g, count, nullptr, nullptr, nullptr);
-  EXPECT_EQ(c, 5050);
-  ASSERT_NO_FATAL_FAILURE(Sealib_Graph_delete(g));
+    void *g = Sealib_Graph_generateRandom(101);
+    Sealib_DFS_nloglognBitDFS(g, count, nullptr, nullptr, nullptr);
+    EXPECT_EQ(c, 5050);
+    ASSERT_NO_FATAL_FAILURE(Sealib_Graph_delete(g));
 }
 
 #ifdef __clang__

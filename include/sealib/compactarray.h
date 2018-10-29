@@ -18,22 +18,22 @@ namespace Sealib {
  */
 class CompactArray {
  public:
-  /**
-   * Create a new compact array.
-   * @param size number of values the compact array should hold
-   * @param v number of states for one value (e.g. v=2 for a binary array, v=4
-   * for states 0,1,2,3). Recommended: ld(v) should divide bitsize(uint) (e.g.
-   * groups of 4 bits fit into a 32 bit integer perfectly)
-   * @throws std::domain_error when ld(v) exceeds bitsize(uint)
-   */
-  explicit CompactArray(uint count, uint v = 3);
+    /**
+     * Create a new compact array.
+     * @param size number of values the compact array should hold
+     * @param v number of states for one value (e.g. v=2 for a binary array, v=4
+     * for states 0,1,2,3). Recommended: ld(v) should divide bitsize(uint) (e.g.
+     * groups of 4 bits fit into a 32 bit integer perfectly)
+     * @throws std::domain_error when ld(v) exceeds bitsize(uint)
+     */
+    explicit CompactArray(uint count, uint v = 3);
 
-  /**
-   * Insert a value to the given index.
-   * @param i the destination index
-   * @param p the value to insert (in [0,v])
-   */
-  void insert(uint i, uint p);
+    /**
+     * Insert a value to the given index.
+     * @param i the destination index
+     * @param p the value to insert (in [0,v])
+     */
+    void insert(uint i, uint p);
 
 /**
  * Get a value from the compact array.
@@ -41,20 +41,20 @@ class CompactArray {
  * @return the found value
  */
 #ifdef __clang__
-  constexpr uint get(uint i) const {
-    return (data[i / valuesPerGroup] >>
-            ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
-           valueMask;
-  }
+    constexpr uint get(uint i) const {
+        return (data[i / valuesPerGroup] >>
+                ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
+               valueMask;
+    }
 #else
-  uint get(uint i) const;
+    uint get(uint i) const;
 #endif
 
-  uint size() const { return valueCount; }
+    uint size() const { return valueCount; }
 
  private:
-  const uint valueCount, valueWidth, valuesPerGroup, valueMask;
-  std::unique_ptr<uint[]> data;
+    const uint valueCount, valueWidth, valuesPerGroup, valueMask;
+    std::unique_ptr<uint[]> data;
 };
 }  // namespace Sealib
 #endif  // SEALIB_COMPACTARRAY_H_

@@ -29,18 +29,18 @@ namespace Sealib {
  */
 class SegmentStack {
  public:
-  virtual int push(Pair u) = 0;
-  virtual int pop(Pair *r);
-  bool isEmpty();
-  virtual bool isAligned() = 0;
+    virtual int push(Pair u) = 0;
+    virtual int pop(Pair *r);
+    bool isEmpty();
+    virtual bool isAligned() = 0;
 
  protected:
-  explicit SegmentStack(unsigned segmentSize);
-  virtual ~SegmentStack();
+    explicit SegmentStack(unsigned segmentSize);
+    virtual ~SegmentStack();
 
-  unsigned q;
-  Pair *low, *high;
-  unsigned lp, hp, tp;
+    unsigned q;
+    Pair *low, *high;
+    unsigned lp, hp, tp;
 };
 
 /**
@@ -54,22 +54,22 @@ class SegmentStack {
  */
 class BasicSegmentStack : public SegmentStack {
  public:
-  explicit BasicSegmentStack(unsigned segmentSize);
+    explicit BasicSegmentStack(unsigned segmentSize);
 
-  int push(Pair u) override;
-  // is the restoration finished? (i.e. saved trailer and actual trailer are
-  // aligned)
-  bool isAligned() override;
+    int push(Pair u) override;
+    // is the restoration finished? (i.e. saved trailer and actual trailer are
+    // aligned)
+    bool isAligned() override;
 
-  // empty the entire stack - needed for a full restoration */
-  void dropAll();
-  // save a trailer to survive a full restoration */
-  void saveTrailer();
+    // empty the entire stack - needed for a full restoration */
+    void dropAll();
+    // save a trailer to survive a full restoration */
+    void saveTrailer();
 
  private:
-  Pair last;
-  Pair savedTrailer;
-  int alignTarget;
+    Pair last;
+    Pair savedTrailer;
+    int alignTarget;
 };
 
 /**
@@ -78,60 +78,61 @@ class BasicSegmentStack : public SegmentStack {
  */
 class ExtendedSegmentStack : public SegmentStack {
  public:
-  // the extended stack needs access to the graph and the color array; the
-  // segment size is n/ld(n) by default
-  ExtendedSegmentStack(uint size, Graph *g, CompactArray *c);
-  ~ExtendedSegmentStack();
+    // the extended stack needs access to the graph and the color array; the
+    // segment size is n/ld(n) by default
+    ExtendedSegmentStack(uint size, Graph *g, CompactArray *c);
+    ~ExtendedSegmentStack();
 
-  int push(Pair p) override;
-  bool isAligned() override;
+    int push(Pair p) override;
+    bool isAligned() override;
 
-  // check if u is labeled with the top segment number (i.e. is table[u]=top?)
-  // @param restoring refer to the previous top segment (used when restoring and
-  // values are actively pushed)
-  bool isInTopSegment(uint u, bool restoring = false);
-  // get the outgoing edge: retrieve the approximation from the table if u is
-  // small, get the edge from the trailer stack if u is big
-  uint getOutgoingEdge(uint u);
-  // get the second-last trailer (the one that is needed to do a 1-segment
-  // restoration)
-  // @return 0 if a trailer is found, 1 otherwise
-  int getRestoreTrailer(Pair *r);
-  // get the last trailer (the one that a restoration will align to)
-  int getTopTrailer(Pair *r);
-  // recolor all vertices in the low segment to the given color (used after a
-  // restoration when the low segment is actually the top segment of S)
-  void recolorLow(unsigned v);
+    // check if u is labeled with the top segment number (i.e. is table[u]=top?)
+    // @param restoring refer to the previous top segment (used when restoring
+    // and
+    // values are actively pushed)
+    bool isInTopSegment(uint u, bool restoring = false);
+    // get the outgoing edge: retrieve the approximation from the table if u is
+    // small, get the edge from the trailer stack if u is big
+    uint getOutgoingEdge(uint u);
+    // get the second-last trailer (the one that is needed to do a 1-segment
+    // restoration)
+    // @return 0 if a trailer is found, 1 otherwise
+    int getRestoreTrailer(Pair *r);
+    // get the last trailer (the one that a restoration will align to)
+    int getTopTrailer(Pair *r);
+    // recolor all vertices in the low segment to the given color (used after a
+    // restoration when the low segment is actually the top segment of S)
+    void recolorLow(unsigned v);
 
-  unsigned approximateEdge(uint u, uint k);
-  uint retrieveEdge(uint u, unsigned f);
+    unsigned approximateEdge(uint u, uint k);
+    uint retrieveEdge(uint u, unsigned f);
 
-  Pair top() const;
+    Pair top() const;
 
  private:
-  /**
-   * A Trailer struct additionally manages a sequence of big vertices.
-   * In detail: trailers[tp-1] manages all big vertices in its segment. The
-   * first managed vertex can be accessed via big[trailers[tp-1].bi].
-   * bc is freely available to increment during restoration.
-   */
-  class Trailer {
-   public:
-    Pair x;
-    unsigned bi, bc;
-    Trailer() : bi(INVALID), bc(0) {}
-  };
+    /**
+     * A Trailer struct additionally manages a sequence of big vertices.
+     * In detail: trailers[tp-1] manages all big vertices in its segment. The
+     * first managed vertex can be accessed via big[trailers[tp-1].bi].
+     * bc is freely available to increment during restoration.
+     */
+    class Trailer {
+     public:
+        Pair x;
+        unsigned bi, bc;
+        Trailer() : bi(INVALID), bc(0) {}
+    };
 
-  Trailer *trailers;
-  unsigned l;
-  CompactArray *table, *edges;
-  Pair *big;
-  unsigned bp;
-  Graph *graph;
-  unsigned m, n;
-  CompactArray *color;
+    Trailer *trailers;
+    unsigned l;
+    CompactArray *table, *edges;
+    Pair *big;
+    unsigned bp;
+    Graph *graph;
+    unsigned m, n;
+    CompactArray *color;
 
-  void storeEdges();
+    void storeEdges();
 };
 }  // namespace Sealib
 #endif  // SEALIB_SEGMENTSTACK_H_
