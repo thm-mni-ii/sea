@@ -2,6 +2,7 @@
 #define SRC_INPLACERUNNER_H_
 
 #include <utility>
+#include <stdexcept>
 
 #define GRADE_ZERO 0
 #define GRADE_ONE 1

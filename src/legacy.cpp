@@ -8,7 +8,7 @@
 using namespace Sealib;  // NOLINT
 
 void *Sealib_Graph_new(unsigned int **m, unsigned int order) {
-  return GraphCreator::createGraphFromAdjacencyMatrix(m, order);
+  return GraphCreator::createGraphPointerFromAdjacencyMatrix(m, order);
 }
 void Sealib_Graph_delete(void *self) { delete static_cast<Graph *>(self); }
 void *Sealib_Graph_generateRandom(unsigned int order) {

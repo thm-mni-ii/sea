@@ -4,6 +4,14 @@
 #include <vector>
 #include <cassert>
 #include <limits>
+#include <memory>
+
+namespace Sealib {
+
+template <typename BlockType = unsigned long,
+    typename AllocatorType = std::allocator<BlockType> >
+class Bitset;
+}
 
 namespace Sealib {
 /**
@@ -13,7 +21,7 @@ namespace Sealib {
  * Partly based on dynamic_bitset from the boost library.
  * @author Johannes Meintrup
  */
-template<typename BlockType = unsigned long>
+template<typename BlockType, typename AllocatorType>
 class Bitset {
     typedef unsigned long sizeType;
     typedef bool bitType;
@@ -23,7 +31,7 @@ class Bitset {
     static const BlockType BlockTypeOne = BlockType(1);
 
     sizeType bits;
-    std::vector<BlockType> mbits;
+    std::vector<BlockType, AllocatorType> mbits;
 
     inline bitType get(const BlockType &i, sizeType b) const {
         return static_cast<bitType>(i & (BlockTypeOne << b));
@@ -40,7 +48,7 @@ class Bitset {
      * Implementation taken from boost dynamic_bitset.
      */
      class BitReference {
-         friend class Bitset<BlockType>;
+         friend class Bitset<BlockType, AllocatorType>;
 
          BitReference(BlockType *b, BlockType pos) :
                  mblock(b),
@@ -161,39 +169,56 @@ class Bitset {
      */
     void setBlock(sizeType idx,  BlockType block);
 
+    /**
+     * @return allocator used for allocation of the internal storage
+     */
+    AllocatorType get_allocator() const {
+        return mbits.get_allocator();
+    }
+
     //  basic bitset operations
-    Bitset<BlockType>& operator&=(const Bitset<BlockType>& rhs);
+    Bitset<BlockType, AllocatorType>& operator&=(const Bitset<BlockType, AllocatorType>& rhs);
 
-    Bitset<BlockType>& operator|=(const Bitset<BlockType>& rhs);
+    Bitset<BlockType, AllocatorType>& operator|=(const Bitset<BlockType, AllocatorType>& rhs);
 
-    Bitset<BlockType>& operator^=(const Bitset<BlockType>& rhs);
+    Bitset<BlockType, AllocatorType>& operator^=(const Bitset<BlockType, AllocatorType>& rhs);
 
-    Bitset<BlockType>& operator-=(const Bitset<BlockType>& rhs);
+    Bitset<BlockType, AllocatorType>& operator-=(const Bitset<BlockType, AllocatorType>& rhs);
 
-    Bitset<BlockType> operator~() const;
+    Bitset<BlockType, AllocatorType> operator~() const;
+
+    /**
+     * resizes the bitset to hold up to size bits
+     * @param size - size of the bitset after resizing
+     */
+    void resize(unsigned long size);
 };
 
-template <typename Block>
-Bitset<Block> operator&(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
-    Bitset<Block> b(lhs);
+template <typename Block, typename Allocator>
+Bitset<Block, Allocator>
+operator&(const Bitset<Block, Allocator>& lhs, const Bitset<Block, Allocator>& rhs) {
+    Bitset<Block, Allocator> b(lhs);
     return b &= rhs;
 }
 
-template <typename Block>
-Bitset<Block> operator|(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
-    Bitset<Block> b(lhs);
+template <typename Block, typename Allocator>
+Bitset<Block, Allocator>
+operator|(const Bitset<Block, Allocator>& lhs, const Bitset<Block, Allocator>& rhs) {
+    Bitset<Block, Allocator> b(lhs);
     return b |= rhs;
 }
 
-template <typename Block>
-Bitset<Block> operator^(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
-    Bitset<Block> b(lhs);
+template <typename Block, typename Allocator>
+Bitset<Block, Allocator>
+operator^(const Bitset<Block, Allocator>& lhs, const Bitset<Block, Allocator>& rhs) {
+    Bitset<Block, Allocator> b(lhs);
     return b ^= rhs;
 }
 
-template <typename Block>
-Bitset<Block> operator-(const Bitset<Block>& lhs, const Bitset<Block>& rhs) {
-    Bitset<Block> b(lhs);
+template <typename Block, typename Allocator>
+Bitset<Block, Allocator>
+operator-(const Bitset<Block, Allocator>& lhs, const Bitset<Block, Allocator>& rhs) {
+    Bitset<Block, Allocator> b(lhs);
     return b -= rhs;
 }
 

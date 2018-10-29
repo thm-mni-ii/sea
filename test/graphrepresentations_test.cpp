@@ -5,7 +5,7 @@
 #include <sealib/graphrepresentations.h>
 
 using Sealib::GraphCreator;
-using Sealib::Basicgraph;
+using Sealib::BasicGraph;
 using Sealib::Graph;
 using Sealib::Compactgraph;
 using Sealib::Graphrepresentations;
