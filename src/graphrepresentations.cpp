@@ -292,7 +292,7 @@ void Graphrepresentations::standardToShifted(unsigned int *g){
 			g[index] = (g[index] & ~((unsigned int)-1>>offset)) | (value << (c_prime - offset));
 		}
 	}
-	unsigned int changing_positions_index = pow(2,c_prime);
+	unsigned int changing_positions_index = order-pow(2,c_prime);
 	for(unsigned int pos : changing_positions){
 		g[changing_positions_index++] = pos;
 	}
@@ -302,13 +302,13 @@ void Graphrepresentations::standardToShifted(unsigned int *g){
 
 void Graphrepresentations::shiftedToStandard(unsigned int *g){
 	unsigned int order = g[0];
-	unsigned int wordsize = sizeof(*g) * 8;
+	unsigned int wordsize = sizeof(g[0]) * 8;
 	unsigned int c_prime = g[order];
 	unsigned int wordsize_packed = wordsize - c_prime;
 	unsigned int c_prime_mask = static_cast<unsigned int>(-1) << (wordsize - c_prime);
-	unsigned int initial_prefix = g[1] & c_prime_mask;
+	unsigned int initial_prefix = order+2 & c_prime_mask;
 	std::vector<unsigned int> changing_positions;
-	for(unsigned int i = pow(2,c_prime); i <= order; ++i){
+	for(unsigned int i = order-pow(2,c_prime); i < order; ++i){
 		if(g[1] == 0){
 			break;
 		}

@@ -48,9 +48,9 @@ class CompactArray {
 #else
   uint get(uint i) const;
 #endif
-
- private:
+ protected:
   const uint valueWidth, valuesPerGroup, valueMask;
+ private:
   std::unique_ptr<uint[]> data;
 };
 }  // namespace Sealib
