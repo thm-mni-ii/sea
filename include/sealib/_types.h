@@ -10,7 +10,7 @@ typedef unsigned int uint;
 typedef std::function<void(uint)> UserFunc1;
 typedef std::function<void(uint, uint)> UserFunc2;
 
-static constexpr unsigned int INVALID = static_cast<unsigned>(-1);
+static constexpr uint INVALID = static_cast<uint>(-1);
 
 // a pair of numbers (used mainly for stack management)
 // typedef std::tuple<uint, uint> Pair;
@@ -30,5 +30,5 @@ class Pair {
     return x.head() != v1 || x.tail() != v2;
   }
 };
-} // namespace Sealib
+}  // namespace Sealib
 #endif  // SEALIB__TYPES_H_

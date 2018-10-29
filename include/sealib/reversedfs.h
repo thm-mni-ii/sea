@@ -72,8 +72,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   UserCall firstCall;
   IntervalData *i;
   uint j = 0;  // interval pointer
-  std::vector<UserCall> *major;
-  std::deque<UserCall> minor;
+  std::vector<UserCall> major;
   bool waitStep = true;
   UserCall previous;
   std::vector<UserCall>::reverse_iterator majorI;
@@ -84,10 +83,10 @@ class ReverseDFS : Iterator<UserCall>, DFS {
   void updateInterval(uint actions, bool end = false);
   void setCall(UserCall call);
 
-  std::stack<Pair> *reconstructPart(Pair from, Pair to);
+  std::stack<Pair> reconstructPart(Pair from, Pair to);
 
-  std::vector<UserCall> *simulate(std::stack<Pair> *sj, Pair until,
-                                  UserCall first);
+  std::vector<UserCall> simulate(std::stack<Pair> * const sj, Pair until,
+                                 UserCall first);
 };
 }  // namespace Sealib
 #endif  // SEALIB_REVERSEDFS_H_
