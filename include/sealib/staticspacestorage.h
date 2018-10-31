@@ -8,23 +8,27 @@
 
 namespace Sealib {
 /**
- * Data storage created by static space allocation. A bit pattern of n+N bits
- * shows the bit size of each entry.
+ * Data storage created by static space allocation. N bits of data are allocated
+ * according to a bit pattern of n+N bits, where the i-th set bit is the start
+ * of the i-th entry. The data is handled in a separate array with the size and
+ * offset specified by the bit pattern.
  * EFFICIENCY: O(n+N) bits
  */
 class StaticSpaceStorage {
+    typedef uint Word;
+
  public:
     /**
      * @param i index of the storage array
      * @return value stored in element i
      */
-    uint get(uint i) const;
+    Word get(uint i) const;
 
     /**
      * @param i index of the storage array
      * @param v value to insert
      */
-    void insert(uint i, uint v);
+    void insert(uint i, Word v);
 
     /**
      * Create a new storage from a bit vector.
@@ -45,12 +49,17 @@ class StaticSpaceStorage {
 
  private:
     const uint n;
-    Bitset<uint_fast8_t> pattern;
+    const Bitset<uint8_t> pattern;
     const RankSelect rankSelect;
-    Bitset<uint_fast8_t> storage;
+    std::vector<Word> storage;
+    const unsigned long bitsize = sizeof(Word) * 8;
 
-    constexpr unsigned long getEnd(uint k) const {
+    CONSTEXPR_IF_CLANG unsigned long getEnd(uint k) const {
         return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);
+    }
+
+    CONSTEXPR_IF_CLANG unsigned long getSize(uint k) const {
+        return getEnd(k + 1) - rankSelect.select(k + 1) - 1;
     }
 };
 }  // namespace Sealib

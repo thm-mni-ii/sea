@@ -39,15 +39,11 @@ class CompactArray {
  * @param i index to get the value from
  * @return the found value
  */
-#ifdef __clang__
-  constexpr uint get(uint i) const {
+CONSTEXPR_IF_CLANG uint get(uint i) const {
     return (data[i / valuesPerGroup] >>
             ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
            valueMask;
   }
-#else
-  uint get(uint i) const;
-#endif
 
  private:
   const uint valueWidth, valuesPerGroup, valueMask;
