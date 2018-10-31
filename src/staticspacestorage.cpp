@@ -8,8 +8,7 @@ using Sealib::StaticSpaceStorage;
 
 uint StaticSpaceStorage::get(uint i) const {
     unsigned long pos = rankSelect.select(i + 1) - i - 1;
-    unsigned long size =
-        rankSelect.select(i + 2) - rankSelect.select(i + 1) - 1;
+    unsigned long size = getEnd(i + 1) - rankSelect.select(i + 1) - 1;
     uint r = 0;
     bool first = true;
     for (unsigned long a = pos + size - 1;
@@ -26,8 +25,7 @@ uint StaticSpaceStorage::get(uint i) const {
 
 void StaticSpaceStorage::insert(uint i, uint v) {
     unsigned long pos = rankSelect.select(i + 1) - i - 1;
-    unsigned long size =
-        rankSelect.select(i + 2) - rankSelect.select(i + 1) - 1;
+    unsigned long size = getEnd(i + 1) - rankSelect.select(i + 1) - 1;
     for (unsigned long a = pos + size - 1;
          static_cast<long>(a) >= static_cast<long>(pos); a--) {
         storage[a] = v & 1;
@@ -67,6 +65,7 @@ static uint countWhere(const std::vector<bool> *v, bool x) {
 }
 
 StaticSpaceStorage::StaticSpaceStorage(const std::vector<bool> &bits)
-    : pattern(initPattern(&bits)),
+    : n(countWhere(&bits, 1)),
+      pattern(initPattern(&bits)),
       rankSelect(pattern),
       storage(countWhere(&bits, 0)) {}
