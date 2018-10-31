@@ -1,57 +1,72 @@
 #include "sealib/staticspacestorage.h"
+#include <cstdio>
+#include <numeric>
 
+using Sealib::Bitset;
+using Sealib::RankSelect;
 using Sealib::StaticSpaceStorage;
 
-/*uint StaticSpaceStorage::get(uint i) {
-    Bitset<Byte> b=storage[i];
-    uint r=0;
-    printf("bytesize=%u\n",sizeof(Byte));
-    for(uint a=0; sizeof(uint)>=sizeof(Byte)&&b.blocks()>a; a++) {
-        r|=(b.getBlock(a)<<a*sizeof(Byte));
-        printf("block %u=%u\n",a,b.getBlock(a));
+uint StaticSpaceStorage::get(uint i) const {
+    unsigned long pos = rankSelect.select(i + 1) - i - 1;
+    unsigned long size =
+        rankSelect.select(i + 2) - rankSelect.select(i + 1) - 1;
+    uint r = 0;
+    bool first = true;
+    for (unsigned long a = pos + size - 1;
+         static_cast<long>(a) >= static_cast<long>(pos); a--) {
+        if (!first) {
+            r <<= 1;
+        } else {
+            first = false;
+        }
+        r |= storage[a];
     }
     return r;
 }
 
-void StaticSpaceStorage::set(uint i,uint v) {
-    Bitset<Byte>& b=storage[i];
-    for(uint a=0; sizeof(uint)>=sizeof(Byte)&&b.blocks()>a; a++) {
-        Byte c=(v>>a*sizeof(Byte))&0xFF;
-        b.setBlock(a,c);
-        printf("block %u<-%u\n",a,b.getBlock(a));
+void StaticSpaceStorage::insert(uint i, uint v) {
+    unsigned long pos = rankSelect.select(i + 1) - i - 1;
+    unsigned long size =
+        rankSelect.select(i + 2) - rankSelect.select(i + 1) - 1;
+    for (unsigned long a = pos + size - 1;
+         static_cast<long>(a) >= static_cast<long>(pos); a--) {
+        storage[a] = v & 1;
+        v >>= 1;
     }
-}*/
-
-Sealib::StaticSpaceStorage::Unit StaticSpaceStorage::bitsToUnit(const std::vector<bool>& p) {
-  Unit n=0;
-  Unit b=0;
-  for(bool a:p) {
-    n|=static_cast<Unit>(a<<(8*sizeof(Unit)-1-b));
-    printf("n=%u ",n);
-    b++;
-  }
-  return n;
-}
-StaticSpaceStorage::StaticSpaceStorage(const std::vector<bool>& pattern) {
-  uint size = pattern.size()/(8*sizeof(Unit))+1;
-  storage = new Unit[size];
-  uint i;
-  std::vector<bool> b=std::vector<bool>();
-  for(uint a=0; a<size; a++) {
-    for(uint c=0; c<8*sizeof(Unit); c++) {
-      i=a*8*sizeof(Unit)+c;
-      if(i<pattern.size()) {
-        printf("%u \t b :: %u\n",i,pattern[i]);
-        b.push_back(pattern[i]);
-      } else {
-        printf("%u \t b :: 0\n",i);
-        b.push_back(0);
-      }
-    }
-    storage[a]=bitsToUnit(b);
-    b.clear();
-    printf("storage[%u]=0x%x \t Unit=%u\n", a,storage[a],sizeof(Unit));
-  }
 }
 
-StaticSpaceStorage::~StaticSpaceStorage() { delete[] storage; }
+std::vector<bool> StaticSpaceStorage::makeBitVector(std::vector<uint> *sizes) {
+    std::vector<bool> r(sizes->size() +
+                        std::accumulate(sizes->begin(), sizes->end(), 0UL));
+    uint index = 0;
+    for (uint a : *sizes) {
+        r[index] = 1;
+        for (uint b = 0; b < a; b++) {
+            index++;
+        }
+        index++;
+    }
+    return r;
+}
+
+static Bitset<uint_fast8_t> initPattern(const std::vector<bool> *v) {
+    Bitset<uint_fast8_t> r(v->size());
+    uint index = 0;
+    for (bool a : *v) {
+        r[index++] = a;
+    }
+    return r;
+}
+
+static uint countWhere(const std::vector<bool> *v, bool x) {
+    uint r = 0;
+    for (bool a : *v) {
+        if (a == x) r++;
+    }
+    return r;
+}
+
+StaticSpaceStorage::StaticSpaceStorage(const std::vector<bool> &bits)
+    : pattern(initPattern(&bits)),
+      rankSelect(pattern),
+      storage(countWhere(&bits, 0)) {}

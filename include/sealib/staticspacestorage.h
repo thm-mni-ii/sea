@@ -4,24 +4,23 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
-
-using Sealib::Bitset;
+#include "sealib/rankselect.h"
 
 namespace Sealib {
 class StaticSpaceStorage {
  public:
-  explicit StaticSpaceStorage(const std::vector<bool>& pattern);
-  ~StaticSpaceStorage();
+    uint get(uint i) const;
 
-  uint get(uint i);
+    void insert(uint i, uint v);
 
-  void set(uint i, uint v);
+    explicit StaticSpaceStorage(const std::vector<bool> &bits);
+
+    static std::vector<bool> makeBitVector(std::vector<uint> *sizes);
 
  private:
-  typedef uint_fast8_t Unit;
-  typedef Unit *Alloc;
-  Alloc storage;
-  static Unit bitsToUnit(const std::vector<bool>&);
+    Bitset<uint_fast8_t> pattern;
+    const RankSelect rankSelect;
+    Bitset<uint_fast8_t> storage;
 };
 }  // namespace Sealib
 #endif  // SEALIB_STATICSPACESTORAGE_H_
