@@ -1,57 +1,38 @@
 #include "sealib/compactarray.h"
+#include <math.h>
+#include <stdexcept>
 
 using Sealib::CompactArray;
 
-void CompactArray::insert(uint i, unsigned int p) {
-  // values per group: 3/e, value width=ceil(log3) bits, group width
-  unsigned groupOffset =
-      static_cast<unsigned>(floor(i / static_cast<double>(valuesPerGroup)));
-  if (groupOffset >= groupCount) throw OUTOFBOUNDS;
-  unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
-  Group a = *(group[groupOffset]);
-  unsigned gap =
-      static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
-  Group b = Group(groupWidth);
-  b.setBlock(0, maxValue << gap);
-  Group c = a & ~b;
-  Group d = Group(groupWidth);
-  d.setBlock(0, p << gap);
-  Group r = c | d;
-  delete group[groupOffset];
-  group[groupOffset] = new Group(r);
+void CompactArray::insert(uint i, uint v) {
+  uint gi = i / valuesPerGroup;
+  uint vi = i % valuesPerGroup;
+  uint s = (valuesPerGroup - vi - 1) * valueWidth;
+  uint a = data[gi];
+  a &= ~(valueMask << s);
+  uint b = v << s;
+  uint c = a | b;
+  data[gi] = c;
 }
 
-unsigned int CompactArray::get(uint i) {
-  unsigned groupOffset = static_cast<unsigned>(floor(i / valuesPerGroup));
-  if (groupOffset >= groupCount) throw OUTOFBOUNDS;
-  unsigned valueOffset = static_cast<unsigned>(fmod(i, valuesPerGroup));
-  unsigned gap =
-      static_cast<unsigned>((valuesPerGroup - valueOffset - 1) * valueWidth);
-  unsigned a = static_cast<unsigned>(group[groupOffset]->getBlock(0));
-  unsigned b = maxValue << gap;
-  unsigned c = a & b;
-  unsigned d = c >> gap;
-  return d;
+#ifndef __clang__
+uint CompactArray::get(uint i) const {
+  return (data[i / valuesPerGroup] >>
+          ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
+         valueMask;
+}
+#endif
+
+static constexpr uint safeDiv(uint p1, uint p2) {
+  return p2 == 0 ? 0 : p1 / p2;
 }
 
-CompactArray::CompactArray(unsigned int count, unsigned int vpg) {
-  /**
-   * value width: no. bits a value occupies (e.g. ceil(ld(3)) for 3 possible
-   * states)
-   * group width: no. bits a group occupies (e.g. ceil(valueWidth*3/e) for 3
-   * possible states)
-   */
-
-  // the following is valid if the inserted values can have 3 states:
-  valueWidth = static_cast<unsigned>(ceil(log(3) / log(2)));
-  valuesPerGroup = vpg;
-  groupWidth = valuesPerGroup *
-               valueWidth;  // bits for a group of 3/e (e.g. 2) consec. colors
-  maxValue = static_cast<unsigned>(pow(2, valueWidth) - 1);
-  groupCount =
-      static_cast<unsigned>(ceil(count / static_cast<double>(valuesPerGroup)));
-  group = new Group *[groupCount];
-  for (unsigned a = 0; a < groupCount; a++) group[a] = new Group(groupWidth);
+CompactArray::CompactArray(uint size, uint values)
+    : valueWidth(static_cast<uint>(ceil(log2(values)))),
+      valuesPerGroup(safeDiv(8 * sizeof(uint), valueWidth)),
+      valueMask((1 << valueWidth) - 1),
+      data(new uint[safeDiv(size, valuesPerGroup) + 1]) {
+  if (valueWidth >= sizeof(uint) * 8) {
+    throw std::domain_error("v is too big (max v = bitsize(uint))");
+  }
 }
-
-CompactArray::~CompactArray() { delete[] group; }

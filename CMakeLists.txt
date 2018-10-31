@@ -9,7 +9,6 @@ set(LIBRARY_OUTPUT_PATH lib)                                    # generated libr
 set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated binary files
 set(CMAKE_INCLUDE_PATH include/)
 
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # --------------------------------------------------- #
@@ -24,8 +23,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # --------------------------------------------------- #
 ExternalProject_Add(GTEST_PROJECT
         GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG 440527a61e1c91188195f7de212c63c77e8f0a45
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
-        CMAKE_ARGS "-DBUILD_GTEST=ON -DBUILD_GMOCK=OFF -DINSTALL_GTEST=OFF -DINSTALL_GMOCK=OFF"
+        CMAKE_ARGS -DINSTALL_GTEST=OFF -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++
         INSTALL_COMMAND ""
         BUILD_COMMAND "${MAKE}" --build .)
 
@@ -49,7 +49,7 @@ include_directories(${CMAKE_INCLUDE_PATH})
 file(GLOB LIB_SOURCES "src/*.cpp")
 
 add_library(sealib SHARED ${LIB_SOURCES})
-target_compile_options(sealib PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpedantic -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
+target_compile_options(sealib PRIVATE -std=c++11 -g -O3 -Wall -Werror -Wextra -Wpedantic -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 # --------------------------------------------------- #
 #                   build tests
@@ -59,10 +59,18 @@ add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(tests PRIVATE -std=c++11 -g -Wall -Werror -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
+target_compile_options(tests PRIVATE -std=c++11 -g -O3 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")
         target_compile_options(tests PRIVATE --coverage)
         target_link_libraries(tests --coverage)
 endif ()
+
+# --------------------------------------------------- #
+#                   build main
+# --------------------------------------------------- #
+file(GLOB MAIN "src-view/*.cpp")                                   # all test files
+add_executable(main ${LIB_SOURCES} ${MAIN})
+find_package(Threads)
+target_compile_options(main PRIVATE -std=c++11 -O3)
