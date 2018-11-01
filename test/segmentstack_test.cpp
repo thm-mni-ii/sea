@@ -60,8 +60,9 @@ class ExtendedSegmentStackTest : public ::testing::Test {
     uint32_t n = 256;
     g = Sealib::GraphCreator::createRandomFixed(n, 10);
     c = new CompactArray(n, 3);
+    for (uint a = 0; a < n; a++) c->insert(a, 0);
     s = new ExtendedSegmentStack(n, &g, c);
-    q = static_cast<unsigned>(ceil(n / log2(n)));
+    q = static_cast<uint32_t>(ceil(n / log2(n)));
   }
   virtual void TearDown() { delete s; }
 };
@@ -77,7 +78,7 @@ class ExtendedSegmentStackTest2 : public ::testing::Test {
     g = Sealib::GraphCreator::createRandomImbalanced(n);
     c = new CompactArray(n, 3);
     s = new ExtendedSegmentStack(n, &g, c);
-    q = static_cast<unsigned>(ceil(n / log2(n)));
+    q = static_cast<uint32_t>(ceil(n / log2(n)));
   }
   virtual void TearDown() { delete s; }
 };

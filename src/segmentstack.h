@@ -5,8 +5,8 @@
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
 
-#define DFS_NO_MORE_NODES (unsigned)11
-#define DFS_DO_RESTORE (unsigned)12
+#define DFS_NO_MORE_NODES (uint32_t)11
+#define DFS_DO_RESTORE (uint32_t)12
 
 namespace Sealib {
 /*
@@ -125,7 +125,7 @@ class ExtendedSegmentStack : public SegmentStack {
   uint32_t m, n;
   CompactArray *color;
 
-  static constexpr uint32_t INVALID = static_cast<unsigned>(-1);
+  static constexpr uint32_t INVALID = static_cast<uint32_t>(-1);
   void storeEdges();
 };
 }  // namespace Sealib

@@ -99,9 +99,9 @@ bool BasicSegmentStack::isAligned() {
 //  -- EXTENDED --
 
 ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph *g, CompactArray *c)
-    : SegmentStack(static_cast<unsigned>(ceil(size / log2(size)))),
+    : SegmentStack(static_cast<uint32_t>(ceil(size / log2(size)))),
       trailers(new Trailer[size / q + 1]),
-      l(static_cast<unsigned>(ceil(log2(size))) + 1),
+      l(static_cast<uint32_t>(ceil(log2(size))) + 1),
       table(new CompactArray(size, l)),
       edges(new CompactArray(size, l)),
       big(new Pair[q]),
@@ -122,7 +122,7 @@ ExtendedSegmentStack::~ExtendedSegmentStack() {
 
 uint32_t ExtendedSegmentStack::approximateEdge(uint u, uint k) {
   double g = ceil(graph->getNodeDegree(u) / static_cast<double>(l));
-  uint32_t f = static_cast<unsigned>(floor((k - 1) / g));
+  uint32_t f = static_cast<uint32_t>(floor((k - 1) / g));
   return f;
 }
 
@@ -175,7 +175,7 @@ bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
 }
 
 uint ExtendedSegmentStack::retrieveEdge(uint u, uint32_t f) {
-  uint32_t g = static_cast<unsigned>(
+  uint32_t g = static_cast<uint32_t>(
       ceil(graph->getNodeDegree(u) / static_cast<double>(l)));
   return f * g;
 }

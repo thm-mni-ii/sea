@@ -104,7 +104,7 @@ BasicGraph GraphCreator::createRandomImbalanced(uint32_t order) {
                                                 2 * order * order);
   std::uniform_int_distribution<uint32_t> dist2(
       0, static_cast<uint32_t>(ceil(log2(order))));
-  std::set<unsigned> big;
+  std::set<uint32_t> big;
   for (uint32_t a = 0; a < ceil(order / (2 * log2(order))); a++)
     big.insert(rnd(rng));
   for (uint32_t a = 0; a < order; a++) {
