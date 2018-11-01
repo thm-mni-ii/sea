@@ -1,5 +1,6 @@
 #include <sealib/subgraphstack.h>
 #include <iostream>
+#include <utility>
 #include "./subgraph.h"
 #include "./recursivesubgraph.h"
 #include "./basesubgraph.h"
@@ -18,7 +19,7 @@ SubGraphStack::SubGraphStack(std::shared_ptr<BasicGraph> g_) : clientList(),
                                                                tunedPsi0(nullptr),
                                                                tunedPhi(nullptr),
                                                                tunedPsi(nullptr) {
-    clientList.emplace_back(new BaseSubGraph(this, g_));
+    clientList.emplace_back(new BaseSubGraph(this, std::move(g_)));
 }
 
 SubGraphStack::~SubGraphStack() {

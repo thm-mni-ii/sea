@@ -1,5 +1,6 @@
 #include "src/basesubgraph.h"
 #include <iostream>
+#include <utility>
 
 /**
  * deletion of the subgraphs will be in the subgraph stack
@@ -9,7 +10,7 @@ Sealib::BaseSubGraph::~BaseSubGraph() = default;
 
 Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
     SubGraph(0, 0, stack_),
-    rGraph(rGraph_) {
+    rGraph(std::move(rGraph_)) {
     uint64_t dSum = 0;
     bitset_t q(rGraph->getOrder());
     for (uint32_t i = 0; i < rGraph->getOrder(); i++) {

@@ -54,7 +54,7 @@ BasicGraph *Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(
 
 BasicGraph GraphCreator::createGraphFromAdjacencyMatrix(uint32_t **adjMatrix,
                                                         uint32_t order) {
-  return std::move(*createGraphPointerFromAdjacencyMatrix(adjMatrix, order));
+  return *createGraphPointerFromAdjacencyMatrix(adjMatrix, order);
 }
 
 std::shared_ptr<BasicGraph> GraphCreator::createSharedGraphFromAdjacencyMatrix(
@@ -120,7 +120,7 @@ BasicGraph GraphCreator::createRandomImbalanced(uint32_t order) {
     }
     n[a] = Node(ad);
   }
-  return std::move(BasicGraph(n));
+  return BasicGraph(n);
 }
 
 Sealib::BasicGraph Sealib::GraphCreator::createRandomFixed(
@@ -135,7 +135,7 @@ Sealib::BasicGraph Sealib::GraphCreator::createRandomFixed(
     }
     n[a] = Node(ad);
   }
-  return std::move(BasicGraph(n));
+  return BasicGraph(n);
 }
 
 Sealib::BasicGraph Sealib::GraphCreator::createRandomGenerated(uint32_t order) {
@@ -149,5 +149,5 @@ Sealib::BasicGraph Sealib::GraphCreator::createRandomGenerated(uint32_t order) {
     }
     n[a] = Node(ad);
   }
-  return std::move(BasicGraph(n));
+  return BasicGraph(n);
 }
