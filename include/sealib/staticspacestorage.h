@@ -1,6 +1,5 @@
 #ifndef SEALIB_STATICSPACESTORAGE_H_
 #define SEALIB_STATICSPACESTORAGE_H_
-#include <cstdint>
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
@@ -15,20 +14,18 @@ namespace Sealib {
  * EFFICIENCY: O(n+N) bits
  */
 class StaticSpaceStorage {
-    typedef uint Word;
-
  public:
     /**
      * @param i index of the storage array
      * @return value stored in element i
      */
-    Word get(uint i) const;
+    uint64_t get(uint i) const;
 
     /**
      * @param i index of the storage array
      * @param v value to insert
      */
-    void insert(uint i, Word v);
+    void insert(uint i, uint64_t v);
 
     /**
      * Create a new storage from a bit vector.
@@ -51,8 +48,8 @@ class StaticSpaceStorage {
     const uint n;
     const Bitset<uint8_t> pattern;
     const RankSelect rankSelect;
-    std::vector<Word> storage;
-    const unsigned long bitsize = sizeof(Word) * 8;
+    std::vector<uint64_t> storage;
+    const unsigned long bitsize = sizeof(uint64_t) * 8;
 
     CONSTEXPR_IF_CLANG unsigned long getEnd(uint k) const {
         return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);
