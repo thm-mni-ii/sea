@@ -177,27 +177,38 @@ static void process_static(uint u0, BasicGraph *g, CompactArray *color,
                            StaticSpaceStorage *forward, UserFunc1 preprocess,
                            UserFunc2 preexplore, UserFunc2 postexplore,
                            UserFunc1 postprocess) {
-    uint u = u0;
-    color->insert(u, DFS_GRAY);
-    preprocess(u);
-    do {
-        for (uint k = forward->get(u); k < g->getNodeDegree(u); k++) {
+    color->insert(u0, DFS_GRAY);
+    back->insert(u0, g->getNodeDegree(u0));
+    preprocess(u0);
+    uint u = u0, k = 0;
+
+    while (true) {
+        while (k < g->getNodeDegree(u)) {
             uint v = g->head(u, k);
+            preexplore(u, v);
             if (color->get(v) == DFS_WHITE) {
-                forward->insert(u, k + 1);
-                back->insert(v, std::get<1>(g->mate(u, k)));
-                preexplore(u, v);
                 preprocess(v);
-                color->insert(u, DFS_GRAY);
+                color->insert(v, DFS_GRAY);
+                back->insert(v, g->mate2(u, k));
+                forward->insert(u, k + 1);
                 u = v;
+                k = 0;
+            } else {
+                postexplore(u, v);
+                k++;
             }
         }
-        forward->insert(u, g->getNodeDegree(u));
+        color->insert(u, DFS_BLACK);
         postprocess(u);
-        uint pu = back->get(u);
-        postexplore(pu, u);
-        u = pu;
-    } while (u != u0);
+        if (u != u0) {
+            uint pu = g->head(u, static_cast<uint>(back->get(u)));
+            postexplore(pu, u);
+            u = pu;
+            k = static_cast<uint>(forward->get(u));
+        } else {
+            break;
+        }
+    }
 }
 
 void DFS::standardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
@@ -257,7 +268,7 @@ void DFS::nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
     for (uint u = 0; u < n; u++) {
         color.insert(u, DFS_WHITE);
         bits.emplace_back(1);
-        for (uint k = 0; k < log2(g->getNodeDegree(u) + 1); k++) {
+        for (uint k = 0; k < ceil(log2(g->getNodeDegree(u) + 1)); k++) {
             bits.emplace_back(0);
         }
     }

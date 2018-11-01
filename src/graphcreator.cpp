@@ -33,13 +33,15 @@ BasicGraph GraphCreator::createGraphFromAdjacencyMatrix(
         const std::vector<Adjacency> &adj_arr = nodes[i].getAdj();
 
         for (unsigned int j = 0; j < deg; j++) {
-            if (adj_arr[j].crossIndex == std::numeric_limits<unsigned int>::max()) {
+            if (adj_arr[j].crossIndex ==
+                std::numeric_limits<unsigned int>::max()) {
                 unsigned int v = adj_arr[j].vertex;
                 const std::vector<Adjacency> &_adj_arr = nodes[v].getAdj();
                 const unsigned int _deg = nodes[v].getDegree();
 
                 for (unsigned int _j = 0; _j < _deg; _j++) {
-                    if (_adj_arr[_j].crossIndex == std::numeric_limits<unsigned int>::max() &&
+                    if (_adj_arr[_j].crossIndex ==
+                            std::numeric_limits<unsigned int>::max() &&
                         _adj_arr[_j].vertex == i) {
                         nodes[v].setCrossIndex(_j, j);
                         nodes[i].setCrossIndex(j, _j);
@@ -78,13 +80,15 @@ std::shared_ptr<BasicGraph> GraphCreator::createSharedGraphFromAdjacencyMatrix(
         const std::vector<Adjacency> &adj_arr = nodes[i].getAdj();
 
         for (unsigned int j = 0; j < deg; j++) {
-            if (adj_arr[j].crossIndex == std::numeric_limits<unsigned int>::max()) {
+            if (adj_arr[j].crossIndex ==
+                std::numeric_limits<unsigned int>::max()) {
                 unsigned int v = adj_arr[j].vertex;
                 const std::vector<Adjacency> &_adj_arr = nodes[v].getAdj();
                 const unsigned int _deg = nodes[v].getDegree();
 
                 for (unsigned int _j = 0; _j < _deg; _j++) {
-                    if (_adj_arr[_j].crossIndex == std::numeric_limits<unsigned int>::max() &&
+                    if (_adj_arr[_j].crossIndex ==
+                            std::numeric_limits<unsigned int>::max() &&
                         _adj_arr[_j].vertex == i) {
                         nodes[v].setCrossIndex(_j, j);
                         nodes[i].setCrossIndex(j, _j);
@@ -97,50 +101,51 @@ std::shared_ptr<BasicGraph> GraphCreator::createSharedGraphFromAdjacencyMatrix(
     return std::shared_ptr<BasicGraph>(new BasicGraph(nodes));
 }
 
-BasicGraph*
-Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(unsigned int **adjMatrix,
-                                                            unsigned int order) {
-        std::vector<Node> nodes(order);
+BasicGraph *Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(
+    unsigned int **adjMatrix, unsigned int order) {
+    std::vector<Node> nodes(order);
 
-        for (unsigned int i = 0; i < order; i++) {
-            unsigned int deg = 0;
+    for (unsigned int i = 0; i < order; i++) {
+        unsigned int deg = 0;
 
-            for (unsigned int j = 0; j < order; j++) {
-                deg += adjMatrix[i][j];
-            }
-
-            std::vector<Adjacency> adj(deg);
-
-            int idx = 0;
-            for (unsigned int j = 0; j < order; j++) {
-                for (unsigned int k = 0; k < adjMatrix[i][j]; k++) {
-                    adj[idx++] = Adjacency(j);
-                }
-            }
-            nodes[i] = Node(adj);
+        for (unsigned int j = 0; j < order; j++) {
+            deg += adjMatrix[i][j];
         }
-        for (unsigned int i = 0; i < order; i++) {
-            const unsigned int deg = nodes[i].getDegree();
-            const std::vector<Adjacency> &adj_arr = nodes[i].getAdj();
 
-            for (unsigned int j = 0; j < deg; j++) {
-                if (adj_arr[j].crossIndex == std::numeric_limits<unsigned int>::max()) {
-                    unsigned int v = adj_arr[j].vertex;
-                    const std::vector<Adjacency> &_adj_arr = nodes[v].getAdj();
-                    const unsigned int _deg = nodes[v].getDegree();
+        std::vector<Adjacency> adj(deg);
 
-                    for (unsigned int _j = 0; _j < _deg; _j++) {
-                        if (_adj_arr[_j].crossIndex == std::numeric_limits<unsigned int>::max() &&
-                            _adj_arr[_j].vertex == i) {
-                            nodes[v].setCrossIndex(_j, j);
-                            nodes[i].setCrossIndex(j, _j);
-                            break;
-                        }
+        int idx = 0;
+        for (unsigned int j = 0; j < order; j++) {
+            for (unsigned int k = 0; k < adjMatrix[i][j]; k++) {
+                adj[idx++] = Adjacency(j);
+            }
+        }
+        nodes[i] = Node(adj);
+    }
+    for (unsigned int i = 0; i < order; i++) {
+        const unsigned int deg = nodes[i].getDegree();
+        const std::vector<Adjacency> &adj_arr = nodes[i].getAdj();
+
+        for (unsigned int j = 0; j < deg; j++) {
+            if (adj_arr[j].crossIndex ==
+                std::numeric_limits<unsigned int>::max()) {
+                unsigned int v = adj_arr[j].vertex;
+                const std::vector<Adjacency> &_adj_arr = nodes[v].getAdj();
+                const unsigned int _deg = nodes[v].getDegree();
+
+                for (unsigned int _j = 0; _j < _deg; _j++) {
+                    if (_adj_arr[_j].crossIndex ==
+                            std::numeric_limits<unsigned int>::max() &&
+                        _adj_arr[_j].vertex == i) {
+                        nodes[v].setCrossIndex(_j, j);
+                        nodes[i].setCrossIndex(j, _j);
+                        break;
                     }
                 }
             }
         }
-        return new BasicGraph(nodes);
+    }
+    return new BasicGraph(nodes);
 }
 
 static std::random_device rng;
@@ -176,7 +181,8 @@ Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
                                                         unsigned int order2,
                                                         double p,
                                                         unsigned int seed) {
-    std::unique_ptr<Sealib::BasicGraph> graph(new Sealib::BasicGraph(order1 + order2));
+    std::unique_ptr<Sealib::BasicGraph> graph(
+        new Sealib::BasicGraph(order1 + order2));
 
     std::mt19937_64 _rng(seed);
     std::uniform_real_distribution<double> unif(0.0, 1.0);
@@ -202,8 +208,8 @@ Sealib::GraphCreator::generateRandomBipartiteBasicGraph(unsigned int order1,
     return graph;
 }
 
-Sealib::BasicGraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
-                                                            unsigned int degreePerNode) {
+Sealib::BasicGraph *Sealib::GraphCreator::createRandomFixed(
+    unsigned int order, unsigned int degreePerNode) {
     std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
     std::vector<Node> n(order);
     for (unsigned int a = 0; a < order; a++) {
@@ -217,7 +223,8 @@ Sealib::BasicGraph *Sealib::GraphCreator::createRandomFixed(unsigned int order,
     return new BasicGraph(n);
 }
 
-Sealib::BasicGraph *Sealib::GraphCreator::createRandomGenerated(unsigned int order) {
+Sealib::BasicGraph *Sealib::GraphCreator::createRandomGenerated(
+    unsigned int order) {
     std::vector<Node> n(order);
     std::uniform_int_distribution<unsigned int> rnd(0, order - 1);
     for (unsigned int a = 0; a < order; a++) {
@@ -231,3 +238,22 @@ Sealib::BasicGraph *Sealib::GraphCreator::createRandomGenerated(unsigned int ord
     return new BasicGraph(n);
 }
 
+std::pair<BasicGraph *, unsigned int> GraphCreator::createRandomUndirected(
+    unsigned int order, unsigned int approxDegree) {
+    BasicGraph *g = new BasicGraph(order);
+    std::uniform_int_distribution<unsigned int> dist(0, order - 1);
+    unsigned long sum = 0;
+    for (unsigned int a = 0; a < order; a++) {
+        while (g->getNodeDegree(a) < approxDegree) {
+            unsigned int b = dist(rng);
+            Node &n1 = g->getNode(a), &n2 = g->getNode(b);
+            unsigned int i1 = g->getNodeDegree(a), i2 = g->getNodeDegree(b);
+            n1.addAdjacency(b);
+            n1.setCrossIndex(i1, i2);
+            n2.addAdjacency(a);
+            n2.setCrossIndex(i2, i1);
+            sum += 2;
+        }
+    }
+    return {g, sum};
+}

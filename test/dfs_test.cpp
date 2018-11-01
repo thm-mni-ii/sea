@@ -7,12 +7,7 @@
 #include "sealib/basicgraph.h"
 #include "sealib/graphcreator.h"
 
-using Sealib::DFS;
-using Sealib::CompactArray;
-using Sealib::Graph;
-using Sealib::BasicGraph;
-using Sealib::Node;
-using Sealib::Adjacency;
+using namespace Sealib;  // NOLINT
 using std::vector;
 using std::stack;
 
@@ -52,14 +47,14 @@ static const unsigned DEGREE = 15;     // how many outneighbours per node?
 static const unsigned order = 200;
 
 static std::vector<BasicGraph *> makeGraphs() {
-    std::vector<BasicGraph*> g;
+    std::vector<BasicGraph *> g;
     for (uint c = 0; c < GRAPHCOUNT; c++) {
         g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
     }
     return g;
 }
 
-class DFSTest : public ::testing::TestWithParam<BasicGraph*> {
+class DFSTest : public ::testing::TestWithParam<BasicGraph *> {
  protected:
     virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
                                                      // TEST_P
@@ -95,13 +90,17 @@ TEST_P(DFSTest, nloglognBitUserproc) {
     EXPECT_EQ(c4, order);
 }
 
-TEST_P(DFSTest, nplusmBitUserproc) {
-    BasicGraph *g = GetParam();
+TEST(DFSTest, nplusmBitUserproc) {
+    c1 = c2 = c3 = c4 = 0;
+    uint n = 400;
+    auto r = GraphCreator::createRandomUndirected(n, 100);
+    BasicGraph *g = r.first;
+    uint m = r.second;
     DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);
-    EXPECT_EQ(c1, order);
-    EXPECT_EQ(c2, DEGREE * order);
-    EXPECT_EQ(c3, DEGREE * order);
-    EXPECT_EQ(c4, order);
+    EXPECT_EQ(c1, n);
+    EXPECT_EQ(c2, m);
+    EXPECT_EQ(c3, m);
+    EXPECT_EQ(c4, n);
 }
 
 TEST(DFSTest, nloglognImbalanced) {

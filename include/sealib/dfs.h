@@ -82,7 +82,8 @@ class DFS {
                                UserFunc1 postprocess);
 
     /**
-     * Run a linear-time and linear-space depth-first search. <br>
+     * Run a linear-time and linear-space depth-first search over an undirected
+     * graph. <br>
      * EFFICIENCY: O(n+m) time, O(n+m) bits
      * @param g undirected graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
