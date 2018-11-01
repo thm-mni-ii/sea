@@ -15,14 +15,6 @@ void CompactArray::insert(uint i, uint v) {
   data[gi] = c;
 }
 
-#ifndef __clang__
-uint CompactArray::get(uint i) const {
-  return (data[i / valuesPerGroup] >>
-          ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
-         valueMask;
-}
-#endif
-
 static constexpr uint safeDiv(uint p1, uint p2) {
   return p2 == 0 ? 0 : p1 / p2;
 }

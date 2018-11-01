@@ -25,15 +25,15 @@ class RankSelect {
 
     /**
      * Selects the k-th set bit
-     * @param k idx
-     * @return k-th set bit
+     * @param k bit (in {1,...,B})
+     * @return index of the k-th set bit (in {1,...,n})
      */
     unsigned long select(unsigned long k) const;
 
     /**
      * Rank of the k-th idx
-     * @param k idx
-     * @return rank of k-th idx
+     * @param k idx (in {1,...,n})
+     * @return rank of k-th idx (in {0,...,B})
      */
     unsigned long rank(unsigned long k) const;
 
