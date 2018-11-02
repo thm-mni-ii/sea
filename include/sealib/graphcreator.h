@@ -4,6 +4,7 @@
 #include <sealib/basicgraph.h>
 #include <memory>
 #include <random>
+#include <utility>
 
 namespace Sealib {
 /**
@@ -56,13 +57,9 @@ class GraphCreator {
     static BasicGraph *createRandomGenerated(unsigned int order);
 
     /**
-     * Create a random "imbalanced" graph, which contains a handful of very
-     * large
-     * nodes.
+     * Create a random "imbalanced" graph, which contains a handful of very large nodes.
      * @param order number of nodes
-     * @return the resulting graph: some nodes have a very large degree (they
-     * are
-     * "big")
+     * @return the resulting graph: some nodes have a very large degree (they are "big")
      */
     static BasicGraph *createRandomImbalanced(unsigned int order);
 

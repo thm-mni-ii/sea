@@ -93,7 +93,7 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 TEST(DFSTest, nplusmBitUserproc) {
     c1 = c2 = c3 = c4 = 0;
     uint n = 4000;
-    auto r = GraphCreator::createRandomUndirected(n, 200);
+    auto r = GraphCreator::createRandomUndirected(n, 20);
     BasicGraph *g = r.first;
     uint m = r.second;
     DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);

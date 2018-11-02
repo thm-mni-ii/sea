@@ -76,6 +76,7 @@ class DFS {
     * @param preexplore to be executed before exploring an edge (u,v)
     * @param postexplore to be executed after exploring an edge (u,v)
     * @param postprocess to be executed after processing a node u
+    * @author Simon Heuser
     */
     static void nloglognBitDFS(Graph *g, UserFunc1 preprocess,
                                UserFunc2 preexplore, UserFunc2 postexplore,
@@ -90,6 +91,7 @@ class DFS {
      * @param preexplore to be executed before exploring an edge (u,v)
      * @param postexplore to be executed after exploring an edge (u,v)
      * @param postprocess to be executed after processing a node u
+     * @author Simon Heuser
      */
     static void nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
                              UserFunc2 preexplore, UserFunc2 postexplore,

@@ -2,6 +2,7 @@
 #include <math.h>
 #include <sstream>
 #include <stack>
+#include <vector>
 #include "./inplacerunner.h"
 #include "./segmentstack.h"
 #include "./simplecontainer.h"
@@ -267,15 +268,14 @@ void DFS::nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
     unsigned int n = g->getOrder();
     CompactArray color(n, 3);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-    /*std::vector<bool> bits;
+    std::vector<bool> bits;
     for (uint u = 0; u < n; u++) {
-        bits.emplace_back(1);
+        bits.push_back(1);
         for (uint k = 0; k < ceil(log2(g->getNodeDegree(u) + 1)); k++) {
-            bits.emplace_back(0);
+            bits.push_back(0);
         }
     }
-    StaticSpaceStorage back(bits);*/
-    SimpleContainer<uint> back(n);
+    StaticSpaceStorage back(bits);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
             process_static(a, g, &color, &back, preprocess, preexplore,
