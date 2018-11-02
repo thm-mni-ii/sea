@@ -38,7 +38,3 @@ Sealib::BasicGraph::mate(unsigned int u, unsigned int k) const {
     return std::tuple<unsigned int, unsigned int>(nodes[u].getAdj()[k].vertex,
                                                   nodes[u].getAdj()[k].crossIndex);
 }
-
-unsigned int Sealib::BasicGraph::mate2(unsigned int u, unsigned int k) const {
-    return nodes[u].getAdj()[k].crossIndex;
-}

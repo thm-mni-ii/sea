@@ -4,6 +4,7 @@
 #include <stack>
 #include "./inplacerunner.h"
 #include "./segmentstack.h"
+#include "./simplecontainer.h"
 
 using namespace Sealib;  // NOLINT
 
@@ -31,12 +32,12 @@ static void process_standard(uint u0, Graph *g, uint *color,
                 if (postExplore != DFS_NOP_EXPLORE) postExplore(u, v);
             }
         } else {
+            color[u] = DFS_BLACK;
+            if (postProcess != DFS_NOP_PROCESS) postProcess(u);
             if (postExplore != DFS_NOP_EXPLORE && u != u0) {
                 uint pu = s->top().head();
                 postExplore(pu, u);
             }
-            color[u] = DFS_BLACK;
-            if (postProcess != DFS_NOP_PROCESS) postProcess(u);
         }
     }
     delete s;
@@ -173,40 +174,41 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
 }
 
 static void process_static(uint u0, BasicGraph *g, CompactArray *color,
-                           StaticSpaceStorage *back,
-                           StaticSpaceStorage *forward, UserFunc1 preprocess,
+                           Container<uint> *back, UserFunc1 preprocess,
                            UserFunc2 preexplore, UserFunc2 postexplore,
                            UserFunc1 postprocess) {
     color->insert(u0, DFS_GRAY);
     back->insert(u0, g->getNodeDegree(u0));
-    preprocess(u0);
+    if (preprocess != DFS_NOP_PROCESS) preprocess(u0);
     uint u = u0, k = 0;
-
     while (true) {
-        while (k < g->getNodeDegree(u)) {
+        if (k < g->getNodeDegree(u)) {
             uint v = g->head(u, k);
-            preexplore(u, v);
+            if (preexplore != DFS_NOP_EXPLORE) preexplore(u, v);
             if (color->get(v) == DFS_WHITE) {
-                preprocess(v);
+                if (preprocess != DFS_NOP_PROCESS) preprocess(v);
                 color->insert(v, DFS_GRAY);
-                back->insert(v, g->mate2(u, k));
-                forward->insert(u, k + 1);
+                back->insert(v, std::get<1>(g->mate(u, k)));
                 u = v;
                 k = 0;
+                continue;
             } else {
-                postexplore(u, v);
+                if (postexplore != DFS_NOP_EXPLORE) postexplore(u, v);
                 k++;
             }
-        }
-        color->insert(u, DFS_BLACK);
-        postprocess(u);
-        if (u != u0) {
-            uint pu = g->head(u, static_cast<uint>(back->get(u)));
-            postexplore(pu, u);
-            u = pu;
-            k = static_cast<uint>(forward->get(u));
         } else {
-            break;
+            color->insert(u, DFS_BLACK);
+            if (postprocess != DFS_NOP_PROCESS) postprocess(u);
+            if (u != u0) {
+                std::tuple<uint, uint> p =
+                    g->mate(u, static_cast<uint>(back->get(u)));
+                uint pu = std::get<0>(p), pk = std::get<1>(p);
+                if (postexplore != DFS_NOP_EXPLORE) postexplore(pu, u);
+                u = pu;
+                k = pk + 1;
+            } else {
+                break;
+            }
         }
     }
 }
@@ -264,19 +266,19 @@ void DFS::nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
                        UserFunc1 postprocess) {
     unsigned int n = g->getOrder();
     CompactArray color(n, 3);
-    std::vector<bool> bits;
+    for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
+    /*std::vector<bool> bits;
     for (uint u = 0; u < n; u++) {
-        color.insert(u, DFS_WHITE);
         bits.emplace_back(1);
         for (uint k = 0; k < ceil(log2(g->getNodeDegree(u) + 1)); k++) {
             bits.emplace_back(0);
         }
     }
-    StaticSpaceStorage back(bits);
-    StaticSpaceStorage fwd(bits);
+    StaticSpaceStorage back(bits);*/
+    SimpleContainer<uint> back(n);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            process_static(a, g, &color, &back, &fwd, preprocess, preexplore,
+            process_static(a, g, &color, &back, preprocess, preexplore,
                            postexplore, postprocess);
     }
 }

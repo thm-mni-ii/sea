@@ -85,15 +85,13 @@ class BasicGraph : public Graph {
     */
     unsigned int getOrder() const override;
 
-    std::tuple<unsigned int, unsigned int> mate(unsigned int u, unsigned int k) const;
-
     /**
-     * Given u's adjacency array, gets the corresponding cross pointer from v's adjacency array.
+     * Given u's adjacency array, gets the corresponding entry (cross pointer) from v's adjacency array.
      * @param u node 1
      * @param k index of the edge that points from node 1 to node 2
-     * @return index of the edge that points from node 2 to node 2
+     * @return (v,k') v: node 2, k': index of the edge that points from node 2 to node 1
      */
-    unsigned int mate2(unsigned int u, unsigned int k) const;
+    std::tuple<unsigned int, unsigned int> mate(unsigned int u, unsigned int k) const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_BASICGRAPH_H_

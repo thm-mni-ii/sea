@@ -52,11 +52,11 @@ class StaticSpaceStorage : public Container<uint> {
     std::vector<uint> storage;
     const uint bitsize = static_cast<uint>(sizeof(uint) * 8);
 
-    inline unsigned long getEnd(uint k) const {
+    CONSTEXPR_IF_CLANG inline unsigned long getEnd(uint k) const {
         return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);
     }
 
-    inline unsigned long getSize(uint k) const {
+    CONSTEXPR_IF_CLANG inline unsigned long getSize(uint k) const {
         return getEnd(k + 1) - rankSelect.select(k + 1) - 1;
     }
 };
