@@ -1,20 +1,20 @@
 #include "sealib/staticspacestorage.h"
 #include <numeric>
-#define PRELUDE                                                             \
-    unsigned long start = rankSelect.select(i + 1) - i - 1;                 \
-    unsigned long end = start + getSize(i) - 1;                             \
-    unsigned long startBlock = start / bitsize, startBit = start % bitsize, \
-                  endBlock = end / bitsize, endBit = end % bitsize;
+#define PRELUDE                                                       \
+    uint start = static_cast<uint>(rankSelect.select(i + 1) - i - 1); \
+    uint end = static_cast<uint>(start + getSize(i) - 1);             \
+    uint startBlock = start / bitsize, startBit = start % bitsize,    \
+         endBlock = end / bitsize, endBit = end % bitsize;
 
 #define IF_SINGLE_BLOCK           \
     if (startBlock == endBlock) { \
-        unsigned long mask = (1 << (endBit - startBit + 1)) - 1;
+        uint mask = (1 << (endBit - startBit + 1)) - 1;
 
-#define ELSE_IF_NOT_SINGLE_BLOCK                                       \
-    }                                                                  \
-    else { /*NOLINT*/                                                  \
-        unsigned long startMask = (1 << (bitsize - startBit - 1)) - 1, \
-                      endMask = (1 << endBit) - 1;
+#define ELSE_IF_NOT_SINGLE_BLOCK                              \
+    }                                                         \
+    else { /*NOLINT*/                                         \
+        uint startMask = (1 << (bitsize - startBit - 1)) - 1, \
+             endMask = (1 << endBit) - 1;
 
 #define END }
 
@@ -22,9 +22,9 @@ using Sealib::Bitset;
 using Sealib::RankSelect;
 using Sealib::StaticSpaceStorage;
 
-uint64_t StaticSpaceStorage::get(uint i) const {
+uint StaticSpaceStorage::get(uint i) const {
     PRELUDE
-    uint64_t r = 0;
+    uint r = 0;
     IF_SINGLE_BLOCK
     r = (storage[startBlock] >> (bitsize - endBit - 1)) & mask;
     ELSE_IF_NOT_SINGLE_BLOCK
@@ -34,7 +34,7 @@ uint64_t StaticSpaceStorage::get(uint i) const {
     END return r;
 }
 
-void StaticSpaceStorage::insert(uint i, uint64_t v) {
+void StaticSpaceStorage::insert(uint i, uint v) {
     PRELUDE
 
     IF_SINGLE_BLOCK

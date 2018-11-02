@@ -5,6 +5,7 @@
 #include <cassert>
 #include <limits>
 #include <memory>
+#include "sealib/container.h"
 
 namespace Sealib {
 
@@ -22,7 +23,7 @@ namespace Sealib {
  * @author Johannes Meintrup
  */
 template<typename BlockType, typename AllocatorType>
-class Bitset {
+class Bitset : public Container<bool, unsigned long> {
     typedef unsigned long sizeType;
     typedef bool bitType;
 
@@ -39,10 +40,22 @@ class Bitset {
 
  public:
     static const sizeType npos = std::numeric_limits<sizeType>::max();
+
     explicit Bitset(sizeType bits_);
+
     explicit Bitset(const std::vector<bool> &bitvector);
+
     Bitset();
-    ~Bitset();
+
+    ~Bitset() = default;
+
+    /**
+     * @param bit idx of the bit
+     * @return true if the bit is set, false otherwise
+     */
+    bool get(sizeType bit) const override;
+
+    void insert(sizeType bit, bool value) override;
 
     /**
      * Proxy class to simulate lvalues of bit type.
@@ -135,12 +148,6 @@ class Bitset {
      * flip bitset
      */
     void flip();
-
-    /**
-     * @param bit idx of the bit
-     * @return true if the bit is set, false otherwise
-     */
-    bitType get(sizeType bit) const;
 
     /**
      * @return number of bits held by bitset
