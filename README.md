@@ -5,7 +5,7 @@ SEA is a project to research and implement an open C++ library for Space-Efficie
 Besides the running time of algorithms, their space requirements cause a problem if dealing with huge
 data sets or executing them on tiny devices where memory is heavily limited. Therefore, we want to provide algorithms and data structures to tackle this problem by treating space as a scarse ressourse.
 
-# Table of Content
+## Table of Content
 * [Algorithms and Data Structures](#algorithms-and-data-structures)
     * [Algorithms](#algorithms)
     * [Data Structures](#data-structures)
@@ -15,22 +15,22 @@ data sets or executing them on tiny devices where memory is heavily limited. The
 * [Licence](#licence)
 * [Acknowledgments](#acknowledgments)
 
-# Algorithms and Data Structures
-This section gives you a brief overview over the implemented algorithms and data structures. For a detailed documentation click on the algorithm (comming soon).
-For some data structure and algorithm we also provide a folklore implementation that we use to check the space efficient algorithm and to run runtime and space consumption tests.
+## Algorithms and Data Structures
+This section gives you a brief overview over the implemented algorithms and data structures. For a detailed documentation click on a algorithm (comming soon).
+For some data structures and algorithms we also provide a folklore implementation that we use to check the space efficient algorithm and to run runtime and space consumption tests.
 
-## Algorithms
+### Algorithms
 * Depth First Search
     * A folklore depth first search that runs in O(n + m) time, using O((n + m) log n) bits.
     * A depth first search that runs in O((n + m) log n) time, using O((log(3)+ε) n) bits. [Read more ...](docs/n-bit-dfs.md) 
     
 
-## Data Structures
+### Data Structures
 * Bitset(n): A bitset of n bits that supports access in O(1) time and occupies O(n) bits.
 * Graph(G = {V, E}): A adjacency list graph representation that occupies O((n + m) log n) bits.
 * [ChoiceDictionary](docs/choice-dictionary.md): A bitset that supports a choice operation in O(1) time that returns the position of a bit set to 1. The total representation requires O(n + n/w + 3n/(w^2)) bits of memory.
 
-# Build
+## Build
 1. Install CMake and a C++ compiler for your specific operating system.
 2. Build a make file for your system by using CMake -> `cmake .`
 3. Build the artifacts by executing make -> `make`
@@ -39,7 +39,7 @@ Now, the `include` folder contains the nessasary header files and the `lib` fold
 
 If you encounter any bugs, missing or misleading documentation, do not hesitate to create an [issue ticket](https://github.com/thm-mni-ii/sea/issues/new).
 
-# Project Structure
+## Project Structure
 ```bash
 .
 ├── CMakeLists.txt  # CMake build script
@@ -54,15 +54,15 @@ If you encounter any bugs, missing or misleading documentation, do not hesitate 
 └── bin             # Executable files to test the project
 ```
 
-# Research
+## Research
 We publish most of our research on arXiv.org.
 
 * [Extra Space during Initialization of Succinct Data Structures and Dynamical Initializable Arrays](https://arxiv.org/abs/1803.09675)
 * [Linear-Time In-Place DFS and BFS in the Restore Model](https://arxiv.org/abs/1803.04282)
 
-# License
+## License
 Licensed under the GNU General Public License version 3. For detailed license information look inside the [LICENSE](LICENSE) file.
 
-# Acknowledgments
+## Acknowledgments
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – 379157101.
 For more details visit [http://gepris.dfg.de/gepris/projekt/379157101?language=en]
