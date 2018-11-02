@@ -173,10 +173,10 @@ static void restore_top(uint u0, Graph *g, CompactArray *color,
     s->recolorLow(DFS_GRAY);
 }
 
-static void process_static(uint u0, BasicGraph *g, CompactArray *color,
-                           Container<uint> *back, UserFunc1 preprocess,
-                           UserFunc2 preexplore, UserFunc2 postexplore,
-                           UserFunc1 postprocess) {
+template <class C>
+static void process_static(uint u0, BasicGraph *g, CompactArray *color, C *back,
+                           UserFunc1 preprocess, UserFunc2 preexplore,
+                           UserFunc2 postexplore, UserFunc1 postprocess) {
     color->insert(u0, DFS_GRAY);
     back->insert(u0, g->getNodeDegree(u0));
     if (preprocess != DFS_NOP_PROCESS) preprocess(u0);

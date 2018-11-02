@@ -9,13 +9,13 @@
 
 #define IF_SINGLE_BLOCK           \
     if (startBlock == endBlock) { \
-        uint64_t mask = (1UL << (endBit - startBit + 1)) - 1;
+        uint64_t mask = (one << (endBit - startBit + 1)) - 1;
 
-#define ELSE_IF_NOT_SINGLE_BLOCK                                    \
-    }                                                               \
-    else { /*NOLINT*/                                               \
-        uint64_t startMask = (1UL << (bitsize - startBit - 1)) - 1, \
-                 endMask = (1UL << endBit) - 1;
+#define ELSE_IF_NOT_SINGLE_BLOCK                                \
+    }                                                           \
+    else { /*NOLINT*/                                           \
+        uint64_t startMask = (one << (bitsize - startBit)) - 1, \
+                 endMask = (one << (endBit + 1)) - 1;
 
 #define END }
 
@@ -29,7 +29,7 @@ uint64_t StaticSpaceStorage::get(uint i) const {
     IF_SINGLE_BLOCK
     r = (storage[startBlock] >> endGap) & mask;
     ELSE_IF_NOT_SINGLE_BLOCK
-    r = (storage[startBlock] & startMask) << endBit;
+    r = (storage[startBlock] & startMask) << (endBit + 1);
     r |= (storage[endBlock] & (endMask << endGap)) >> endGap;
     END return r;
 }
@@ -41,7 +41,7 @@ void StaticSpaceStorage::insert(uint i, uint64_t v) {
     storage[startBlock] |= v << endGap;
     ELSE_IF_NOT_SINGLE_BLOCK
     storage[startBlock] &= ~startMask;
-    storage[startBlock] |= (v >> endBit);
+    storage[startBlock] |= (v >> (endBit + 1));
     storage[endBlock] &= ~(endMask << endGap);
     storage[endBlock] |= (v & endMask) << endGap;
     END

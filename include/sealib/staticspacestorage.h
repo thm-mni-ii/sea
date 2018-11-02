@@ -14,7 +14,7 @@ namespace Sealib {
  * offset specified by the bit pattern.
  * EFFICIENCY: O(n+N) bits
  */
-class StaticSpaceStorage : public Container<uint64_t, uint> {
+class StaticSpaceStorage : public Container<uint64_t> {
  public:
     /**
      * @param i index of the storage array
@@ -52,6 +52,7 @@ class StaticSpaceStorage : public Container<uint64_t, uint> {
     const RankSelect rankSelect;
     std::vector<uint64_t> storage;
     const uint bitsize = static_cast<uint>(sizeof(uint64_t) * 8);
+    static constexpr uint64_t one = 1;
 
     CONSTEXPR_IF_CLANG inline unsigned long getEnd(uint k) const {
         return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);

@@ -8,25 +8,20 @@ using Sealib::StaticSpaceStorage;
 using Sealib::SimpleContainer;
 
 TEST(StaticSpaceStorageTest, boundary) {
-    std::vector<uint> b = {3, 1, 4, 60, 2};
+    std::vector<uint> b = {59, 22, 55, 23, 3};
+    std::vector<uint64_t> values = {576646035, 3360686, 193508993, 3833501, 3};
     StaticSpaceStorage s(StaticSpaceStorage::makeBitVector(&b));
-    s.insert(0, 5);
-    EXPECT_EQ(s.get(0), 5);
-    s.insert(1, 1);
-    EXPECT_EQ(s.get(1), 1);
-    s.insert(2, 15);
-    EXPECT_EQ(s.get(2), 15);
-    s.insert(4, 3);
-    s.insert(3, static_cast<uint64_t>(2.5e9) + 1);
-    EXPECT_EQ(s.get(3), static_cast<uint64_t>(2.5e9) + 1);
-    EXPECT_EQ(s.get(4), 3);
-    EXPECT_EQ(s.get(2), 15);
-    EXPECT_EQ(s.get(1), 1);
-    EXPECT_EQ(s.get(0), 5);
+
+    for (uint a = 0; a < values.size(); a++) {
+        s.insert(a, values[a]);
+    }
+    for (uint a = 0; a < values.size(); a++) {
+        EXPECT_EQ(s.get(a), values[a]);
+    }
 }
 
 TEST(StaticSpaceStorageTest, referenceTest) {
-    uint n = 1000, d = sizeof(uint64_t) * 8;
+    uint n = 100, d = sizeof(uint64_t) * 8;
     std::random_device rnd;
     std::uniform_int_distribution<uint> dist(0, d - 1), dist2(0, n - 1);
     std::vector<uint> sizes;
@@ -40,7 +35,6 @@ TEST(StaticSpaceStorageTest, referenceTest) {
         if (sizes[a] > 0) {
             uint64_t b =
                 static_cast<uint64_t>(fmod(rnd(), pow(2, sizes[a]) - 1));
-            printf("sizes[%u]=%u, b=%u\n", a, sizes[a], b);
             s.insert(a, b);
             c.insert(a, b);
         }
