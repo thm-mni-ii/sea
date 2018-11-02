@@ -51,7 +51,7 @@ set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemo
 #                   build library
 # --------------------------------------------------- #
 include_directories(${CMAKE_INCLUDE_PATH})
-file(GLOB LIB_SOURCES "src/*.cpp")
+file(GLOB LIB_SOURCES "src/*.cpp" "src/*/*.cpp")
 
 add_library(sealib SHARED ${LIB_SOURCES})
 

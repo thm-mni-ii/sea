@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <sealib/choicedictionaryiterator.h>
+#include <sealib/iterator/choicedictionaryiterator.h>
 
 #include <algorithm>
 #include <array>

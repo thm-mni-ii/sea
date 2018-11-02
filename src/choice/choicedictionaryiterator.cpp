@@ -1,5 +1,5 @@
 #include <iostream>
-#include "sealib/choicedictionaryiterator.h"
+#include "sealib/iterator/choicedictionaryiterator.h"
 
 using Sealib::ChoiceDictionaryIterator;
 

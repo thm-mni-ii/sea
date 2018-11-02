@@ -1,8 +1,8 @@
 #ifndef SEALIB_BASICGRAPH_H_
 #define SEALIB_BASICGRAPH_H_
 
-#include <sealib/graph.h>
-#include <sealib/node.h>
+#include <sealib/graph/graph.h>
+#include <sealib/graph/node.h>
 #include <vector>
 #include <tuple>
 

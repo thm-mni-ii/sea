@@ -1,7 +1,7 @@
 #ifndef SRC_BASESUBGRAPH_H_
 #define SRC_BASESUBGRAPH_H_
-#include <sealib/rankselect.h>
-#include <sealib/basicgraph.h>
+#include <sealib/dictionary/rankselect.h>
+#include <sealib/graph/basicgraph.h>
 #include <tuple>
 #include "./subgraph.h"
 

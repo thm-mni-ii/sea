@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "sealib/_types.h"
-#include "sealib/bitset.h"
+#include "sealib/collection/bitset.h"
 
 using Sealib::Bitset;
 

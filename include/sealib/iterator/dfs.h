@@ -2,9 +2,9 @@
 #define SEALIB_DFS_H_
 
 #include "sealib/_types.h"
-#include "sealib/compactarray.h"
-#include "sealib/graph.h"
-#include "sealib/node.h"
+#include "sealib/collection/compactarray.h"
+#include "sealib/graph/graph.h"
+#include "sealib/graph/node.h"
 
 #define DFS_WHITE 0
 #define DFS_GRAY 1

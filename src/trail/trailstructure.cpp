@@ -1,5 +1,5 @@
-#include <sealib/bitset.h>
-#include <sealib/rankselect.h>
+#include <sealib/collection/bitset.h>
+#include <sealib/dictionary/rankselect.h>
 #include <sealib/recursivedyckmatchingstructure.h>
 #include <sealib/smalldoublelinkedlist.h>
 #include <sealib/largedoublelinkedlist.h>

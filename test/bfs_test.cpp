@@ -1,8 +1,8 @@
-#include "sealib/bfs.h"
+#include "sealib/iterator/bfs.h"
 #include <gtest/gtest.h>
 #include <stdio.h>
-#include "sealib/graph.h"
-#include "sealib/graphcreator.h"
+#include "sealib/graph/graph.h"
+#include "sealib/graph/graphcreator.h"
 
 using Sealib::BFS;
 using Sealib::BasicGraph;

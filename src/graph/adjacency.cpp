@@ -1,4 +1,4 @@
-#include "sealib/adjacency.h"
+#include "sealib/graph/adjacency.h"
 #include <limits>
 
 using Sealib::Adjacency;

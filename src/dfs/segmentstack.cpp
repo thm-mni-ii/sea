@@ -1,4 +1,4 @@
-#include "src/segmentstack.h"
+#include "src/dfs/segmentstack.h"
 #include <math.h>
 #include <sstream>
 #include <stack>

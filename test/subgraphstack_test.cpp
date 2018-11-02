@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <sealib/subgraphstack.h>
-#include <sealib/graphcreator.h>
+#include <sealib/graph/graphcreator.h>
 
 using Sealib::SubGraphStack;
 using Sealib::SubGraph;

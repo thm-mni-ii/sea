@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <stdlib.h>
-#include <sealib/graphcreator.h>
+#include <sealib/graph/graphcreator.h>
 
 using Sealib::GraphCreator;
 using Sealib::BasicGraph;

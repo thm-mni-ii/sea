@@ -1,7 +1,7 @@
-#include "../src/segmentstack.h"
+#include "../src/dfs/segmentstack.h"
 #include <gtest/gtest.h>
-#include "sealib/compactarray.h"
-#include "sealib/graphcreator.h"
+#include "sealib/collection/compactarray.h"
+#include "sealib/graph/graphcreator.h"
 
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;

@@ -1,4 +1,4 @@
-#include "sealib/dfs.h"
+#include "sealib/iterator/dfs.h"
 #include <math.h>
 #include <sstream>
 #include <stack>

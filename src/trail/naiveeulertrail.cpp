@@ -1,6 +1,6 @@
-#include <src/naiveeulertrail.h>
-#include <src/simpletrail.h>
-#include <src/naivetrailstructure.h>
+#include <src/trail/naiveeulertrail.h>
+#include <src/trail/simpletrail.h>
+#include <src/trail/naivetrailstructure.h>
 #include <map>
 #include <set>
 #include <tuple>

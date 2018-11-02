@@ -1,7 +1,7 @@
 #ifndef SEALIB_SIMPLERANKSELECT_H_
 #define SEALIB_SIMPLERANKSELECT_H_
 
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 #include <memory>
 #include <vector>
 

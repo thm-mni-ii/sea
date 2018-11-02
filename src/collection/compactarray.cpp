@@ -1,4 +1,4 @@
-#include "sealib/compactarray.h"
+#include "sealib/collection/compactarray.h"
 #include <math.h>
 #include <stdexcept>
 

@@ -1,4 +1,4 @@
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 #include <iostream>
 
 using Sealib::Bitset;

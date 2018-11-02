@@ -1,4 +1,4 @@
-#include "sealib/bfs.h"
+#include "sealib/iterator/bfs.h"
 #include <stdexcept>
 #include <vector>
 

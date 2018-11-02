@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <sealib/choicedictionary.h>
+#include <sealib/dictionary/choicedictionary.h>
 
 #include <array>
 #include <random>

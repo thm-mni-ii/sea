@@ -2,9 +2,9 @@
 #define SEALIB_BFS_H_
 
 #include "sealib/_types.h"
-#include "sealib/compactarray.h"
-#include "sealib/graph.h"
-#include "sealib/iterator.h"
+#include "sealib/collection/compactarray.h"
+#include "sealib/graph/graph.h"
+#include "sealib/iterator/iterator.h"
 
 #define BFS_WHITE 0
 #define BFS_GRAY1 1

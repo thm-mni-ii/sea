@@ -1,4 +1,4 @@
-#include <sealib/node.h>
+#include <sealib/graph/node.h>
 
 const std::vector<Sealib::Adjacency> &Sealib::Node::getAdj() const { return adj; }
 

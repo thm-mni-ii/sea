@@ -1,8 +1,8 @@
 #ifndef SEALIB_CHOICEDICTIONARYITERATOR_H_
 #define SEALIB_CHOICEDICTIONARYITERATOR_H_
 
-#include "sealib/iterator.h"
-#include "sealib/choicedictionary.h"
+#include "sealib/iterator/iterator.h"
+#include "sealib/dictionary/choicedictionary.h"
 
 #define SHIFT_OFFSET 1UL
 

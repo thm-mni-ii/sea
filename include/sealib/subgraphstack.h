@@ -1,9 +1,9 @@
 #ifndef SEALIB_SUBGRAPHSTACK_H_
 #define SEALIB_SUBGRAPHSTACK_H_
 
-#include <sealib/basicgraph.h>
-#include <sealib/bitset.h>
-#include <sealib/rankselect.h>
+#include <sealib/graph/basicgraph.h>
+#include <sealib/collection/bitset.h>
+#include <sealib/dictionary/rankselect.h>
 #include <memory>
 #include <utility>
 #include <vector>

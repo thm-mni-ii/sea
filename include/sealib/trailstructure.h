@@ -2,8 +2,8 @@
 #define SEALIB_TRAILSTRUCTURE_H_
 
 #include <sealib/localdycktable.h>
-#include <sealib/rankselect.h>
-#include <sealib/simplerankselect.h>
+#include <sealib/dictionary/rankselect.h>
+#include <sealib/dictionary/simplerankselect.h>
 #include <sealib/dyckmatchingstructure.h>
 #include <sealib/largedoublelinkedlist.h>
 #include <vector>

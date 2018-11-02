@@ -1,7 +1,7 @@
 #ifndef SEALIB_DYCKWORDLEXICON_H_
 #define SEALIB_DYCKWORDLEXICON_H_
 
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 #include <vector>
 #include <ostream>
 

@@ -1,7 +1,7 @@
 #ifndef SEALIB_SIMPLETRAILSTRUCTURE_H_
 #define SEALIB_SIMPLETRAILSTRUCTURE_H_
 
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 #include <vector>
 
 namespace Sealib {

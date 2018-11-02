@@ -1,4 +1,4 @@
-#include "sealib/graphrepresentations.h"
+#include "sealib/graph/graphrepresentations.h"
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
@@ -7,9 +7,9 @@
 #include <vector>
 #include <algorithm>
 #include <set>
-#include "sealib/adjacency.h"
-#include "sealib/compactgraph.h"
-#include "sealib/node.h"
+#include "sealib/graph/adjacency.h"
+#include "sealib/graph/compactgraph.h"
+#include "sealib/graph/node.h"
 
 using Sealib::Graphrepresentations;
 using Sealib::Compactgraph;

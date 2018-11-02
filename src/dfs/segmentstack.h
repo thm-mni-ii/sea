@@ -2,8 +2,8 @@
 #define SRC_SEGMENTSTACK_H_
 
 #include "sealib/_types.h"
-#include "sealib/compactarray.h"
-#include "sealib/graph.h"
+#include "sealib/collection/compactarray.h"
+#include "sealib/graph/graph.h"
 
 #define DFS_NO_MORE_NODES (uint32_t)11
 #define DFS_DO_RESTORE (uint32_t)12

@@ -1,7 +1,7 @@
 #ifndef SEALIB_GRAPHREPRESENTATIONS_H_
 #define SEALIB_GRAPHREPRESENTATIONS_H_
 #include <random>
-#include "sealib/compactgraph.h"
+#include "sealib/graph/compactgraph.h"
 /**
  * This class contains static functions to change the
  * representation of graph structures and to generate

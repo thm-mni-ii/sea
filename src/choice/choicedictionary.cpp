@@ -1,4 +1,4 @@
-#include "sealib/choicedictionary.h"
+#include "sealib/dictionary/choicedictionary.h"
 #include <exception>
 #include <iostream>
 

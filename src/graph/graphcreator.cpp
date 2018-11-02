@@ -1,4 +1,4 @@
-#include <sealib/graphcreator.h>
+#include <sealib/graph/graphcreator.h>
 #include <stdlib.h>
 #include <iostream>
 #include <limits>

@@ -1,5 +1,5 @@
 #include <memory>
-#include "sealib/compactgraph.h"
+#include "sealib/graph/compactgraph.h"
 
 using Sealib::Compactgraph;
 

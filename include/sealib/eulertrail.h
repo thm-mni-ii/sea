@@ -1,8 +1,8 @@
 #ifndef SEALIB_EULERTRAIL_H_
 #define SEALIB_EULERTRAIL_H_
 
-#include <sealib/rankselect.h>
-#include <sealib/basicgraph.h>
+#include <sealib/dictionary/rankselect.h>
+#include <sealib/graph/basicgraph.h>
 #include <sealib/simpletrailstructure.h>
 #include <sealib/trailstructure.h>
 #include <ostream>

@@ -2,7 +2,7 @@
 #define SEALIB_RANKSELECT_H_
 
 #include <sealib/rankstructure.h>
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 
 namespace Sealib {
 /**

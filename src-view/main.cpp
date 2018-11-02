@@ -8,10 +8,10 @@
 #include <stack>
 #include <string>
 #include "sealib/_types.h"
-#include "sealib/compactgraph.h"
-#include "sealib/dfs.h"
-#include "sealib/graphcreator.h"
-#include "sealib/graphrepresentations.h"
+#include "sealib/graph/compactgraph.h"
+#include "sealib/iterator/dfs.h"
+#include "sealib/graph/graphcreator.h"
+#include "sealib/graph/graphrepresentations.h"
 #include "sealib/runtimetest.h"
 
 using std::cout;

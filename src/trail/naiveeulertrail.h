@@ -1,8 +1,8 @@
 #ifndef SRC_NAIVEEULERTRAIL_H_
 #define SRC_NAIVEEULERTRAIL_H_
 
-#include <sealib/basicgraph.h>
-#include <src/simpletrail.h>
+#include <sealib/graph/basicgraph.h>
+#include <src/trail/simpletrail.h>
 #include <ostream>
 #include <vector>
 #include <list>

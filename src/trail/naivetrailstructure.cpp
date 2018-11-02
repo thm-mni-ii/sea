@@ -1,4 +1,4 @@
-#include <src/naivetrailstructure.h>
+#include <src/trail/naivetrailstructure.h>
 
 uint32_t Sealib::NaiveTrailStructure::leave() {
     if (unusedEdges.empty()) {

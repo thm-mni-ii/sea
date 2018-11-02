@@ -1,7 +1,7 @@
 #ifndef SEALIB_NODE_H_
 #define SEALIB_NODE_H_
 
-#include <sealib/adjacency.h>
+#include <sealib/graph/adjacency.h>
 #include <cstdint>
 #include <vector>
 

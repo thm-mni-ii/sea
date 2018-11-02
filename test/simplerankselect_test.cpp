@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <sealib/simplerankselect.h>
+#include <sealib/dictionary/simplerankselect.h>
 #include <sealib/sharedrankselect.h>
 
 TEST(SimpleRankSelectTest, simpleRankSelect) {

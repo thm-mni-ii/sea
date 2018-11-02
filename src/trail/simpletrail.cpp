@@ -1,4 +1,4 @@
-#include <src/simpletrail.h>
+#include <src/trail/simpletrail.h>
 
 void Sealib::SimpleTrail::insertSubTrail(const SimpleTrail &subTrail, uint64_t idx) {
     std::vector<std::tuple<uint32_t, uint32_t>> oldTrail = trail;

@@ -1,9 +1,9 @@
 #include "sealib/legacy.h"
-#include "sealib/bitset.h"
-#include "sealib/choicedictionaryiterator.h"
-#include "sealib/dfs.h"
-#include "sealib/graphcreator.h"
-#include "sealib/rankselect.h"
+#include "sealib/collection/bitset.h"
+#include "sealib/iterator/choicedictionaryiterator.h"
+#include "sealib/iterator/dfs.h"
+#include "sealib/graph/graphcreator.h"
+#include "sealib/dictionary/rankselect.h"
 
 using namespace Sealib;  // NOLINT
 

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <sealib/graphcreator.h>
+#include <sealib/graph/graphcreator.h>
 #include <sealib/simpletrailstructure.h>
 #include <sealib/eulertrail.h>
 #include <stdlib.h>

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <stdlib.h>
-#include <sealib/graphcreator.h>
-#include <sealib/compactgraph.h>
-#include <sealib/graphrepresentations.h>
+#include <sealib/graph/graphcreator.h>
+#include <sealib/graph/compactgraph.h>
+#include <sealib/graph/graphrepresentations.h>
 
 using Sealib::GraphCreator;
 using Sealib::BasicGraph;

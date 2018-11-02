@@ -2,7 +2,7 @@
 #define SEALIB_SHAREDRANKSTRUCTURE_H_
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 #include <memory>
 #include <vector>
 

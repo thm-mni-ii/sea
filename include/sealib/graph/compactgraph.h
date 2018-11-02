@@ -2,7 +2,7 @@
 #define SEALIB_COMPACTGRAPH_H_
 
 #include <memory>
-#include "sealib/graph.h"
+#include "sealib/graph/graph.h"
 
 namespace Sealib {
 /**

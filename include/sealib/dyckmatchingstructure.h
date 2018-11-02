@@ -1,7 +1,7 @@
 #ifndef SEALIB_DYCKMATCHINGSTRUCTURE_H_
 #define SEALIB_DYCKMATCHINGSTRUCTURE_H_
 
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 #include <iostream>
 
 namespace Sealib {

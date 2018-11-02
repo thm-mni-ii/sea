@@ -3,7 +3,7 @@
 
 #include <sealib/localdycktable.h>
 #include <sealib/dyckmatchingstructure.h>
-#include <sealib/rankselect.h>
+#include <sealib/dictionary/rankselect.h>
 #include <map>
 
 namespace Sealib {

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 
 using Sealib::Bitset;
 
