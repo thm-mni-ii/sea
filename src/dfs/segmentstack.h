@@ -1,5 +1,5 @@
-#ifndef SRC_SEGMENTSTACK_H_
-#define SRC_SEGMENTSTACK_H_
+#ifndef SRC_DFS_SEGMENTSTACK_H_
+#define SRC_DFS_SEGMENTSTACK_H_
 
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
@@ -129,4 +129,4 @@ class ExtendedSegmentStack : public SegmentStack {
   void storeEdges();
 };
 }  // namespace Sealib
-#endif  // SRC_SEGMENTSTACK_H_
+#endif  // SRC_DFS_SEGMENTSTACK_H_

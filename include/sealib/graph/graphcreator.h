@@ -1,5 +1,5 @@
-#ifndef SEALIB_GRAPHCREATOR_H_
-#define SEALIB_GRAPHCREATOR_H_
+#ifndef SEALIB_GRAPH_GRAPHCREATOR_H_
+#define SEALIB_GRAPH_GRAPHCREATOR_H_
 
 #include <sealib/graph/basicgraph.h>
 #include <memory>
@@ -70,4 +70,4 @@ class GraphCreator {
       uint32_t order1, uint32_t order2, double p, uint32_t seed);
 };
 }  // namespace Sealib
-#endif  // SEALIB_GRAPHCREATOR_H_
+#endif  // SEALIB_GRAPH_GRAPHCREATOR_H_

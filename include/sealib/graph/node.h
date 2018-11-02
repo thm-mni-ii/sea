@@ -1,5 +1,5 @@
-#ifndef SEALIB_NODE_H_
-#define SEALIB_NODE_H_
+#ifndef SEALIB_GRAPH_NODE_H_
+#define SEALIB_GRAPH_NODE_H_
 
 #include <sealib/graph/adjacency.h>
 #include <cstdint>
@@ -53,4 +53,4 @@ class Node {
       void addAdjacency(uint32_t vertex);
 };
 }  // namespace Sealib
-#endif  // SEALIB_NODE_H_
+#endif  // SEALIB_GRAPH_NODE_H_

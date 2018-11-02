@@ -1,5 +1,5 @@
-#ifndef SEALIB_ITERATOR_H_
-#define SEALIB_ITERATOR_H_
+#ifndef SEALIB_ITERATOR_ITERATOR_H_
+#define SEALIB_ITERATOR_ITERATOR_H_
 
 namespace Sealib {
 /**
@@ -31,4 +31,4 @@ class Iterator {
   virtual ~Iterator() {}
 };
 }  // namespace Sealib
-#endif  // SEALIB_ITERATOR_H_
+#endif  // SEALIB_ITERATOR_ITERATOR_H_

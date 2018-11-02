@@ -1,5 +1,5 @@
-#ifndef SEALIB_ADJACENCY_H_
-#define SEALIB_ADJACENCY_H_
+#ifndef SEALIB_GRAPH_ADJACENCY_H_
+#define SEALIB_GRAPH_ADJACENCY_H_
 #include <cstdint>
 
 namespace Sealib {
@@ -23,4 +23,4 @@ class Adjacency {
     Adjacency();
 };
 }  // namespace Sealib
-#endif  // SEALIB_ADJACENCY_H_
+#endif  // SEALIB_GRAPH_ADJACENCY_H_

@@ -1,5 +1,5 @@
-#ifndef SEALIB_CHOICEDICTIONARYITERATOR_H_
-#define SEALIB_CHOICEDICTIONARYITERATOR_H_
+#ifndef SEALIB_ITERATOR_CHOICEDICTIONARYITERATOR_H_
+#define SEALIB_ITERATOR_CHOICEDICTIONARYITERATOR_H_
 
 #include "sealib/iterator/iterator.h"
 #include "sealib/dictionary/choicedictionary.h"
@@ -58,4 +58,4 @@ class ChoiceDictionaryIterator : Iterator<uint64_t> {
     ~ChoiceDictionaryIterator();
 };
 }  // namespace Sealib
-#endif  // SEALIB_CHOICEDICTIONARYITERATOR_H_
+#endif  // SEALIB_ITERATOR_CHOICEDICTIONARYITERATOR_H_

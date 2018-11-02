@@ -1,5 +1,5 @@
-#ifndef SEALIB_COMPACTGRAPH_H_
-#define SEALIB_COMPACTGRAPH_H_
+#ifndef SEALIB_GRAPH_COMPACTGRAPH_H_
+#define SEALIB_GRAPH_COMPACTGRAPH_H_
 
 #include <memory>
 #include "sealib/graph/graph.h"
@@ -53,4 +53,4 @@ class Compactgraph : public Graph {
 };
 
 }  // namespace Sealib
-#endif  // SEALIB_COMPACTGRAPH_H_
+#endif  // SEALIB_GRAPH_COMPACTGRAPH_H_

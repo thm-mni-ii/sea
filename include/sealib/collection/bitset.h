@@ -1,5 +1,5 @@
-#ifndef SEALIB_BITSET_H_
-#define SEALIB_BITSET_H_
+#ifndef SEALIB_COLLECTION_BITSET_H_
+#define SEALIB_COLLECTION_BITSET_H_
 
 #include <cstdint>
 #include <vector>
@@ -224,4 +224,4 @@ operator-(const Bitset<Block, Allocator>& lhs, const Bitset<Block, Allocator>& r
 }
 
 }  // namespace Sealib
-#endif  // SEALIB_BITSET_H_
+#endif  // SEALIB_COLLECTION_BITSET_H_

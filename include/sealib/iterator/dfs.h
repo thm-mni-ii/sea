@@ -1,5 +1,5 @@
-#ifndef SEALIB_DFS_H_
-#define SEALIB_DFS_H_
+#ifndef SEALIB_ITERATOR_DFS_H_
+#define SEALIB_ITERATOR_DFS_H_
 
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
@@ -91,4 +91,4 @@ class DFS {
                                       uint32_t startVertex);
 };
 }  // namespace Sealib
-#endif  // SEALIB_DFS_H_
+#endif  // SEALIB_ITERATOR_DFS_H_

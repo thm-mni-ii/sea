@@ -20,25 +20,25 @@ static uint32_t c1 = 0, c2 = 0, c3 = 0, c4 = 0;
 static uint32_t tmp = 0;
 
 static void incr1(uint u) {
-  c1++;
-  tmp = u;
+    c1++;
+    tmp = u;
 }
 
 static void incr4(uint u) {
-  c4++;
-  tmp = u;
+    c4++;
+    tmp = u;
 }
 
 static void incr2(uint u, uint v) {
-  c2++;
-  tmp = u;
-  tmp = v;
+    c2++;
+    tmp = u;
+    tmp = v;
 }
 
 static void incr3(uint u, uint v) {
-  c3++;
-  tmp = u;
-  tmp = v;
+    c3++;
+    tmp = u;
+    tmp = v;
 }
 
 /*void p0(uint u) { printf("preprocess %u\n", u); }
@@ -52,54 +52,54 @@ static const uint32_t DEGREE = 15;     // how many outneighbours per node?
 static const uint32_t order = 200;
 
 static std::vector<BasicGraph> makeGraphs() {
-  std::vector<BasicGraph> g;
-  for (uint c = 0; c < GRAPHCOUNT; c++) {
-    g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
-  }
-  return g;
+    std::vector<BasicGraph> g;
+    for (uint c = 0; c < GRAPHCOUNT; c++) {
+        g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
+    }
+    return g;
 }
 
 class DFSTest : public ::testing::TestWithParam<BasicGraph> {
  protected:
-  virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
-                                                   // TEST_P
+    virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
+                                                     // TEST_P
 };
 
 INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
 TEST_P(DFSTest, stdUserproc) {
-  BasicGraph g = GetParam();
-  DFS::standardDFS(&g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, DEGREE * order);
-  EXPECT_EQ(c3, DEGREE * order);
-  EXPECT_EQ(c4, order);
+    BasicGraph g = GetParam();
+    DFS::standardDFS(&g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, order);
+    EXPECT_EQ(c2, DEGREE * order);
+    EXPECT_EQ(c3, DEGREE * order);
+    EXPECT_EQ(c4, order);
 }
 
 TEST_P(DFSTest, nBitUserproc) {
-  BasicGraph g = GetParam();
-  DFS::nBitDFS(&g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, DEGREE * order);
-  EXPECT_EQ(c3, DEGREE * order);
-  EXPECT_EQ(c4, order);
+    BasicGraph g = GetParam();
+    DFS::nBitDFS(&g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, order);
+    EXPECT_EQ(c2, DEGREE * order);
+    EXPECT_EQ(c3, DEGREE * order);
+    EXPECT_EQ(c4, order);
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
-  BasicGraph g = GetParam();
-  DFS::nloglognBitDFS(&g, incr1, incr2, incr3, incr4);
-  EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, DEGREE * order);
-  EXPECT_EQ(c3, DEGREE * order);
-  EXPECT_EQ(c4, order);
+    BasicGraph g = GetParam();
+    DFS::nloglognBitDFS(&g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, order);
+    EXPECT_EQ(c2, DEGREE * order);
+    EXPECT_EQ(c3, DEGREE * order);
+    EXPECT_EQ(c4, order);
 }
 
 TEST(DFSTest, nloglognImbalanced) {
-  BasicGraph g = Sealib::GraphCreator::createRandomImbalanced(order);
-  DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                      DFS_NOP_PROCESS);
-  SUCCEED();
+    BasicGraph g = Sealib::GraphCreator::createRandomImbalanced(order);
+    DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                        DFS_NOP_PROCESS);
+    SUCCEED();
 }
 
 auto *graph = new uint32_t[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
@@ -107,17 +107,17 @@ auto *graph = new uint32_t[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
 uint32_t controllSum = (2 * (1 + 2 + 3 + 4 + 5));
 stack<uint32_t> controllStack;
 void preTwo(uint32_t a) {
-  controllSum = controllSum - a;
-  controllStack.push(a);
+    controllSum = controllSum - a;
+    controllStack.push(a);
 }
 void postTwo(uint32_t a) {
-  controllSum = controllSum - a;
-  uint32_t ex = controllStack.top();
-  controllStack.pop();
-  EXPECT_EQ(ex, a);
+    controllSum = controllSum - a;
+    uint32_t ex = controllStack.top();
+    controllStack.pop();
+    EXPECT_EQ(ex, a);
 }
 
 TEST(DFSTest, inplace_dfs_all_of_grade_ge_2) {
-  DFS::runLinearTimeInplaceDFS(graph, preTwo, postTwo, 1);
-  EXPECT_EQ(0, controllSum);
+    DFS::runLinearTimeInplaceDFS(graph, preTwo, postTwo, 1);
+    EXPECT_EQ(0, controllSum);
 }

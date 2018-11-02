@@ -1,5 +1,5 @@
-#ifndef SEALIB_RANKSELECT_H_
-#define SEALIB_RANKSELECT_H_
+#ifndef SEALIB_DICTIONARY_RANKSELECT_H_
+#define SEALIB_DICTIONARY_RANKSELECT_H_
 
 #include <sealib/rankstructure.h>
 #include <sealib/collection/bitset.h>
@@ -43,4 +43,4 @@ class RankSelect {
     const Bitset<uint8_t> &getBitset() const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_RANKSELECT_H_
+#endif  // SEALIB_DICTIONARY_RANKSELECT_H_

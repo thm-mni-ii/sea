@@ -1,5 +1,5 @@
-#ifndef SRC_BASESUBGRAPH_H_
-#define SRC_BASESUBGRAPH_H_
+#ifndef SRC_SUBGRAPH_BASESUBGRAPH_H_
+#define SRC_SUBGRAPH_BASESUBGRAPH_H_
 #include <sealib/dictionary/rankselect.h>
 #include <sealib/graph/basicgraph.h>
 #include <tuple>
@@ -24,4 +24,4 @@ class BaseSubGraph : public SubGraph {
     ~BaseSubGraph() override;
 };
 }  // namespace Sealib
-#endif  // SRC_BASESUBGRAPH_H_
+#endif  // SRC_SUBGRAPH_BASESUBGRAPH_H_

@@ -1,5 +1,5 @@
-#ifndef SEALIB_GRAPHREPRESENTATIONS_H_
-#define SEALIB_GRAPHREPRESENTATIONS_H_
+#ifndef SEALIB_GRAPH_GRAPHREPRESENTATIONS_H_
+#define SEALIB_GRAPH_GRAPHREPRESENTATIONS_H_
 #include <random>
 #include "sealib/graph/compactgraph.h"
 /**
@@ -87,4 +87,4 @@ class Graphrepresentations {
     static void swapRepresentation(uint32_t *g);
 };
 }  // namespace Sealib
-#endif  // SEALIB_GRAPHREPRESENTATIONS_H_
+#endif  // SEALIB_GRAPH_GRAPHREPRESENTATIONS_H_

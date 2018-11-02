@@ -1,5 +1,5 @@
-#ifndef SEALIB_GRAPH_H_
-#define SEALIB_GRAPH_H_
+#ifndef SEALIB_GRAPH_GRAPH_H_
+#define SEALIB_GRAPH_GRAPH_H_
 #include <cstdint>
 
 namespace Sealib {
@@ -33,4 +33,4 @@ class Graph {
     virtual ~Graph() {}
 };
 }  // namespace Sealib
-#endif  // SEALIB_GRAPH_H_
+#endif  // SEALIB_GRAPH_GRAPH_H_

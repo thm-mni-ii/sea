@@ -1,5 +1,5 @@
-#ifndef SEALIB_BFS_H_
-#define SEALIB_BFS_H_
+#ifndef SEALIB_ITERATOR_BFS_H_
+#define SEALIB_ITERATOR_BFS_H_
 
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
@@ -81,4 +81,4 @@ class BFS : Iterator<Pair> {
 };
 
 }  // namespace Sealib
-#endif  // SEALIB_BFS_H_
+#endif  // SEALIB_ITERATOR_BFS_H_

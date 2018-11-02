@@ -1,5 +1,5 @@
-#ifndef SEALIB_COMPACTARRAY_H_
-#define SEALIB_COMPACTARRAY_H_
+#ifndef SEALIB_COLLECTION_COMPACTARRAY_H_
+#define SEALIB_COLLECTION_COMPACTARRAY_H_
 
 #include <memory>
 #include "sealib/_types.h"
@@ -54,4 +54,4 @@ class CompactArray {
   std::unique_ptr<uint[]> data;
 };
 }  // namespace Sealib
-#endif  // SEALIB_COMPACTARRAY_H_
+#endif  // SEALIB_COLLECTION_COMPACTARRAY_H_

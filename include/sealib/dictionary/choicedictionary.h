@@ -1,5 +1,5 @@
-#ifndef SEALIB_CHOICEDICTIONARY_H_
-#define SEALIB_CHOICEDICTIONARY_H_
+#ifndef SEALIB_DICTIONARY_CHOICEDICTIONARY_H_
+#define SEALIB_DICTIONARY_CHOICEDICTIONARY_H_
 #include <cstdint>
 
 #define SHIFT_OFFSET 1UL
@@ -117,4 +117,4 @@ class ChoiceDictionary {
     ~ChoiceDictionary();
 };
 }  // namespace Sealib
-#endif  // SEALIB_CHOICEDICTIONARY_H_
+#endif  // SEALIB_DICTIONARY_CHOICEDICTIONARY_H_

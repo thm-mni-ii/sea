@@ -1,5 +1,5 @@
-#ifndef SEALIB_BASICGRAPH_H_
-#define SEALIB_BASICGRAPH_H_
+#ifndef SEALIB_GRAPH_BASICGRAPH_H_
+#define SEALIB_GRAPH_BASICGRAPH_H_
 
 #include <sealib/graph/graph.h>
 #include <sealib/graph/node.h>
@@ -88,4 +88,4 @@ class BasicGraph : public Graph {
     std::tuple<uint32_t, uint32_t> mate(uint32_t u, uint32_t k) const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_BASICGRAPH_H_
+#endif  // SEALIB_GRAPH_BASICGRAPH_H_

@@ -1,4 +1,4 @@
-#include "src/subgraph/recursivesubgraph.h"
+#include "./recursivesubgraph.h"
 #include <iostream>
 
 /**

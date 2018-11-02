@@ -1,5 +1,5 @@
-#ifndef SRC_SIMPLETRAIL_H_
-#define SRC_SIMPLETRAIL_H_
+#ifndef SRC_TRAIL_SIMPLETRAIL_H_
+#define SRC_TRAIL_SIMPLETRAIL_H_
 
 #include <vector>
 #include <tuple>
@@ -19,4 +19,4 @@ class SimpleTrail {
     std::tuple<uint32_t, uint32_t> getOutgoingFrom(uint32_t u) const;
 };
 }  // namespace Sealib
-#endif  // SRC_SIMPLETRAIL_H_
+#endif  // SRC_TRAIL_SIMPLETRAIL_H_

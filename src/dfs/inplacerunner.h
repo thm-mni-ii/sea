@@ -1,5 +1,5 @@
-#ifndef SRC_INPLACERUNNER_H_
-#define SRC_INPLACERUNNER_H_
+#ifndef SRC_DFS_INPLACERUNNER_H_
+#define SRC_DFS_INPLACERUNNER_H_
 
 #include <utility>
 #include <stdexcept>
@@ -419,4 +419,4 @@ class LinearTimeInplaceDFSRunner {
   }
 };
 }  // namespace Sealib
-#endif  // SRC_INPLACERUNNER_H_
+#endif  // SRC_DFS_INPLACERUNNER_H_
