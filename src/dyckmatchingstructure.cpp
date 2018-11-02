@@ -35,6 +35,8 @@ const Sealib::Bitset<unsigned char> &Sealib::DyckMatchingStructure::getWord() co
 Sealib::DyckMatchingStructure::DyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_) :
     word(word_) {}
 
+Sealib::DyckMatchingStructure::~DyckMatchingStructure() {}
+
 unsigned long Sealib::DyckMatchingStructure::getMatch(unsigned long idx) {
     return getMatchNaive(word, idx);
 }
