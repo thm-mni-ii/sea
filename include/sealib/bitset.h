@@ -5,7 +5,7 @@
 #include <cassert>
 #include <limits>
 #include <memory>
-#include "sealib/container.h"
+#include "sealib/sequence.h"
 
 namespace Sealib {
 
@@ -23,7 +23,7 @@ namespace Sealib {
  * @author Johannes Meintrup
  */
 template<typename BlockType, typename AllocatorType>
-class Bitset : public Container<bool, unsigned long> {
+class Bitset : public Sequence<bool, unsigned long> {
     typedef unsigned long sizeType;
     typedef bool bitType;
 
@@ -55,6 +55,10 @@ class Bitset : public Container<bool, unsigned long> {
      */
     bool get(sizeType bit) const override;
 
+    /**
+     * @param bit index to insert to
+     * @param value 0/1 to unset/set the bit
+     */
     void insert(sizeType bit, bool value) override;
 
     /**

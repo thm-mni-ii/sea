@@ -1,31 +1,31 @@
-#ifndef SEALIB_CONTAINER_H_
-#define SEALIB_CONTAINER_H_
+#ifndef SEALIB_SEQUENCE_H_
+#define SEALIB_SEQUENCE_H_
 #include "sealib/_types.h"
 
 namespace Sealib {
 /**
- * An container interface to be used by several classes in this library.
- * @param T the element type that this container holds
+ * An sequence interface to be used by several classes in this library.
+ * @param T the element type that this sequence holds
  * @author Simon Heuser
  */
 template <class T, class I = uint>
-class Container {
+class Sequence {
  public:
     /**
-     * Get an element from the container.
+     * Get an element from the sequence.
      * @param i index
      * @return the element at the given index
      */
     virtual T get(I i) const = 0;
 
     /**
-     * Insert an element into the container.
+     * Insert an element into the sequence.
      * @param i index
      * @param v element to insert
      */
     virtual void insert(I i, T v) = 0;
 
-    virtual ~Container() = default;
+    virtual ~Sequence() = default;
 };
 }  // namespace Sealib
-#endif  // SEALIB_CONTAINER_H_
+#endif  // SEALIB_SEQUENCE_H_

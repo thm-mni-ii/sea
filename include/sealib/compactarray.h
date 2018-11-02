@@ -4,7 +4,7 @@
 #include <memory>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
-#include "sealib/container.h"
+#include "sealib/sequence.h"
 
 using Sealib::Bitset;
 
@@ -16,7 +16,7 @@ namespace Sealib {
  * For optimal space usage, see constructor comments.
  * @author Simon Heuser
  */
-class CompactArray : public Container<uint> {
+class CompactArray : public Sequence<uint> {
  public:
   /**
    * Create a new compact array.

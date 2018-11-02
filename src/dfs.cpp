@@ -5,7 +5,6 @@
 #include <vector>
 #include "./inplacerunner.h"
 #include "./segmentstack.h"
-#include "./simplecontainer.h"
 
 using namespace Sealib;  // NOLINT
 

@@ -3,7 +3,7 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
-#include "sealib/container.h"
+#include "sealib/sequence.h"
 #include "sealib/rankselect.h"
 
 namespace Sealib {
@@ -14,7 +14,7 @@ namespace Sealib {
  * offset specified by the bit pattern.
  * EFFICIENCY: O(n+N) bits
  */
-class StaticSpaceStorage : public Container<uint64_t> {
+class StaticSpaceStorage : public Sequence<uint64_t> {
  public:
     /**
      * @param i index of the storage array

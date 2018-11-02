@@ -2,10 +2,10 @@
 #include <gtest/gtest.h>
 #include <cstdio>
 #include <random>
-#include "src/simplecontainer.h"
+#include "src/simplesequence.h"
 
 using Sealib::StaticSpaceStorage;
-using Sealib::SimpleContainer;
+using Sealib::SimpleSequence;
 
 TEST(StaticSpaceStorageTest, boundary) {
     std::vector<uint> b = {59, 22, 55, 23, 3};
@@ -29,7 +29,7 @@ TEST(StaticSpaceStorageTest, referenceTest) {
         sizes.emplace_back(dist(rnd));
     }
     StaticSpaceStorage s(StaticSpaceStorage::makeBitVector(&sizes));
-    SimpleContainer<uint64_t> c(n);
+    SimpleSequence<uint64_t> c(n);
     // insert random values < size[a]
     for (uint a = 0; a < n; a++) {
         if (sizes[a] > 0) {
