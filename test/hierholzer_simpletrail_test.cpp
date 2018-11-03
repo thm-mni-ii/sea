@@ -14,9 +14,9 @@ TEST(GraphTest, hierholzer_simple_trail) {
     adj_mtrx[4] = new uint32_t[order]{1, 0, 0, 0, 0, 0};
     adj_mtrx[5] = new uint32_t[order]{1, 0, 0, 0, 0, 0};
 
-    std::shared_ptr<Sealib::BasicGraph>
+    std::shared_ptr<Sealib::UndirectedGraph>
         graph_ptr(
-            new Sealib::BasicGraph(Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
+            new Sealib::UndirectedGraph(Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
                 adj_mtrx,
                 order)));
     Sealib::EulerTrail<Sealib::SimpleTrailStructure> et(graph_ptr);

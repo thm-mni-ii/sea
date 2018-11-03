@@ -7,7 +7,7 @@ using Sealib::SubGraph;
 using Sealib::RecursiveSubGraph;
 using Sealib::BaseSubGraph;
 using Sealib::Bitset;
-using Sealib::BasicGraph;
+using Sealib::UndirectedGraph;
 using Sealib::GraphCreator;
 using std::shared_ptr;
 
@@ -24,7 +24,7 @@ TEST(SubGraphStackTest, pushPop) {
     adj_mtrx[5] = new uint32_t[order]{1, 1, 0, 1, 1, 0, 0};
     adj_mtrx[6] = new uint32_t[order]{1, 1, 1, 0, 0, 0, 0};
 
-    shared_ptr<BasicGraph> bg =
+    shared_ptr<UndirectedGraph> bg =
         GraphCreator::createSharedGraphFromAdjacencyMatrix(adj_mtrx, order);
 
     SubGraphStack stack(bg);
@@ -69,7 +69,7 @@ TEST(SubGraphStackTest, orderDegree) {
     adj_mtrx[7] = new uint32_t[order]{1, 1, 1, 0, 0, 0, 0, 0, 0};
     adj_mtrx[8] = new uint32_t[order]{0, 1, 0, 0, 0, 1, 0, 0, 0};
 
-    shared_ptr<BasicGraph> bg =
+    shared_ptr<UndirectedGraph> bg =
         GraphCreator::createSharedGraphFromAdjacencyMatrix(adj_mtrx, order);
 
     SubGraphStack stack(bg);

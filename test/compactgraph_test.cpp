@@ -4,7 +4,7 @@
 #include <sealib/graph/compactgraph.h>
 
 using Sealib::GraphCreator;
-using Sealib::BasicGraph;
+using Sealib::UndirectedGraph;
 using Sealib::Compactgraph;
 using Sealib::Graph;
 

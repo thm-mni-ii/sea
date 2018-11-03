@@ -23,7 +23,7 @@ void *Sealib_Graph_generateRandom(uint32_t order) {
     }
     n[a] = Node(ad);
   }
-  return new BasicGraph(n);
+  return new UndirectedGraph(n);
 }
 
 void *Sealib_ChoiceDictionary_new(uint32_t size) {

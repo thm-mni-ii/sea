@@ -124,7 +124,7 @@ void runTest(uint n, uint (*fm)(uint n)) {
 void runtime_dfs() {
   RuntimeTest t1, t2, t3;
   for (uint n = 1e5; n <= 1e6; n += 10000) {
-    BasicGraph g = GraphCreator::createRandomFixed(n, 5);
+    DirectedGraph g = GraphCreator::createRandomFixed(n, 5);
     t1.runTest(
         [&g]() {
           DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,

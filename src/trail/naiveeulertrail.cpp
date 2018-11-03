@@ -6,7 +6,7 @@
 #include <tuple>
 
 using Sealib::NaiveEulerTrail;
-using Sealib::BasicGraph;
+using Sealib::UndirectedGraph;
 using std::shared_ptr;
 using std::vector;
 using std::list;
@@ -14,7 +14,7 @@ using std::map;
 using std::set;
 using std::tuple;
 
-NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<BasicGraph> &g) {
+NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
     static const std::tuple<uint32_t, uint32_t> nonArc =
         std::make_tuple((uint32_t) -1, (uint32_t) -1);
 

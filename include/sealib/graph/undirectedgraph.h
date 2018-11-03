@@ -1,5 +1,5 @@
-#ifndef SEALIB_GRAPH_BASICGRAPH_H_
-#define SEALIB_GRAPH_BASICGRAPH_H_
+#ifndef SEALIB_GRAPH_UNDIRECTEDGRAPH_H_
+#define SEALIB_GRAPH_UNDIRECTEDGRAPH_H_
 
 #include <sealib/graph/graph.h>
 #include <sealib/graph/node.h>
@@ -14,7 +14,7 @@ namespace Sealib {
  * @complexity (O((n + m) log n)) bits Stores a undirected graph with n vertices and m edges using (n + 4m) log n bits.
  * @author Johannes Meintrup
  */
-class BasicGraph : public Graph {
+class UndirectedGraph : public Graph {
  private:
     std::vector<Sealib::Node> nodes;
 
@@ -24,24 +24,24 @@ class BasicGraph : public Graph {
      * @param _nodes Array of nodes.
      * @param _order Order of the graph (equals the length of the nodes array).
      */
-    BasicGraph(Node *nodes_, uint32_t order_);
+    UndirectedGraph(Node *nodes_, uint32_t order_);
 
     /**
      * Created a new graph object with the nodes provided by the nodes_ vector
      * @param nodes_ vector of nodes (ref)
      */
-    explicit BasicGraph(const std::vector<Sealib::Node> &nodes_);
+    explicit UndirectedGraph(const std::vector<Sealib::Node> &nodes_);
 
     /**
      * Created a new empty graph object with no nodes
      */
-    BasicGraph();
+    UndirectedGraph();
 
     /**
      * Created a graph with the specified order and without any edges.
      * @param order - order of the graph
      */
-    explicit BasicGraph(uint32_t order);
+    explicit UndirectedGraph(uint32_t order);
 
     /**
      * Adds a new node to the graph
@@ -56,7 +56,7 @@ class BasicGraph : public Graph {
      */
     const Node &getNode(uint32_t u) const;
 
-    ~BasicGraph() override = default;
+    ~UndirectedGraph() override = default;
 
     /**
      * Getter for a specific node in the nodes array.
@@ -88,4 +88,4 @@ class BasicGraph : public Graph {
     std::tuple<uint32_t, uint32_t> mate(uint32_t u, uint32_t k) const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_GRAPH_BASICGRAPH_H_
+#endif  // SEALIB_GRAPH_UNDIRECTEDGRAPH_H_

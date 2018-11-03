@@ -4,13 +4,13 @@
 #include <random>
 #include <stack>
 #include <vector>
-#include "sealib/graph/basicgraph.h"
+#include "sealib/graph/undirectedgraph.h"
 #include "sealib/graph/graphcreator.h"
 
 using Sealib::DFS;
 using Sealib::CompactArray;
 using Sealib::Graph;
-using Sealib::BasicGraph;
+using Sealib::DirectedGraph;
 using Sealib::Node;
 using Sealib::Adjacency;
 using std::vector;
@@ -51,15 +51,15 @@ static const uint32_t GRAPHCOUNT = 4;  // how many random graphs to generate?
 static const uint32_t DEGREE = 15;     // how many outneighbours per node?
 static const uint32_t order = 200;
 
-static std::vector<BasicGraph> makeGraphs() {
-    std::vector<BasicGraph> g;
+static std::vector<DirectedGraph> makeGraphs() {
+    std::vector<DirectedGraph> g;
     for (uint c = 0; c < GRAPHCOUNT; c++) {
         g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
     }
     return g;
 }
 
-class DFSTest : public ::testing::TestWithParam<BasicGraph> {
+class DFSTest : public ::testing::TestWithParam<DirectedGraph> {
  protected:
     virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
                                                      // TEST_P
@@ -69,7 +69,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
 TEST_P(DFSTest, stdUserproc) {
-    BasicGraph g = GetParam();
+    DirectedGraph g = GetParam();
     DFS::standardDFS(&g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, DEGREE * order);
@@ -78,7 +78,7 @@ TEST_P(DFSTest, stdUserproc) {
 }
 
 TEST_P(DFSTest, nBitUserproc) {
-    BasicGraph g = GetParam();
+    DirectedGraph g = GetParam();
     DFS::nBitDFS(&g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, DEGREE * order);
@@ -87,7 +87,7 @@ TEST_P(DFSTest, nBitUserproc) {
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
-    BasicGraph g = GetParam();
+    DirectedGraph g = GetParam();
     DFS::nloglognBitDFS(&g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, DEGREE * order);
@@ -96,7 +96,7 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 }
 
 TEST(DFSTest, nloglognImbalanced) {
-    BasicGraph g = Sealib::GraphCreator::createRandomImbalanced(order);
+    DirectedGraph g = Sealib::GraphCreator::createRandomImbalanced(order);
     DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                         DFS_NOP_PROCESS);
     SUCCEED();

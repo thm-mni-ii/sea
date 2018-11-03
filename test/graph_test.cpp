@@ -3,7 +3,7 @@
 #include <sealib/graph/graphcreator.h>
 
 using Sealib::GraphCreator;
-using Sealib::BasicGraph;
+using Sealib::UndirectedGraph;
 using Sealib::Graph;
 
 TEST(GraphTest, graph_integrity) {
@@ -26,7 +26,7 @@ TEST(GraphTest, graph_integrity) {
     adj_mtrx[2] = new uint32_t[order]{0, 1, 0, 1};
     adj_mtrx[3] = new uint32_t[order]{1, 0, 1, 0};
 
-    BasicGraph g = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
+    UndirectedGraph g = GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
 
     // verify correct order and degree of nodes
     ASSERT_EQ(g.getOrder(), order);

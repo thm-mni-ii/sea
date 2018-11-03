@@ -1,7 +1,7 @@
 #ifndef SEALIB_SUBGRAPHSTACK_H_
 #define SEALIB_SUBGRAPHSTACK_H_
 
-#include <sealib/graph/basicgraph.h>
+#include <sealib/graph/undirectedgraph.h>
 #include <sealib/collection/bitset.h>
 #include <sealib/dictionary/rankselect.h>
 #include <memory>
@@ -46,7 +46,7 @@ class SubGraphStack {
     void tunepsi(uint64_t i);
 
  public:
-    explicit SubGraphStack(std::shared_ptr<BasicGraph> g_);
+    explicit SubGraphStack(std::shared_ptr<UndirectedGraph> g_);
     /**
      * Pushes a new subgraph G_l+1 on G_l.
      * i.e. replaces the client list (G_0,...,G_l) with (G_0,...,G_l,G_l+1)

@@ -1,7 +1,8 @@
 #ifndef SEALIB_GRAPH_GRAPHCREATOR_H_
 #define SEALIB_GRAPH_GRAPHCREATOR_H_
 
-#include <sealib/graph/basicgraph.h>
+#include <sealib/graph/undirectedgraph.h>
+#include <sealib/graph/directedgraph.h>
 #include <memory>
 #include <random>
 
@@ -29,13 +30,13 @@ class GraphCreator {
    * @param adj_matrix NxN adjacency matrix representation of the graph.
    * @param _order Order of the graph, order equals the number of nodes.
    */
-  static BasicGraph createGraphFromAdjacencyMatrix(uint32_t **adjMatrix,
+  static UndirectedGraph createGraphFromAdjacencyMatrix(uint32_t **adjMatrix,
                                                    uint32_t order);
 
-  static BasicGraph *createGraphPointerFromAdjacencyMatrix(uint32_t **adjMatrix,
+  static UndirectedGraph *createGraphPointerFromAdjacencyMatrix(uint32_t **adjMatrix,
                                                            uint32_t order);
 
-  static std::shared_ptr<BasicGraph> createSharedGraphFromAdjacencyMatrix(
+  static std::shared_ptr<UndirectedGraph> createSharedGraphFromAdjacencyMatrix(
       uint32_t **adjMatrix, uint32_t order);
 
   /**
@@ -46,7 +47,7 @@ class GraphCreator {
    * @return the resulting graph G (n = order, m = degreePerNode*order)
    * @author Simon Heuser
    */
-  static BasicGraph createRandomFixed(uint32_t order, uint32_t degreePerNode);
+  static DirectedGraph createRandomFixed(uint32_t order, uint32_t degreePerNode);
 
   /**
    * Create a completely random graph with a given number of nodes. Each node
@@ -55,7 +56,7 @@ class GraphCreator {
    * @return the resulting graph: n = order, m = O(n^2)
    * @author Simon Heuser
    */
-  static BasicGraph createRandomGenerated(uint32_t order);
+  static DirectedGraph createRandomGenerated(uint32_t order);
 
   /**
    * Create a random "imbalanced" graph, which contains a handful of very large
@@ -64,9 +65,9 @@ class GraphCreator {
    * @return the resulting graph: some nodes have a very large degree (they are
    * "big")
    */
-  static BasicGraph createRandomImbalanced(uint32_t order);
+  static DirectedGraph createRandomImbalanced(uint32_t order);
 
-  static std::unique_ptr<BasicGraph> generateRandomBipartiteBasicGraph(
+  static std::unique_ptr<UndirectedGraph> generateRandomBipartiteUndirectedGraph(
       uint32_t order1, uint32_t order2, double p, uint32_t seed);
 };
 }  // namespace Sealib

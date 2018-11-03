@@ -5,7 +5,7 @@
 #include "sealib/graph/graphcreator.h"
 
 using Sealib::BFS;
-using Sealib::BasicGraph;
+using Sealib::DirectedGraph;
 using Sealib::GraphCreator;
 
 static uint c1 = 0, c2 = 0;
@@ -21,15 +21,15 @@ static void incr2(uint u, uint v) {
 }
 
 static uint GRAPHCOUNT = 4, order = 500, degree = 20;
-static std::vector<BasicGraph> makeGraphs() {
-  std::vector<BasicGraph> g;
+static std::vector<DirectedGraph> makeGraphs() {
+  std::vector<DirectedGraph> g;
   for (uint c = 0; c < GRAPHCOUNT; c++) {
     g.emplace_back(GraphCreator::createRandomFixed(order, degree));
   }
   return g;
 }
 
-class BFSTest : public ::testing::TestWithParam<BasicGraph> {
+class BFSTest : public ::testing::TestWithParam<DirectedGraph> {
  protected:
   virtual void SetUp() { c1 = c2 = 0; }
 };
@@ -38,7 +38,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, BFSTest, ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
 TEST_P(BFSTest, userproc) {
-  BasicGraph g = GetParam();
+  DirectedGraph g = GetParam();
   BFS bfs(&g, incr1, incr2);
   bfs.init();
   do {
@@ -50,7 +50,7 @@ TEST_P(BFSTest, userproc) {
 
 TEST(BFSTest, nextComponent) {
   c1 = c2 = 0;
-  BasicGraph g = GraphCreator::createRandomFixed(order, 0);
+  DirectedGraph g = GraphCreator::createRandomFixed(order, 0);
   BFS bfs(&g, incr1, incr2);
   uint rc = 0;
   bfs.init();

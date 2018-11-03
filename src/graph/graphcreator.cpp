@@ -4,10 +4,10 @@
 #include <limits>
 #include <set>
 
-using Sealib::BasicGraph;
+using Sealib::UndirectedGraph;
 using Sealib::GraphCreator;
 
-BasicGraph *Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(
+UndirectedGraph *Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(
     uint32_t **adjMatrix, uint32_t order) {
   std::vector<Node> nodes(order);
 
@@ -49,27 +49,27 @@ BasicGraph *Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(
       }
     }
   }
-  return new BasicGraph(nodes);
+  return new UndirectedGraph(nodes);
 }
 
-BasicGraph GraphCreator::createGraphFromAdjacencyMatrix(uint32_t **adjMatrix,
+UndirectedGraph GraphCreator::createGraphFromAdjacencyMatrix(uint32_t **adjMatrix,
                                                         uint32_t order) {
   return *createGraphPointerFromAdjacencyMatrix(adjMatrix, order);
 }
 
-std::shared_ptr<BasicGraph> GraphCreator::createSharedGraphFromAdjacencyMatrix(
+std::shared_ptr<UndirectedGraph> GraphCreator::createSharedGraphFromAdjacencyMatrix(
     uint32_t **adjMatrix, uint32_t order) {
-  return std::shared_ptr<BasicGraph>(
+  return std::shared_ptr<UndirectedGraph>(
     createGraphPointerFromAdjacencyMatrix(adjMatrix, order));
 }
 
-std::unique_ptr<Sealib::BasicGraph>
-Sealib::GraphCreator::generateRandomBipartiteBasicGraph(uint32_t order1,
+std::unique_ptr<Sealib::UndirectedGraph>
+Sealib::GraphCreator::generateRandomBipartiteUndirectedGraph(uint32_t order1,
                                                         uint32_t order2,
                                                         double p,
                                                         uint32_t seed) {
-  std::unique_ptr<Sealib::BasicGraph> graph(
-      new Sealib::BasicGraph(order1 + order2));
+  std::unique_ptr<Sealib::UndirectedGraph> graph(
+      new Sealib::UndirectedGraph(order1 + order2));
 
   std::mt19937_64 _rng(seed);
   std::uniform_real_distribution<double> unif(0.0, 1.0);
@@ -97,7 +97,7 @@ Sealib::GraphCreator::generateRandomBipartiteBasicGraph(uint32_t order1,
 
 static std::random_device rng;
 
-BasicGraph GraphCreator::createRandomImbalanced(uint32_t order) {
+Sealib::DirectedGraph GraphCreator::createRandomImbalanced(uint32_t order) {
   std::vector<Node> n(order);
   std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
   std::uniform_int_distribution<uint32_t> dist1(order * order,
@@ -120,10 +120,10 @@ BasicGraph GraphCreator::createRandomImbalanced(uint32_t order) {
     }
     n[a] = Node(ad);
   }
-  return BasicGraph(n);
+  return DirectedGraph(n);
 }
 
-Sealib::BasicGraph Sealib::GraphCreator::createRandomFixed(
+Sealib::DirectedGraph Sealib::GraphCreator::createRandomFixed(
     uint32_t order, uint32_t degreePerNode) {
   std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
   std::vector<Node> n(order);
@@ -135,10 +135,10 @@ Sealib::BasicGraph Sealib::GraphCreator::createRandomFixed(
     }
     n[a] = Node(ad);
   }
-  return BasicGraph(n);
+  return DirectedGraph(n);
 }
 
-Sealib::BasicGraph Sealib::GraphCreator::createRandomGenerated(uint32_t order) {
+Sealib::DirectedGraph Sealib::GraphCreator::createRandomGenerated(uint32_t order) {
   std::vector<Node> n(order);
   std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
   for (uint32_t a = 0; a < order; a++) {
@@ -149,5 +149,5 @@ Sealib::BasicGraph Sealib::GraphCreator::createRandomGenerated(uint32_t order) {
     }
     n[a] = Node(ad);
   }
-  return BasicGraph(n);
+  return DirectedGraph(n);
 }

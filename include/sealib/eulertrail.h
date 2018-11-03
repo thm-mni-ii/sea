@@ -2,7 +2,7 @@
 #define SEALIB_EULERTRAIL_H_
 
 #include <sealib/dictionary/rankselect.h>
-#include <sealib/graph/basicgraph.h>
+#include <sealib/graph/undirectedgraph.h>
 #include <sealib/simpletrailstructure.h>
 #include <sealib/trailstructure.h>
 #include <ostream>
@@ -19,7 +19,7 @@ template<class TrailStructureType>
  */
 class EulerTrail {
  private:
-    std::shared_ptr<Sealib::BasicGraph> graph;
+    std::shared_ptr<Sealib::UndirectedGraph> graph;
     std::vector<TrailStructureType>  trail;
     Sealib::RankSelect trailStarts;
 
@@ -52,7 +52,7 @@ class EulerTrail {
      *
      * @param graph - undirected graph object for which the euler trails should be created
      */
-    explicit EulerTrail(const std::shared_ptr<Sealib::BasicGraph> &graph);
+    explicit EulerTrail(const std::shared_ptr<Sealib::UndirectedGraph> &graph);
 
     /**
      * @return iterates over all trails and writes them to the output steam

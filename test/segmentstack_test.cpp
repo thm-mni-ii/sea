@@ -6,7 +6,7 @@
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
 using Sealib::CompactArray;
-using Sealib::BasicGraph;
+using Sealib::DirectedGraph;
 
 #define pushn(i, n) \
   for (uint32_t a = (i); a < (n); a++) s->push(Pair((a), K))
@@ -55,7 +55,7 @@ class ExtendedSegmentStackTest : public ::testing::Test {
   ExtendedSegmentStack *s;
   uint32_t q;
   CompactArray *c;
-  BasicGraph g;
+  DirectedGraph g;
   virtual void SetUp() {
     uint32_t n = 256;
     g = Sealib::GraphCreator::createRandomFixed(n, 10);
@@ -72,7 +72,7 @@ class ExtendedSegmentStackTest2 : public ::testing::Test {
   ExtendedSegmentStack *s;
   uint32_t q;
   CompactArray *c;
-  BasicGraph g;
+  DirectedGraph g;
   virtual void SetUp() {
     uint32_t n = 128;
     g = Sealib::GraphCreator::createRandomImbalanced(n);

@@ -1,13 +1,13 @@
 #ifndef SRC_SUBGRAPH_BASESUBGRAPH_H_
 #define SRC_SUBGRAPH_BASESUBGRAPH_H_
 #include <sealib/dictionary/rankselect.h>
-#include <sealib/graph/basicgraph.h>
+#include <sealib/graph/undirectedgraph.h>
 #include <tuple>
 #include "./subgraph.h"
 
 namespace Sealib {
 class BaseSubGraph : public SubGraph {
-    typedef std::shared_ptr<BasicGraph> rgraph_t;
+    typedef std::shared_ptr<UndirectedGraph> rgraph_t;
  private:
     rgraph_t rGraph;
 
@@ -20,7 +20,7 @@ class BaseSubGraph : public SubGraph {
     uint64_t psi(uint64_t a) const override;
     uint64_t phiInv(uint64_t u) const override;
     uint64_t psiInv(uint64_t a) const override;
-    explicit BaseSubGraph(stack_t *stack, std::shared_ptr<BasicGraph> rGraph);
+    explicit BaseSubGraph(stack_t *stack, std::shared_ptr<UndirectedGraph> rGraph);
     ~BaseSubGraph() override;
 };
 }  // namespace Sealib
