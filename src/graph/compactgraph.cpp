@@ -1,13 +1,13 @@
 #include <memory>
 #include "sealib/graph/compactgraph.h"
 
-using Sealib::Compactgraph;
+using Sealib::CompactGraph;
 
-Compactgraph::Compactgraph(uint32_t _A[]) {
+CompactGraph::CompactGraph(uint32_t _A[]) {
 	this->A = std::unique_ptr<uint32_t[]>(_A);
 }
 
-uint32_t Compactgraph::getNodeDegree(uint32_t u) const {
+uint32_t CompactGraph::getNodeDegree(uint32_t u) const {
 	// Fix index u = u+1
 	++u;
 	// Following node
@@ -34,14 +34,14 @@ uint32_t Compactgraph::getNodeDegree(uint32_t u) const {
 	}
 }
 
-uint32_t Compactgraph::head(uint32_t u, uint32_t k) const {
+uint32_t CompactGraph::head(uint32_t u, uint32_t k) const {
 	return A[A[u+1]+k];
 }
 
-uint32_t Compactgraph::getOrder() const {
+uint32_t CompactGraph::getOrder() const {
 	return A[0];
 }
 
-uint32_t* Compactgraph::getData() {
+uint32_t* CompactGraph::getData() {
 	return this->A.get();
 }

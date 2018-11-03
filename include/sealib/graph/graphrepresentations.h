@@ -21,32 +21,6 @@ namespace Sealib {
 
 class Graphrepresentations {
  public:
-    static uint* fastGraphGeneration(uint n, uint mPern);
-
-    /**	Generates a Gilbert graph G(n,p) in standard representation with n nodes
-     *  and an occurence of every possible edge with a probability of
-     *  0 < p < 1
-     *  Complexity = O(n^2)
-     *
-     *	@param numNodes order of the graph
-     *	@param p probability of an edge
-     *	@param gen engine to generate a pseudo random sequence of numbers
-     */
-    static Compactgraph *generateGilbertGraph(uint32_t n, double p,
-                                              std::mt19937_64 *gen);
-
-    /**	Generates a Gilbert graph G(n,p) in standard representation with n nodes
-     *  and an occurence of every possible edge with a probability of
-     *  0 < p < 1
-     *  Complexity = O(n^2)
-     *
-     *	@param numNodes order of the graph
-     *	@param p probability of an edge
-     *	@param gen engine to generate a pseudo random sequence of numbers
-     */
-    static uint* generateRawGilbertGraph(uint32_t n, double p,
-                                         std::mt19937_64 *gen);
-
     /**
      * Copies a graph object declared in graph.h into the standard
      * representation used for inplace DFS and BFS

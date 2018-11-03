@@ -80,16 +80,15 @@ void runTests(double (*p)(double), std::string filename) {
     for (uint32_t j = 0; j < 2; ++j) {
       double pN = p(n);
       double m = n * (n - 1) * pN;
-      auto A = Graphrepresentations::generateRawGilbertGraph(n, pN, &gen);
-      std::unique_ptr<Compactgraph> g(new Compactgraph(A));
+      CompactGraph g = GraphCreator::generateGilbertGraph(n, pN, &gen);
       test1.runTest(
-          [&g]() { DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy); },
+          [&g]() { DFS::standardDFS(&g, dummy, dummy2, dummy2, dummy); },
           n, m);
       test2.runTest(
-          [&A]() {
-            Graphrepresentations::standardToBeginpointer(A);
-            Graphrepresentations::swapRepresentation(A);
-            DFS::runLinearTimeInplaceDFS(A, dummy, dummy, 1);
+          [&g]() {
+            Graphrepresentations::standardToBeginpointer(g.getData());
+            Graphrepresentations::swapRepresentation(g.getData());
+            DFS::runLinearTimeInplaceDFS(g.getData(), dummy, dummy, 1);
           },
           n, m);
     }
@@ -104,8 +103,8 @@ void runTest(uint n, uint (*fm)(uint n)) {
   auto _n = n;
   for (uint i = 1; i <= 1; i++) {
     for (uint32_t j = 0; j < 1; ++j) {
-      auto A = Graphrepresentations::fastGraphGeneration(_n, fm(_n));
-      std::unique_ptr<Compactgraph> g(new Compactgraph(A));
+      auto A = GraphCreator::fastGraphGeneration(_n, fm(_n));
+      std::unique_ptr<CompactGraph> g(new CompactGraph(A));
       test1.runTest(
           [&g]() { DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy); },
           _n, fm(_n));

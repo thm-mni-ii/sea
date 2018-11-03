@@ -15,7 +15,7 @@ namespace Sealib {
  * @complexity A graph with n nodes and m edges is stored in O(n + m + 2) words
  * @author Simon Schniedenharn 
  */
-class Compactgraph : public Graph {
+class CompactGraph : public Graph {
 	private:
 		std::unique_ptr<uint32_t[]> A;
 
@@ -24,7 +24,7 @@ class Compactgraph : public Graph {
 		 * Creates a compactgraph object out of a pointer to an uint32_t array
 		 * @param A pointer to a graph array in standard representation
 		 */
-		explicit Compactgraph(uint32_t _A[]);
+		explicit CompactGraph(uint32_t _A[]);
 
     /**
     * Returns the degree of the node that v points at.

@@ -4,8 +4,8 @@
 #include <random>
 #include <stack>
 #include <vector>
-#include "sealib/graph/undirectedgraph.h"
 #include "sealib/graph/graphcreator.h"
+#include "sealib/graph/undirectedgraph.h"
 
 using Sealib::DFS;
 using Sealib::CompactArray;
