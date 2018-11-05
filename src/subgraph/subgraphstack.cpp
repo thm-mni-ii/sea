@@ -93,8 +93,6 @@ uint64_t Sealib::SubGraphStack::phi(uint64_t i,
         return tunedPhi->select(u);
     } else if (j > 0 && j == tuned && i == j - 1) {
         return tunedPhi->getBitset()[u - 1] ? tunedPhi->rank(u) : 0;
-    } else if (i == j) {
-        return u;
     }
     /** tuned end */
 
@@ -136,8 +134,6 @@ uint64_t Sealib::SubGraphStack::psi(uint64_t i,
         return tunedPsi->select(a);
     } else if (j > 0 && j == tuned && i == j - 1) {
         return tunedPsi->getBitset()[a - 1] ? tunedPsi->rank(a) : 0;
-    } else if (i == j) {
-        return a;
     }
     /** tuned end */
 

@@ -3,9 +3,8 @@
 
 using Sealib::ChoiceDictionaryIterator;
 
-ChoiceDictionaryIterator::ChoiceDictionaryIterator(ChoiceDictionary *_choicedictionary) {
-    choicedictionary = _choicedictionary;
-}
+ChoiceDictionaryIterator::ChoiceDictionaryIterator(ChoiceDictionary *_choicedictionary)
+    : choicedictionary(_choicedictionary) {}
 
 void ChoiceDictionaryIterator::init() {
     pointer = 0;

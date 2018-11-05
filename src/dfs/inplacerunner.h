@@ -263,7 +263,7 @@ class LinearTimeInplaceDFSRunner {
           this->m_postProcess(p);
           p = A[name(q)];
         }
-        nextNeighbor(p, false);
+        return nextNeighbor(p, false);
       }
       case GRADE_AT_LEAST_TWO: {
         this->m_postProcess(name(q));

@@ -41,8 +41,8 @@ class RecursiveSubGraph : public SubGraph {
 
     uint64_t phi(uint64_t u) const override;
     uint64_t psi(uint64_t a) const override;
-    uint64_t phiInv(uint64_t u) const override;
-    uint64_t psiInv(uint64_t a) const override;
+    uint64_t phiInv(uint64_t u) const final;
+    uint64_t psiInv(uint64_t a) const final;
     ~RecursiveSubGraph() override;
 };
 }  // namespace Sealib

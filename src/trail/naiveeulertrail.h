@@ -8,11 +8,6 @@
 #include <list>
 #include <memory>
 
-using Sealib::UndirectedGraph;
-using std::shared_ptr;
-using std::vector;
-using std::list;
-
 namespace Sealib {
 /**
  * Space efficient Euler Trail class. Initialized with an undirected graph object G_0,
@@ -23,14 +18,14 @@ namespace Sealib {
 class NaiveEulerTrail {
  private:
     std::list<Sealib::SimpleTrail> trails;
-    shared_ptr<UndirectedGraph> graph;
+    std::shared_ptr<UndirectedGraph> graph;
 
  public:
     /**
      *
      * @param graph - undirected graph object for which the euler trails should be created
      */
-    explicit NaiveEulerTrail(const shared_ptr<UndirectedGraph> &graph);
+    explicit NaiveEulerTrail(const std::shared_ptr<UndirectedGraph> &graph);
 };
 }  // namespace Sealib
 #endif  //  SRC_TRAIL_NAIVEEULERTRAIL_H_

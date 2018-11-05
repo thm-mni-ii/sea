@@ -75,7 +75,7 @@ Graph* Graphrepresentations::standardToGraph(uint32_t* a) {
 void Graphrepresentations::standardToCrosspointer(uint32_t* a) {
   uint32_t n = a[0], v, u, pv, pu;
   // n = order of the graph
-  v = u = pv = pu = 0;
+  v = pv = pu = 0;
   u = 1;
   while (u < n) {
     while (!(a[a[u]] > n || a[u] == a[u + 1])) {
