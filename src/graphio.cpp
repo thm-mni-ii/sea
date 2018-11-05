@@ -33,7 +33,8 @@
 
 using namespace Sealib;  // NOLINT
 
-void GraphExporter::exportGML(Graph* g, std::string filename) {
+template<>
+void GraphExporter::exportGML<Graph>(Graph* g, std::string filename) {
     std::ofstream out(filename);
     out << "graph [\ndirected 1\n";
     for (unsigned u = 0; u < g->getOrder(); u++) {
