@@ -2,8 +2,9 @@
 #define SEALIB_GRAPHCREATOR_H_
 
 #include <sealib/basicgraph.h>
-#include <random>
 #include <memory>
+#include <random>
+#include <utility>
 
 namespace Sealib {
 /**
@@ -32,8 +33,8 @@ class GraphCreator {
     static BasicGraph createGraphFromAdjacencyMatrix(unsigned int **adjMatrix,
                                                      unsigned int order);
 
-    static BasicGraph *createGraphPointerFromAdjacencyMatrix(unsigned int **adjMatrix,
-                                                     unsigned int order);
+    static BasicGraph *createGraphPointerFromAdjacencyMatrix(
+        unsigned int **adjMatrix, unsigned int order);
 
     /**
      * Create a random graph with a fixed number of neighbours per node.
@@ -56,20 +57,19 @@ class GraphCreator {
     static BasicGraph *createRandomGenerated(unsigned int order);
 
     /**
-     * Create a random "imbalanced" graph, which contains a handful of very large
-     * nodes.
+     * Create a random "imbalanced" graph, which contains a handful of very large nodes.
      * @param order number of nodes
-     * @return the resulting graph: some nodes have a very large degree (they are
-     * "big")
+     * @return the resulting graph: some nodes have a very large degree (they are "big")
      */
     static BasicGraph *createRandomImbalanced(unsigned int order);
 
-    static std::unique_ptr<BasicGraph> generateRandomBipartiteBasicGraph(unsigned int order1,
-                                                                  unsigned int order2,
-                                                                  double p,
-                                                                  unsigned int seed);
-    static std::shared_ptr<BasicGraph>
-    createSharedGraphFromAdjacencyMatrix(unsigned int **adjMatrix, unsigned int order);
+    static std::pair<BasicGraph *, unsigned int> createRandomUndirected(
+        unsigned int order, unsigned int approxDegree);
+
+    static std::unique_ptr<BasicGraph> generateRandomBipartiteBasicGraph(
+        unsigned int order1, unsigned int order2, double p, unsigned int seed);
+    static std::shared_ptr<BasicGraph> createSharedGraphFromAdjacencyMatrix(
+        unsigned int **adjMatrix, unsigned int order);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPHCREATOR_H_

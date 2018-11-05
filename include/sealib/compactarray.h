@@ -4,6 +4,7 @@
 #include <memory>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
+#include "sealib/sequence.h"
 
 using Sealib::Bitset;
 
@@ -16,7 +17,7 @@ namespace Sealib {
  * For optimal space usage, see constructor comments.
  * @author Simon Heuser
  */
-class CompactArray {
+class CompactArray : public Sequence<uint> {
  public:
     /**
      * Create a new compact array.
@@ -28,27 +29,23 @@ class CompactArray {
      */
     explicit CompactArray(uint count, uint v = 3);
 
-    /**
-     * Insert a value to the given index.
-     * @param i the destination index
-     * @param p the value to insert (in [0,v])
-     */
-    void insert(uint i, uint p);
+  /**
+   * Insert a value to the given index.
+   * @param i the destination index
+   * @param p the value to insert (in [0,v])
+   */
+  void insert(uint i, uint p) override;
 
-/**
- * Get a value from the compact array.
- * @param i index to get the value from
- * @return the found value
- */
-#ifdef __clang__
-    constexpr uint get(uint i) const {
-        return (data[i / valuesPerGroup] >>
-                ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
-               valueMask;
-    }
-#else
-    uint get(uint i) const;
-#endif
+  /**
+   * Get a value from the compact array.
+   * @param i index to get the value from
+   * @return the found value
+   */
+  inline uint get(uint i) const override {
+      return (data[i / valuesPerGroup] >>
+              ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
+             valueMask;
+  }
 
     uint size() const { return valueCount; }
 

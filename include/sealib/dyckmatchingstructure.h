@@ -38,6 +38,11 @@ class DyckMatchingStructure {
     explicit DyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_);
 
     /**
+     * Default descructor.
+     */
+    virtual ~DyckMatchingStructure();
+
+    /**
      * @return Sealib::Bitset<unsigned char> word
      */
     const Sealib::Bitset<unsigned char> &getWord() const;

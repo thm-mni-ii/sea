@@ -30,4 +30,14 @@ class Pair {
   }
 };
 }  // namespace Sealib
+
+/**
+ * Macro for constexpr qualifier on member functions
+ */
+#ifdef __clang__
+#define CONSTEXPR_IF_CLANG constexpr
+#else
+#define CONSTEXPR_IF_CLANG
+#endif
+
 #endif  // SEALIB__TYPES_H_

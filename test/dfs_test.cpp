@@ -48,23 +48,22 @@ static const unsigned GRAPHCOUNT = 4;  // how many random graphs to generate?
 static const unsigned DEGREE = 15;     // how many outneighbours per node?
 static const unsigned order = 200;
 
-static std::vector<std::shared_ptr<Graph>> makeGraphs() {
-    std::vector<std::shared_ptr<Graph>> g;
+static std::vector<BasicGraph *> makeGraphs() {
+    std::vector<BasicGraph *> g;
     for (uint c = 0; c < GRAPHCOUNT; c++) {
-        g.push_back(std::shared_ptr<Graph>(
-            Sealib::GraphCreator::createRandomFixed(order, DEGREE)));
+        g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
     }
     return g;
 }
 
-class DFSTest : public ::testing::TestWithParam<std::shared_ptr<Graph>> {
+class DFSTest : public ::testing::TestWithParam<BasicGraph *> {
  protected:
     virtual void SetUp() {
         c1 = c2 = c3 = c4 = 0;
         v1 = std::vector<unsigned>(order);
         v4 = std::vector<unsigned>(order);
     }  // executed before each
-       // TEST_P
+    // TEST_P
 };
 
 INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
@@ -113,6 +112,19 @@ TEST_P(DFSTest, nloglognBitUserproc) {
     for (unsigned a : v4) {
         EXPECT_EQ(a, 1);
     }
+}
+
+TEST(DFSTest, nplusmBitUserproc) {
+    c1 = c2 = c3 = c4 = 0;
+    uint n = 4000;
+    auto r = GraphCreator::createRandomUndirected(n, 20);
+    BasicGraph *g = r.first;
+    uint m = r.second;
+    DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, n);
+    EXPECT_EQ(c2, m);
+    EXPECT_EQ(c3, m);
+    EXPECT_EQ(c4, n);
 }
 
 TEST(DFSTest, standardImbalanced) {

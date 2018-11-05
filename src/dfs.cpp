@@ -2,15 +2,10 @@
 #include <cmath>
 #include <sstream>
 #include <stack>
+#include <vector>
 #include "./inplacerunner.h"
 
-using Sealib::DFS;
-using Sealib::SegmentStack;
-using Sealib::BasicSegmentStack;
-using Sealib::ExtendedSegmentStack;
-using Sealib::CompactArray;
-using Sealib::Graph;
-using Sealib::Node;
+using namespace Sealib;  // NOLINT
 
 void DFS::process_standard(uint u0, Graph *g, uint *color, UserFunc1 preprocess,
                            UserFunc2 preexplore, UserFunc2 postexplore,
@@ -166,14 +161,54 @@ void DFS::restore_top(uint u0, Graph *g, CompactArray *color,
     s->recolorLow(DFS_GRAY);
 }
 
-void DFS::standardDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
-                      UserFunc2 postexplore, UserFunc1 postprocess) {
+template <class C>
+static void process_static(uint u0, BasicGraph *g, CompactArray *color, C *back,
+                           UserFunc1 preprocess, UserFunc2 preexplore,
+                           UserFunc2 postexplore, UserFunc1 postprocess) {
+    color->insert(u0, DFS_GRAY);
+    back->insert(u0, g->getNodeDegree(u0));
+    preprocess(u0);
+    uint u = u0, k = 0;
+    while (true) {
+        if (k < g->getNodeDegree(u)) {
+            uint v = g->head(u, k);
+            preexplore(u, v);
+            if (color->get(v) == DFS_WHITE) {
+                preprocess(v);
+                color->insert(v, DFS_GRAY);
+                back->insert(v, std::get<1>(g->mate(u, k)));
+                u = v;
+                k = 0;
+                continue;
+            } else {
+                postexplore(u, v);
+                k++;
+            }
+        } else {
+            color->insert(u, DFS_BLACK);
+            postprocess(u);
+            if (u != u0) {
+                std::tuple<uint, uint> p =
+                    g->mate(u, static_cast<uint>(back->get(u)));
+                uint pu = std::get<0>(p), pk = std::get<1>(p);
+                postexplore(pu, u);
+                u = pu;
+                k = pk + 1;
+            } else {
+                break;
+            }
+        }
+    }
+}
+
+void DFS::standardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
+                      UserFunc2 postExplore, UserFunc1 postProcess) {
     uint *color = new uint[g->getOrder()];
     for (uint a = 0; a < g->getOrder(); a++) color[a] = DFS_WHITE;
     for (uint u = 0; u < g->getOrder(); u++) {
         if (color[u] == DFS_WHITE) {
-            DFS::process_standard(u, g, color, preprocess, preexplore,
-                                  postexplore, postprocess);
+            process_standard(u, g, color, preProcess, preExplore, postExplore,
+                             postProcess);
         }
     }
     delete[] color;
@@ -213,10 +248,31 @@ void DFS::nloglognBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
     }
 }
 
-void DFS::runLinearTimeInplaceDFS(uint *graph, UserFunc1 preprocess,
-                                  UserFunc1 postprocess, uint startVertex) {
+void DFS::nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
+                       UserFunc2 preexplore, UserFunc2 postexplore,
+                       UserFunc1 postprocess) {
+    unsigned int n = g->getOrder();
+    CompactArray color(n, 3);
+    for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
+    std::vector<bool> bits;
+    for (uint u = 0; u < n; u++) {
+        bits.push_back(1);
+        for (uint k = 0; k < ceil(log2(g->getNodeDegree(u) + 1)); k++) {
+            bits.push_back(0);
+        }
+    }
+    StaticSpaceStorage back(bits);
+    for (uint a = 0; a < n; a++) {
+        if (color.get(a) == DFS_WHITE)
+            process_static(a, g, &color, &back, preprocess, preexplore,
+                           postexplore, postprocess);
+    }
+}
+
+void DFS::runLinearTimeInplaceDFS(uint *graph, UserFunc1 preProcess,
+                                  UserFunc1 postProcess, uint startVertex) {
     auto *ilDFSRunner =
-        new LinearTimeInplaceDFSRunner(graph, preprocess, postprocess);
+        new LinearTimeInplaceDFSRunner(graph, preProcess, postProcess);
     ilDFSRunner->run(startVertex);
     delete ilDFSRunner;
 }

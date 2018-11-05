@@ -2,15 +2,16 @@
 #define SEALIB_DFS_H_
 
 #include "sealib/_types.h"
+#include "sealib/basicgraph.h"
 #include "sealib/compactarray.h"
-#include "sealib/graph.h"
 #include "sealib/node.h"
 #include "sealib/segmentstack.h"
+#include "sealib/staticspacestorage.h"
 
 #define DFS_WHITE 0
 #define DFS_GRAY 1
 #define DFS_BLACK 2
-#define DFS_RESERVED 3
+#define DFS_RESERVED 3 
 
 using Sealib::Pair;
 using Sealib::UserFunc1;
@@ -82,6 +83,21 @@ class DFS {
                                UserFunc2 preexplore = DFS_NOP_EXPLORE,
                                UserFunc2 postexplore = DFS_NOP_EXPLORE,
                                UserFunc1 postprocess = DFS_NOP_PROCESS);
+
+    /**
+     * Run a linear-time and linear-space depth-first search over an undirected
+     * graph. <br>
+     * EFFICIENCY: O(n+m) time, O(n+m) bits
+     * @param g undirected graph G=(V,E) to iterate over
+     * @param preprocess to be executed before processing a node u
+     * @param preexplore to be executed before exploring an edge (u,v)
+     * @param postexplore to be executed after exploring an edge (u,v)
+     * @param postprocess to be executed after processing a node u
+     * @author Simon Heuser
+     */
+    static void nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
+                             UserFunc2 preexplore, UserFunc2 postexplore,
+                             UserFunc1 postprocess);
 
     /**
      * Runs an inplace DFS in linear time over a graph that is given in a
