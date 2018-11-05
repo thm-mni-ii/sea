@@ -20,7 +20,7 @@ unsigned long Sealib::SharedRankSelect::select(unsigned long k) const {
     unsigned long h = rankStructure.getNonEmptySegments()[firstInSegmentRank - 1];
     unsigned char segment = rankStructure.getBitset().getBlock(h);
     auto localIndex = static_cast<unsigned char>(k - rankStructure.setBefore(h) - 1);
-    unsigned char localSelect = LocalSelectTable::getLocalSelect(segment, localIndex);
+    unsigned char localSelect = LocalSelectTable<>::getLocalSelect(segment, localIndex);
     return localSelect + rankStructure.getSegmentLength() * h + 1;
 }
 
@@ -36,7 +36,7 @@ Sealib::SharedRankSelect::generateFirstInBlockBitSet(const SharedRankStructure &
 
     for (unsigned long i = 0; i < rs.getSegmentCount(); i++) {
         unsigned char segment = rs.getBitset().getBlock(i);
-        unsigned char localFirst = LocalSelectTable::getLocalSelect(segment, 0);
+        unsigned char localFirst = LocalSelectTable<>::getLocalSelect(segment, 0);
         if (localFirst != (unsigned char) -1) {  // has a local first, i.e. is not an empty segment
             // setBefore gives us the index in firstInBlockBitset
             unsigned int before = rs.setBefore(i);
