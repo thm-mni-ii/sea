@@ -1,7 +1,6 @@
 #include "sealib/graphio.h"
 #include <cstring>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
@@ -36,15 +35,15 @@ using namespace Sealib;  // NOLINT
 
 void GraphExporter::exportGML(Graph* g, std::string filename) {
     std::ofstream out(filename);
-    out << "graph\n[\ndirected 1\n";
+    out << "graph [\ndirected 1\n";
     for (unsigned u = 0; u < g->getOrder(); u++) {
-        out << "node\n[\nid " << u << "\n";
+        out << "node [\nid " << u << "\n";
         out << "]\n";
     }
     unsigned edgeId = g->getOrder();
     for (unsigned u = 0; u < g->getOrder(); u++) {
         for (unsigned k = 0; k < g->getNodeDegree(u); k++) {
-            out << "edge\n[\nid " << edgeId++ << "\n";
+            out << "edge [\nid " << edgeId++ << "\n";
             out << "source " << u << "\n";
             out << "target " << g->head(u, k) << "\n";
             out << "]\n";
@@ -77,7 +76,6 @@ BasicGraph GraphImporter::importGML<BasicGraph>(std::string filename) {
     bool directed;
     BasicGraph g;
     bool ok = true;
-    uint n;
 
     std::ifstream in(filename);
     std::stringstream input;
@@ -87,39 +85,39 @@ BasicGraph GraphImporter::importGML<BasicGraph>(std::string filename) {
     uint index = 0;
     READ("graph");
     READ("[");
-    READ("directed");
+    do {
+        READL("directed");
+        index++;
+    } while (!ok);
+    index--;
     directed = std::stoi(tok[index]);
-    std::cout << "Directed: " << directed << "\n";
     index++;
     while (true) {
         READL("node");
         if (ok) {
             READ("[");
             READ("id");
-            in >> n;
             index++;
             Node u;
             g.addNode(u);
             GET_CLOSING_BRACKET
         } else {
-            std::cout << "Added " << g.getOrder() << " nodes\n";
             break;
         }
     }
-    uint m=0;
+    uint m = 0;
     while (true) {
         READL("edge");
         if (ok) {
             READ("[");
             READ("id");
-            in >> n;
             index++;
             uint u, v;
             READ("source");
-            in >> u;
+            u = uint(std::stoi(tok[index]));
             index++;
             READ("target");
-            in >> v;
+            v = uint(std::stoi(tok[index]));
             index++;
             g.getNode(u).addAdjacency(v);
             if (!directed) {
@@ -132,7 +130,6 @@ BasicGraph GraphImporter::importGML<BasicGraph>(std::string filename) {
             GET_CLOSING_BRACKET
             m++;
         } else {
-            std::cout << "Added " << m << " edges\n";
             break;
         }
     }
