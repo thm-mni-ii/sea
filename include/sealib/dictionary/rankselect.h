@@ -25,15 +25,15 @@ class RankSelect {
 
     /**
      * Selects the k-th set bit
-     * @param k idx
-     * @return k-th set bit
+     * @param k bit (in {1,...,B})
+     * @return index of the k-th set bit (in {1,...,n})
      */
     uint64_t select(uint64_t k) const;
 
     /**
      * Rank of the k-th idx
-     * @param k idx
-     * @return rank of k-th idx
+     * @param k idx (in {1,...,n})
+     * @return rank of k-th idx (in {0,...,B})
      */
     uint64_t rank(uint64_t k) const;
 

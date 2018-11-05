@@ -9,6 +9,17 @@ Bitset<BlockType, AllocatorType>::Bitset(sizeType bits_) :
     mbits(bits % bitsPerBlock == 0 ? bits / bitsPerBlock : bits / bitsPerBlock + 1) {}
 
 template<typename BlockType, typename AllocatorType>
+Bitset<BlockType, AllocatorType>::Bitset(const std::vector<bool> &bitvector) :
+    bits(bitvector.size()),
+    mbits(bits % bitsPerBlock == 0 ? bits / bitsPerBlock : bits / bitsPerBlock + 1) {
+    sizeType index = 0;
+        for (bool a : bitvector) {
+            operator[](index) = a;
+            index++;
+        }
+    }
+
+template<typename BlockType, typename AllocatorType>
 Bitset<BlockType, AllocatorType>::Bitset() : Bitset(0) {}
 
 template<typename BlockType, typename AllocatorType>
