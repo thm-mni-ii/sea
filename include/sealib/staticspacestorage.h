@@ -3,6 +3,7 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
+#include "sealib/sequence.h"
 #include "sealib/rankselect.h"
 
 namespace Sealib {
@@ -13,7 +14,7 @@ namespace Sealib {
  * offset specified by the bit pattern.
  * EFFICIENCY: O(n+N) bits
  */
-class StaticSpaceStorage {
+class StaticSpaceStorage : public Sequence<uint64_t> {
  public:
     /**
      * @param i index of the storage array
@@ -29,7 +30,8 @@ class StaticSpaceStorage {
 
     /**
      * Create a new storage from a bit vector.
-     * @param bits bit pattern that shows the position and size of entries
+     * @param bits bit pattern that shows the position and size of entries. The
+     * bits reserved for an entry must NOT exceed 64.
      *  Example:
      *      10001001100
      *      => 4 data packs: size 3, 2, 0 and 2 bits
@@ -49,13 +51,14 @@ class StaticSpaceStorage {
     const Bitset<uint8_t> pattern;
     const RankSelect rankSelect;
     std::vector<uint64_t> storage;
-    const unsigned long bitsize = sizeof(uint64_t) * 8;
+    const uint bitsize = static_cast<uint>(sizeof(uint64_t) * 8);
+    static constexpr uint64_t one = 1;
 
-    CONSTEXPR_IF_CLANG unsigned long getEnd(uint k) const {
+    CONSTEXPR_IF_CLANG inline unsigned long getEnd(uint k) const {
         return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);
     }
 
-    CONSTEXPR_IF_CLANG unsigned long getSize(uint k) const {
+    CONSTEXPR_IF_CLANG inline unsigned long getSize(uint k) const {
         return getEnd(k + 1) - rankSelect.select(k + 1) - 1;
     }
 };
