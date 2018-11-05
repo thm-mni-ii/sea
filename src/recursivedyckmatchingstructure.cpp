@@ -40,8 +40,8 @@ const Sealib::Bitset<unsigned char>
         unsigned long beg = segmentLength * i;
         unsigned char segment = word.getShiftedBlock(beg);
 
-        unsigned long leftPioneer = LocalDyckTable::getLocalData(segment).leftPioneer;
-        unsigned long rightPioneer = LocalDyckTable::getLocalData(segment).rightPioneer;
+        unsigned long leftPioneer = LocalDyckTable<>::getLocalData(segment).leftPioneer;
+        unsigned long rightPioneer = LocalDyckTable<>::getLocalData(segment).rightPioneer;
 
         if (leftPioneer != (unsigned char) -1) {
             if (!pioneerRankSelectBitset[beg + leftPioneer]) {
@@ -76,7 +76,7 @@ const Sealib::Bitset<unsigned char>
             segment |= static_cast<unsigned char>(1 << c);
         }
 
-        unsigned long rightPioneer = LocalDyckTable::getLocalData(segment).rightPioneer;
+        unsigned long rightPioneer = LocalDyckTable<>::getLocalData(segment).rightPioneer;
 
         if (rightPioneer != (unsigned char) -1) {
             if (!pioneerRankSelectBitset[beg + rightPioneer]) {
@@ -104,7 +104,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
         unsigned char segment = word.getShiftedBlock(beg);
 
         unsigned char localMatch =
-            LocalDyckTable::getLocalData(segment).localMatches[bSegmentIdx];
+            LocalDyckTable<>::getLocalData(segment).localMatches[bSegmentIdx];
         if (localMatch != bSegmentIdx) {
             return beg + localMatch;
         }
@@ -113,7 +113,7 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
         unsigned char segment = word.getShiftedBlock(beg);
 
         unsigned char localMatch =
-            LocalDyckTable::getLocalData(segment).localMatches[bSegmentIdx];
+            LocalDyckTable<>::getLocalData(segment).localMatches[bSegmentIdx];
         if (localMatch != bSegmentIdx) {
             return beg + localMatch;
         }
@@ -132,8 +132,8 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
         unsigned long beg = pSegment * segmentLength;
         unsigned char pSeg = word.getShiftedBlock(beg);
 
-        int pDepth = LocalDyckTable::getLocalData(pSeg).localDepths[pSegmentIdx];
-        int bDepth = LocalDyckTable::getLocalData(pSeg).localDepths[bSegmentIdx];
+        int pDepth = LocalDyckTable<>::getLocalData(pSeg).localDepths[pSegmentIdx];
+        int bDepth = LocalDyckTable<>::getLocalData(pSeg).localDepths[bSegmentIdx];
 
         int depthDiff = bDepth - pDepth;
 
@@ -146,9 +146,9 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
             beg = pMatchSegment * segmentLength;
             unsigned char pMatchSeg = word.getShiftedBlock(beg);
 
-            int pMatchDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
+            int pMatchDepth = LocalDyckTable<>::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
             for (long i = matchSegmentIdx; i >= 0; i--) {
-                int candidateDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[i];
+                int candidateDepth = LocalDyckTable<>::getLocalData(pMatchSeg).localDepths[i];
                 int candidateDepthDifference = pMatchDepth - candidateDepth;
                 if (candidateDepthDifference == depthDiff) {  // i is match
                     return (pMatchSegment * segmentLength) + i;
@@ -162,9 +162,9 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
                 pMatchSeg |= static_cast<unsigned char>(1 << c);
             }
 
-            int pMatchDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
+            int pMatchDepth = LocalDyckTable<>::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
             for (long i = matchSegmentIdx; i >= 0; i--) {
-                int candidateDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[i];
+                int candidateDepth = LocalDyckTable<>::getLocalData(pMatchSeg).localDepths[i];
                 int candidateDepthDifference = pMatchDepth - candidateDepth;
                 if (candidateDepthDifference == depthDiff) {  // i is match
                     return (pMatchSegment * segmentLength) + i;
@@ -192,8 +192,8 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
             unsigned long beg = pSegment * segmentLength;
             unsigned char pSeg = word.getShiftedBlock(beg);
 
-            pDepth = LocalDyckTable::getLocalData(pSeg).localDepths[pSegmentIdx];
-            bDepth = LocalDyckTable::getLocalData(pSeg).localDepths[bSegmentIdx];
+            pDepth = LocalDyckTable<>::getLocalData(pSeg).localDepths[pSegmentIdx];
+            bDepth = LocalDyckTable<>::getLocalData(pSeg).localDepths[bSegmentIdx];
 
             depthDiff = pDepth - bDepth;
         } else {
@@ -204,8 +204,8 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
                 pSeg |= static_cast<unsigned char>(1 << c);
             }
 
-            pDepth = LocalDyckTable::getLocalData(pSeg).localDepths[pSegmentIdx];
-            bDepth = LocalDyckTable::getLocalData(pSeg).localDepths[bSegmentIdx];
+            pDepth = LocalDyckTable<>::getLocalData(pSeg).localDepths[pSegmentIdx];
+            bDepth = LocalDyckTable<>::getLocalData(pSeg).localDepths[bSegmentIdx];
 
             depthDiff = pDepth - bDepth;
         }
@@ -216,9 +216,9 @@ unsigned long Sealib::RecursiveDyckMatchingStructure::getMatch(unsigned long idx
         unsigned long beg = pMatchSegment * segmentLength;
         unsigned char pMatchSeg = word.getShiftedBlock(beg);
 
-        int pMatchDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
+        int pMatchDepth = LocalDyckTable<>::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
         for (unsigned long i = matchSegmentIdx; i < segmentLength; i++) {
-            int candidateDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[i];
+            int candidateDepth = LocalDyckTable<>::getLocalData(pMatchSeg).localDepths[i];
             int candidateDepthDifference = candidateDepth - pMatchDepth;
             if (candidateDepthDifference == depthDiff) {  // i is match
                 return (pMatchSegment * segmentLength) + i;

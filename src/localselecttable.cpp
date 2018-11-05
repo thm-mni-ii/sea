@@ -2,22 +2,30 @@
 #include <sealib/sharedrankstructure.h>
 #include <iostream>
 
-Sealib::LocalSelectTable::LocalSelectTable() : localSelectLookupTable(256) {
-    for (unsigned int i = 0; i <= (unsigned char) -1; i++) {
-        unsigned char rank = 0;
-        localSelectLookupTable[i] = std::vector<unsigned char>(8, 255);
-        for (unsigned char j = 0; j < 8; j++) {
+template <typename BlockType>
+Sealib::LocalSelectTable<BlockType>::LocalSelectTable() : localSelectLookupTable(blockTypeMax+1) {
+    for (unsigned int i = 0; i <= blockTypeMax; i++) {
+        BlockType rank = 0;
+        localSelectLookupTable[i] = std::vector<BlockType>(bitsPerBlock, blockTypeMax);
+        for (BlockType j = 0; j < bitsPerBlock; j++) {
             if (CHECK_BIT(i, j)) {
                 localSelectLookupTable[i][rank++] = j;
             }
         }
     }
 }
-
-unsigned char Sealib::LocalSelectTable::getLocalSelect(unsigned char segment,
-                                                       unsigned char localIdx) {
-    static LocalSelectTable instance;
+template <typename BlockType>
+BlockType Sealib::LocalSelectTable<BlockType>::getLocalSelect(BlockType segment,
+                                                              BlockType localIdx) {
+    static LocalSelectTable<BlockType> instance;
     return instance.localSelectLookupTable[segment][localIdx];
 }
+template <typename BlockType>
+Sealib::LocalSelectTable<BlockType>::~LocalSelectTable() = default;
 
-Sealib::LocalSelectTable::~LocalSelectTable() = default;
+namespace Sealib {
+template
+class LocalSelectTable<unsigned char>;
+template
+class LocalSelectTable<unsigned short>;
+}  // namespace Sealib

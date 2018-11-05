@@ -11,7 +11,7 @@ unsigned long Sealib::SharedRankStructure::rank(unsigned long k) const {
     unsigned long segmentIdx = (k - 1) / segmentLength;
     unsigned char segment = bitset->getBlock(segmentIdx);
     auto localIdx = static_cast<unsigned char>((k - 1) % segmentLength);
-    return setBefore(segmentIdx) + LocalRankTable::getLocalRank(segment, localIdx);
+    return setBefore(segmentIdx) + LocalRankTable<>::getLocalRank(segment, localIdx);
 }
 
 Sealib::SharedRankStructure::SharedRankStructure(
@@ -31,7 +31,7 @@ Sealib::SharedRankStructure::SharedRankStructure(
 
     for (unsigned int i = 0; i < segmentCount; i++) {
         unsigned char segment = bitset->getBlock(i);
-        if (LocalRankTable::getLocalRank(segment, 7) != 0) {
+        if (LocalRankTable<>::getLocalRank(segment, 7) != 0) {
             nonEmptySegments.push_back(i);
         }
     }
@@ -41,7 +41,7 @@ Sealib::SharedRankStructure::SharedRankStructure(
         unsigned int cnt = 0;
         for (unsigned long i = 0; i < segmentCount - 1; i++) {
             unsigned char segment = bitset->getBlock(i);
-            cnt += LocalRankTable::getLocalRank(segment, 7);
+            cnt += LocalRankTable<>::getLocalRank(segment, 7);
             setCountTable.push_back(cnt);
         }
     }

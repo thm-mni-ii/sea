@@ -4,13 +4,24 @@
 #include <vector>
 
 namespace Sealib {
+
+template <typename BlockType = unsigned char>
+class LocalDyckTable;
+}
+
+namespace Sealib {
 /**
  * Lookup Table for local dyck matches, depths, and base pioneers
  * @author Johannes Meintrup
  */
+template <typename BlockType>
 class LocalDyckTable {
  public:
-    static constexpr const unsigned int kSegLen = 7;
+
+    static const constexpr unsigned int bitsPerBlock = sizeof(BlockType) * 8;
+    static const constexpr BlockType blockTypeMax = (BlockType) - 1;
+
+    static const constexpr unsigned int kSegLen = bitsPerBlock - 1;
     /**
      * Capsules the Data we want to lookup in the table in a single class.
      */
@@ -24,7 +35,7 @@ class LocalDyckTable {
         /**
          * @param segment to be used for data creation, meaning the local dyck segment
          */
-        explicit Data(unsigned char segment);
+        explicit Data(BlockType segment);
         Data();
         ~Data() = default;
     };
@@ -35,7 +46,7 @@ class LocalDyckTable {
     * @param segment - unsigned char representing a bit vector of size 8
     * @return Local Dyck Data matching the segment
     */
-    static const Data& getLocalData(unsigned char segment);
+    static const Data& getLocalData(BlockType segment);
 
     //  singleton instance only in the function getLocalSelect, these should not be used
     LocalDyckTable(LocalDyckTable const &) = delete;
@@ -45,7 +56,7 @@ class LocalDyckTable {
     std::vector<Data> table;
 
     LocalDyckTable();
-    ~LocalDyckTable() = default;
+    ~LocalDyckTable();
 };
 }  // namespace Sealib
 #endif  // SEALIB_LOCALDYCKTABLE_H_

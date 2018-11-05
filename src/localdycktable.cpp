@@ -5,22 +5,28 @@
 
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 
-Sealib::LocalDyckTable::LocalDyckTable() : table(256) {
+template <typename BlockType>
+Sealib::LocalDyckTable<BlockType>::LocalDyckTable() : table(256) {
     for (unsigned int i = 0; i < 256; i++) {
-        table[i] = Sealib::LocalDyckTable::Data((unsigned char) i);
+        table[i] = Sealib::LocalDyckTable<BlockType>::Data((unsigned char) i);
     }
 }
 
-const Sealib::LocalDyckTable::Data& Sealib::LocalDyckTable::getLocalData(unsigned char segment) {
-    static LocalDyckTable instance;
+template <typename BlockType>
+const typename Sealib::LocalDyckTable<BlockType>::Data& Sealib::LocalDyckTable<BlockType>::getLocalData(BlockType segment) {
+    static LocalDyckTable<BlockType> instance;
     return instance.table[segment];
 }
+template<typename BlockType>
+Sealib::LocalDyckTable<BlockType>::~LocalDyckTable() = default;
 
-Sealib::LocalDyckTable::Data::Data() {}
+template <typename BlockType>
+Sealib::LocalDyckTable<BlockType>::Data::Data() = default;
 
-Sealib::LocalDyckTable::Data::Data(unsigned char segment) :
-    leftPioneer((unsigned char) - 1),
-    rightPioneer((unsigned char) - 1) {
+template <typename BlockType>
+Sealib::LocalDyckTable<BlockType>::Data::Data(BlockType segment) :
+    leftPioneer(blockTypeMax),
+    rightPioneer(blockTypeMax) {
     for (unsigned char c = 0; c < kSegLen; c++) {
         localMatches[c] = c;
         localDepths[c] = 0;
@@ -66,3 +72,11 @@ Sealib::LocalDyckTable::Data::Data(unsigned char segment) :
         }
     }
 }
+
+
+namespace Sealib {
+template
+class LocalDyckTable<unsigned char>;
+template
+class LocalDyckTable<unsigned short>;
+}  // namespace Sealib

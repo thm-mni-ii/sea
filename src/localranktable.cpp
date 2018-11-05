@@ -1,11 +1,12 @@
 #include <sealib/localranktable.h>
 #include <sealib/sharedrankstructure.h>
 
-Sealib::LocalRankTable::LocalRankTable() : localRankLookupTable(256) {
-    for (unsigned int i = 0; i <= (unsigned char) -1; i++) {
-        unsigned char rank = 0;
-        localRankLookupTable[i] = std::vector<unsigned char>(8);
-        for (unsigned char j = 0; j < 8; j++) {
+template <typename BlockType>
+Sealib::LocalRankTable<BlockType>::LocalRankTable() : localRankLookupTable(blockTypeMax+1) {
+    for (unsigned int i = 0; i <= blockTypeMax; i++) {
+        BlockType rank = 0;
+        localRankLookupTable[i] = std::vector<BlockType>(bitsPerBlock);
+        for (BlockType j = 0; j < bitsPerBlock; j++) {
             if (CHECK_BIT(i, j)) {
                 rank++;
             }
@@ -13,10 +14,18 @@ Sealib::LocalRankTable::LocalRankTable() : localRankLookupTable(256) {
         }
     }
 }
-
-unsigned char Sealib::LocalRankTable::getLocalRank(unsigned char segment, unsigned char localIdx) {
-    static LocalRankTable instance;
+template <typename BlockType>
+BlockType Sealib::LocalRankTable<BlockType>::getLocalRank(BlockType segment, BlockType localIdx) {
+    static LocalRankTable<BlockType> instance;
     return instance.localRankLookupTable[segment][localIdx];
 }
 
-Sealib::LocalRankTable::~LocalRankTable() = default;
+template <typename BlockType>
+Sealib::LocalRankTable<BlockType>::~LocalRankTable() = default;
+
+namespace Sealib {
+template
+class LocalRankTable<unsigned char>;
+template
+class LocalRankTable<unsigned short>;
+}  // namespace Sealib
