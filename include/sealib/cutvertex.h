@@ -31,8 +31,8 @@ class CutVertexIterator : Iterator<uint>, DFS {
     ChoiceDictionary cut;
     ChoiceDictionaryIterator cutI;
 
-    void setTreeEdge(uint u, uint v);
-    void setMark(uint u, uint v, uint8_t mark);
+    void setTreeEdge(uint u, uint k, bool uChild);
+    void setMark(uint u, uint k, uint8_t mark);
     void markParents(uint w, uint u, StaticSpaceStorage *parent);
 
     /** Edge data: (4 bits)
@@ -44,31 +44,23 @@ class CutVertexIterator : Iterator<uint>, DFS {
     const uint8_t EDGE_BIT = 0x8,  // 0b1000
         DIRECTION_BIT = 0x4,       // 0b0100
         MARKING_BITS = 0x3;        // 0b0011
-    const uint8_t TREE = 1;
-    const uint8_t FULL = 2, HALF = 1;
-    CONSTEXPR_IF_CLANG bool isTreeEdge(uint u, uint v) const {
-        return (getEdgeData(u, v) & EDGE_BIT) == TREE;
+    const uint8_t TREE = 0x8;
+    const uint8_t FULL = 0x2, HALF = 0x1;
+    CONSTEXPR_IF_CLANG bool isTreeEdge(uint u, uint k) const {
+        return (getEdgeData(u, k) & EDGE_BIT) == TREE;
     }
-    CONSTEXPR_IF_CLANG bool isParent(uint u, uint v) const {
-        return getEdgeData(u, v) & DIRECTION_BIT;
+    CONSTEXPR_IF_CLANG bool isParent(uint u, uint k) const {
+        return (getEdgeData(u, k) & DIRECTION_BIT) == 0;
     }
-    CONSTEXPR_IF_CLANG bool isFullMarked(uint u, uint v) const {
-        return (getEdgeData(u, v) & MARKING_BITS) == FULL;
+    CONSTEXPR_IF_CLANG bool isFullMarked(uint u, uint k) const {
+        return (getEdgeData(u, k) & MARKING_BITS) == FULL;
     }
 
-    inline uint findEdge(uint u, uint v) const {
-        for (uint k = 0; k < g->getNodeDegree(u); k++) {
-            if (g->head(u, k) == v) {
-                return k;
-            }
-        }
-        return INVALID;
+    CONSTEXPR_IF_CLANG uint edgeIndex(uint u) const {
+        return static_cast<uint>(offset.select(u + 1) - u - 1U);
     }
-    CONSTEXPR_IF_CLANG uint nodeIndex(uint u) const {
-        return static_cast<uint>(offset.select(u + 1) - u - 1U) * 4U;
-    }
-    CONSTEXPR_IF_CLANG uint64_t getEdgeData(uint u, uint v) const {
-        return edges.get(nodeIndex(u) + findEdge(u, v));
+    CONSTEXPR_IF_CLANG uint64_t getEdgeData(uint u, uint k) const {
+        return edges.get(edgeIndex(u) + k);
     }
 };
 }  // namespace Sealib
