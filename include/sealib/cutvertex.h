@@ -3,6 +3,8 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/basicgraph.h"
+#include "sealib/bitset.h"
+#include "sealib/choicedictionaryiterator.h"
 #include "sealib/compactarray.h"
 #include "sealib/dfs.h"
 #include "sealib/iterator.h"
@@ -18,14 +20,16 @@ class CutVertexIterator : Iterator<uint>, DFS {
 
     uint next() override;
 
+    bool isCutVertex(uint u);
+
  private:
     BasicGraph *g;
     uint n;
-    std::vector<uint> offs;
+    RankSelect offset;
     StaticSpaceStorage edges;
-    std::vector<uint> cc{0};
-    uint cci = 0;
-    uint cu = 0;
+    ChoiceDictionary cc;
+    ChoiceDictionary cut;
+    ChoiceDictionaryIterator cutI;
 
     void setTreeEdge(uint u, uint v);
     void setMark(uint u, uint v, uint8_t mark);
@@ -52,7 +56,7 @@ class CutVertexIterator : Iterator<uint>, DFS {
         return (getEdgeData(u, v) & MARKING_BITS) == FULL;
     }
 
-    inline uint edgeIndex(uint u, uint v) const {
+    inline uint findEdge(uint u, uint v) const {
         for (uint k = 0; k < g->getNodeDegree(u); k++) {
             if (g->head(u, k) == v) {
                 return k;
@@ -60,8 +64,11 @@ class CutVertexIterator : Iterator<uint>, DFS {
         }
         return INVALID;
     }
+    CONSTEXPR_IF_CLANG uint nodeIndex(uint u) const {
+        return static_cast<uint>(offset.select(u + 1) - u - 1U) * 4U;
+    }
     CONSTEXPR_IF_CLANG uint64_t getEdgeData(uint u, uint v) const {
-        return edges.get(offs[u] + edgeIndex(u, v));
+        return edges.get(nodeIndex(u) + findEdge(u, v));
     }
 };
 }  // namespace Sealib

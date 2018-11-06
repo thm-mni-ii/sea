@@ -5,38 +5,49 @@
 
 using namespace Sealib;  // NOLINT
 
-static std::vector<bool> makeBits(BasicGraph *g, std::vector<uint> *offs) {
+static std::vector<bool> makeEdges(BasicGraph *g) {
     std::vector<bool> bits;
-    uint offset = 0;
     for (uint u = 0; u < g->getOrder(); u++) {
-        offs->push_back(offset);
         bits.push_back(1);
         for (uint k = 0; k < g->getNodeDegree(u); k++) {
             bits.push_back(0);
             bits.push_back(0);
             bits.push_back(0);
             bits.push_back(0);
-            offset++;
         }
     }
     return bits;
 }
 
+static Bitset<unsigned char> makeOffset(BasicGraph *g) {
+    std::vector<bool> bits;
+    for (uint u = 0; u < g->getOrder(); u++) {
+        bits.push_back(1);
+        for (uint k = 0; k < g->getNodeDegree(u); k++) {
+            bits.push_back(0);
+        }
+    }
+    return Bitset<unsigned char>(bits);
+}
+
 CutVertexIterator::CutVertexIterator(BasicGraph *graph)
-    : g(graph), n(g->getOrder()), offs(0), edges(makeBits(g, &offs)) {}
+    : g(graph),
+      n(g->getOrder()),
+      offset(makeOffset(g)),
+      edges(makeEdges(g)),
+      cc(n),
+      cut(n),
+      cutI(nullptr) {}
 
 void CutVertexIterator::setTreeEdge(uint u, uint v) {
-    uint ui = offs[u] + edgeIndex(u, v), vi = offs[v] + edgeIndex(v, u);
+    uint ui = nodeIndex(u) + findEdge(u, v), vi = nodeIndex(v) + findEdge(v, u);
     edges.insert(ui, edges.get(ui) | EDGE_BIT);
     edges.insert(vi, edges.get(vi) | EDGE_BIT);
     edges.insert(vi, edges.get(vi) | DIRECTION_BIT);
 }
 
-/**
- * Set the mark for edge {u,v}.
- */
 void CutVertexIterator::setMark(uint u, uint v, uint8_t mark) {
-    uint ui = offs[u] + edgeIndex(u, v), vi = offs[v] + edgeIndex(v, u);
+    uint ui = nodeIndex(u) + findEdge(u, v), vi = nodeIndex(v) + findEdge(v, u);
     edges.insert(ui, edges.get(ui) & (EDGE_BIT | DIRECTION_BIT));
     edges.insert(vi, edges.get(vi) & (EDGE_BIT | DIRECTION_BIT));
     edges.insert(ui, edges.get(ui) | mark);
@@ -70,7 +81,7 @@ void CutVertexIterator::init() {
     }
     StaticSpaceStorage parent(bits);
     for (uint a = 0; a < n; a++) {
-        cc.emplace_back(a);
+        cc.insert(a);
         process_static(a, g, &color, &parent, DFS_NOP_PROCESS,
                        [this, &color](uint u, uint v) {
                            if (color.get(v) == DFS_WHITE) {
@@ -107,33 +118,35 @@ void CutVertexIterator::init() {
             },
             DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
     }
-}
 
-bool CutVertexIterator::more() { return cu < n; }
-
-uint CutVertexIterator::next() {
-    bool r = false;
-    while (!r) {
-        if (cu == cc[cci]) {
-            cci++;
+    uint u = 0;
+    while (u < n) {
+        if (cc.get(u)) {
             uint num = 0;
             for (uint k = 0; k < n; k++) {
-                if (isTreeEdge(cu, g->head(cu, k))) {
+                if (isTreeEdge(u, g->head(u, k))) {
                     num++;
                 }
                 if (num > 1) {
-                    r = true;
+                    cut.insert(u);
+                    break;
                 }
             }
         } else {
-            for (uint k = 0; k < g->getNodeDegree(cu); k++) {
-                if (!isFullMarked(cu, g->head(cu, k))) {
-                    r = true;
+            for (uint k = 0; k < g->getNodeDegree(u); k++) {
+                if (!isFullMarked(u, g->head(u, k))) {
+                    cut.insert(u);
+                    break;
                 }
             }
         }
-        cu++;
-        if (cu == n) return INVALID;
+        u++;
     }
-    return cu - 1;
+    cutI = ChoiceDictionaryIterator(&cut);
 }
+
+bool CutVertexIterator::more() { return cutI.more(); }
+
+uint CutVertexIterator::next() { return static_cast<uint>(cutI.next()); }
+
+bool CutVertexIterator::isCutVertex(uint u) { return cut.get(u); }
