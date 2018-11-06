@@ -17,9 +17,8 @@ namespace Sealib {
 template <typename BlockType>
 class LocalDyckTable {
  public:
-
     static const constexpr unsigned int bitsPerBlock = sizeof(BlockType) * 8;
-    static const constexpr BlockType blockTypeMax = (BlockType) - 1;
+    static const constexpr unsigned int blockTypeMax = (BlockType) - 1;
 
     static const constexpr unsigned int kSegLen = bitsPerBlock - 1;
     /**
@@ -27,6 +26,8 @@ class LocalDyckTable {
      */
     class Data {
      public:
+        static const constexpr BlockType npos = blockTypeMax;
+
         unsigned char localMatches[kSegLen];  // array of local matches
         char localDepths[kSegLen];  // array of local depths
         unsigned char leftPioneer;  // left pioneer, if there is one

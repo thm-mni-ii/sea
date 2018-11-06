@@ -177,7 +177,7 @@ inline void Sealib::TrailStructure::initDyckStructure() {
             // increment circular
             j = j == inAndOut.size() - 1 ? 0 : j + 1;
         } while (j != dyckStart);
-        dyckMatchingStructure.reset(new RecursiveDyckMatchingStructure(dyckWord));
+        dyckMatchingStructure.reset(new RecursiveDyckMatchingStructure<>(dyckWord));
     }
 }
 

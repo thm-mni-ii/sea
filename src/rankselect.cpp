@@ -41,7 +41,8 @@ const Sealib::Bitset<BlockType> Sealib::RankSelect<BlockType>::generateFirstInBl
     for (unsigned long i = 0; i < rs.getSegmentCount(); i++) {
         BlockType segment = rs.getBitset().getBlock(i);
         BlockType localFirst = LocalSelectTable<BlockType>::getLocalSelect(segment, 0);
-        if (localFirst != LocalSelectTable<BlockType>::npos) {  // has a local first, i.e. is not an empty segment
+        // has a local first, i.e. is not an empty segment
+        if (localFirst != LocalSelectTable<BlockType>::npos) {
             // setBefore gives us the index in firstInBlockBitset
             unsigned int before = rs.setBefore(i);
             firstInBlockBitSet[before] = 1;

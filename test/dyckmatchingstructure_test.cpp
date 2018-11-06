@@ -5,7 +5,7 @@
 TEST(DyckMatchingStructureTest, testAllWordsLength10) {
     Sealib::DyckWordLexicon lex(10);
     for (const Sealib::Bitset<unsigned char> &word : lex.getLexicon()) {
-        Sealib::DyckMatchingStructure d(word);
+        Sealib::DyckMatchingStructure<> d(word);
         for (unsigned int i = 0; i < 10; i++) {
             ASSERT_NE(d.getMatch(i), i);
         }
@@ -15,7 +15,7 @@ TEST(DyckMatchingStructureTest, testAllWordsLength10) {
 TEST(DyckMatchingStructureTest, testWords) {
     Sealib::Bitset<unsigned char> word1(2);
     word1[0] = 1;
-    Sealib::DyckMatchingStructure d1(word1);
+    Sealib::DyckMatchingStructure<> d1(word1);
 
     ASSERT_EQ(d1.getMatch(0), 1);
     ASSERT_EQ(d1.getMatch(1), 0);
@@ -24,7 +24,7 @@ TEST(DyckMatchingStructureTest, testWords) {
     for (unsigned int i = 0; i < 5; i++) {
         word2[i] = 1;
     }
-    Sealib::DyckMatchingStructure d2(word2);
+    Sealib::DyckMatchingStructure<> d2(word2);
 
     ASSERT_EQ(d2.getMatch(0), 9);
     ASSERT_EQ(d2.getMatch(1), 8);

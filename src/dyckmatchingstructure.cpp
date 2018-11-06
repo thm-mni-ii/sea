@@ -1,8 +1,9 @@
 #include <sealib/dyckmatchingstructure.h>
 #include <iostream>
 
-unsigned long Sealib::DyckMatchingStructure::getMatchNaive(
-    const Sealib::Bitset<unsigned char> &word,
+template<typename BlockType>
+unsigned long Sealib::DyckMatchingStructure<BlockType>::getMatchNaive(
+    const Sealib::Bitset<BlockType> &word,
     unsigned long idx) {
     unsigned int j = 0;
     unsigned int p = 0;
@@ -27,16 +28,27 @@ unsigned long Sealib::DyckMatchingStructure::getMatchNaive(
 
     return idx;;
 }
+template<typename BlockType>
 
-const Sealib::Bitset<unsigned char> &Sealib::DyckMatchingStructure::getWord() const {
+const Sealib::Bitset<BlockType> &Sealib::DyckMatchingStructure<BlockType>::getWord() const {
     return word;
 }
+template<typename BlockType>
 
-Sealib::DyckMatchingStructure::DyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_) :
+Sealib::DyckMatchingStructure<BlockType>::DyckMatchingStructure(
+    const Sealib::Bitset<BlockType> &word_) :
     word(word_) {}
+template<typename BlockType>
 
-Sealib::DyckMatchingStructure::~DyckMatchingStructure() {}
+Sealib::DyckMatchingStructure<BlockType>::~DyckMatchingStructure() {}
+template<typename BlockType>
 
-unsigned long Sealib::DyckMatchingStructure::getMatch(unsigned long idx) {
+unsigned long Sealib::DyckMatchingStructure<BlockType>::getMatch(unsigned long idx) {
     return getMatchNaive(word, idx);
 }
+namespace Sealib {
+template
+class DyckMatchingStructure<unsigned char>;
+template
+class DyckMatchingStructure<unsigned short>;
+}  // namespace Sealib

@@ -22,7 +22,8 @@ unsigned long Sealib::SharedRankSelect<BlockType>::select(unsigned long k) const
     unsigned long h = rankStructure.getNonEmptySegments()[firstInSegmentRank - 1];
     BlockType segment = rankStructure.getBitset().getBlock(h);
     auto localIndex = static_cast<BlockType>(k - rankStructure.setBefore(h) - 1);
-    BlockType localSelect = LocalSelectTable<BlockType>::getLocalSelect(segment, localIndex);
+    BlockType localSelect =
+        LocalSelectTable<BlockType>::getLocalSelect(segment, localIndex);
     return localSelect + rankStructure.getSegmentLength() * h + 1;
 }
 
@@ -31,7 +32,8 @@ Sealib::SharedRankSelect<BlockType>::SharedRankSelect() = default;
 
 template <typename BlockType>
 std::shared_ptr<const Sealib::Bitset<BlockType>>
-Sealib::SharedRankSelect<BlockType>::generateFirstInBlockBitSet(const SharedRankStructure<BlockType> &rs) {
+Sealib::SharedRankSelect<BlockType>::generateFirstInBlockBitSet(
+    const SharedRankStructure<BlockType> &rs) {
     unsigned long size = rs.rank(rs.size());
     if (size == (unsigned long) -1) {
         size = 0;
@@ -41,7 +43,8 @@ Sealib::SharedRankSelect<BlockType>::generateFirstInBlockBitSet(const SharedRank
     for (unsigned long i = 0; i < rs.getSegmentCount(); i++) {
         BlockType segment = rs.getBitset().getBlock(i);
         BlockType localFirst = LocalSelectTable<BlockType>::getLocalSelect(segment, 0);
-        if (localFirst != LocalSelectTable<BlockType>::npos) {  // has a local first, i.e. is not an empty segment
+        // has a local first, i.e. is not an empty segment
+        if (localFirst != LocalSelectTable<BlockType>::npos) {
             // setBefore gives us the index in firstInBlockBitset
             unsigned int before = rs.setBefore(i);
             (*firstInBlockBitSet)[before] = 1;
@@ -59,7 +62,8 @@ unsigned long Sealib::SharedRankSelect<BlockType>::rank(unsigned long k) const {
     return rankStructure.rank(k);
 }
 template<typename BlockType>
-const Sealib::Bitset<BlockType> &Sealib::SharedRankSelect<BlockType>::getBitset() const {
+const Sealib::Bitset<BlockType>
+&Sealib::SharedRankSelect<BlockType>::getBitset() const {
     return rankStructure.getBitset();
 }
 

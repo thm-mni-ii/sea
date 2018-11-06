@@ -7,11 +7,18 @@
 #include <map>
 
 namespace Sealib {
+
+template <typename BlockType = unsigned char>
+class RecursiveDyckMatchingStructure;
+}
+
+namespace Sealib {
 /**
  * Space efficient implementation of a dyck matching structure.
  * Enables to find the match of a given parenthesis b in a dyckword w in constant time.
  */
-class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
+template <typename BlockType>
+class RecursiveDyckMatchingStructure : public DyckMatchingStructure<BlockType> {
  public:
     /**
      * Constructs the matching structure for the given dyck word word_
@@ -21,7 +28,7 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
      * @param recursions - maximum recursion depth
      */
     explicit RecursiveDyckMatchingStructure(
-        const Sealib::Bitset<unsigned char> &word_,
+        const Sealib::Bitset<BlockType> &word_,
         unsigned int recursions);
 
     /**
@@ -30,7 +37,7 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
      * up to a maximum recursion depth of two.
      * @param word_ - valid dyck word. validity is not being tested
      */
-    explicit RecursiveDyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_);
+    explicit RecursiveDyckMatchingStructure(const Sealib::Bitset<BlockType> &word_);
 
     /**
      * finds the match of a parenthesis b in word in constant time
@@ -40,13 +47,14 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
     unsigned long getMatch(unsigned long idx) override;
 
  private:
-    static const unsigned char segmentLength = 7;
+    static const unsigned int bitsPerBlock = sizeof(BlockType) * 8;
+    static const unsigned int segmentLength = bitsPerBlock - 1;
     unsigned int segments;
-    unsigned char lastSegment;
-    RankSelect<> pioneerRankSelect;
-    DyckMatchingStructure *pioneerMatchingStructure;
+    BlockType lastSegment;
+    RankSelect<BlockType> pioneerRankSelect;
+    DyckMatchingStructure<BlockType> *pioneerMatchingStructure;
 
-    const Sealib::Bitset<unsigned char> initializePioneerRankSelectBitset();
+    const Sealib::Bitset<BlockType> initializePioneerRankSelectBitset();
 };
 }  // namespace Sealib
 #endif  // SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_

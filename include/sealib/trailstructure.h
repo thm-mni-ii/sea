@@ -22,7 +22,7 @@ class TrailStructure {
     Sealib::Bitset<unsigned char> matched;
     Sealib::Bitset<unsigned char> flags;
 
-    std::unique_ptr<DyckMatchingStructure> dyckMatchingStructure;
+    std::unique_ptr<DyckMatchingStructure<>> dyckMatchingStructure;
     std::unique_ptr<std::vector<unsigned int>> married;
     std::unique_ptr<DoubleLinkedList> unused;
 

@@ -79,7 +79,7 @@ TEST(SimpleTrailStructureTest, allEvenPossibilities) {
             for (unsigned int j = 0; j < len; j++) {
                 if (word[j]) {
                     unsigned long match =
-                        Sealib::DyckMatchingStructure::getMatchNaive(word, j);
+                        Sealib::DyckMatchingStructure<>::getMatchNaive(word, j);
                     unsigned long d = match - j;
                     depths[d].push_back(j);
                 }

@@ -17,7 +17,6 @@ namespace Sealib {
 */
 template <typename BlockType>
 class LocalRankTable {
-
  private:
     std::vector<std::vector<BlockType>> localRankLookupTable;
     /**

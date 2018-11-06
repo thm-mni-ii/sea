@@ -5,12 +5,19 @@
 #include <iostream>
 
 namespace Sealib {
+
+template <typename BlockType = unsigned char>
+class DyckMatchingStructure;
+}
+
+namespace Sealib {
 /**
  * Base class for dyckmatching.
  * Enables to find the match of a parenthesis in a dyck word w in a naive way, taking O(n) time.
  *
  * Also the static functions to find a match in a dyck word w in a naive way.
  */
+template <typename BlockType>
 class DyckMatchingStructure {
  public:
     /**
@@ -20,7 +27,7 @@ class DyckMatchingStructure {
      * @return match of word_(idx_), or idx_ if there is no match. (if word_ is not valid)
      */
     static unsigned long getMatchNaive(
-        const Sealib::Bitset<unsigned char> &word_,
+        const Sealib::Bitset<BlockType> &word_,
         unsigned long idx);
 
     /**
@@ -35,7 +42,7 @@ class DyckMatchingStructure {
      * There is no test to check if word_ is a valid dyck word.
      * @param word_ - dyck word for the matching structure
      */
-    explicit DyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_);
+    explicit DyckMatchingStructure(const Sealib::Bitset<BlockType> &word_);
 
     /**
      * Default descructor.
@@ -45,12 +52,11 @@ class DyckMatchingStructure {
     /**
      * @return Sealib::Bitset<unsigned char> word
      */
-    const Sealib::Bitset<unsigned char> &getWord() const;
+    const Sealib::Bitset<BlockType> &getWord() const;
 
 
  protected:
-    const Sealib::Bitset<unsigned char> word;
-    static constexpr const unsigned char mSegmentLength = 7;
+    const Sealib::Bitset<BlockType> word;
 };
 }  // namespace Sealib
 #endif  // SEALIB_DYCKMATCHINGSTRUCTURE_H_

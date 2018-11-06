@@ -6,14 +6,15 @@
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 
 template <typename BlockType>
-Sealib::LocalDyckTable<BlockType>::LocalDyckTable() : table(256) {
-    for (unsigned int i = 0; i < 256; i++) {
-        table[i] = Sealib::LocalDyckTable<BlockType>::Data((unsigned char) i);
+Sealib::LocalDyckTable<BlockType>::LocalDyckTable() : table(blockTypeMax+1) {
+    for (unsigned int i = 0; i <= blockTypeMax; i++) {
+        table[i] = Sealib::LocalDyckTable<BlockType>::Data((BlockType) i);
     }
 }
 
 template <typename BlockType>
-const typename Sealib::LocalDyckTable<BlockType>::Data& Sealib::LocalDyckTable<BlockType>::getLocalData(BlockType segment) {
+const typename Sealib::LocalDyckTable<BlockType>::Data&
+Sealib::LocalDyckTable<BlockType>::getLocalData(BlockType segment) {
     static LocalDyckTable<BlockType> instance;
     return instance.table[segment];
 }
@@ -25,8 +26,8 @@ Sealib::LocalDyckTable<BlockType>::Data::Data() = default;
 
 template <typename BlockType>
 Sealib::LocalDyckTable<BlockType>::Data::Data(BlockType segment) :
-    leftPioneer(blockTypeMax),
-    rightPioneer(blockTypeMax) {
+    leftPioneer(npos),
+    rightPioneer(npos) {
     for (unsigned char c = 0; c < kSegLen; c++) {
         localMatches[c] = c;
         localDepths[c] = 0;
