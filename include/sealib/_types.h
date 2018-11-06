@@ -27,7 +27,7 @@ class Pair {
 #ifdef __clang__
 #define CONSTEXPR_IF_CLANG constexpr
 #else
-#define CONSTEXPR_IF_CLANG
+#define CONSTEXPR_IF_CLANG inline
 #endif
 
 #endif  // SEALIB__TYPES_H_

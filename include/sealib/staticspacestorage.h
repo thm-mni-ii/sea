@@ -54,11 +54,11 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
     const uint bitsize = static_cast<uint>(sizeof(uint64_t) * 8);
     static constexpr uint64_t one = 1;
 
-    CONSTEXPR_IF_CLANG inline unsigned long getEnd(uint k) const {
+    CONSTEXPR_IF_CLANG unsigned long getEnd(uint k) const {
         return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);
     }
 
-    CONSTEXPR_IF_CLANG inline unsigned long getSize(uint k) const {
+    CONSTEXPR_IF_CLANG unsigned long getSize(uint k) const {
         return getEnd(k + 1) - rankSelect.select(k + 1) - 1;
     }
 };
