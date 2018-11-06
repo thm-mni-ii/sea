@@ -192,7 +192,7 @@ void Sealib::SubGraphStack::tunephi0(unsigned long i) {
         phi0bs[phi(i, u) - 1] = 1;
     }
     if (tunedPhi0) delete tunedPhi0;
-    tunedPhi0 = new RankSelect(phi0bs);
+    tunedPhi0 = new RankSelect<>(phi0bs);
 }
 
 void Sealib::SubGraphStack::tunepsi0(unsigned long i) {
@@ -201,7 +201,7 @@ void Sealib::SubGraphStack::tunepsi0(unsigned long i) {
         psi0bs[psi(i, u) - 1] = 1;
     }
     if (tunedPsi0) delete tunedPsi0;
-    tunedPsi0 = new RankSelect(psi0bs);
+    tunedPsi0 = new RankSelect<>(psi0bs);
 }
 
 void Sealib::SubGraphStack::tunephi(unsigned long i) {
@@ -210,7 +210,7 @@ void Sealib::SubGraphStack::tunephi(unsigned long i) {
         phibs[phi(i, i - 1, u) - 1] = 1;
     }
     if (tunedPhi) delete tunedPhi;
-    tunedPhi = new RankSelect(phibs);
+    tunedPhi = new RankSelect<>(phibs);
 }
 
 void Sealib::SubGraphStack::tunepsi(unsigned long i) {
@@ -219,5 +219,5 @@ void Sealib::SubGraphStack::tunepsi(unsigned long i) {
         psibs[psi(i, i - 1, u) - 1] = 1;
     }
     if (tunedPsi) delete tunedPsi;
-    tunedPsi = new RankSelect(psibs);
+    tunedPsi = new RankSelect<>(psibs);
 }

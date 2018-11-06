@@ -5,22 +5,27 @@
 #include <sealib/bitset.h>
 
 namespace Sealib {
+template <typename BlockType = unsigned char>
+class RankSelect;
+}
+namespace Sealib {
 /**
 * Space efficient RankSelect implementation.
 * @author Johannes Meintrup
 */
+template <typename BlockType>
 class RankSelect {
  private:
-    RankStructure rankStructure;
-    RankStructure firstInSegment;
-    const Bitset<unsigned char> generateFirstInBlockBitSet(
-        const RankStructure &RankStructure);
+    RankStructure<BlockType> rankStructure;
+    RankStructure<BlockType> firstInSegment;
+    const Bitset<BlockType> generateFirstInBlockBitSet(
+        const RankStructure<BlockType> &RankStructure);
 
  public:
     /**
      * @param Sealib::Bitset used for RankSelect
      */
-    explicit RankSelect(const Bitset<unsigned char> &bitset);
+    explicit RankSelect(const Bitset<BlockType> &bitset);
     RankSelect();
 
     /**
@@ -40,7 +45,7 @@ class RankSelect {
     unsigned long size() const;
 
     ~RankSelect();
-    const Bitset<unsigned char> &getBitset() const;
+    const Bitset<BlockType> &getBitset() const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_RANKSELECT_H_

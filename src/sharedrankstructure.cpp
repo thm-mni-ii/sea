@@ -4,21 +4,23 @@
 #include <cmath>
 #include <utility>
 
-unsigned long Sealib::SharedRankStructure::rank(unsigned long k) const {
+template <typename BlockType>
+unsigned long Sealib::SharedRankStructure<BlockType>::rank(unsigned long k) const {
     if (k == 0 || k > maxRank) {
         return (unsigned long) -1;
     }
     unsigned long segmentIdx = (k - 1) / segmentLength;
-    unsigned char segment = bitset->getBlock(segmentIdx);
-    auto localIdx = static_cast<unsigned char>((k - 1) % segmentLength);
-    return setBefore(segmentIdx) + LocalRankTable<>::getLocalRank(segment, localIdx);
+    BlockType segment = bitset->getBlock(segmentIdx);
+    auto localIdx = static_cast<BlockType>((k - 1) % segmentLength);
+    return setBefore(segmentIdx) + LocalRankTable<BlockType>::getLocalRank(segment, localIdx);
 }
 
-Sealib::SharedRankStructure::SharedRankStructure(
-    std::shared_ptr<const Sealib::Bitset<unsigned char>> bitset_) :
+template <typename BlockType>
+Sealib::SharedRankStructure<BlockType>::SharedRankStructure(
+    std::shared_ptr<const Sealib::Bitset<BlockType>> bitset_) :
     bitset(std::move(bitset_)),
     segmentCount(static_cast<unsigned int>(bitset->size() / segmentLength)) {
-    auto lastSeg = static_cast<unsigned char>((bitset->size() % segmentLength));
+    auto lastSeg = static_cast<BlockType>((bitset->size() % segmentLength));
 
     if ((lastSeg != 0) && bitset->size() != 0) {
         segmentCount++;
@@ -30,8 +32,8 @@ Sealib::SharedRankStructure::SharedRankStructure(
     nonEmptySegments.reserve(segmentCount);
 
     for (unsigned int i = 0; i < segmentCount; i++) {
-        unsigned char segment = bitset->getBlock(i);
-        if (LocalRankTable<>::getLocalRank(segment, 7) != 0) {
+        BlockType segment = bitset->getBlock(i);
+        if (LocalRankTable<BlockType>::getLocalRank(segment, segmentLength-1) != 0) {
             nonEmptySegments.push_back(i);
         }
     }
@@ -40,42 +42,64 @@ Sealib::SharedRankStructure::SharedRankStructure(
         setCountTable.reserve(segmentCount);
         unsigned int cnt = 0;
         for (unsigned long i = 0; i < segmentCount - 1; i++) {
-            unsigned char segment = bitset->getBlock(i);
-            cnt += LocalRankTable<>::getLocalRank(segment, 7);
+            BlockType segment = bitset->getBlock(i);
+            cnt += LocalRankTable<BlockType>::getLocalRank(segment, segmentLength-1);
             setCountTable.push_back(cnt);
         }
     }
 }
 
-Sealib::SharedRankStructure::SharedRankStructure() : bitset(0) {
+template <typename BlockType>
+Sealib::SharedRankStructure<BlockType>::SharedRankStructure() : bitset(0) {
 }
 
-unsigned int Sealib::SharedRankStructure::getSegmentCount() const {
+template <typename BlockType>
+unsigned int Sealib::SharedRankStructure<BlockType>::getSegmentCount() const {
     return segmentCount;
 }
 
-unsigned int Sealib::SharedRankStructure::setBefore(unsigned long segment) const {
+template <typename BlockType>
+unsigned int Sealib::SharedRankStructure<BlockType>::setBefore(unsigned long segment) const {
     if (segment == 0) return 0;
     return setCountTable[segment - 1];
 }
 
-unsigned char Sealib::SharedRankStructure::getSegmentLength() const {
+template <typename BlockType>
+unsigned char Sealib::SharedRankStructure<BlockType>::getSegmentLength() const {
     return segmentLength;
 }
-unsigned long Sealib::SharedRankStructure::size() const {
+
+template <typename BlockType>
+unsigned long Sealib::SharedRankStructure<BlockType>::size() const {
     return bitset->size();
 }
-const Sealib::Bitset<unsigned char> &Sealib::SharedRankStructure::getBitset() const {
+
+template <typename BlockType>
+const Sealib::Bitset<BlockType> &Sealib::SharedRankStructure<BlockType>::getBitset() const {
     return (*bitset.get());
 }
-unsigned int Sealib::SharedRankStructure::getMaxRank() const {
+
+template <typename BlockType>
+unsigned int Sealib::SharedRankStructure<BlockType>::getMaxRank() const {
     return maxRank;
 }
-const std::vector<unsigned int> &Sealib::SharedRankStructure::getSetCountTable() const {
+
+template <typename BlockType>
+const std::vector<unsigned int> &Sealib::SharedRankStructure<BlockType>::getSetCountTable() const {
     return setCountTable;
 }
-const std::vector<unsigned int> &Sealib::SharedRankStructure::getNonEmptySegments() const {
+
+template <typename BlockType>
+const std::vector<unsigned int> &Sealib::SharedRankStructure<BlockType>::getNonEmptySegments() const {
     return nonEmptySegments;
 }
 
-Sealib::SharedRankStructure::~SharedRankStructure() = default;
+template <typename BlockType>
+Sealib::SharedRankStructure<BlockType>::~SharedRankStructure() = default;
+
+namespace Sealib {
+template
+class SharedRankStructure<unsigned char>;
+template
+class SharedRankStructure<unsigned short>;
+}  // namespace Sealib

@@ -49,7 +49,7 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
  private:
     const uint n;
     const Bitset<uint8_t> pattern;
-    const RankSelect rankSelect;
+    const RankSelect<> rankSelect;
     std::vector<uint64_t> storage;
     const uint bitsize = static_cast<uint>(sizeof(uint64_t) * 8);
     static constexpr uint64_t one = 1;

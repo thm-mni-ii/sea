@@ -5,23 +5,29 @@
 #include <sealib/bitset.h>
 
 namespace Sealib {
+template <typename BlockType = unsigned char>
+class SharedRankSelect;
+}
+
+namespace Sealib {
 /**
 * Space efficient RankSelect implementation.
 * Uses a shared_ptr for the bitset, saves space if the bitset can be reused.
 * @author Johannes Meintrup
 */
+template <typename BlockType>
 class SharedRankSelect {
  private:
-    SharedRankStructure rankStructure;
-    SharedRankStructure firstInSegment;
-    static std::shared_ptr<const Bitset<unsigned char>> generateFirstInBlockBitSet(
-        const SharedRankStructure &sharedRankStructure);
+    SharedRankStructure<BlockType> rankStructure;
+    SharedRankStructure<BlockType> firstInSegment;
+    static std::shared_ptr<const Bitset<BlockType>> generateFirstInBlockBitSet(
+        const SharedRankStructure<BlockType> &sharedRankStructure);
 
  public:
     /**
      * @param shared_ptr managing the Sealib::Bitset used for RankSelect
      */
-    explicit SharedRankSelect(std::shared_ptr<const Bitset<unsigned char> > bitset);
+    explicit SharedRankSelect(std::shared_ptr<const Bitset<BlockType> > bitset);
     SharedRankSelect();
 
     /**
@@ -39,6 +45,7 @@ class SharedRankSelect {
     unsigned long rank(unsigned long k) const;
 
     ~SharedRankSelect();
+    const Bitset<BlockType> &getBitset() const;
 };
 }  // namespace Sealib
 #endif  // SEALIB_SHAREDRANKSELECT_H_

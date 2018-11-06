@@ -6,13 +6,20 @@
 #include <vector>
 
 namespace Sealib {
+
+template <typename BlockType = unsigned char>
+class SimpleRankSelect;
+}
+
+namespace Sealib {
 /**
  * Naive implementation of RankSelect, used to test the space efficient variant or for debugging
  * @author Johannes Meintrup
  */
+template <typename BlockType>
 class SimpleRankSelect {
  private:
-    std::shared_ptr<const Bitset<unsigned char>> bitset;
+    std::shared_ptr<const Bitset<BlockType>> bitset;
     std::vector<unsigned long> ranks;
     std::vector<unsigned long> selects;
 
@@ -31,7 +38,7 @@ class SimpleRankSelect {
      */
     unsigned long rank(unsigned long k) const;
 
-    explicit SimpleRankSelect(std::shared_ptr<const Bitset<unsigned char>> bitset);
+    explicit SimpleRankSelect(std::shared_ptr<const Bitset<BlockType>> bitset);
     SimpleRankSelect();
     ~SimpleRankSelect();
 };

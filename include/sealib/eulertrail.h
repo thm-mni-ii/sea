@@ -21,7 +21,7 @@ class EulerTrail {
  private:
     std::shared_ptr<Sealib::BasicGraph> graph;
     std::vector<TrailStructureType>  trail;
-    Sealib::RankSelect trailStarts;
+    Sealib::RankSelect<> trailStarts;
 
     unsigned int findStartingNode();
     std::vector<TrailStructureType> initializeTrail();

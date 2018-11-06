@@ -28,8 +28,8 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
             p[deg - 1] = 1;
         }
     }
-    qSelect = new RankSelect(q);
-    pSelect = new RankSelect(p);
+    qSelect = new RankSelect<>(q);
+    pSelect = new RankSelect<>(p);
 }
 
 unsigned long Sealib::BaseSubGraph::head(unsigned long u,

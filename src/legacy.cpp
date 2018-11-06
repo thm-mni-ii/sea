@@ -63,19 +63,19 @@ int Sealib_Bitset_get(void *self, unsigned long index) {
 }
 
 void *Sealib_RankSelect_new(void *bitset) {
-  return new RankSelect(*static_cast<Bitset<unsigned char> *>(bitset));
+  return new RankSelect<>(*static_cast<Bitset<unsigned char> *>(bitset));
 }
 void Sealib_RankSelect_delete(void *self) {
-  delete static_cast<RankSelect *>(self);
+  delete static_cast<RankSelect<> *>(self);
 }
 unsigned long Sealib_RankSelect_rank(void *self, unsigned long index) {
-  return static_cast<RankSelect *>(self)->rank(index);
+  return static_cast<RankSelect<> *>(self)->rank(index);
 }
 unsigned long Sealib_RankSelect_select(void *self, unsigned long bit) {
-  return static_cast<RankSelect *>(self)->select(bit);
+  return static_cast<RankSelect<> *>(self)->select(bit);
 }
 unsigned long Sealib_RankSelect_size(void *self) {
-  return static_cast<RankSelect *>(self)->size();
+  return static_cast<RankSelect<> *>(self)->size();
 }
 
 void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(unsigned int),

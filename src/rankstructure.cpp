@@ -4,21 +4,23 @@
 #include <cmath>
 #include <utility>
 
-unsigned long Sealib::RankStructure::rank(unsigned long k) const {
+template <typename BlockType>
+unsigned long Sealib::RankStructure<BlockType>::rank(unsigned long k) const {
     if (k == 0 || k > maxRank) {
         return (unsigned long) -1;
     }
     unsigned long segmentIdx = (k - 1) / segmentLength;
-    unsigned char segment = bitset.getBlock(segmentIdx);
-    auto localIdx = static_cast<unsigned char>((k - 1) % segmentLength);
-    return setBefore(segmentIdx) + LocalRankTable<>::getLocalRank(segment, localIdx);
+    BlockType segment = bitset.getBlock(segmentIdx);
+    auto localIdx = static_cast<BlockType>((k - 1) % segmentLength);
+    return setBefore(segmentIdx) + LocalRankTable<BlockType>::getLocalRank(segment, localIdx);
 }
 
-Sealib::RankStructure::RankStructure(
-    const Sealib::Bitset<unsigned char> &bitset_) :
+template <typename BlockType>
+Sealib::RankStructure<BlockType>::RankStructure(
+    const Sealib::Bitset<BlockType> &bitset_) :
     bitset(bitset_),
     segmentCount(static_cast<unsigned int>(bitset.size() / segmentLength)) {
-    auto lastSeg = static_cast<unsigned char>((bitset.size() % segmentLength));
+    auto lastSeg = static_cast<BlockType>((bitset.size() % segmentLength));
 
     if ((lastSeg != 0) && bitset.size() != 0) {
         segmentCount++;
@@ -30,8 +32,8 @@ Sealib::RankStructure::RankStructure(
     nonEmptySegments.reserve(segmentCount);
 
     for (unsigned int i = 0; i < segmentCount; i++) {
-        unsigned char segment = bitset.getBlock(i);
-        if (LocalRankTable<>::getLocalRank(segment, 7) != 0) {
+        BlockType segment = bitset.getBlock(i);
+        if (LocalRankTable<BlockType>::getLocalRank(segment, 7) != 0) {
             nonEmptySegments.push_back(i);
         }
     }
@@ -40,41 +42,54 @@ Sealib::RankStructure::RankStructure(
         setCountTable.reserve(segmentCount);
         unsigned int cnt = 0;
         for (unsigned long i = 0; i < segmentCount - 1; i++) {
-            unsigned char segment = bitset.getBlock(i);
-            cnt += LocalRankTable<>::getLocalRank(segment, 7);
+            BlockType segment = bitset.getBlock(i);
+            cnt += LocalRankTable<BlockType>::getLocalRank(segment, 7);
             setCountTable.push_back(cnt);
         }
     }
 }
-
-Sealib::RankStructure::RankStructure() : bitset(0) {
+template <typename BlockType>
+Sealib::RankStructure<BlockType>::RankStructure() : bitset(0) {
 }
-
-unsigned int Sealib::RankStructure::getSegmentCount() const {
+template <typename BlockType>
+unsigned int Sealib::RankStructure<BlockType>::getSegmentCount() const {
     return segmentCount;
 }
-
-unsigned int Sealib::RankStructure::setBefore(unsigned long segment) const {
+template <typename BlockType>
+unsigned int Sealib::RankStructure<BlockType>::setBefore(unsigned long segment) const {
     if (segment == 0) return 0;
     return setCountTable[segment - 1];
 }
-
-unsigned char Sealib::RankStructure::getSegmentLength() const {
+template <typename BlockType>
+unsigned char Sealib::RankStructure<BlockType>::getSegmentLength() const {
     return segmentLength;
 }
-const Sealib::Bitset<unsigned char> &Sealib::RankStructure::getBitset() const {
+template <typename BlockType>
+const Sealib::Bitset<BlockType> &Sealib::RankStructure<BlockType>::getBitset() const {
     return bitset;
 }
-unsigned int Sealib::RankStructure::getMaxRank() const {
+template <typename BlockType>
+unsigned int Sealib::RankStructure<BlockType>::getMaxRank() const {
     return maxRank;
 }
-const std::vector<unsigned int> &Sealib::RankStructure::getSetCountTable() const {
+template <typename BlockType>
+const std::vector<unsigned int> &Sealib::RankStructure<BlockType>::getSetCountTable() const {
     return setCountTable;
 }
-const std::vector<unsigned int> &Sealib::RankStructure::getNonEmptySegments() const {
+template <typename BlockType>
+const std::vector<unsigned int> &Sealib::RankStructure<BlockType>::getNonEmptySegments() const {
     return nonEmptySegments;
 }
-unsigned long Sealib::RankStructure::size() const {
+template <typename BlockType>
+unsigned long Sealib::RankStructure<BlockType>::size() const {
     return bitset.size();
 }
-Sealib::RankStructure::~RankStructure() = default;
+template <typename BlockType>
+Sealib::RankStructure<BlockType>::~RankStructure() = default;
+
+namespace Sealib {
+template
+class RankStructure<unsigned char>;
+template
+class RankStructure<unsigned short>;
+}  // namespace Sealib

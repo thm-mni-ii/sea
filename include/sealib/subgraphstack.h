@@ -35,10 +35,10 @@ class SubGraphStack {
     unsigned long currentRef;
     unsigned long tuned;
 
-    RankSelect *tunedPhi0;
-    RankSelect *tunedPsi0;
-    RankSelect *tunedPhi;
-    RankSelect *tunedPsi;
+    RankSelect<> *tunedPhi0;
+    RankSelect<> *tunedPsi0;
+    RankSelect<> *tunedPhi;
+    RankSelect<> *tunedPsi;
 
     void tunephi0(unsigned long i);
     void tunepsi0(unsigned long i);

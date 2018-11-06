@@ -6,16 +6,23 @@
 #include <memory>
 #include <vector>
 
+namespace Sealib {
+
+template <typename BlockType = unsigned char>
+class SharedRankStructure;
+}
+
 /**
  * Space efficient RankStructure implementation.
  * Uses a shared_ptr for the bitset, saves space if the bitset can be reused.
  * @author Johannes Meintrup
  */
 namespace Sealib {
+template <typename BlockType>
 class SharedRankStructure {
  protected:
-    static const unsigned char segmentLength = 8;
-    std::shared_ptr<const Sealib::Bitset<unsigned char>> bitset;
+    static const unsigned char segmentLength = sizeof(BlockType) * 8;
+    std::shared_ptr<const Sealib::Bitset<BlockType>> bitset;
     unsigned int segmentCount;
     unsigned int maxRank;
 
@@ -37,7 +44,7 @@ class SharedRankStructure {
     /**
      * @param shared_ptr managing the Sealib::Bitset used for Rank
      */
-    explicit SharedRankStructure(std::shared_ptr<const Sealib::Bitset<unsigned char> > bitset);
+    explicit SharedRankStructure(std::shared_ptr<const Sealib::Bitset<BlockType> > bitset);
 
     /**
      * default empty constructor
@@ -62,7 +69,7 @@ class SharedRankStructure {
     /**
      * @return segment of the bitset
      */
-    const Sealib::Bitset<unsigned char>& getBitset() const;
+    const Sealib::Bitset<BlockType>& getBitset() const;
 
     ~SharedRankStructure();
     unsigned int setBefore(unsigned long segment) const;

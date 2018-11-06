@@ -12,7 +12,7 @@ class SubGraph {
     friend class RecursiveSubGraph;
  public:
     typedef Sealib::Bitset<unsigned char> bitset_t;
-    typedef Sealib::RankSelect rankselect_t;
+    typedef Sealib::RankSelect<> rankselect_t;
     typedef Sealib::SubGraphStack stack_t;
 
  protected:

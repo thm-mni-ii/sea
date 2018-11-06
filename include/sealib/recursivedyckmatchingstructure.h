@@ -43,7 +43,7 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
     static const unsigned char segmentLength = 7;
     unsigned int segments;
     unsigned char lastSegment;
-    RankSelect pioneerRankSelect;
+    RankSelect<> pioneerRankSelect;
     DyckMatchingStructure *pioneerMatchingStructure;
 
     const Sealib::Bitset<unsigned char> initializePioneerRankSelectBitset();

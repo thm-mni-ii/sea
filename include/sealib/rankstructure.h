@@ -6,15 +6,22 @@
 #include <memory>
 #include <vector>
 
+namespace Sealib {
+
+template <typename BlockType = unsigned char>
+class RankStructure;
+}
+
 /**
  * Space efficient RankStructure implementation.
  * @author Johannes Meintrup
  */
 namespace Sealib {
+template <typename BlockType>
 class RankStructure {
  protected:
-    static constexpr const unsigned char segmentLength = 8;
-    const Sealib::Bitset<unsigned char> bitset;
+    static const unsigned char segmentLength = sizeof(BlockType) * 8;
+    const Sealib::Bitset<BlockType> bitset;
     unsigned int segmentCount;
     unsigned int maxRank;
 
@@ -37,7 +44,7 @@ class RankStructure {
     /**
      * @param bitset used for Rank
      */
-    explicit RankStructure(const Sealib::Bitset<unsigned char> &bitset);
+    explicit RankStructure(const Sealib::Bitset<BlockType> &bitset);
 
     /**
      * default empty constructor
@@ -57,7 +64,7 @@ class RankStructure {
     /**
      * @return segment of the bitset
      */
-    const Sealib::Bitset<unsigned char>& getBitset() const;
+    const Sealib::Bitset<BlockType>& getBitset() const;
 
     ~RankStructure();
     unsigned int setBefore(unsigned long segment) const;
