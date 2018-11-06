@@ -12,9 +12,6 @@
 #define DFS_BLACK 2
 #define DFS_RESERVED 3
 
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
-
 /**
  * These two functions symbolize a NOP: you can call a DFS which accepts
  * (preprocess,preexplore,postexplore,postprocess) with the arguments
@@ -49,9 +46,10 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void standardDFS(Graph *g, UserFunc1 preprocess,
-                            UserFunc2 preexplore, UserFunc2 postexplore,
-                            UserFunc1 postprocess);
+    static void standardDFS(Graph *g, UserFunc1 preprocess = DFS_NOP_PROCESS,
+                            UserFunc2 preexplore = DFS_NOP_EXPLORE,
+                            UserFunc2 postexplore = DFS_NOP_EXPLORE,
+                            UserFunc1 postprocess = DFS_NOP_PROCESS);
     /**
      * Run a space-efficient depth-first search over a given graph. (Elmasry,
      * Hagerup and Kammer; 2015) <br>
@@ -63,8 +61,10 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nBitDFS(Graph *g, UserFunc1 preprocess, UserFunc2 preexplore,
-                        UserFunc2 postexplore, UserFunc1 postprocess);
+    static void nBitDFS(Graph *g, UserFunc1 preprocess = DFS_NOP_PROCESS,
+                        UserFunc2 preexplore = DFS_NOP_EXPLORE,
+                        UserFunc2 postexplore = DFS_NOP_EXPLORE,
+                        UserFunc1 postprocess = DFS_NOP_PROCESS);
 
     /**
      * Run a linear-time space-efficient depth-first search. (Elmasry, Hagerup
@@ -93,9 +93,11 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
-                             UserFunc2 preexplore, UserFunc2 postexplore,
-                             UserFunc1 postprocess);
+    static void nplusmBitDFS(BasicGraph *g,
+                             UserFunc1 preprocess = DFS_NOP_PROCESS,
+                             UserFunc2 preexplore = DFS_NOP_EXPLORE,
+                             UserFunc2 postexplore = DFS_NOP_EXPLORE,
+                             UserFunc1 postprocess = DFS_NOP_PROCESS);
 
     /**
      * Runs an inplace DFS in linear time over a graph that is given in a
@@ -110,6 +112,30 @@ class DFS {
                                         UserFunc1 preProcess,
                                         UserFunc1 postProcess,
                                         unsigned int startVertex);
+
+ protected:
+    static void process_standard(uint u0, Graph *g, uint *color,
+                                 UserFunc1 preprocess, UserFunc2 preexplore,
+                                 UserFunc2 postexplore, UserFunc1 postprocess);
+
+    template <class SS>
+    static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
+                              void (*restoration)(uint, Graph *, CompactArray *,
+                                                  SS *),
+                              UserFunc1 preprocess, UserFunc2 preexplore,
+                              UserFunc2 postexplore, UserFunc1 postprocess);
+
+    template <class S>
+    static void process_static(uint u0, BasicGraph *g, CompactArray *color,
+                               S *back, UserFunc1 preprocess,
+                               UserFunc2 preexplore, UserFunc2 postexplore,
+                               UserFunc1 postprocess);
+
+    static void restore_full(uint u0, Graph *g, CompactArray *color,
+                             BasicSegmentStack *s);
+
+    static void restore_top(uint u0, Graph *g, CompactArray *color,
+                            ExtendedSegmentStack *s);
 };
 }  // namespace Sealib
 #endif  // SEALIB_DFS_H_
