@@ -7,21 +7,12 @@
 #include "sealib/node.h"
 #include "sealib/staticspacestorage.h"
 
-#define DFS_WHITE 0
-#define DFS_GRAY 1
-#define DFS_BLACK 2
-#define DFS_RESERVED 3
-
-/**
- * These two functions symbolize a NOP: you can call a DFS which accepts
- * (preprocess,preexplore,postexplore,postprocess) with the arguments
- * (DFS_NOP_PROCESS,DFS_NOP_EXPLORE,DFS_NOP_EXPLORE,DFS_NOP_PROCESS) to run it
- * silently.
- */
-#define DFS_NOP_PROCESS (UserFunc1)0
-#define DFS_NOP_EXPLORE (UserFunc2)0
-
 namespace Sealib {
+
+const uint DFS_WHITE = 0, DFS_GRAY = 1, DFS_BLACK = 2, DFS_RESERVED = 3;
+const std::function<void(uint)> DFS_NOP_PROCESS = [](uint) {};
+const std::function<void(uint, uint)> DFS_NOP_EXPLORE = [](uint, uint) {};
+
 /**
  * This class contains depth-first search algorithms.
  * The depth-first search of a graph processes all its nodes and

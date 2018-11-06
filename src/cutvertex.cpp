@@ -3,30 +3,13 @@
 #include "sealib/choicedictionary.h"
 #include "sealib/staticspacestorage.h"
 
-/** Edge data:
- *      EDMM
- *  E: edge type (0: back edge, 1: tree edge)
- *  D: "direction" (0: closer to root, 1: further away from root)
- *  M: marking (0: unmarked, 1: half marked, 2: full marked)
- */
-#define EDGE_BIT 0x8       // 0b1000
-#define DIRECTION_BIT 0x4  // 0b0100
-#define MARKING_BITS 0x3   // 0b0011
-#define SET_TREE(u, v)                          \
-    uint ui = offs[(u)] + edgeIndex((u), (v)),  \
-         vi = offs[(v)] + edgeIndex((v), (u));  \
-    edges.insert(ui, edges.get(ui) | EDGE_BIT); \
-    edges.insert(vi, edges.get(vi) | EDGE_BIT); \
-    edges.insert(vi, edges.get(vi) | DIRECTION_BIT);
-#define IS_TREE(u,v) ((getEdgeData((u), (v)) & EDGE_BIT) == 1)
-
 using namespace Sealib;  // NOLINT
 
 static std::vector<bool> makeBits(BasicGraph *g, std::vector<uint> *offs) {
     std::vector<bool> bits;
     uint offset = 0;
     for (uint u = 0; u < g->getOrder(); u++) {
-        offs->emplace_back(offset);
+        offs->push_back(offset);
         bits.push_back(1);
         for (uint k = 0; k < g->getNodeDegree(u); k++) {
             bits.push_back(0);
@@ -40,10 +23,42 @@ static std::vector<bool> makeBits(BasicGraph *g, std::vector<uint> *offs) {
 }
 
 CutVertexIterator::CutVertexIterator(BasicGraph *graph)
-    : g(graph), edges(makeBits(g, &offs)) {}
+    : g(graph), n(g->getOrder()), offs(0), edges(makeBits(g, &offs)) {}
+
+void CutVertexIterator::setTreeEdge(uint u, uint v) {
+    uint ui = offs[u] + edgeIndex(u, v), vi = offs[v] + edgeIndex(v, u);
+    edges.insert(ui, edges.get(ui) | EDGE_BIT);
+    edges.insert(vi, edges.get(vi) | EDGE_BIT);
+    edges.insert(vi, edges.get(vi) | DIRECTION_BIT);
+}
+
+/**
+ * Set the mark for edge {u,v}.
+ */
+void CutVertexIterator::setMark(uint u, uint v, uint8_t mark) {
+    uint ui = offs[u] + edgeIndex(u, v), vi = offs[v] + edgeIndex(v, u);
+    edges.insert(ui, edges.get(ui) & (EDGE_BIT | DIRECTION_BIT));
+    edges.insert(vi, edges.get(vi) & (EDGE_BIT | DIRECTION_BIT));
+    edges.insert(ui, edges.get(ui) | mark);
+    edges.insert(vi, edges.get(vi) | mark);
+}
+
+void CutVertexIterator::markParents(uint w, uint u,
+                                    StaticSpaceStorage *parent) {
+    uint k = static_cast<uint>(parent->get(w));
+    uint v = g->head(w, k);
+    while (v != u && !isFullMarked(w, v)) {
+        setMark(w, v, FULL);
+        w = v;
+        k = static_cast<uint>(parent->get(w));
+        v = g->head(w, k);
+    }
+    if (v == u) {
+        setMark(w, u, HALF);
+    }
+}
 
 void CutVertexIterator::init() {
-    uint n = g->getOrder();
     CompactArray color(n, 3);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     std::vector<bool> bits;
@@ -53,12 +68,13 @@ void CutVertexIterator::init() {
             bits.push_back(0);
         }
     }
-    StaticSpaceStorage back(bits);
+    StaticSpaceStorage parent(bits);
     for (uint a = 0; a < n; a++) {
-        process_static(a, g, &color, &back, DFS_NOP_PROCESS,
+        cc.emplace_back(a);
+        process_static(a, g, &color, &parent, DFS_NOP_PROCESS,
                        [this, &color](uint u, uint v) {
                            if (color.get(v) == DFS_WHITE) {
-                               SET_TREE(u, v);
+                               setTreeEdge(u, v);
                            }
                        },
                        DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
@@ -70,21 +86,22 @@ void CutVertexIterator::init() {
     for (uint a = 0; a < n; a++) {
         bool doScan = false;
         process_static(
-            a, g, &color, &back,
-            [this, &doScan](uint u) {
+            a, g, &color, &parent,
+            [this, &doScan, &parent](uint u) {
                 if (doScan) {
                     doScan = false;
                     for (uint k = 0; k < g->getNodeDegree(u); k++) {
-                        uint64_t e = getEdgeData(u, g->head(u, k));
+                        uint v = g->head(u, k);
+                        uint64_t e = getEdgeData(u, v);
                         if ((e & EDGE_BIT) == 0 && (e & DIRECTION_BIT) == 0) {
                             // {u,v} is a back edge and u is closer to root:
-                            
+                            markParents(v, u, &parent);
                         }
                     }
                 }
             },
             [this, &color, &doScan](uint u, uint v) {
-                if (color.get(v) == DFS_WHITE && IS_TREE(u, v)) {
+                if (color.get(v) == DFS_WHITE && isTreeEdge(u, v)) {
                     doScan = true;
                 }
             },
@@ -92,6 +109,31 @@ void CutVertexIterator::init() {
     }
 }
 
-bool CutVertexIterator::more() { return false; }
+bool CutVertexIterator::more() { return cu < n; }
 
-uint CutVertexIterator::next() { return 0; }
+uint CutVertexIterator::next() {
+    bool r = false;
+    while (!r) {
+        if (cu == cc[cci]) {
+            cci++;
+            uint num = 0;
+            for (uint k = 0; k < n; k++) {
+                if (isTreeEdge(cu, g->head(cu, k))) {
+                    num++;
+                }
+                if (num > 1) {
+                    r = true;
+                }
+            }
+        } else {
+            for (uint k = 0; k < g->getNodeDegree(cu); k++) {
+                if (!isFullMarked(cu, g->head(cu, k))) {
+                    r = true;
+                }
+            }
+        }
+        cu++;
+        if (cu == n) return INVALID;
+    }
+    return cu - 1;
+}
