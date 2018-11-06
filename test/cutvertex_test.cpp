@@ -8,4 +8,5 @@ TEST(CutVertexIteratorTest, init) {
     std::pair<BasicGraph*, uint> p =
         GraphCreator::createRandomUndirected(100, 3);
     CutVertexIterator c(p.first);
+    c.init();
 }
