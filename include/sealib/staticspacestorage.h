@@ -3,8 +3,8 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
-#include "sealib/sequence.h"
 #include "sealib/rankselect.h"
+#include "sealib/sequence.h"
 
 namespace Sealib {
 /**

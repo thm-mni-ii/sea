@@ -10,8 +10,8 @@
 namespace Sealib {
 
 const uint DFS_WHITE = 0, DFS_GRAY = 1, DFS_BLACK = 2, DFS_RESERVED = 3;
-const std::function<void(uint)> DFS_NOP_PROCESS = [](uint) {};
-const std::function<void(uint, uint)> DFS_NOP_EXPLORE = [](uint, uint) {};
+const UserFunc1 DFS_NOP_PROCESS = [](uint) {};
+const UserFunc2 DFS_NOP_EXPLORE = [](uint, uint) {};
 
 /**
  * This class contains depth-first search algorithms.

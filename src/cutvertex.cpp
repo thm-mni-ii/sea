@@ -102,7 +102,8 @@ void CutVertexIterator::init() {
         process_static(a, g, &color, &parent,
                        [this, &parent, a](uint u) {
                            if (u != a) {
-                               setTreeEdge(u, static_cast<uint>(parent.get(u)), 1);
+                               setTreeEdge(u, static_cast<uint>(parent.get(u)),
+                                           1);
                            }
                        },
                        DFS_NOP_EXPLORE, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
@@ -110,23 +111,27 @@ void CutVertexIterator::init() {
 
     for (uint a = 0; a < n; a++) {
         color.insert(a, DFS_WHITE);
+        parent.insert(a, 0);
     }
     for (uint a = 0; a < n; a++) {
-        process_static(
-            a, g, &color, &parent,
-            [this, &parent](uint u) {
-                if (isTreeEdge(u, static_cast<uint>(parent.get(u)))) {
-                    for (uint k = 0; k < g->getNodeDegree(u); k++) {
-                        uint v = g->head(u, k);
-                        uint64_t e = getEdgeData(u, k);
-                        if ((e & EDGE_BIT) == 0 && (e & DIRECTION_BIT) == 0) {
-                            // {u,v} is a back edge and u is closer to root:
-                            markParents(v, u, &parent);
+        if (color.get(a) == DFS_WHITE) {
+            process_static(
+                a, g, &color, &parent,
+                [this, &parent](uint u) {
+                    if (isTreeEdge(u, static_cast<uint>(parent.get(u)))) {
+                        for (uint k = 0; k < g->getNodeDegree(u); k++) {
+                            uint v = g->head(u, k);
+                            uint64_t e = getEdgeData(u, k);
+                            if ((e & EDGE_BIT) == 0 &&
+                                (e & DIRECTION_BIT) == CHILD) {
+                                // {u,v} is a back edge and u is closer to root:
+                                markParents(v, u, &parent);
+                            }
                         }
                     }
-                }
-            },
-            DFS_NOP_EXPLORE, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+                },
+                DFS_NOP_EXPLORE, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+        }
     }
 
     uint u = 0;
