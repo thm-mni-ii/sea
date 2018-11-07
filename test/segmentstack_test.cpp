@@ -1,4 +1,4 @@
-#include "../src/segmentstack.h"
+#include "sealib/segmentstack.h"
 #include <gtest/gtest.h>
 #include "sealib/compactarray.h"
 #include "sealib/graphcreator.h"
@@ -6,6 +6,7 @@
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
 using Sealib::CompactArray;
+using Sealib::Pair;
 
 #define pushn(i, n) \
   for (unsigned a = (i); a < (n); a++) s->push(Pair((a), K))

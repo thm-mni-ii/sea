@@ -6,18 +6,13 @@
 #include "sealib/graph.h"
 #include "sealib/iterator.h"
 
-#define BFS_WHITE 0
-#define BFS_GRAY1 1
-#define BFS_GRAY2 2
-#define BFS_BLACK 3
-
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
-
-#define BFS_NOP_PROCESS (UserFunc1)0
-#define BFS_NOP_EXPLORE (UserFunc2)0
-
 namespace Sealib {
+
+const uint BFS_WHITE = 0, BFS_GRAY1 = 1, BFS_GRAY2 = 2, BFS_BLACK = 3;
+
+const UserFunc1 BFS_NOP_PROCESS = [](uint) {};
+const UserFunc2 BFS_NOP_EXPLORE = [](uint, uint) {};
+
 /**
  * Run a breadth-first search over a given graph, while executing the two
  * given user functions.
