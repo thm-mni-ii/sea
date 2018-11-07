@@ -49,7 +49,7 @@ TEST(ChoiceDictionaryIteratorTest, iterator_integrity) {
             }
         }
     }
-    // ASSERT_EQ(count, setSize - 18);
+    ASSERT_EQ(count, setSize - 18);
     delete iterator;
     delete c;
 }
