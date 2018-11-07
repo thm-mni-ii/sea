@@ -5,6 +5,7 @@
 #include "sealib/basicgraph.h"
 #include "sealib/compactarray.h"
 #include "sealib/node.h"
+#include "sealib/segmentstack.h"
 #include "sealib/staticspacestorage.h"
 
 namespace Sealib {

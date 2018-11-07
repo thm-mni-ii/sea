@@ -1,4 +1,4 @@
-#include "src/segmentstack.h"
+#include "sealib/segmentstack.h"
 #include <math.h>
 #include <sstream>
 #include <stack>
