@@ -179,31 +179,31 @@ void DFS::process_static(uint u0, BasicGraph *g, CompactArray *color, S *back,
                          UserFunc2 postexplore, UserFunc1 postprocess) {
     color->insert(u0, DFS_GRAY);
     back->insert(u0, g->getNodeDegree(u0));
-    if (preprocess != DFS_NOP_PROCESS) preprocess(u0);
+    preprocess(u0);
     uint u = u0, k = 0;
     while (true) {
         if (k < g->getNodeDegree(u)) {
             uint v = g->head(u, k);
-            if (preexplore != DFS_NOP_EXPLORE) preexplore(u, v);
+            preexplore(u, v);
             if (color->get(v) == DFS_WHITE) {
-                if (preprocess != DFS_NOP_PROCESS) preprocess(v);
-                color->insert(v, DFS_GRAY);
                 back->insert(v, std::get<1>(g->mate(u, k)));
+                preprocess(v);
+                color->insert(v, DFS_GRAY);
                 u = v;
                 k = 0;
                 continue;
             } else {
-                if (postexplore != DFS_NOP_EXPLORE) postexplore(u, v);
+                postexplore(u, v);
                 k++;
             }
         } else {
             color->insert(u, DFS_BLACK);
-            if (postprocess != DFS_NOP_PROCESS) postprocess(u);
+            postprocess(u);
             if (u != u0) {
                 std::tuple<uint, uint> p =
                     g->mate(u, static_cast<uint>(back->get(u)));
                 uint pu = std::get<0>(p), pk = std::get<1>(p);
-                if (postexplore != DFS_NOP_EXPLORE) postexplore(pu, u);
+                postexplore(pu, u);
                 u = pu;
                 k = pk + 1;
             } else {

@@ -45,6 +45,7 @@ class CutVertexIterator : Iterator<uint>, DFS {
         DIRECTION_BIT = 0x4,       // 0b0100
         MARKING_BITS = 0x3;        // 0b0011
     const uint8_t TREE = 0x8;
+    const uint8_t CHILD = 0x4;
     const uint8_t FULL = 0x2, HALF = 0x1;
     CONSTEXPR_IF_CLANG bool isTreeEdge(uint u, uint k) const {
         return (getEdgeData(u, k) & EDGE_BIT) == TREE;
