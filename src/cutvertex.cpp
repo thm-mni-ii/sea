@@ -45,34 +45,30 @@ CutVertexIterator::CutVertexIterator(BasicGraph *graph)
       cc(n),
       cut(n),
       cutI(nullptr) {
-          for(uint a=0; a<n; a++) {
-              // we have to initialize the choice dictionary in reverse
-              cc.insert(a);
-              cc.remove(a);
-              //cut.insert(a);
-              //cut.remove(a);
-          }
-      }
+    for (uint a = 0; a < n; a++) {
+        // we have to initialize the choice dictionary in reverse
+        cc.insert(a);
+        cc.remove(a);
+        // cut.insert(a);
+        // cut.remove(a);
+    }
+}
 
-void CutVertexIterator::setTreeEdge(uint u, uint k, bool uChild) {
+void CutVertexIterator::initEdgeType(uint u, uint k, uint8_t type) {
     auto p = g->mate(u, k);
     uint v = std::get<0>(p), k2 = std::get<1>(p);
     uint ui = edgeIndex(u) + k, vi = edgeIndex(v) + k2;
-    edges.insert(ui, edges.get(ui) | EDGE_BIT);
-    edges.insert(vi, edges.get(vi) | EDGE_BIT);
-    if (!uChild) {
-        edges.insert(ui, edges.get(ui) | PARENT_BIT);
-    } else {
-        edges.insert(vi, edges.get(vi) | PARENT_BIT);
-    }
+    edges.insert(ui, edges.get(ui) | type);
+    edges.insert(vi, edges.get(vi) | type);
+    edges.insert(ui, edges.get(ui) | PARENT);
 }
 
 void CutVertexIterator::setMark(uint u, uint k, uint8_t mark) {
     auto p = g->mate(u, k);
     uint v = std::get<0>(p), k2 = std::get<1>(p);
     uint ui = edgeIndex(u) + k, vi = edgeIndex(v) + k2;
-    edges.insert(ui, edges.get(ui) & (EDGE_BIT | PARENT_BIT));
-    edges.insert(vi, edges.get(vi) & (EDGE_BIT | PARENT_BIT));
+    edges.insert(ui, edges.get(ui) & PARENT_MASK);
+    edges.insert(vi, edges.get(vi) & PARENT_MASK);
     edges.insert(ui, edges.get(ui) | mark);
     edges.insert(vi, edges.get(vi) | mark);
 }
@@ -92,19 +88,30 @@ void CutVertexIterator::markParents(uint w, uint u,
     }
 }
 
+static uint findEdge(Graph *g, uint u, uint v) {
+    for (uint a = 0; a < g->getNodeDegree(u); a++) {
+        if (g->head(u, a) == v) return a;
+    }
+    return uint(-1);
+}
+
 void CutVertexIterator::init_tree(CompactArray *color,
                                   StaticSpaceStorage *parent) {
     for (uint a = 0; a < n; a++) {
         if (color->get(a) == DFS_WHITE) {
             cc.insert(a);
-            process_static(
-                a, g, color, parent,
-                [this, &parent, a](uint u) {
-                    if (u != a) {
-                        setTreeEdge(u, static_cast<uint>(parent->get(u)), true);
-                    }
-                },
-                DFS_NOP_EXPLORE, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+            process_static(a, g, color, parent, DFS_NOP_PROCESS,
+                           [this, &color](uint u, uint v) {
+                               uint k = findEdge(g, u, v);
+                               if (color->get(v) == DFS_WHITE) {
+                                   initEdgeType(u, k, UNMARKED);
+                               } else if (color->get(v) == DFS_GRAY) {
+                                   initEdgeType(u, k, BACK);
+                               } else {
+                                   initEdgeType(u, k, CROSS);
+                               }
+                           },
+                           DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         }
     }
 }
@@ -178,7 +185,7 @@ void CutVertexIterator::init() {
     init_mark(&color, &parent);
 
     init_cut();
-    cutI=ChoiceDictionaryIterator(&cut);
+    cutI = ChoiceDictionaryIterator(&cut);
 }
 
 bool CutVertexIterator::more() { return cutI.more(); }
