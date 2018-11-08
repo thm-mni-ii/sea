@@ -35,30 +35,29 @@ class CutVertexIterator : Iterator<uint>, DFS {
     inline void init_mark(CompactArray *, StaticSpaceStorage *);
     inline void init_cut();
 
-    void setTreeEdge(uint u, uint k, bool uChild);
+    void initEdgeType(uint u, uint k, uint8_t type);
     void setMark(uint u, uint k, uint8_t mark);
     void markParents(uint w, uint u, StaticSpaceStorage *parent);
 
     /** Edge data: (4 bits)
-     *      EDMM
-     *  E: edge type (0: back edge, 1: tree edge)
+     *      TTTP
+     *  T: edge type (0: cross/forward edge, 1: back edge, 2: unmarked tree
+     * edge, 3: half-marked tree edge, 4: full-marked tree edge)
      *  P: parent (0: further away from root, 1: closer to root)
-     *  M: marking (0: unmarked, 1: half marked, 2: full marked)
      */
-    const uint8_t EDGE_BIT = 0x8,  // 0b1000
-        PARENT_BIT = 0x4,          // 0b0100
-        MARKING_BITS = 0x3;        // 0b0011
-    const uint8_t TREE = 0x8;
-    const uint8_t PARENT = 0x4;
-    const uint8_t FULL = 0x2, HALF = 0x1;
+    const uint8_t TYPE_MASK = 0xe,  // 0b1110
+        PARENT_MASK = 0x1;          // 0b0001
+    const uint8_t FULL = 0x8, HALF = 0x6, UNMARKED = 0x4, BACK = 0x2,
+                  CROSS = 0x0;
+    const uint8_t PARENT = 0x1;
     CONSTEXPR_IF_CLANG bool isTreeEdge(uint u, uint k) const {
-        return (getEdgeData(u, k) & EDGE_BIT) == TREE;
+        return (getEdgeData(u, k) & TYPE_MASK) >= UNMARKED;
     }
     CONSTEXPR_IF_CLANG bool isParent(uint u, uint k) const {
-        return (getEdgeData(u, k) & PARENT_BIT) == PARENT;
+        return (getEdgeData(u, k) & PARENT_MASK) == PARENT;
     }
     CONSTEXPR_IF_CLANG bool isFullMarked(uint u, uint k) const {
-        return (getEdgeData(u, k) & MARKING_BITS) == FULL;
+        return (getEdgeData(u, k) & TYPE_MASK) == FULL;
     }
 
     CONSTEXPR_IF_CLANG uint edgeIndex(uint u) const {
