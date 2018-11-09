@@ -7,9 +7,9 @@
 
 using namespace Sealib;  // NOLINT
 
-void DFS::process_standard(uint u0, Graph *g, uint *color,
-                             UserFunc1 preProcess, UserFunc2 preExplore,
-                             UserFunc2 postExplore, UserFunc1 postProcess) {
+void DFS::process_standard(uint u0, Graph *g, uint *color, UserFunc1 preProcess,
+                           UserFunc2 preExplore, UserFunc2 postExplore,
+                           UserFunc1 postProcess) {
     std::stack<Pair> *s = new std::stack<Pair>;
     s->push(Pair(u0, 0));
     while (!s->empty()) {
@@ -44,10 +44,10 @@ void DFS::process_standard(uint u0, Graph *g, uint *color,
 
 template <class SS>
 void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
-                          void (*restoration)(uint, Graph *, CompactArray *,
-                                              SS *),
-                          UserFunc1 preProcess, UserFunc2 preExplore,
-                          UserFunc2 postExplore, UserFunc1 postProcess) {
+                        void (*restoration)(uint, Graph *, CompactArray *,
+                                            SS *),
+                        UserFunc1 preProcess, UserFunc2 preExplore,
+                        UserFunc2 postExplore, UserFunc1 postProcess) {
     s->push(Pair(u0, 0));
     Pair x;
     while (!s->isEmpty()) {
@@ -93,7 +93,7 @@ void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
 }
 
 void DFS::restore_full(uint u0, Graph *g, CompactArray *color,
-                         BasicSegmentStack *s) {
+                       BasicSegmentStack *s) {
     s->saveTrailer();
     s->dropAll();
     for (uint a = 0; a < g->getOrder(); a++) {
@@ -145,7 +145,7 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
 }
 
 void DFS::restore_top(uint u0, Graph *g, CompactArray *color,
-                        ExtendedSegmentStack *s) {
+                      ExtendedSegmentStack *s) {
     Pair x;
     uint u = u0, k = 0;
     if (s->getRestoreTrailer(&x) == 1) {
@@ -185,9 +185,9 @@ void DFS::process_static(uint u0, BasicGraph *g, CompactArray *color, S *back,
             uint v = g->head(u, k);
             preexplore(u, v);
             if (color->get(v) == DFS_WHITE) {
-                back->insert(v, std::get<1>(g->mate(u, k)));
                 preprocess(v);
                 color->insert(v, DFS_GRAY);
+                back->insert(v, std::get<1>(g->mate(u, k)));
                 u = v;
                 k = 0;
                 continue;

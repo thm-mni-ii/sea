@@ -1,43 +1,21 @@
-#ifndef SEALIB_CUTVERTEX_H_
-#define SEALIB_CUTVERTEX_H_
-#include <vector>
-#include "sealib/_types.h"
+#ifndef SEALIB_EDGEMARKER_H_
+#define SEALIB_EDGEMARKER_H_
 #include "sealib/basicgraph.h"
-#include "sealib/bitset.h"
-#include "sealib/choicedictionaryiterator.h"
 #include "sealib/compactarray.h"
 #include "sealib/dfs.h"
-#include "sealib/iterator.h"
+#include "sealib/rankselect.h"
+#include "sealib/staticspacestorage.h"
 
 namespace Sealib {
-class CutVertexIterator : Iterator<uint>, DFS {
+class EdgeMarker {
  public:
-    explicit CutVertexIterator(BasicGraph *g);
+    explicit EdgeMarker(BasicGraph *g);
 
-    void init() override;
+    void identifyEdges(CompactArray *color, StaticSpaceStorage *parent);
 
-    bool more() override;
+    void markTreeEdges(CompactArray *color, StaticSpaceStorage *parent);
 
-    uint next() override;
-
-    bool isCutVertex(uint u);
-
- private:
-    BasicGraph *g;
-    uint n;
-    RankSelect offset;
-    StaticSpaceStorage edges;
-    ChoiceDictionary cc;
-    ChoiceDictionary cut;
-    ChoiceDictionaryIterator cutI;
-
-    inline void init_tree(CompactArray *, StaticSpaceStorage *);
-    inline void init_mark(CompactArray *, StaticSpaceStorage *);
-    inline void init_cut();
-
-    void initEdgeType(uint u, uint k, uint8_t type);
     void setMark(uint u, uint k, uint8_t mark);
-    void markParents(uint w, uint u, StaticSpaceStorage *parent);
 
     /** Edge data: (4 bits)
      *      TTTP
@@ -50,6 +28,7 @@ class CutVertexIterator : Iterator<uint>, DFS {
     const uint8_t FULL = 0x8, HALF = 0x6, UNMARKED = 0x4, BACK = 0x2,
                   CROSS = 0x0;
     const uint8_t PARENT = 0x1;
+
     CONSTEXPR_IF_CLANG bool isTreeEdge(uint u, uint k) const {
         return (getEdgeData(u, k) & TYPE_MASK) >= UNMARKED;
     }
@@ -60,6 +39,16 @@ class CutVertexIterator : Iterator<uint>, DFS {
         return (getEdgeData(u, k) & TYPE_MASK) == FULL;
     }
 
+ private:
+    BasicGraph *g;
+    uint n;
+    StaticSpaceStorage edges;
+    RankSelect offset;
+
+    void initEdge(uint u, uint k, uint8_t type);
+
+    void markParents(uint w, uint u, StaticSpaceStorage *parent);
+
     CONSTEXPR_IF_CLANG uint edgeIndex(uint u) const {
         return static_cast<uint>(offset.select(u + 1) - u - 1U);
     }
@@ -68,4 +57,4 @@ class CutVertexIterator : Iterator<uint>, DFS {
     }
 };
 }  // namespace Sealib
-#endif  // SEALIB_CUTVERTEX_H_
+#endif  // SEALIB_EDGEMARKER_H_
