@@ -1,6 +1,6 @@
-#include "sealib/cutvertex.h"
 #include <gtest/gtest.h>
 #include <iostream>
+#include "sealib/cutvertexiterator.h"
 #include "sealib/graphcreator.h"
 
 using namespace Sealib;  // NOLINT
