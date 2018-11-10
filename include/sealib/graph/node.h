@@ -41,7 +41,9 @@ class Node {
     uint32_t getDegree() const;
 
     /**
-     * Sets the crossindex in the adjacency
+     * Make a cross pointer from "this" to an "other" adjacency array
+     * @param adjIndex index of endpoint in "this" adjacency array
+     * @param crossIndex index of endpoint in the "other" adjacency array
      */
      void setCrossIndex(uint32_t adjIndex, uint32_t crossIndex);
 

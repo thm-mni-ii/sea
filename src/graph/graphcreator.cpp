@@ -159,6 +159,26 @@ Sealib::DirectedGraph Sealib::GraphCreator::createRandomGenerated(
     return DirectedGraph(n);
 }
 
+std::pair<UndirectedGraph *, uint32_t> GraphCreator::createRandomUndirected(
+    uint32_t order, uint32_t approxDegree) {
+    UndirectedGraph *g = new UndirectedGraph(order);
+    std::uniform_int_distribution<uint32_t> dist(0, order - 1);
+    uint64_t sum = 0;
+    for (uint32_t a = 0; a < order; a++) {
+        while (g->getNodeDegree(a) < approxDegree) {
+            uint32_t b = dist(rng);
+            Node &n1 = g->getNode(a), &n2 = g->getNode(b);
+            uint32_t i1 = g->getNodeDegree(a), i2 = g->getNodeDegree(b);
+            n1.addAdjacency(b);
+            n1.setCrossIndex(i1, i2);
+            n2.addAdjacency(a);
+            n2.setCrossIndex(i2, i1);
+            sum += 2;
+        }
+    }
+    return {g, sum};
+}
+
 static uint32_t *generateRawGilbertGraph(uint32_t order, double p,
                                          std::mt19937_64 *gen) {
     uint32_t size = 0;

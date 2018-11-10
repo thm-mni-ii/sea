@@ -61,13 +61,9 @@ class GraphCreator {
     static DirectedGraph createRandomGenerated(uint32_t order);
 
     /**
-     * Create a random "imbalanced" graph, which contains a handful of very
-     * large
-     * nodes.
+     * Create a random "imbalanced" graph, which contains a handful of very large nodes.
      * @param order number of nodes
-     * @return the resulting graph: some nodes have a very large degree (they
-     * are
-     * "big")
+     * @return the resulting graph: some nodes have a very large degree (they are "big")
      */
     static DirectedGraph createRandomImbalanced(uint32_t order);
 
@@ -89,6 +85,9 @@ class GraphCreator {
     static std::unique_ptr<UndirectedGraph>
     generateRandomBipartiteUndirectedGraph(uint32_t order1, uint32_t order2,
                                            double p, uint32_t seed);
+
+    static std::pair<UndirectedGraph *, uint32_t> createRandomUndirected(
+        uint32_t order, uint32_t approxDegree);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPHCREATOR_H_

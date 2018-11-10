@@ -7,12 +7,7 @@
 #include "sealib/graph/graphcreator.h"
 #include "sealib/graph/undirectedgraph.h"
 
-using Sealib::DFS;
-using Sealib::CompactArray;
-using Sealib::Graph;
-using Sealib::DirectedGraph;
-using Sealib::Node;
-using Sealib::Adjacency;
+using namespace Sealib;  // NOLINT
 using std::vector;
 using std::stack;
 
@@ -93,6 +88,19 @@ TEST_P(DFSTest, nloglognBitUserproc) {
     EXPECT_EQ(c2, DEGREE * order);
     EXPECT_EQ(c3, DEGREE * order);
     EXPECT_EQ(c4, order);
+}
+
+TEST(DFSTest, nplusmBitUserproc) {
+    c1 = c2 = c3 = c4 = 0;
+    uint n = 4000;
+    auto r = GraphCreator::createRandomUndirected(n, 20);
+    UndirectedGraph *g = r.first;
+    uint m = r.second;
+    DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, n);
+    EXPECT_EQ(c2, m);
+    EXPECT_EQ(c3, m);
+    EXPECT_EQ(c4, n);
 }
 
 TEST(DFSTest, nloglognImbalanced) {
