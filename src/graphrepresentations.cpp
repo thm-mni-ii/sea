@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <set>
 #include <bitset>
+#include <iostream>
 #include "sealib/adjacency.h"
 #include "sealib/compactgraph.h"
 #include "sealib/node.h"
@@ -58,7 +59,6 @@ Compactgraph* Graphrepresentations::generateGilbertGraph(unsigned int order,
 		std::mt19937_64* gen) {
 	return new Compactgraph(generateRawGilbertGraph(order, p, gen));
 }
-
 uint* Graphrepresentations::generateRawGilbertGraph(unsigned int order,
 		double p,
 		std::mt19937_64* gen) {
@@ -278,24 +278,25 @@ void Graphrepresentations::standardToShifted(unsigned int *g){
 		}
 	}
 	for(unsigned int i = 1; i <= order; ++i){
-		unsigned int value = g[i];
+		unsigned int value = g[i] & ~c_prime_mask;
 		unsigned int startbit = wordsize_packed * (i-1);
 		unsigned int offset = startbit & (wordsize-1);
 		unsigned int index = (startbit >> (unsigned int)log2(wordsize))+1;
 		if(offset + wordsize_packed > wordsize){
 			unsigned int leftbits = wordsize-offset;
 			unsigned int rightbits = wordsize_packed - leftbits;
-			value = value & ~c_prime_mask;
 			g[index] = (value >> rightbits) | g[index];
 			g[index+1] = value << (leftbits + c_prime);
 		}else{
 			g[index] = (g[index] & ~((unsigned int)-1>>offset)) | (value << (c_prime - offset));
 		}
 	}
-	unsigned int changing_positions_index = order-pow(2,c_prime);
+	unsigned int changing_positions_index = order-static_cast<unsigned int>(pow(2,c_prime));
 	for(unsigned int pos : changing_positions){
+		std::cout << pos << std::endl;
 		g[changing_positions_index++] = pos;
 	}
+	g[changing_positions_index] = 0;
 	g[g[0]] = c_prime;
 
 }
@@ -308,22 +309,24 @@ void Graphrepresentations::shiftedToStandard(unsigned int *g){
 	unsigned int c_prime_mask = static_cast<unsigned int>(-1) << (wordsize - c_prime);
 	unsigned int initial_prefix = order+2 & c_prime_mask;
 	std::vector<unsigned int> changing_positions;
-	for(unsigned int i = order-pow(2,c_prime); i < order; ++i){
-		if(g[1] == 0){
-			break;
-		}
-		changing_positions.push_back(g[i]);
+	uint i = order - static_cast<uint>(pow(2,c_prime));
+	while(g[i] < g[i+1]){
+		changing_positions.push_back(g[i++]);
 	}
-	unsigned int changing_pos = 0;
-	unsigned int current_prefix = initial_prefix >> (wordsize - c_prime);
+		changing_positions.push_back(g[i]);
+	for(auto pos : changing_positions){
+		std::cout << pos << std::endl;
+	}
+	int changing_pos = changing_positions.size()-1;
+	unsigned int current_prefix = (initial_prefix >> (wordsize - c_prime)) + changing_positions.size();
 	for(unsigned int i = order; i > 0; --i){
+		while(changing_pos >= 0 && changing_positions[changing_pos] == i+1 ){
+			changing_pos--;	
+			current_prefix--;
+		}
 		unsigned int startbit = wordsize_packed * (i - 1);
 		unsigned int offset = startbit & (wordsize - 1);
 		unsigned int index = (startbit >> (unsigned int)log2(wordsize))+1;
-		if(changing_positions[changing_pos] == i){
-			changing_pos++;	
-			current_prefix--;
-		}
 		if(offset + wordsize_packed > wordsize){
 			unsigned int leftbits = wordsize - offset;
 			unsigned int rightbits = wordsize_packed - leftbits;

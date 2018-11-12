@@ -5,7 +5,7 @@ using Sealib::InplaceBFS;
 using Sealib::Compactgraph;
 using Sealib::ChoiceDictionaryDummy;
 
-ChoiceDictionaryDummy::ChoiceDictionaryDummy(uint n): CompactArray(n){
+ChoiceDictionaryDummy::ChoiceDictionaryDummy(uint n): CompactArray(n,4){
 	size = n;
 }
 
@@ -71,7 +71,7 @@ void InplaceBFS::runInplaceBFS(){
 			}
 			bool isSameAdjacency = true;
 			while(isSameAdjacency){
-				if (preexplore != BFS_NOP_EXPLORE){ 
+				if (preexplore !=BFS_NOP_EXPLORE){ 
 					preexplore(u, v);
 				}
 				if(color->color(u) == BFS_WHITE){
@@ -99,7 +99,6 @@ void InplaceBFS::runInplaceBFS(){
 	round_number++;
 	}
 }
-
 uint InplaceBFS::read(uint i){
 	unsigned int order = g->getData()[0]; 
 	unsigned int wordsize = sizeof(g->getData()[0]) * 8;
@@ -109,7 +108,7 @@ uint InplaceBFS::read(uint i){
 	unsigned int initial_prefix = order+2 & c_prime_mask;
 	unsigned int current_prefix = initial_prefix >> (wordsize - c_prime);
 	unsigned int pos_index = (unsigned int) order-pow(2,c_prime); 	
-	while(i < g->getData()[pos_index] && pos_index < order){
+	while(i >= g->getData()[pos_index] && g->getData()[pos_index] != 0 && pos_index < order){
 		current_prefix++;
 		pos_index++;
 	}
@@ -122,7 +121,7 @@ uint InplaceBFS::read(uint i){
 		unsigned int value = (g->getData()[index] << rightbits) | (g->getData()[index+1] >> (wordsize - rightbits));
 		return (value & ~c_prime_mask) | (current_prefix << (wordsize - c_prime));
 	}else{
-		return ((g->getData()[index] >> (c_prime - offset)) & ~c_prime_mask) | (current_prefix << (wordsize - c_prime));
+		return (g->getData()[index] >> (c_prime - offset) & ~c_prime_mask) | (current_prefix << (wordsize - c_prime));
 	}
 }
 
