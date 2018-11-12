@@ -18,6 +18,13 @@ typedef void (*UserFunc2)(uint, uint);
 #define BFS_NOP_PROCESS (UserFunc1)0
 #define BFS_NOP_EXPLORE (UserFunc2)0
 
+/**
+ * Run a breadth-first search over a given CompactGraph in shifted representation, while executing the two
+ * given user functions.
+ * EFFICIENCY: O(n+m) time, O(n+m+2) words 
+ * @author Simon Schniedenharn
+ */
+
 namespace Sealib{
 	class ChoiceDictionaryDummy: public CompactArray{
 		public:
@@ -40,15 +47,22 @@ namespace Sealib{
 			uint round_number;
 			UserFunc1 preprocess;
 			UserFunc2 preexplore;
-			/* Returns the pointer to the adjacency array of i 
-			 * @param i = index of Node 
-			 */
 		public:
 			uint read(uint i);
+			/* Creates an InplaceBFS Object with a give Graph and
+			 * implements a 4-Color Choice Dicrionary inside
+			 * the shifted graph representations free Space to
+			 * hold the color information
+			 * @param g a compactgraph in shifted representation
+			 * @param color CompactArray as dummy for missing choice dictionary
+			 * @param pp function pointer for preprocess function
+			 * @param pe function pointer for postprocess function
+			 * */
 			InplaceBFS(Compactgraph *g, ChoiceDictionaryDummy *color, UserFunc1 pp, UserFunc2 pe);
+
 			void runInplaceBFS();
 
 	};
 } //namespace Sealib
 
-#endif
+#endif // SEALIB_INPLACEBFS_H_
