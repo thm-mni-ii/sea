@@ -10,9 +10,7 @@ class BCCIterator : Iterator<uint> {
     explicit BCCIterator(BasicGraph *g);
     BCCIterator(BasicGraph *g, EdgeMarker *e);
 
-    void init() override;
-
-    void setOrigin(uint u, uint v);
+    void init(uint u, uint v);
 
     bool more() override;
 
@@ -20,7 +18,11 @@ class BCCIterator : Iterator<uint> {
 
  private:
     BasicGraph *g;
+    uint n;
     EdgeMarker e;
+    Pair startEdge;
+
+    void init() override;
 };
 }  // namespace Sealib
 

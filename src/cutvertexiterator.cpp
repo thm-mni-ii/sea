@@ -1,5 +1,4 @@
 #include "sealib/cutvertexiterator.h"
-#include <cmath>
 #include "sealib/choicedictionary.h"
 #include "sealib/staticspacestorage.h"
 
@@ -19,14 +18,7 @@ CutVertexIterator::CutVertexIterator(BasicGraph *graph)
 void CutVertexIterator::init() {
     CompactArray color(n, 3);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-    std::vector<bool> bits;
-    for (uint u = 0; u < n; u++) {
-        bits.push_back(1);
-        for (uint k = 0; k < ceil(log2(g->getNodeDegree(u) + 1)); k++) {
-            bits.push_back(0);
-        }
-    }
-    StaticSpaceStorage parent(bits);
+    StaticSpaceStorage parent(g);
 
     // identify connected components
     for (uint a = 0; a < n; a++) {
@@ -68,7 +60,7 @@ void CutVertexIterator::init() {
             }
         }
     }
-    //cutI = ChoiceDictionaryIterator(&cut);
+    // cutI = ChoiceDictionaryIterator(&cut);
 }
 
 bool CutVertexIterator::more() { return cutI.more(); }
