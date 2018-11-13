@@ -3,6 +3,7 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/bitset.h"
+#include "sealib/graph.h"
 #include "sealib/rankselect.h"
 #include "sealib/sequence.h"
 
@@ -37,6 +38,13 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      *      => 4 data packs: size 3, 2, 0 and 2 bits
      */
     explicit StaticSpaceStorage(const std::vector<bool> &bits);
+
+    /**
+     * Create a new storage with O(log(deg(u)) bits for each node u in the graph
+     * G.
+     * @param g graph G=(V,E) to create a storage for
+     */
+    explicit StaticSpaceStorage(Graph *g);
 
     /**
      * Convenience method to create a bit pattern from a vector of sizes
