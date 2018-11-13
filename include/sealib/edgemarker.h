@@ -39,6 +39,8 @@ class EdgeMarker {
         return (getEdgeData(u, k) & TYPE_MASK) == FULL;
     }
 
+    CONSTEXPR_IF_CLANG BasicGraph *getGraph() const { return g; }
+
  private:
     BasicGraph *g;
     uint n;
