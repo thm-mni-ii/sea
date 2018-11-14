@@ -23,6 +23,13 @@ TEST(ChoiceDictionaryTest, choicedictionary_integrity) {
 
     std::shuffle(set.begin(), set.end(), std::default_random_engine(seed));
 
+    // test zero initialization
+    std::vector<unsigned long int> nonZero;
+    for (unsigned long int i = 0; i < size; i++) {
+        if (c->get(i) == 1) nonZero.push_back(i);
+    }
+    ASSERT_EQ(nonZero.size(), 0);
+
     // insert into Choice Dictionary and test if choice() returns the correct
     c->insert(123UL);
     ASSERT_EQ(c->choice(), 123);
