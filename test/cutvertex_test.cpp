@@ -6,9 +6,8 @@
 using namespace Sealib;  // NOLINT
 
 TEST(CutVertexIteratorTest, init) {
-    std::pair<BasicGraph *, uint> p =
-        GraphCreator::createRandomUndirected(100, 10);
-    CutVertexIterator c(p.first);
+    BasicGraph *g = GraphCreator::createWindmill(3, 4);
+    CutVertexIterator c(g);
     c.init();
     while (c.more()) std::cout << c.next() << " ";
 }

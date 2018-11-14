@@ -257,3 +257,28 @@ std::pair<BasicGraph *, unsigned int> GraphCreator::createRandomUndirected(
     }
     return {g, sum};
 }
+
+BasicGraph *GraphCreator::createWindmill(unsigned int order,
+                                         unsigned int count) {
+    unsigned int n = order * count + 1;
+    BasicGraph *g = new BasicGraph(n);
+    for (uint a = 0; a < n - 1; a++) {
+        unsigned int i1 = g->getNodeDegree(n - 1), i2 = g->getNodeDegree(a);
+        g->getNode(n - 1).addAdjacency(a);
+        g->getNode(n - 1).setCrossIndex(i1, i2);
+        g->getNode(a).addAdjacency(n - 1);
+        g->getNode(a).setCrossIndex(i2, i1);
+    }
+    for (unsigned int a = 0; a < count; a++) {
+        for (unsigned int b = a * order; b < a * order + order - 1; b++) {
+            for (unsigned int c = b + 1; c < a * order + order; c++) {
+                unsigned int i1 = g->getNodeDegree(b), i2 = g->getNodeDegree(c);
+                g->getNode(b).addAdjacency(c);
+                g->getNode(b).setCrossIndex(i1, i2);
+                g->getNode(c).addAdjacency(b);
+                g->getNode(c).setCrossIndex(i2, i1);
+            }
+        }
+    }
+    return g;
+}

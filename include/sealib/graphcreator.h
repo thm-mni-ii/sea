@@ -63,8 +63,22 @@ class GraphCreator {
      */
     static BasicGraph *createRandomImbalanced(unsigned int order);
 
+    /**
+     * Create a random undirected graph with an approximate degree.
+     * @param order number of nodes to generate
+     * @param approxDegree every node will have at least this many outgoing edges
+     * @return pair {G, m} where G is the graph and m is the actual number of edges in the graph
+     */
     static std::pair<BasicGraph *, unsigned int> createRandomUndirected(
         unsigned int order, unsigned int approxDegree);
+
+    /**
+     * Create an undirected windmill graph (m complete graphs of order n joined together at a common vertex).
+     * @param order order of each windmill part (n)
+     * @param count number of windmill parts (m)
+     * @return the generated windmill graph W_n^m
+     */
+    static BasicGraph * createWindmill(unsigned int order, unsigned int count);
 
     static std::unique_ptr<BasicGraph> generateRandomBipartiteBasicGraph(
         unsigned int order1, unsigned int order2, double p, unsigned int seed);
