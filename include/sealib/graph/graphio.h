@@ -1,5 +1,5 @@
-#ifndef SEALIB_GRAPHIO_H_
-#define SEALIB_GRAPHIO_H_
+#ifndef SEALIB_GRAPH_GRAPHIO_H_
+#define SEALIB_GRAPH_GRAPHIO_H_
 
 #include <string>
 #include "sealib/graph/graph.h"
@@ -30,4 +30,4 @@ class GraphImporter {
     static G importGML(std::string filename);
 };
 }  // namespace Sealib
-#endif  // SEALIB_GRAPHIO_H_
+#endif  // SEALIB_GRAPH_GRAPHIO_H_

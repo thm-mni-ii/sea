@@ -1,5 +1,5 @@
-#ifndef SEALIB_SEQUENCE_H_
-#define SEALIB_SEQUENCE_H_
+#ifndef SEALIB_COLLECTION_SEQUENCE_H_
+#define SEALIB_COLLECTION_SEQUENCE_H_
 #include "sealib/_types.h"
 
 namespace Sealib {
@@ -28,4 +28,4 @@ class Sequence {
     virtual ~Sequence() = default;
 };
 }  // namespace Sealib
-#endif  // SEALIB_SEQUENCE_H_
+#endif  // SEALIB_COLLECTION_SEQUENCE_H_

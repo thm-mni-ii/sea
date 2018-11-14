@@ -38,9 +38,14 @@ void ChoiceDictionary::insert(uint64_t index) {
 bool ChoiceDictionary::get(uint64_t index) {
     uint64_t primaryWord;
     uint64_t targetBit;
+    uint64_t primaryInnerIndex;
 
     uint64_t primaryIndex = index / (uint64_t)wordSize;
-    uint64_t primaryInnerIndex = index % (uint64_t)wordSize;
+
+    if (!isInitialized(primaryIndex))
+        return 0;
+
+    primaryInnerIndex = index % (uint64_t)wordSize;
 
     primaryWord = primary[primaryIndex];
     targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryInnerIndex);

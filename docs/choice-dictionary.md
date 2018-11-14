@@ -10,7 +10,7 @@ A choice dictionary is a bitset containing n elements that supports reading and 
 
 ## Efficiency
 * Time: O(1) (all operations)
-* Space: O(n) bits
+* Space: n+o(n)
 
 ## Example
 
