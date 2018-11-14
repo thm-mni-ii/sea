@@ -30,7 +30,8 @@ class BCCIterator : Iterator<uint> {
     ~BCCIterator();
 
     /**
-     * Initialize the iterator. If no external EdgeMarker was given, identifies tree edges and marks them.
+     * Initialize the iterator. If no external EdgeMarker was given, identifies
+     * tree edges and marks them.
      */
     void init() override;
 

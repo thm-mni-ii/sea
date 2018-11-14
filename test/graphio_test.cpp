@@ -6,6 +6,7 @@ using namespace Sealib;  // NOLINT
 
 TEST(GraphIOTest, exportGML) {
     Graph *g = GraphCreator::createRandomFixed(10, 5);
+    // Graph *g=GraphCreator::createWindmill(3,4);
     GraphExporter::exportGML(g, "graphio1.gml");
 }
 

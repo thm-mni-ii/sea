@@ -5,15 +5,7 @@
 using namespace Sealib;  // NOLINT
 
 CutVertexIterator::CutVertexIterator(BasicGraph *graph)
-    : g(graph), e(g), n(g->getOrder()), cc(n), cut(n), cutI(nullptr) {
-    for (uint a = 0; a < n; a++) {
-        // we have to initialize the choice dictionary "in reverse"
-        cc.insert(a);
-        cc.remove(a);
-        // cut.insert(a);
-        // cut.remove(a);
-    }
-}
+    : g(graph), e(g), n(g->getOrder()), cc(n), cut(n), cutI(nullptr) {}
 
 void CutVertexIterator::init() {
     CompactArray color(n, 3);
@@ -36,7 +28,6 @@ void CutVertexIterator::init() {
     }
     e.markTreeEdges(&color, &parent);
 
-    cutI = ChoiceDictionaryIterator(&cut);
     for (uint u = 0; u < n; u++) {
         if (cc.get(u)) {
             // u is root of a DFS tree
@@ -60,7 +51,7 @@ void CutVertexIterator::init() {
             }
         }
     }
-    // cutI = ChoiceDictionaryIterator(&cut);
+    cutI = ChoiceDictionaryIterator(&cut);
 }
 
 bool CutVertexIterator::more() { return cutI.more(); }
