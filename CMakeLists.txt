@@ -10,11 +10,14 @@ set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated bina
 set(CMAKE_INCLUDE_PATH include/)
 
 set(CMAKE_INCLUDE_CURRENT_DIR OFF)
-set(BUILD_FLAGS "-std=c++11 -O3 -Wall -Wextra -Wpedantic -Wswitch-default -Wswitch-enum \
+
+set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wswitch-default -Wswitch-enum \
 -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef -Wcast-qual -Wctor-dtor-privacy \
 -Wdisabled-optimization -Winit-self -Wmissing-declarations -Wmissing-include-dirs \
 -Woverloaded-virtual -Wredundant-decls -Wsign-conversion -Wsign-promo \
--Wstrict-overflow=5")
+-Wstrict-overflow=5 -Wfloat-equal")
+set(BUILD_FLAGS "-std=c++11 -O3 -fno-builtin -ffast-math ${WARNING_FLAGS}")
+set(TEST_FLAGS "-std=c++11 -g -O0 -fno-builtin -ffast-math ${WARING_FLAGS}")
 
 # --------------------------------------------------- #
 #                   Dependencies
@@ -77,4 +80,5 @@ file(GLOB MAIN "src-view/*.cpp")                                   # all test fi
 add_executable(main ${LIB_SOURCES} ${MAIN})
 find_package(Threads)
 
-set_target_properties(sealib tests main PROPERTIES COMPILE_FLAGS ${BUILD_FLAGS})
+set_target_properties(sealib main PROPERTIES COMPILE_FLAGS ${BUILD_FLAGS})
+set_target_properties(tests PROPERTIES COMPILE_FLAGS ${TEST_FLAGS})
