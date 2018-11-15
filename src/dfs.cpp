@@ -177,7 +177,7 @@ void DFS::process_static(uint u0, BasicGraph *g, CompactArray *color, S *back,
                          UserFunc1 preprocess, UserFunc2 preexplore,
                          UserFunc2 postexplore, UserFunc1 postprocess) {
     color->insert(u0, DFS_GRAY);
-    back->insert(u0, g->getNodeDegree(u0));
+    back->insert(u0, std::numeric_limits<uint>::max());
     preprocess(u0);
     uint u = u0, k = 0;
     while (true) {
