@@ -1,6 +1,7 @@
 #ifndef SEALIB_LEGACY_H_
 #define SEALIB_LEGACY_H_
 #ifdef __cplusplus
+namespace Sealib {
 extern "C" {
 #endif
 
@@ -38,5 +39,6 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(unsigned int),
 
 #ifdef __cplusplus
 }
+}   // namespace Sealib
 #endif
 #endif  // SEALIB_LEGACY_H_

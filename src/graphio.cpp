@@ -31,7 +31,7 @@
         index++;                    \
     }
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 template<>
 void GraphExporter::exportGML<Graph>(Graph* g, std::string filename) {
@@ -137,3 +137,4 @@ BasicGraph GraphImporter::importGML<BasicGraph>(std::string filename) {
     READ("]");
     return g;
 }
+}   // namespace Sealib

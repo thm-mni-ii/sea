@@ -5,7 +5,7 @@
 #include "sealib/graphcreator.h"
 #include "sealib/rankselect.h"
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 void *Sealib_Graph_new(unsigned int **m, unsigned int order) {
   return GraphCreator::createGraphPointerFromAdjacencyMatrix(m, order);
@@ -89,3 +89,4 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(unsigned int),
     DFS::nloglognBitDFS(static_cast<Graph *>(graph), preprocess, preexplore,
                         postexplore, postprocess);
 }
+}   // namespace Sealib
