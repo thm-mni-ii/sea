@@ -42,27 +42,33 @@ static uint findEdge(Graph *g, uint u, uint v) {
 }
 
 EdgeMarker::EdgeMarker(BasicGraph *graph)
-    : g(graph), n(g->getOrder()), edges(makeEdges(g)), offset(makeOffset(g)) {}
+    : g(graph),
+      n(g->getOrder()),
+      parent(g),
+      edges(makeEdges(g)),
+      offset(makeOffset(g)) {}
 
 void EdgeMarker::identifyEdges() {
     CompactArray color(n, 3);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-    StaticSpaceStorage parent(g);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             DFS::process_static(
                 a, g, &color, &parent, DFS_NOP_PROCESS,
                 [this, &color](uint u, uint k) {
-                    uint v = g->head(u, k);
-                    if (color.get(v) == DFS_WHITE) {
-                        initEdge(u, k, UNMARKED);
-                    } else if (color.get(v) == DFS_GRAY) {
-                        // initializing {u,v} as a back edge with v parent of u
-                        // (closer to root)
-                        std::tuple<uint, uint> p = g->mate(u, k);
-                        initEdge(std::get<0>(p), std::get<1>(p), BACK);
-                    } else {
-                        initEdge(u, k, CROSS);
+                    if (!isInitialized(u, k)) {
+                        uint v = g->head(u, k);
+                        if (color.get(v) == DFS_WHITE) {
+                            initEdge(u, k, UNMARKED);
+                        } else if (color.get(v) == DFS_GRAY) {
+                            // initializing {u,v} as a back edge with v parent
+                            // of u
+                            // (closer to root)
+                            std::tuple<uint, uint> p = g->mate(u, k);
+                            initEdge(std::get<0>(p), std::get<1>(p), BACK);
+                        } else {
+                            initEdge(u, k, CROSS);
+                        }
                     }
                 },
                 DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
@@ -73,20 +79,19 @@ void EdgeMarker::identifyEdges() {
 void EdgeMarker::markTreeEdges() {
     CompactArray color(n, 3);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-    StaticSpaceStorage parent(g);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             DFS::process_static(
                 a, g, &color, &parent,
-                [this, &parent](uint u) {
-                    if (isTreeEdge(u, static_cast<uint>(parent.get(u)))) {
+                [this, a](uint u) {
+                    if (u == a || isTreeEdge(u, static_cast<uint>(parent.get(u)))) {
                         for (uint k = 0; k < g->getNodeDegree(u); k++) {
                             uint v = g->head(u, k);
                             // to do: check that v is descendant of u (who is
                             // descendant in a back edge?)
                             if (isBackEdge(u, k) && isParent(u, k) /*(?)*/) {
                                 // {u,v} is a back edge and u is closer to root:
-                                markParents(v, u, &parent);
+                                markParents(v, u);
                             }
                         }
                     }
@@ -96,15 +101,15 @@ void EdgeMarker::markTreeEdges() {
     }
 }
 
-void EdgeMarker::markParents(uint w, uint u, StaticSpaceStorage *parent) {
-    uint k = static_cast<uint>(parent->get(w));
+void EdgeMarker::markParents(uint w, uint u) {
+    uint k = static_cast<uint>(parent.get(w));
     if (k < g->getNodeDegree(w)) {
         // if k>deg(w), then w is already root (?)
-        uint v = g->head(w, k);
+        uint v = g->head(w, k);  // assert(isTreeEdge(w,k));
         while (v != u && !isFullMarked(w, k)) {
             setMark(w, k, FULL);
             w = v;
-            k = static_cast<uint>(parent->get(w));
+            k = static_cast<uint>(parent.get(w));
             v = g->head(w, k);
         }
         if (v == u) {
