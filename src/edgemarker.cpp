@@ -1,6 +1,6 @@
 #include "sealib/edgemarker.h"
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 static std::vector<bool> makeEdges(BasicGraph *g) {
     std::vector<bool> bits;
@@ -124,3 +124,4 @@ void EdgeMarker::setMark(uint u, uint k, uint8_t mark) {
     edges.insert(ui, edges.get(ui) | mark);
     edges.insert(vi, edges.get(vi) | mark);
 }
+}   // namespace Sealib

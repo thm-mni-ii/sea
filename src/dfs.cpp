@@ -5,7 +5,7 @@
 #include <vector>
 #include "./inplacerunner.h"
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 void DFS::process_standard(uint u0, Graph *g, uint *color, UserFunc1 preProcess,
                            UserFunc2 preExplore, UserFunc2 postExplore,
@@ -288,3 +288,4 @@ void DFS::runLinearTimeInplaceDFS(uint *graph, UserFunc1 preProcess,
     ilDFSRunner->run(startVertex);
     delete ilDFSRunner;
 }
+}   // namespace Sealib

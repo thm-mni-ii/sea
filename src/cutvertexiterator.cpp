@@ -2,7 +2,7 @@
 #include "sealib/choicedictionary.h"
 #include "sealib/staticspacestorage.h"
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 CutVertexIterator::CutVertexIterator(BasicGraph *graph)
     : g(graph), e(g), n(g->getOrder()), cc(n), cut(n), cutI(nullptr) {}
@@ -59,3 +59,5 @@ bool CutVertexIterator::more() { return cutI.more(); }
 uint CutVertexIterator::next() { return static_cast<uint>(cutI.next()); }
 
 bool CutVertexIterator::isCutVertex(uint u) { return cut.get(u); }
+
+}   // namespace Sealib

@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
+using namespace Sealib;   // NOLINT
+
 #ifdef __clang__
 /* G++ will complain about this (the tests should be successful anyway): */
 extern "C" {
