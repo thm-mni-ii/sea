@@ -32,7 +32,7 @@ void CutVertexIterator::init() {
         if (cc.get(u)) {
             // u is root of a DFS tree
             uint num = 0;
-            for (uint k = 0; k < n; k++) {
+            for (uint k = 0; k < g->getNodeDegree(u); k++) {
                 if (e.isTreeEdge(u, k) && e.isParent(u, k)) {
                     num++;
                 }
