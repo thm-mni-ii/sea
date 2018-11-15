@@ -23,13 +23,16 @@ const UserFunc2 DFS_NOP_EXPLORE = [](uint, uint) {};
  *
  * The following DFS variants are available:
  *  - standardDFS: the normal DFS, uses implicit recursion stack
- *  - nBitDFS: space-efficient DFS, explicit segmented stack
- *
+ *  - nBitDFS: slow but very space-efficient DFS, explicit segmented stack
+ *  - nloglognBitDFS: fast and space-efficient DFS, segment storage
+ *  - nplusmBitDFS: good space-efficient DFS for undirected graphs, static space
+ * allocation
+ *  - runLinearTimeInplaceDFS: space-efficient DFS over a compact graph
  */
 class DFS {
  public:
     /**
-     * Run a standard depth-first search over a given graph. <br>
+     * Run a standard depth-first search over a given graph.
      * EFFICIENCY: O(n+m) time, O(n log n) bits
      * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
@@ -44,7 +47,7 @@ class DFS {
                             UserFunc1 postprocess = DFS_NOP_PROCESS);
     /**
      * Run a space-efficient depth-first search over a given graph. (Elmasry,
-     * Hagerup and Kammer; 2015) <br>
+     * Hagerup and Kammer; 2015)
      * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) bits
      * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
@@ -60,28 +63,29 @@ class DFS {
 
     /**
      * Run a linear-time space-efficient depth-first search. (Elmasry, Hagerup
-    * and
-     * Kammer; 2015) <br>
+     * and Kammer; 2015)
      * EFFICIENCY: O(n+m) time, O(n log log n) bits
-    * @param g graph G=(V,E) to iterate over
-    * @param preprocess to be executed before processing a node u
-    * @param preexplore to be executed before exploring an edge (u,v)
-    * @param postexplore to be executed after exploring an edge (u,v)
-    * @param postprocess to be executed after processing a node u
-    * @author Simon Heuser
-    */
-    static void nloglognBitDFS(Graph *g, UserFunc1 preprocess,
-                               UserFunc2 preexplore, UserFunc2 postexplore,
-                               UserFunc1 postprocess);
-
-    /**
-     * Run a linear-time and linear-space depth-first search over an undirected
-     * graph. <br>
-     * EFFICIENCY: O(n+m) time, O(n+m) bits
-     * @param g undirected graph G=(V,E) to iterate over
+     * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
      * @param preexplore to be executed before exploring an edge (u,v)
      * @param postexplore to be executed after exploring an edge (u,v)
+     * @param postprocess to be executed after processing a node u
+     * @author Simon Heuser
+     */
+    static void nloglognBitDFS(Graph *g, UserFunc1 preprocess = DFS_NOP_PROCESS,
+                               UserFunc2 preexplore = DFS_NOP_EXPLORE,
+                               UserFunc2 postexplore = DFS_NOP_EXPLORE,
+                               UserFunc1 postprocess = DFS_NOP_PROCESS);
+
+    /**
+     * Run a linear-time and linear-space depth-first search over an undirected
+     * graph. The preexplore and postexplore calls can take (u,k) as argument
+     * due to the nature of an undirected graph.
+     * EFFICIENCY: O(n+m) time, O(n+m) bits
+     * @param g undirected graph G=(V,E) to iterate over
+     * @param preprocess to be executed before processing a node u
+     * @param preexplore to be executed before exploring an edge (u,k)
+     * @param postexplore to be executed after exploring an edge (u,k)
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
@@ -93,8 +97,7 @@ class DFS {
 
     /**
      * Runs an inplace DFS in linear time over a graph that is given in a
-     * special
-     * representation. <br>
+     * special representation.
      * EFFICIENCY: O(n+m) time, O(log n) bits
      * @param graph Graph A graph in a swapped begin pointer representation.
      * @param startVertex startVertex The begin of the DFS tree.

@@ -183,7 +183,7 @@ void DFS::process_static(uint u0, BasicGraph *g, CompactArray *color, S *back,
     while (true) {
         if (k < g->getNodeDegree(u)) {
             uint v = g->head(u, k);
-            preexplore(u, v);
+            preexplore(u, k);
             if (color->get(v) == DFS_WHITE) {
                 preprocess(v);
                 color->insert(v, DFS_GRAY);
@@ -192,7 +192,7 @@ void DFS::process_static(uint u0, BasicGraph *g, CompactArray *color, S *back,
                 k = 0;
                 continue;
             } else {
-                postexplore(u, v);
+                postexplore(u, k);
                 k++;
             }
         } else {
@@ -202,7 +202,7 @@ void DFS::process_static(uint u0, BasicGraph *g, CompactArray *color, S *back,
                 std::tuple<uint, uint> p =
                     g->mate(u, static_cast<uint>(back->get(u)));
                 uint pu = std::get<0>(p), pk = std::get<1>(p);
-                postexplore(pu, u);
+                postexplore(pu, pk);
                 u = pu;
                 k = pk + 1;
             } else {
@@ -288,4 +288,4 @@ void DFS::runLinearTimeInplaceDFS(uint *graph, UserFunc1 preProcess,
     ilDFSRunner->run(startVertex);
     delete ilDFSRunner;
 }
-}   // namespace Sealib
+}  // namespace Sealib
