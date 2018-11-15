@@ -74,7 +74,7 @@ class GraphCreator {
 
     /**
      * Create an undirected windmill graph (m complete graphs of order n joined together at a common vertex).
-     * @param order order of each windmill part (n)
+     * @param order order of each windmill part (n > 1)
      * @param count number of windmill parts (m)
      * @return the generated windmill graph W_n^m
      */

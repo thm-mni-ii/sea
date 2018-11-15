@@ -260,18 +260,15 @@ std::pair<BasicGraph *, unsigned int> GraphCreator::createRandomUndirected(
 
 BasicGraph *GraphCreator::createWindmill(unsigned int order,
                                          unsigned int count) {
+    order--;
     unsigned int n = order * count + 1;
     BasicGraph *g = new BasicGraph(n);
-    for (uint a = 0; a < n - 1; a++) {
-        unsigned int i1 = g->getNodeDegree(n - 1), i2 = g->getNodeDegree(a);
-        g->getNode(n - 1).addAdjacency(a);
-        g->getNode(n - 1).setCrossIndex(i1, i2);
-        g->getNode(a).addAdjacency(n - 1);
-        g->getNode(a).setCrossIndex(i2, i1);
-    }
     for (unsigned int a = 0; a < count; a++) {
-        for (unsigned int b = a * order; b < a * order + order - 1; b++) {
-            for (unsigned int c = b + 1; c < a * order + order; c++) {
+        // a = no. complete graphs
+        for (unsigned int b = a * order; b < (a + 1) * order - 1; b++) {
+            // b = no. source nodes
+            for (unsigned int c = b + 1; c < (a + 1) * order; c++) {
+                // c = no. dest. nodes
                 unsigned int i1 = g->getNodeDegree(b), i2 = g->getNodeDegree(c);
                 g->getNode(b).addAdjacency(c);
                 g->getNode(b).setCrossIndex(i1, i2);
@@ -279,6 +276,13 @@ BasicGraph *GraphCreator::createWindmill(unsigned int order,
                 g->getNode(c).setCrossIndex(i2, i1);
             }
         }
+    }
+    for (uint a = 0; a < n - 1; a++) {
+        unsigned int i1 = g->getNodeDegree(n - 1), i2 = g->getNodeDegree(a);
+        g->getNode(n - 1).addAdjacency(a);
+        g->getNode(n - 1).setCrossIndex(i1, i2);
+        g->getNode(a).addAdjacency(n - 1);
+        g->getNode(a).setCrossIndex(i2, i1);
     }
     return g;
 }
