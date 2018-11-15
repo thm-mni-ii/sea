@@ -20,13 +20,8 @@ BCCIterator::~BCCIterator() {
 
 void BCCIterator::init() {
     if (!externalEdgeMarker) {
-        for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-        e->identifyEdges(&color, &parent);
-
-        for (uint a = 0; a < n; a++) {
-            color.insert(a, DFS_WHITE);
-        }
-        e->markTreeEdges(&color, &parent);
+        e->identifyEdges();
+        e->markTreeEdges();
     }
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
 }

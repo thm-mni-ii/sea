@@ -5,28 +5,28 @@
 namespace Sealib {
 
 CutVertexIterator::CutVertexIterator(BasicGraph *graph)
-    : g(graph), e(g), n(g->getOrder()), cc(n), cut(n), cutI(nullptr) {}
+    : g(graph), e(g), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {}
 
 void CutVertexIterator::init() {
-    CompactArray color(n, 3);
-    for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-    StaticSpaceStorage parent(g);
+    {
+        CompactArray color(n, 3);
+        for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
+        StaticSpaceStorage parent(g);
 
-    // identify connected components
-    for (uint a = 0; a < n; a++) {
-        if (color.get(a) == DFS_WHITE) {
-            cc.insert(a);
-            process_static(a, g, &color, &parent, DFS_NOP_PROCESS,
-                           DFS_NOP_EXPLORE, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+        // identify connected components
+        for (uint a = 0; a < n; a++) {
+            if (color.get(a) == DFS_WHITE) {
+                cc.insert(a);
+                process_static(a, g, &color, &parent, DFS_NOP_PROCESS,
+                               DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                               DFS_NOP_PROCESS);
+            }
         }
     }
 
-    e.identifyEdges(&color, &parent);
+    e.identifyEdges();
 
-    for (uint a = 0; a < n; a++) {
-        color.insert(a, DFS_WHITE);
-    }
-    e.markTreeEdges(&color, &parent);
+    e.markTreeEdges();
 
     for (uint u = 0; u < n; u++) {
         if (cc.get(u)) {
@@ -51,7 +51,7 @@ void CutVertexIterator::init() {
             }
         }
     }
-    cutI = ChoiceDictionaryIterator(&cut);
+    cutI.init();
 }
 
 bool CutVertexIterator::more() { return cutI.more(); }
@@ -60,4 +60,4 @@ uint CutVertexIterator::next() { return static_cast<uint>(cutI.next()); }
 
 bool CutVertexIterator::isCutVertex(uint u) { return cut.get(u); }
 
-}   // namespace Sealib
+}  // namespace Sealib

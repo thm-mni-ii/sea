@@ -5,9 +5,14 @@
 
 using namespace Sealib;  // NOLINT
 
-TEST(CutVertexIteratorTest, init) {
+TEST(CutVertexIteratorTest, windmillGraph) {
     BasicGraph *g = GraphCreator::createWindmill(3, 4);
     CutVertexIterator c(g);
     c.init();
-    while (c.more()) std::cout << c.next() << " ";
+
+    // there should be exactly one cut vertex (the windmill's center, which has
+    // the last index in G)
+    EXPECT_TRUE(c.more());
+    EXPECT_EQ(c.next(), g->getOrder() - 1);
+    EXPECT_FALSE(c.more());
 }

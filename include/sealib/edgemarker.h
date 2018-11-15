@@ -11,10 +11,26 @@ class EdgeMarker {
  public:
     explicit EdgeMarker(BasicGraph *g);
 
-    void identifyEdges(CompactArray *color, StaticSpaceStorage *parent);
+    /**
+     * Run a DFS to classify edges of G. When an outging edge (u,k) points to a
+     * white node: tree edge; to a gray node: back edge; to a black node:
+     * cross/forward edge.
+     */
+    void identifyEdges();
 
-    void markTreeEdges(CompactArray *color, StaticSpaceStorage *parent);
+    /**
+     * Run a DFS to mark descendant back edges of each node. For each back edge
+     * {u,w}, we chain upwards from w until we reach a full-marked node or u
+     * itself.
+     */
+    void markTreeEdges();
 
+    /**
+     * Set the marking on the kth edge of u (and on the jth edge of the mate v).
+     * @param u node to modify an edge for
+     * @param k outgoing edge index
+     * @param mark marking (can be FULL, HALF or UNMARKED)
+     */
     void setMark(uint u, uint k, uint8_t mark);
 
     /** Edge data: (4 bits)
@@ -32,6 +48,12 @@ class EdgeMarker {
     CONSTEXPR_IF_CLANG bool isTreeEdge(uint u, uint k) const {
         return (getEdgeData(u, k) & TYPE_MASK) >= UNMARKED;
     }
+    CONSTEXPR_IF_CLANG bool isBackEdge(uint u, uint k) const {
+        return (getEdgeData(u, k) & TYPE_MASK) == BACK;
+    }
+    /**
+     * @return true if u is closer to the root of the DFS tree
+     */
     CONSTEXPR_IF_CLANG bool isParent(uint u, uint k) const {
         return (getEdgeData(u, k) & PARENT_MASK) == PARENT;
     }
@@ -47,6 +69,9 @@ class EdgeMarker {
     StaticSpaceStorage edges;
     RankSelect offset;
 
+    /**
+     * Initializes the kth edge of u to the given type. u will be set as parent.
+     */
     void initEdge(uint u, uint k, uint8_t type);
 
     void markParents(uint w, uint u, StaticSpaceStorage *parent);
