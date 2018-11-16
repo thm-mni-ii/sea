@@ -86,9 +86,14 @@ Pair BCCIterator::next() {
     Pair r;
     if (firstNode) {
         firstNode = false;
+        latestNode = node;
         r = Pair(node, INVALID);
     } else {
-        if (outputtingBackEdges) {
+        if (latestNode != node) {
+            if (!outputtingBackEdges) oneMoreOutput = true;
+            r = Pair(latestNode, node);
+            latestNode = node;
+        } else if (outputtingBackEdges) {
             bool haveEdge = false;
             while (k < g->getNodeDegree(node)) {
                 if (e->isBackEdge(node, k) && !e->isParent(node, k)) {
@@ -106,16 +111,11 @@ Pair BCCIterator::next() {
                 return next();
             }
         } else {
-            if (latestNode != node) {
-                oneMoreOutput = true;
-                r = Pair(latestNode, node);
-            } else {
-                oneMoreOutput = false;
-                r = Pair(node, INVALID);
-            }
+            oneMoreOutput = false;
+            r = Pair(node, INVALID);
+            latestNode = node;
         }
     }
-    latestNode = node;
     return r;
 }
 
