@@ -1,11 +1,8 @@
 #ifndef SEALIB_CUTVERTEXITERATOR_H_
 #define SEALIB_CUTVERTEXITERATOR_H_
-#include <vector>
 #include "sealib/_types.h"
 #include "sealib/basicgraph.h"
-#include "sealib/bitset.h"
 #include "sealib/choicedictionaryiterator.h"
-#include "sealib/compactarray.h"
 #include "sealib/dfs.h"
 #include "sealib/edgemarker.h"
 #include "sealib/iterator.h"
@@ -23,6 +20,14 @@ class CutVertexIterator : Iterator<uint>, DFS {
      * @param g the undirected graph G=(V,E)
      */
     explicit CutVertexIterator(BasicGraph *g);
+
+    /**
+     * Create a new cut vertex iterator from an existing EdgeMarker.
+     * @param e EdgeMarker that holds the markings and edge types for a graph G
+     */
+    explicit CutVertexIterator(EdgeMarker *e);
+
+    ~CutVertexIterator();
 
     /**
      * Initialize the iterator: first identify all tree and back edges, then
@@ -50,15 +55,23 @@ class CutVertexIterator : Iterator<uint>, DFS {
      */
     bool isCutVertex(uint u);
 
+    /**
+     * Moves the EdgeMarker object out of this instance to reuse it somewhere
+     * else.
+     */
+    inline EdgeMarker getEdgeMarker() { return std::move(*e); }
+
  private:
     BasicGraph *g;
-    EdgeMarker e;
     uint n;
+    EdgeMarker *e;
     ChoiceDictionary cc;
     ChoiceDictionary cut;
     ChoiceDictionaryIterator cutI;
 
     void markParents(uint w, uint u, StaticSpaceStorage *parent);
+
+    bool externalEdgeMarker;
 };
 }  // namespace Sealib
 #endif  // SEALIB_CUTVERTEXITERATOR_H_

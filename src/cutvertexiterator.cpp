@@ -4,8 +4,26 @@
 
 namespace Sealib {
 
+CutVertexIterator::CutVertexIterator(EdgeMarker *edges)
+    : g(edges->getGraph()), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {
+    externalEdgeMarker = true;
+}
+
 CutVertexIterator::CutVertexIterator(BasicGraph *graph)
-    : g(graph), e(g), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {}
+    : g(graph),
+      n(g->getOrder()),
+      e(new EdgeMarker(graph)),
+      cc(n),
+      cut(n),
+      cutI(&cut) {
+    externalEdgeMarker = false;
+}
+
+CutVertexIterator::~CutVertexIterator() {
+    if (!externalEdgeMarker) {
+        delete e;
+    }
+}
 
 void CutVertexIterator::init() {
     {
@@ -24,16 +42,16 @@ void CutVertexIterator::init() {
         }
     }
 
-    e.identifyEdges();
+    e->identifyEdges();
 
-    e.markTreeEdges();
+    e->markTreeEdges();
 
     for (uint u = 0; u < n; u++) {
         if (cc.get(u)) {
             // u is root of a DFS tree
             uint num = 0;
             for (uint k = 0; k < g->getNodeDegree(u); k++) {
-                if (e.isTreeEdge(u, k) && e.isParent(u, k)) {
+                if (e->isTreeEdge(u, k) && e->isParent(u, k)) {
                     num++;
                 }
                 if (num > 1) {
@@ -43,8 +61,8 @@ void CutVertexIterator::init() {
             }
         } else {
             for (uint k = 0; k < g->getNodeDegree(u); k++) {
-                if (e.isTreeEdge(u, k) && e.isParent(u, k) &&
-                    !e.isFullMarked(u, k)) {
+                if (e->isTreeEdge(u, k) && e->isParent(u, k) &&
+                    !e->isFullMarked(u, k)) {
                     cut.insert(u);
                     break;
                 }
