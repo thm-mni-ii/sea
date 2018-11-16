@@ -1,6 +1,6 @@
 #include "sealib/bcciterator.h"
 
-using Sealib::BCCIterator;
+namespace Sealib {
 
 BCCIterator::BCCIterator(EdgeMarker *edges)
     : g(edges->getGraph()), n(g->getOrder()), e(edges), color(n, 3), parent(g) {
@@ -8,7 +8,11 @@ BCCIterator::BCCIterator(EdgeMarker *edges)
 }
 
 BCCIterator::BCCIterator(BasicGraph *graph)
-    : BCCIterator(new EdgeMarker(graph)) {
+    : g(graph),
+      n(g->getOrder()),
+      e(new EdgeMarker(graph)),
+      color(n, 3),
+      parent(g) {
     externalEdgeMarker = false;
 }
 
@@ -29,16 +33,17 @@ void BCCIterator::init() {
 void BCCIterator::start(uint u, uint v) {
     startEdge = Pair(u, v);
     node = v;
-    parent.insert(node, g->getNodeDegree(node));
     edge = 0;
+    firstNode = true;
+    parent.insert(node, std::numeric_limits<uint>::max());
     color.insert(node, DFS_GRAY);
 }
-
-// to do: output edge indices in addition to vertices
 
 bool BCCIterator::more() {
     if (endOnNextStep) {
         return false;
+    } else if (firstNode || oneMoreOutput || outputtingBackEdges) {
+        return true;
     } else {
         while (true) {
             if (edge < g->getNodeDegree(node)) {
@@ -51,6 +56,9 @@ bool BCCIterator::more() {
                     if (color.get(v) == DFS_WHITE) {
                         color.insert(v, DFS_GRAY);
                         parent.insert(v, std::get<1>(g->mate(node, edge)));
+                        if (e->isFullMarked(node, edge)) {
+                            outputtingBackEdges = true;
+                        }
                         node = v;
                         edge = 0;
                         return true;
@@ -74,4 +82,40 @@ bool BCCIterator::more() {
     }
 }
 
-uint BCCIterator::next() { return node; }
+Pair BCCIterator::next() {
+    static uint k = 0;
+    Pair r;
+    if (firstNode) {
+        firstNode = false;
+        r = Pair(node, INVALID);
+    } else {
+        if (outputtingBackEdges) {
+            while (k < g->getNodeDegree(node)) {
+                if (e->isBackEdge(node, k) && !e->isParent(node, k)) {
+                    r = Pair(g->head(node, k), node);
+                    k++;
+                    break;
+                } else {
+                    k++;
+                }
+            }
+            if (k >= g->getNodeDegree(node)) {
+                k = 0;
+                outputtingBackEdges = false;
+                return next();
+            }
+        } else {
+            if (latestNode != node) {
+                oneMoreOutput = true;
+                r = Pair(latestNode, node);
+            } else {
+                oneMoreOutput = false;
+                r = Pair(node, INVALID);
+            }
+        }
+    }
+    latestNode = node;
+    return r;
+}
+
+}  // namespace Sealib

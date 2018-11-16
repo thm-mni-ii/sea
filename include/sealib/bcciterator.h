@@ -1,6 +1,5 @@
 #ifndef SEALIB_BCCITERATOR_H_
 #define SEALIB_BCCITERATOR_H_
-#include <memory>
 #include "sealib/basicgraph.h"
 #include "sealib/edgemarker.h"
 #include "sealib/iterator.h"
@@ -12,7 +11,7 @@ namespace Sealib {
  * edge {x,y} in G to set the starting point of the BCC iterator. After that,
  * call more() and next() alternately to retrieve all the vertices of the BCC.
  */
-class BCCIterator : Iterator<uint> {
+class BCCIterator : Iterator<Pair> {
  public:
     /**
      * Create a new BCC iterator from a given undirected graph.
@@ -49,9 +48,16 @@ class BCCIterator : Iterator<uint> {
     bool more() override;
 
     /**
-     * @return the next vertex in the BCC
+     * @return the next vertex or edge in the BCC: vertex in the form
+     * (u,INVALID), edge in the form (u,v)
      */
-    uint next() override;
+    Pair next() override;
+
+    /**
+     * Moves the EdgeMarker object out of this instance to reuse it somewhere
+     * else.
+     */
+    inline EdgeMarker getEdgeMarker() { return std::move(*e); }
 
  private:
     BasicGraph *g;
@@ -62,7 +68,11 @@ class BCCIterator : Iterator<uint> {
 
     Pair startEdge;
     uint node, edge;
+    uint latestNode;
     bool endOnNextStep = false;
+    bool oneMoreOutput = false;
+    bool outputtingBackEdges = false;
+    bool firstNode;
 
     bool externalEdgeMarker;
 };
