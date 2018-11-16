@@ -84,12 +84,11 @@ void EdgeMarker::markTreeEdges() {
             DFS::process_static(
                 a, g, &color, &parent,
                 [this, a](uint u) {
-                    if (u == a || isTreeEdge(u, static_cast<uint>(parent.get(u)))) {
+                    if (u == a /*?*/ ||
+                        isTreeEdge(u, static_cast<uint>(parent.get(u)))) {
                         for (uint k = 0; k < g->getNodeDegree(u); k++) {
                             uint v = g->head(u, k);
-                            // to do: check that v is descendant of u (who is
-                            // descendant in a back edge?)
-                            if (isBackEdge(u, k) && isParent(u, k) /*(?)*/) {
+                            if (isBackEdge(u, k) && isParent(u, k)) {
                                 // {u,v} is a back edge and u is closer to root:
                                 markParents(v, u);
                             }

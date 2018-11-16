@@ -63,9 +63,8 @@ bool BCCIterator::more() {
                         edge = 0;
                         return true;
                     }
-                } else {
-                    edge++;
                 }
+                edge++;
             } else {
                 color.insert(node, DFS_BLACK);
                 if (node != startEdge.tail()) {
@@ -90,16 +89,18 @@ Pair BCCIterator::next() {
         r = Pair(node, INVALID);
     } else {
         if (outputtingBackEdges) {
+            bool haveEdge = false;
             while (k < g->getNodeDegree(node)) {
                 if (e->isBackEdge(node, k) && !e->isParent(node, k)) {
                     r = Pair(g->head(node, k), node);
                     k++;
+                    haveEdge = true;
                     break;
                 } else {
                     k++;
                 }
             }
-            if (k >= g->getNodeDegree(node)) {
+            if (k >= g->getNodeDegree(node) && !haveEdge) {
                 k = 0;
                 outputtingBackEdges = false;
                 return next();
