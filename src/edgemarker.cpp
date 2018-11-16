@@ -34,13 +34,6 @@ static Bitset<unsigned char> makeOffset(BasicGraph *g) {
     return Bitset<unsigned char>(bits);
 }
 
-static uint findEdge(Graph *g, uint u, uint v) {
-    for (uint a = 0; a < g->getNodeDegree(u); a++) {
-        if (g->head(u, a) == v) return a;
-    }
-    return uint(-1);
-}
-
 EdgeMarker::EdgeMarker(BasicGraph *graph)
     : g(graph),
       n(g->getOrder()),
