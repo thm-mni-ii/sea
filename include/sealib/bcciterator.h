@@ -48,8 +48,11 @@ class BCCIterator : Iterator<Pair> {
     bool more() override;
 
     /**
-     * @return the next vertex or edge in the BCC: vertex in the form
-     * (u,INVALID), edge in the form (u,v)
+     * @return the next vertex or edge in the BCC: vertices in the form
+     * (u,INVALID), edges in the form (u,v). The order of output is the
+     * following: 1) node u; 2) edge (u,v); 3) back edges to v (if any); 4)
+     * vertex v.
+     * (INVALID is a global constant defined in _types.h.)
      */
     Pair next() override;
 
