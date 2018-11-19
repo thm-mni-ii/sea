@@ -2,6 +2,7 @@
 #define SEALIB_LOCALDYCKTABLE_H_
 
 #include <vector>
+#include <limits>
 
 namespace Sealib {
 
@@ -26,7 +27,7 @@ class LocalDyckTable {
      */
     class Data {
      public:
-        static const constexpr BlockType npos = blockTypeMax;
+        static const constexpr BlockType npos = std::numeric_limits<unsigned char>::max();
 
         unsigned char localMatches[kSegLen];  // array of local matches
         char localDepths[kSegLen];  // array of local depths
