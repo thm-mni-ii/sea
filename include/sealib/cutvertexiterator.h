@@ -58,6 +58,7 @@ class CutVertexIterator : Iterator<uint>, DFS {
     /**
      * Moves the EdgeMarker object out of this instance to reuse it somewhere
      * else.
+     * @return the used EdgeMarker
      */
     inline EdgeMarker getEdgeMarker() { return std::move(*e); }
 
