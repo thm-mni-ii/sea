@@ -13,18 +13,21 @@ TEST(BCCIteratorTest, windmillGraph) {
     std::set<std::set<uint>> edges;
     while (b.more()) {
         Pair n = b.next();
-        std::cout << n.head() << "," << n.tail() << " ";
         if (n.tail() == INVALID) {
             nodes.insert(n.head());
         } else {
             edges.insert({n.head(), n.tail()});
         }
     }
+
+    EXPECT_EQ(nodes.size(), 5);
+    EXPECT_EQ(edges.size(), 7);
+
     EXPECT_NE(nodes.find(16), nodes.end());
     EXPECT_NE(nodes.find(3), nodes.end());
     EXPECT_NE(nodes.find(2), nodes.end());
     EXPECT_NE(nodes.find(1), nodes.end());
-    EXPECT_EQ(nodes.find(0), nodes.end());
+    EXPECT_NE(nodes.find(0), nodes.end());
 
     // back edges should only be included when reaching a vertex via a
     // full-marked edge (see paper, p. 8)
@@ -38,4 +41,36 @@ TEST(BCCIteratorTest, windmillGraph) {
     EXPECT_NE(edges.find({2, 1}), edges.end());
     EXPECT_NE(edges.find({2, 0}), edges.end());  // back edge
     EXPECT_NE(edges.find({1, 0}), edges.end());  // half marked
+}
+
+TEST(BCCIteratorTest, lineGraph) {
+    uint size = 10;
+    BasicGraph g(size);
+    for (uint a = 0; a < size - 1; a++) {
+        uint i1 = g.getNodeDegree(a), i2 = g.getNodeDegree(a + 1);
+        g.getNode(a).addAdjacency(a + 1);
+        g.getNode(a).setCrossIndex(i1, i2);
+        g.getNode(a + 1).addAdjacency(a);
+        g.getNode(a + 1).setCrossIndex(i2, i1);
+    }
+
+    BCCIterator b(&g);
+    b.init();
+    b.start(4, 5);
+
+    std::set<uint> nodes;
+    std::set<std::set<uint>> edges;
+    while (b.more()) {
+        Pair n = b.next();
+        if (n.tail() == INVALID) {
+            nodes.insert(n.head());
+        } else {
+            edges.insert({n.head(), n.tail()});
+        }
+    }
+    EXPECT_EQ(nodes.size(), 2);
+    EXPECT_EQ(edges.size(), 1);
+    EXPECT_NE(nodes.find(4), nodes.end());
+    EXPECT_NE(nodes.find(5), nodes.end());
+    EXPECT_NE(edges.find({4, 5}), edges.end());
 }
