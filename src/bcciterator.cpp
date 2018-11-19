@@ -40,17 +40,17 @@ void BCCIterator::start(uint u, uint v) {
 }
 
 bool BCCIterator::more() {
-    if (endOnNextStep) {
-        return false;
-    } else if (firstNode || oneMoreOutput || outputtingBackEdges) {
+    if (firstNode || oneMoreOutput || outputtingBackEdges) {
         return true;
+    } else if (endOnNextNode) {
+        return false;
     } else {
         while (true) {
             if (edge < g->getNodeDegree(node)) {
                 if (e->isTreeEdge(node, edge) &&
                     (!e->isParent(node, edge) || e->isFullMarked(node, edge))) {
                     if (!e->isFullMarked(node, edge)) {
-                        endOnNextStep = true;
+                        endOnNextNode = true;
                     }
                     uint v = g->head(node, edge);
                     if (color.get(v) == DFS_WHITE) {

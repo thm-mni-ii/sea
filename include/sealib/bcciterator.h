@@ -72,7 +72,7 @@ class BCCIterator : Iterator<Pair> {
     Pair startEdge;
     uint node, edge;
     uint latestNode;
-    bool endOnNextStep = false;
+    bool endOnNextNode = false;
     bool oneMoreOutput = false;
     bool outputtingBackEdges = false;
     bool firstNode;
