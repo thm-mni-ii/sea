@@ -7,8 +7,19 @@
 #include "sealib/staticspacestorage.h"
 
 namespace Sealib {
+/**
+ * The EdgeMarker class holds edge markings for a given graph. An edge has
+ * markings if it is a tree edge. Tree edges are identified using a DFS, and
+ * markings for edges are set using another DFS run. With the edge markings, you
+ * can run algorithms like cut-vertex finding and biconnected-component
+ * outputting.
+ */
 class EdgeMarker {
  public:
+    /**
+     * Create a new edge marker from a given undirected graph.
+     * @param g undirected graph
+     */
     explicit EdgeMarker(BasicGraph *g);
 
     /**
@@ -32,6 +43,12 @@ class EdgeMarker {
      * @param mark marking (can be FULL, HALF or UNMARKED)
      */
     void setMark(uint u, uint k, uint8_t mark);
+
+    /**
+     * Get the graph that this edge marker is using.
+     * @return pointer to the undirected graph used
+     */
+    CONSTEXPR_IF_CLANG BasicGraph *getGraph() const { return g; }
 
     /** Edge data: (4 bits)
      *      TTTP
@@ -64,8 +81,6 @@ class EdgeMarker {
     CONSTEXPR_IF_CLANG bool isFullMarked(uint u, uint k) const {
         return (getEdgeData(u, k) & TYPE_MASK) == FULL;
     }
-
-    CONSTEXPR_IF_CLANG BasicGraph *getGraph() const { return g; }
 
  private:
     BasicGraph *g;
