@@ -1,9 +1,8 @@
 #ifndef SEALIB_LOCALSELECTTABLE_H_
 #define SEALIB_LOCALSELECTTABLE_H_
 
-#define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
-
 #include <vector>
+#include <limits>
 
 namespace Sealib {
 
@@ -26,9 +25,8 @@ class LocalSelectTable {
      */
     LocalSelectTable();
 
-    static const unsigned int bitsPerBlock = sizeof(BlockType) * 8;
+    static const unsigned char bitsPerBlock = sizeof(BlockType) * 8;
     static const BlockType blockTypeMax = std::numeric_limits<BlockType>::max();
-
 
  public:
     static const BlockType npos = std::numeric_limits<BlockType>::max();
@@ -46,14 +44,15 @@ class LocalSelectTable {
     void operator=(LocalSelectTable const &) = delete;
 };
 template <typename BlockType>
-LocalSelectTable<BlockType>::LocalSelectTable() : localSelectLookupTable(static_cast<size_t>(blockTypeMax+1)) {
+LocalSelectTable<BlockType>::LocalSelectTable() :
+    localSelectLookupTable(static_cast<size_t>(blockTypeMax+1)) {
     for (unsigned int i = 0; i <= blockTypeMax; i++) {
         BlockType rank = 0;
         localSelectLookupTable[i] = std::vector<BlockType>(
             bitsPerBlock,
             std::numeric_limits<BlockType>::max());
         for (BlockType j = 0; j < bitsPerBlock; j++) {
-            if (CHECK_BIT(i, j)) {
+            if (((i)>>(j)) & 1) {
                 localSelectLookupTable[i][rank++] = j;
             }
         }
