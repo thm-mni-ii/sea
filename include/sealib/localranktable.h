@@ -25,8 +25,8 @@ class LocalRankTable {
     LocalRankTable();
     ~LocalRankTable();
 
-    static const constexpr unsigned int bitsPerBlock = sizeof(BlockType) * 8;
-    static const constexpr BlockType blockTypeMax = (BlockType) - 1;
+    static const unsigned int bitsPerBlock = sizeof(BlockType) * 8;
+    static const BlockType blockTypeMax = (BlockType) - 1;
 
  public:
     /**

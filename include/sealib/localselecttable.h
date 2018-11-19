@@ -24,12 +24,12 @@ class LocalSelectTable {
     LocalSelectTable();
     ~LocalSelectTable();
 
-    static const constexpr unsigned int bitsPerBlock = sizeof(BlockType) * 8;
-    static const constexpr BlockType blockTypeMax = (BlockType) - 1;
+    static const unsigned int bitsPerBlock = sizeof(BlockType) * 8;
+    static const BlockType blockTypeMax = (BlockType) - 1;
 
 
  public:
-    static const constexpr BlockType npos = blockTypeMax;
+    static const BlockType npos = blockTypeMax;
     /**
     * Values are stored in a lookup table.
     * The lookup table is a static instance in this function that is initialized on the first call.

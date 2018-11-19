@@ -6,7 +6,9 @@ template <typename BlockType>
 Sealib::LocalSelectTable<BlockType>::LocalSelectTable() : localSelectLookupTable(blockTypeMax+1) {
     for (unsigned int i = 0; i <= blockTypeMax; i++) {
         BlockType rank = 0;
-        localSelectLookupTable[i] = std::vector<BlockType>(bitsPerBlock, npos);
+        localSelectLookupTable[i] = std::vector<BlockType>(
+            bitsPerBlock,
+            Sealib::LocalSelectTable<BlockType>::npos);
         for (BlockType j = 0; j < bitsPerBlock; j++) {
             if (CHECK_BIT(i, j)) {
                 localSelectLookupTable[i][rank++] = j;

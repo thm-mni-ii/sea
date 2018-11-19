@@ -18,16 +18,16 @@ namespace Sealib {
 template <typename BlockType>
 class LocalDyckTable {
  public:
-    static const constexpr unsigned int bitsPerBlock = sizeof(BlockType) * 8;
-    static const constexpr unsigned int blockTypeMax = (BlockType) - 1;
+    static const unsigned int bitsPerBlock = sizeof(BlockType) * 8;
+    static const unsigned int blockTypeMax = (BlockType) - 1;
 
-    static const constexpr unsigned int kSegLen = bitsPerBlock - 1;
+    static const unsigned int kSegLen = bitsPerBlock - 1;
     /**
      * Capsules the Data we want to lookup in the table in a single class.
      */
     class Data {
      public:
-        static const constexpr BlockType npos = std::numeric_limits<unsigned char>::max();
+        static const BlockType npos = std::numeric_limits<unsigned char>::max();
 
         unsigned char localMatches[kSegLen];  // array of local matches
         char localDepths[kSegLen];  // array of local depths
