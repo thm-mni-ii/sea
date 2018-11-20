@@ -11,7 +11,7 @@ namespace Sealib {
  * edge {x,y} in G to set the starting point of the BCC iterator. After that,
  * call more() and next() alternately to retrieve all the vertices of the BCC.
  */
-class BCCIterator : Iterator<Pair> {
+class BCCIterator : Iterator<std::pair<uint, uint>> {
  public:
     /**
      * Create a new BCC iterator from a given undirected graph.
@@ -54,7 +54,7 @@ class BCCIterator : Iterator<Pair> {
      * vertex v.
      * (INVALID is a global constant defined in _types.h.)
      */
-    Pair next() override;
+    std::pair<uint, uint> next() override;
 
     /**
      * Moves the EdgeMarker object out of this instance to reuse it somewhere
@@ -70,7 +70,7 @@ class BCCIterator : Iterator<Pair> {
     CompactArray color;
     StaticSpaceStorage parent;
 
-    Pair startEdge;
+    std::pair<uint, uint> startEdge;
     uint node, edge;
     uint latestNode;
     bool endOnNextNode = false;

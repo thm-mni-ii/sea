@@ -6,14 +6,13 @@
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
 using Sealib::CompactArray;
-using Sealib::Pair;
 
 #define pushn(i, n) \
-  for (unsigned a = (i); a < (n); a++) s->push(Pair((a), K))
+  for (unsigned a = (i); a < (n); a++) s->push(std::pair<uint, uint>((a), K))
 #define popexp(n, exp) \
   for (unsigned a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 
-static Pair r;
+static std::pair<uint, uint> r;
 static const uint K = 5;
 
 class BasicSegmentStackTest : public ::testing::Test {
@@ -91,7 +90,7 @@ TEST_F(ExtendedSegmentStackTest, topSegment) {
   for (uint a = 2 * q; a < 3 * q; a++) EXPECT_TRUE(s->isInTopSegment(a));
   /* We push one value to the fourth segment. Expected: Only the new value is
    * now in a top segment */
-  s->push(Pair(3 * q, K));
+  s->push(std::pair<uint, uint>(3 * q, K));
   for (uint a = 0; a < 3 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
   EXPECT_TRUE(s->isInTopSegment(3 * q));
   /* We pop the top value, which will leave us with 3 segments. Expected: Again,
@@ -115,13 +114,13 @@ TEST_F(ExtendedSegmentStackTest, secondLastTrailer) {
    * of a restoration */
   pushn(3 * q, 3 * q + 1);
   EXPECT_EQ(s->getRestoreTrailer(&r), 0);
-  EXPECT_EQ(r.head(), q - 1);
+  EXPECT_EQ(r.first, q - 1);
   /* We pop the two segments. Expected: A restoration is required and the
    * restore trailer is (A,K) as predicted */
   popexp(q + 1, 0);
   EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
   EXPECT_EQ(s->getRestoreTrailer(&r), 0);
-  EXPECT_EQ(r.head(), q - 1);
+  EXPECT_EQ(r.first, q - 1);
 }
 
 TEST_F(ExtendedSegmentStackTest, recolorLow) {
@@ -167,23 +166,23 @@ TEST_F(ExtendedSegmentStackTest2, outgoingEdgeBig) {
     }
   }
   for (uint a = 0; a < 4 * q; a++) {
-    s->push(Pair(a, 0));
+    s->push(std::pair<uint, uint>(a, 0));
     s->pop(&r);
-    s->push(Pair(a, 3));
+    s->push(std::pair<uint, uint>(a, 3));
   }
   popexp(2 * q, 0);
   EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
   EXPECT_EQ(s->getRestoreTrailer(&r), 0);
-  EXPECT_EQ(r.head(), q - 1);
-  EXPECT_EQ(r.tail(), 3);
+  EXPECT_EQ(r.first, q - 1);
+  EXPECT_EQ(r.second, 3);
   for (uint a = q; a < 2 * q; a++) {
     EXPECT_FALSE(s->isAligned());
     if (big.find(a) == big.end()) {
-      s->push(Pair(a, 3));
+      s->push(std::pair<uint, uint>(a, 3));
     } else {
       uint b = s->getOutgoingEdge(a);
       EXPECT_EQ(b, 2);
-      s->push(Pair(a, 3));
+      s->push(std::pair<uint, uint>(a, 3));
     }
   }
   EXPECT_TRUE(s->isAligned());
@@ -198,7 +197,7 @@ TEST_F(ExtendedSegmentStackTest, aligned) {
   /* We restore one segment correctly. Expected: the stack is aligned */
   for (uint a = q; a < 2 * q; a++) {
     EXPECT_FALSE(s->isAligned());
-    s->push(Pair(a, K));
+    s->push(std::pair<uint, uint>(a, K));
   }
   EXPECT_TRUE(s->isAligned());
   /* We pop the segment again and restore. Expected: The restoration is
@@ -207,14 +206,14 @@ TEST_F(ExtendedSegmentStackTest, aligned) {
   EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
   for (uint a = 0; a < q; a++) {
     EXPECT_FALSE(s->isAligned());
-    s->push(Pair(a, K));
+    s->push(std::pair<uint, uint>(a, K));
   }
   EXPECT_TRUE(s->isAligned());
   /* We replace the top element with a wrong one. Expected: the trailer does not
    * match */
   s->pop(&r);
   EXPECT_FALSE(s->isAligned());
-  s->push(Pair(0, K));
+  s->push(std::pair<uint, uint>(0, K));
   EXPECT_FALSE(s->isAligned());
   popexp(q, 0);
   EXPECT_EQ(s->pop(&r), DFS_NO_MORE_NODES);

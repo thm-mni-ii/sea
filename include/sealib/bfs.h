@@ -23,7 +23,7 @@ const UserFunc2 BFS_NOP_EXPLORE = [](uint, uint) {};
  * To get the next result, call next().
  * To move the search to a possible next component, call nextComponent().
  */
-class BFS : Iterator<Pair> {
+class BFS : Iterator<std::pair<uint, uint>> {
  public:
   /**
    * Initialize or reset the BFS to the beginning.
@@ -50,7 +50,7 @@ class BFS : Iterator<Pair> {
    * starting node
    * @throws std::logic_error if no next node is available
    */
-  Pair next() override;
+  std::pair<uint, uint> next() override;
 
   /**
    * Create a new BFS iterator.

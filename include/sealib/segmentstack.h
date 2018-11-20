@@ -26,8 +26,8 @@ namespace Sealib {
 */
 class SegmentStack {
  public:
-  virtual int push(Pair u) = 0;
-  int pop(Pair *r);
+  virtual int push(std::pair<uint, uint> u) = 0;
+  int pop(std::pair<uint, uint> *r);
   bool isEmpty();
   virtual bool isAligned() = 0;
 
@@ -36,7 +36,7 @@ class SegmentStack {
   virtual ~SegmentStack();
 
   unsigned q;
-  Pair *low, *high;
+  std::pair<uint, uint> *low, *high;
   unsigned lp, hp, tp;
 };
 
@@ -53,7 +53,7 @@ class BasicSegmentStack : public SegmentStack {
  public:
   explicit BasicSegmentStack(unsigned segmentSize);
 
-  int push(Pair u) override;
+  int push(std::pair<uint, uint> u) override;
   // is the restoration finished? (i.e. saved trailer and actual trailer are
   // aligned)
   bool isAligned() override;
@@ -64,8 +64,8 @@ class BasicSegmentStack : public SegmentStack {
   void saveTrailer();
 
  private:
-  Pair last;
-  Pair savedTrailer;
+  std::pair<uint, uint> last;
+  std::pair<uint, uint> savedTrailer;
   int alignTarget;
 };
 
@@ -80,7 +80,7 @@ class ExtendedSegmentStack : public SegmentStack {
   ExtendedSegmentStack(uint size, Graph *g, CompactArray *c);
   ~ExtendedSegmentStack();
 
-  int push(Pair u) override;
+  int push(std::pair<uint, uint> u) override;
   bool isAligned() override;
 
   // check if u is labeled with the top segment number (i.e. is table[u]=top?)
@@ -93,9 +93,9 @@ class ExtendedSegmentStack : public SegmentStack {
   // get the second-last trailer (the one that is needed to do a 1-segment
   // restoration)
   // @return 0 if a trailer is found, 1 otherwise
-  int getRestoreTrailer(Pair *r);
+  int getRestoreTrailer(std::pair<uint, uint> *r);
   // get the last trailer (the one that a restoration will align to)
-  int getTopTrailer(Pair *r);
+  int getTopTrailer(std::pair<uint, uint> *r);
   // recolor all vertices in the low segment to the given color (used after a
   // restoration when the low segment is actually the top segment of S)
   void recolorLow(unsigned v);
@@ -111,7 +111,7 @@ class ExtendedSegmentStack : public SegmentStack {
    * bc is freely available to increment during restoration.
    */
   struct Trailer {
-    Pair x;
+    std::pair<uint, uint> x;
     unsigned bi, bc;
     Trailer() : bi(INVALID), bc(0) {}
   };
@@ -119,7 +119,7 @@ class ExtendedSegmentStack : public SegmentStack {
   Trailer *trailers;
   unsigned l;
   CompactArray *table, *edges;
-  Pair *big;
+  std::pair<uint, uint> *big;
   unsigned bp;
   Graph *graph;
   unsigned m, n;

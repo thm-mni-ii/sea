@@ -12,11 +12,11 @@ TEST(BCCIteratorTest, windmillGraph) {
     std::set<uint> nodes;
     std::set<std::set<uint>> edges;
     while (b.more()) {
-        Pair n = b.next();
-        if (n.tail() == INVALID) {
-            nodes.insert(n.head());
+        std::pair<uint, uint> n = b.next();
+        if (n.second == INVALID) {
+            nodes.insert(n.first);
         } else {
-            edges.insert({n.head(), n.tail()});
+            edges.insert({n.first, n.second});
         }
     }
 
@@ -61,11 +61,11 @@ TEST(BCCIteratorTest, lineGraph) {
     std::set<uint> nodes;
     std::set<std::set<uint>> edges;
     while (b.more()) {
-        Pair n = b.next();
-        if (n.tail() == INVALID) {
-            nodes.insert(n.head());
+        std::pair<uint, uint> n = b.next();
+        if (n.second == INVALID) {
+            nodes.insert(n.first);
         } else {
-            edges.insert({n.head(), n.tail()});
+            edges.insert({n.first, n.second});
         }
     }
     EXPECT_EQ(nodes.size(), 2);
