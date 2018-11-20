@@ -1,10 +1,11 @@
 #include <gtest/gtest.h>
 #include <sealib/graph/graphcreator.h>
+#include "../src/trail/naiveeulertrail.h"
 #include <sealib/simpletrailstructure.h>
 #include <sealib/eulertrail.h>
 #include <stdlib.h>
 
-TEST(GraphTest, hierholzer_trail) {
+TEST(EulerTrailTest, hierholzerTrail) {
     uint32_t order = 6;
     auto **adj_mtrx = reinterpret_cast<uint32_t **>(malloc(sizeof(uint32_t) * order * order));
     adj_mtrx[0] = new uint32_t[order]{0, 1, 0, 1, 1, 1};
@@ -20,4 +21,7 @@ TEST(GraphTest, hierholzer_trail) {
                 adj_mtrx,
                 order)));
     Sealib::EulerTrail<Sealib::TrailStructure> et(graph_ptr);
+    Sealib::EulerTrail<Sealib::SimpleTrailStructure> et2(graph_ptr);
+    Sealib::NaiveEulerTrail et3(graph_ptr);
+    SUCCEED();
 }

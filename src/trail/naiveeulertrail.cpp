@@ -1,5 +1,4 @@
 #include "./naiveeulertrail.h"
-#include "./simpletrail.h"
 #include "./naivetrailstructure.h"
 #include <map>
 #include <set>
