@@ -7,8 +7,8 @@ namespace Sealib {
 // the standard numeric type (used mainly for node names)
 typedef unsigned int uint;
 
-typedef std::function<void(uint)> UserFunc1;
-typedef std::function<void(uint, uint)> UserFunc2;
+typedef std::function<void(uint)> Consumer;
+typedef std::function<void(uint, uint)> BiConsumer;
 
 static constexpr uint INVALID = static_cast<uint>(-1);
 }  // namespace Sealib

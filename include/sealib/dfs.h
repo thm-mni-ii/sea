@@ -11,8 +11,8 @@
 namespace Sealib {
 
 const uint DFS_WHITE = 0, DFS_GRAY = 1, DFS_BLACK = 2, DFS_RESERVED = 3;
-const UserFunc1 DFS_NOP_PROCESS = [](uint) {};
-const UserFunc2 DFS_NOP_EXPLORE = [](uint, uint) {};
+const Consumer DFS_NOP_PROCESS = [](uint) {};
+const BiConsumer DFS_NOP_EXPLORE = [](uint, uint) {};
 
 /**
  * This class contains depth-first search algorithms.
@@ -41,10 +41,10 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void standardDFS(Graph *g, UserFunc1 preprocess = DFS_NOP_PROCESS,
-                            UserFunc2 preexplore = DFS_NOP_EXPLORE,
-                            UserFunc2 postexplore = DFS_NOP_EXPLORE,
-                            UserFunc1 postprocess = DFS_NOP_PROCESS);
+    static void standardDFS(Graph *g, Consumer preprocess = DFS_NOP_PROCESS,
+                            BiConsumer preexplore = DFS_NOP_EXPLORE,
+                            BiConsumer postexplore = DFS_NOP_EXPLORE,
+                            Consumer postprocess = DFS_NOP_PROCESS);
     /**
      * Run a space-efficient depth-first search over a given graph. (Elmasry,
      * Hagerup and Kammer; 2015)
@@ -56,10 +56,10 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nBitDFS(Graph *g, UserFunc1 preprocess = DFS_NOP_PROCESS,
-                        UserFunc2 preexplore = DFS_NOP_EXPLORE,
-                        UserFunc2 postexplore = DFS_NOP_EXPLORE,
-                        UserFunc1 postprocess = DFS_NOP_PROCESS);
+    static void nBitDFS(Graph *g, Consumer preprocess = DFS_NOP_PROCESS,
+                        BiConsumer preexplore = DFS_NOP_EXPLORE,
+                        BiConsumer postexplore = DFS_NOP_EXPLORE,
+                        Consumer postprocess = DFS_NOP_PROCESS);
 
     /**
      * Run a linear-time space-efficient depth-first search. (Elmasry, Hagerup
@@ -72,10 +72,10 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nloglognBitDFS(Graph *g, UserFunc1 preprocess = DFS_NOP_PROCESS,
-                               UserFunc2 preexplore = DFS_NOP_EXPLORE,
-                               UserFunc2 postexplore = DFS_NOP_EXPLORE,
-                               UserFunc1 postprocess = DFS_NOP_PROCESS);
+    static void nloglognBitDFS(Graph *g, Consumer preprocess = DFS_NOP_PROCESS,
+                               BiConsumer preexplore = DFS_NOP_EXPLORE,
+                               BiConsumer postexplore = DFS_NOP_EXPLORE,
+                               Consumer postprocess = DFS_NOP_PROCESS);
 
     /**
      * Run a linear-time and linear-space depth-first search over an undirected
@@ -90,10 +90,10 @@ class DFS {
      * @author Simon Heuser
      */
     static void nplusmBitDFS(BasicGraph *g,
-                             UserFunc1 preprocess = DFS_NOP_PROCESS,
-                             UserFunc2 preexplore = DFS_NOP_EXPLORE,
-                             UserFunc2 postexplore = DFS_NOP_EXPLORE,
-                             UserFunc1 postprocess = DFS_NOP_PROCESS);
+                             Consumer preprocess = DFS_NOP_PROCESS,
+                             BiConsumer preexplore = DFS_NOP_EXPLORE,
+                             BiConsumer postexplore = DFS_NOP_EXPLORE,
+                             Consumer postprocess = DFS_NOP_PROCESS);
 
     /**
      * Runs an inplace DFS in linear time over a graph that is given in a
@@ -104,27 +104,27 @@ class DFS {
      * @author Simon Schniedenharn
      */
     static void runLinearTimeInplaceDFS(unsigned int *graph,
-                                        UserFunc1 preProcess,
-                                        UserFunc1 postProcess,
+                                        Consumer preProcess,
+                                        Consumer postProcess,
                                         unsigned int startVertex);
 
  protected:
     static void process_standard(uint u0, Graph *g, uint *color,
-                                 UserFunc1 preprocess, UserFunc2 preexplore,
-                                 UserFunc2 postexplore, UserFunc1 postprocess);
+                                 Consumer preprocess, BiConsumer preexplore,
+                                 BiConsumer postexplore, Consumer postprocess);
 
     template <class SS>
     static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
                               void (*restoration)(uint, Graph *, CompactArray *,
                                                   SS *),
-                              UserFunc1 preprocess, UserFunc2 preexplore,
-                              UserFunc2 postexplore, UserFunc1 postprocess);
+                              Consumer preprocess, BiConsumer preexplore,
+                              BiConsumer postexplore, Consumer postprocess);
 
     template <class S>
     static void process_static(uint u0, BasicGraph *g, CompactArray *color,
-                               S *back, UserFunc1 preprocess,
-                               UserFunc2 preexplore, UserFunc2 postexplore,
-                               UserFunc1 postprocess);
+                               S *back, Consumer preprocess,
+                               BiConsumer preexplore, BiConsumer postexplore,
+                               Consumer postprocess);
 
     static void restore_full(uint u0, Graph *g, CompactArray *color,
                              BasicSegmentStack *s);
