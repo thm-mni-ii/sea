@@ -5,7 +5,6 @@
 using Sealib::BFS;
 using Sealib::CompactArray;
 using Sealib::Graph;
-using Sealib::Pair;
 
 void BFS::init() {
   u = 0;
@@ -67,7 +66,7 @@ uint BFS::getGrayNode() {
 
 bool BFS::more() { return hasGrayNode(); }
 
-Pair BFS::next() {
+std::pair<uint, uint> BFS::next() {
   u = getGrayNode();
   if (color->get(u) == outerGray) {
     unsigned tmp = innerGray;
@@ -84,7 +83,7 @@ Pair BFS::next() {
     }
   }
   color->insert(u, BFS_BLACK);
-  return Pair(u, dist);
+  return std::pair<uint, uint>(u, dist);
 }
 
 BFS::BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe)

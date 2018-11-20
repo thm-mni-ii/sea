@@ -31,7 +31,7 @@ void BCCIterator::init() {
 }
 
 void BCCIterator::start(uint u, uint v) {
-    startEdge = Pair(u, v);
+    startEdge = std::pair<uint, uint>(u, v);
     node = v;
     edge = 0;
     firstNode = true;
@@ -67,7 +67,7 @@ bool BCCIterator::more() {
                 edge++;
             } else {
                 color.insert(node, DFS_BLACK);
-                if (node != startEdge.tail()) {
+                if (node != startEdge.second) {
                     std::tuple<uint, uint> p =
                         g->mate(node, static_cast<uint>(parent.get(node)));
                     uint pu = std::get<0>(p), pk = std::get<1>(p);
@@ -81,23 +81,23 @@ bool BCCIterator::more() {
     }
 }
 
-Pair BCCIterator::next() {
+std::pair<uint, uint> BCCIterator::next() {
     static uint k = 0;
-    Pair r;
+    std::pair<uint, uint> r;
     if (firstNode) {
         firstNode = false;
         latestNode = node;
-        r = Pair(node, INVALID);
+        r = std::pair<uint, uint>(node, INVALID);
     } else {
         if (latestNode != node) {
             if (!outputtingBackEdges) oneMoreOutput = true;
-            r = Pair(latestNode, node);
+            r = std::pair<uint, uint>(latestNode, node);
             latestNode = node;
         } else if (outputtingBackEdges) {
             bool haveEdge = false;
             while (k < g->getNodeDegree(node)) {
                 if (e->isBackEdge(node, k) && !e->isParent(node, k)) {
-                    r = Pair(g->head(node, k), node);
+                    r = std::pair<uint, uint>(g->head(node, k), node);
                     k++;
                     haveEdge = true;
                     break;
@@ -112,7 +112,7 @@ Pair BCCIterator::next() {
             }
         } else {
             oneMoreOutput = false;
-            r = Pair(node, INVALID);
+            r = std::pair<uint, uint>(node, INVALID);
             latestNode = node;
         }
     }
