@@ -2,6 +2,7 @@
 #include <sealib/trailstructure.h>
 #include <sealib/dyckwordlexicon.h>
 #include <sealib/simpletrailstructure.h>
+#include "../src/trail/naivetrailstructure.h"
 
 using Sealib::TrailStructure;
 
@@ -92,20 +93,24 @@ TEST(SimpleTrailStructureTest, allEvenPossibilities) {
                         j = (j + k) % len;
                     }
                 }
+                Sealib::NaiveTrailStructure naiveTrailStructure(len);
                 Sealib::SimpleTrailStructure simpleTrailStructure(len);
                 Sealib::TrailStructure trailStructure(len);
 
                 for (std::vector<uint64_t> &depthVector : shiftedDepths) {
                     if (!depthVector.empty()) {
                         for (uint64_t &idx : depthVector) {
+                            naiveTrailStructure.enter(static_cast<uint32_t>(idx));
                             simpleTrailStructure.enter(static_cast<uint32_t>(idx));
                             trailStructure.enter(static_cast<uint32_t>(idx));
                         }
                     }
                 }
                 for (uint32_t i = 0; i < len; i++) {
+                    uint32_t naiveMatch = naiveTrailStructure.getMatched(i);
                     uint32_t simpleMatch = simpleTrailStructure.getMatched(i);
                     uint32_t match = trailStructure.getMatched(i);
+                    ASSERT_NE(naiveMatch, i);
                     ASSERT_NE(simpleMatch, i);
                     ASSERT_NE(match, i);
                     ASSERT_EQ(simpleMatch, match);
