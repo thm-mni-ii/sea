@@ -11,22 +11,22 @@ namespace Sealib {
  */
 class LargeDoubleLinkedList : public DoubleLinkedList {
  private:
-    std::vector<unsigned int> links;
-    unsigned int current;
+    std::vector<uint32_t> links;
+    uint32_t current;
 
  public:
     ~LargeDoubleLinkedList() override = default;
-    explicit LargeDoubleLinkedList(unsigned int size);
+    explicit LargeDoubleLinkedList(uint32_t size);
     /**
-     * @return the currently pointed to value and removes it, or (unsigned int)-1 if empty.
+     * @return the currently pointed to value and removes it, or (uint32_t)-1 if empty.
      */
-    unsigned int get() override;
+    uint32_t get() override;
 
     /**
     * @param element to be removed
-    * @return the removed element, or (unsigned int)-1 if the element was not present.
+    * @return the removed element, or (uint32_t)-1 if the element was not present.
     */
-    unsigned int remove(unsigned int idx) override;
+    uint32_t remove(uint32_t idx) override;
     /**
      * @return - true if empty, false otherwise
      */

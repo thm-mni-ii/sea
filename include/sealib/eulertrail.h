@@ -1,8 +1,8 @@
 #ifndef SEALIB_EULERTRAIL_H_
 #define SEALIB_EULERTRAIL_H_
 
-#include <sealib/rankselect.h>
-#include <sealib/basicgraph.h>
+#include <sealib/dictionary/rankselect.h>
+#include <sealib/graph/undirectedgraph.h>
 #include <sealib/simpletrailstructure.h>
 #include <sealib/trailstructure.h>
 #include <ostream>
@@ -19,13 +19,13 @@ template<class TrailStructureType>
  */
 class EulerTrail {
  private:
-    std::shared_ptr<Sealib::BasicGraph> graph;
+    std::shared_ptr<Sealib::UndirectedGraph> graph;
     std::vector<TrailStructureType>  trail;
     Sealib::RankSelect trailStarts;
 
-    unsigned int findStartingNode();
+    uint32_t findStartingNode();
     std::vector<TrailStructureType> initializeTrail();
-    Sealib::Bitset<unsigned char> findTrailStarts();
+    Sealib::Bitset<uint8_t> findTrailStarts();
 
     /**
      * Iterator used for iterating over the created trails.
@@ -34,16 +34,16 @@ class EulerTrail {
      */
     class iterator {
      public:
-        explicit iterator(const EulerTrail<TrailStructureType> &Container, unsigned int index = 1);
-        std::tuple<unsigned long, bool> operator*() const;
+        explicit iterator(const EulerTrail<TrailStructureType> &Container, uint32_t index = 1);
+        std::tuple<uint64_t, bool> operator*() const;
         iterator &operator++();
         iterator &operator++(int);
         bool operator!=(const iterator &) const;
      private:
         const EulerTrail<TrailStructureType> &eulerTrail;
-        unsigned int nIndex;
-        unsigned int mIndex;
-        unsigned int arc;
+        uint32_t nIndex;
+        uint32_t mIndex;
+        uint32_t arc;
         bool ending;
     };
 
@@ -52,14 +52,14 @@ class EulerTrail {
      *
      * @param graph - undirected graph object for which the euler trails should be created
      */
-    explicit EulerTrail(const std::shared_ptr<Sealib::BasicGraph> &graph);
+    explicit EulerTrail(const std::shared_ptr<Sealib::UndirectedGraph> &graph);
 
     /**
      * @return iterates over all trails and writes them to the output steam
      */
     friend std::ostream &operator<<(std::ostream &os,
                                     const EulerTrail<TrailStructureType> &eulerTrail) {
-        unsigned int tourNum = 1;
+        uint32_t tourNum = 1;
         bool newTour = true;
         for (auto v0 : eulerTrail) {
             bool ending = std::get<1>(v0);

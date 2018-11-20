@@ -2,6 +2,7 @@
 #include <sealib/trailstructure.h>
 #include <sealib/dyckwordlexicon.h>
 #include <sealib/simpletrailstructure.h>
+#include "../src/trail/naivetrailstructure.h"
 
 using Sealib::TrailStructure;
 
@@ -10,7 +11,7 @@ TEST(TrailStructureTest, enter) {
 
     ASSERT_EQ(ts.enter(2), 3);
     ASSERT_EQ(ts.enter(4), 0);
-    ASSERT_EQ(ts.enter(1), (unsigned int) -1);  // last element
+    ASSERT_EQ(ts.enter(1), (uint32_t) -1);  // last element
 }
 
 TEST(TrailStructureTest, leave) {
@@ -71,41 +72,45 @@ TEST(TrailStructureTest, enterLeaveCombination) {
 }
 
 TEST(SimpleTrailStructureTest, allEvenPossibilities) {
-    const unsigned long maxLen = 16;
-    for (unsigned len = 2; len < maxLen; len += 2) {
+    const uint64_t maxLen = 16;
+    for (uint32_t len = 2; len < maxLen; len += 2) {
         Sealib::DyckWordLexicon lex(len);
-        for (const Sealib::Bitset<unsigned char> &word : lex.getLexicon()) {
-            std::vector<std::vector<unsigned long>> depths(len);
-            for (unsigned int j = 0; j < len; j++) {
+        for (const Sealib::Bitset<uint8_t> &word : lex.getLexicon()) {
+            std::vector<std::vector<uint64_t>> depths(len);
+            for (uint32_t j = 0; j < len; j++) {
                 if (word[j]) {
-                    unsigned long match =
+                    uint64_t match =
                         Sealib::DyckMatchingStructure::getMatchNaive(word, j);
-                    unsigned long d = match - j;
+                    uint64_t d = match - j;
                     depths[d].push_back(j);
                 }
             }
 
-            for (unsigned int k = 0; k < len; k++) {
-                std::vector<std::vector<unsigned long>> shiftedDepths(depths);
+            for (uint32_t k = 0; k < len; k++) {
+                std::vector<std::vector<uint64_t>> shiftedDepths(depths);
                 for (auto &shiftedDepth : shiftedDepths) {
-                    for (unsigned long &j : shiftedDepth) {
+                    for (uint64_t &j : shiftedDepth) {
                         j = (j + k) % len;
                     }
                 }
+                Sealib::NaiveTrailStructure naiveTrailStructure(len);
                 Sealib::SimpleTrailStructure simpleTrailStructure(len);
                 Sealib::TrailStructure trailStructure(len);
 
-                for (std::vector<unsigned long> &depthVector : shiftedDepths) {
+                for (std::vector<uint64_t> &depthVector : shiftedDepths) {
                     if (!depthVector.empty()) {
-                        for (unsigned long &idx : depthVector) {
-                            simpleTrailStructure.enter(static_cast<unsigned int>(idx));
-                            trailStructure.enter(static_cast<unsigned int>(idx));
+                        for (uint64_t &idx : depthVector) {
+                            naiveTrailStructure.enter(static_cast<uint32_t>(idx));
+                            simpleTrailStructure.enter(static_cast<uint32_t>(idx));
+                            trailStructure.enter(static_cast<uint32_t>(idx));
                         }
                     }
                 }
-                for (unsigned int i = 0; i < len; i++) {
-                    unsigned int simpleMatch = simpleTrailStructure.getMatched(i);
-                    unsigned int match = trailStructure.getMatched(i);
+                for (uint32_t i = 0; i < len; i++) {
+                    uint32_t naiveMatch = naiveTrailStructure.getMatched(i);
+                    uint32_t simpleMatch = simpleTrailStructure.getMatched(i);
+                    uint32_t match = trailStructure.getMatched(i);
+                    ASSERT_NE(naiveMatch, i);
                     ASSERT_NE(simpleMatch, i);
                     ASSERT_NE(match, i);
                     ASSERT_EQ(simpleMatch, match);

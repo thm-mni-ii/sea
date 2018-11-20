@@ -24,11 +24,11 @@ before_install:
   - 'if test $CC = clang; then ln -sf $(which llvm-cov) /home/travis/bin/gcov; fi'
 
 script:
-  - cpplint --quiet ./src/*.*
-  - cpplint --quiet ./include/*/*.*
-  - cpplint --quiet ./src-view/*.*
-  - cpplint --quiet ./test/*.*
-  - cppcheck --std=c++11 --error-exitcode=1 --quiet -Iinclude src/ src-view/
+  - cpplint --quiet src/*.* src/*/*.*
+  - cpplint --quiet include/sealib/*.* include/sealib/*/*.*
+  - cpplint --quiet src-view/*.*
+  - cpplint --quiet test/*.*
+  - cppcheck --std=c++11 --enable=performance,portability --error-exitcode=1 --quiet -Iinclude src/ src-view/
   - cmake -DCOVERAGE=1 .
   - 'if test $TRAVIS_PULL_REQUEST = false; then build-wrapper-linux-x86-64 --out-dir bw-output make; else make; fi'
   - ./bin/tests

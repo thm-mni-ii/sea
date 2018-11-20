@@ -1,16 +1,17 @@
 #include "sealib/segmentstack.h"
 #include <gtest/gtest.h>
-#include "sealib/compactarray.h"
-#include "sealib/graphcreator.h"
+#include "sealib/collection/compactarray.h"
+#include "sealib/graph/graphcreator.h"
 
 using Sealib::BasicSegmentStack;
 using Sealib::ExtendedSegmentStack;
 using Sealib::CompactArray;
+using Sealib::DirectedGraph;
 
 #define pushn(i, n) \
   for (unsigned a = (i); a < (n); a++) s->push(std::pair<uint, uint>((a), K))
 #define popexp(n, exp) \
-  for (unsigned a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
+  for (uint32_t a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 
 static std::pair<uint, uint> r;
 static const uint K = 5;
@@ -52,16 +53,16 @@ TEST_F(BasicSegmentStackTest, highAlign) {
 class ExtendedSegmentStackTest : public ::testing::Test {
  protected:
   ExtendedSegmentStack *s;
-  unsigned q;
+  uint32_t q;
   CompactArray *c;
-  Sealib::Graph *g;
+  DirectedGraph g;
   virtual void SetUp() {
-    unsigned n = 256;
+    uint32_t n = 256;
     g = Sealib::GraphCreator::createRandomFixed(n, 10);
     c = new CompactArray(n, 3);
     for (uint a = 0; a < n; a++) c->insert(a, 0);
-    s = new ExtendedSegmentStack(n, g, c);
-    q = static_cast<unsigned>(ceil(n / log2(n)));
+    s = new ExtendedSegmentStack(n, &g, c);
+    q = static_cast<uint32_t>(ceil(n / log2(n)));
   }
   virtual void TearDown() { delete s; }
 };
@@ -69,15 +70,15 @@ class ExtendedSegmentStackTest : public ::testing::Test {
 class ExtendedSegmentStackTest2 : public ::testing::Test {
  protected:
   ExtendedSegmentStack *s;
-  unsigned q;
+  uint32_t q;
   CompactArray *c;
-  Sealib::Graph *g;
+  DirectedGraph g;
   virtual void SetUp() {
-    unsigned n = 128;
+    uint32_t n = 128;
     g = Sealib::GraphCreator::createRandomImbalanced(n);
     c = new CompactArray(n, 3);
-    s = new ExtendedSegmentStack(n, g, c);
-    q = static_cast<unsigned>(ceil(n / log2(n)));
+    s = new ExtendedSegmentStack(n, &g, c);
+    q = static_cast<uint32_t>(ceil(n / log2(n)));
   }
   virtual void TearDown() { delete s; }
 };
@@ -159,9 +160,9 @@ TEST_F(ExtendedSegmentStackTest, outgoingEdgeSmall) {
 TEST_F(ExtendedSegmentStackTest2, outgoingEdgeBig) {
   uint m = 0;
   std::set<uint> big;
-  for (uint u = 0; u < g->getOrder(); u++) m += g->getNodeDegree(u);
-  for (uint u = 0; u < g->getOrder(); u++) {
-    if (g->getNodeDegree(u) > m / q) {
+  for (uint u = 0; u < g.getOrder(); u++) m += g.getNodeDegree(u);
+  for (uint u = 0; u < g.getOrder(); u++) {
+    if (g.getNodeDegree(u) > m / q) {
       big.insert(u);
     }
   }

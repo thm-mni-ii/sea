@@ -1,41 +1,42 @@
 #ifndef SEALIB_LEGACY_H_
 #define SEALIB_LEGACY_H_
+#include <stdint.h>
 #ifdef __cplusplus
 namespace Sealib {
 extern "C" {
 #endif
 
-void *Sealib_Graph_new(unsigned int **m, unsigned int order);
+void *Sealib_Graph_new(uint32_t **m, uint32_t order);
 void Sealib_Graph_delete(void *self);
-void *Sealib_Graph_generateRandom(unsigned int order);
+void *Sealib_Graph_generateRandom(uint32_t order);
 
-void *Sealib_ChoiceDictionary_new(unsigned int size);
+void *Sealib_ChoiceDictionary_new(uint32_t size);
 void Sealib_ChoiceDictionary_delete(void *self);
-void Sealib_ChoiceDictionary_set(void *self, unsigned long index);
-int Sealib_ChoiceDictionary_get(void *self, unsigned long index);
-unsigned long Sealib_ChoiceDictionary_choice(void *self);
+void Sealib_ChoiceDictionary_set(void *self, uint64_t index);
+int Sealib_ChoiceDictionary_get(void *self, uint64_t index);
+uint64_t Sealib_ChoiceDictionary_choice(void *self);
 
 void *Sealib_ChoiceDictionaryIterator_new(void *choiceDictionary);
 void Sealib_ChoiceDictionaryIterator_delete(void *choiceDictionary);
 void Sealib_ChoiceDictionaryIterator_init(void *self);
 int Sealib_ChoiceDictionaryIterator_more(void *self);
-unsigned long Sealib_ChoiceDictionaryIterator_next(void *self);
+uint64_t Sealib_ChoiceDictionaryIterator_next(void *self);
 
-void *Sealib_Bitset_new(unsigned long size);
+void *Sealib_Bitset_new(uint64_t size);
 void Sealib_Bitset_delete(void *self);
-void Sealib_Bitset_set(void *self, unsigned long index);
-int Sealib_Bitset_get(void *self, unsigned long index);
+void Sealib_Bitset_set(void *self, uint64_t index);
+int Sealib_Bitset_get(void *self, uint64_t index);
 
 void *Sealib_RankSelect_new(void *bitset);
 void Sealib_RankSelect_delete(void *self);
-unsigned long Sealib_RankSelect_rank(void *self, unsigned long index);
-unsigned long Sealib_RankSelect_select(void *self, unsigned long bit);
-unsigned long Sealib_RankSelect_size(void *self);
+uint64_t Sealib_RankSelect_rank(void *self, uint64_t index);
+uint64_t Sealib_RankSelect_select(void *self, uint64_t bit);
+uint64_t Sealib_RankSelect_size(void *self);
 
-void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(unsigned int),
-                               void (*preexplore)(unsigned int, unsigned int),
-                               void (*postexplore)(unsigned int, unsigned int),
-                               void (*postprocess)(unsigned int));
+void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint32_t),
+                               void (*preexplore)(uint32_t, uint32_t),
+                               void (*postexplore)(uint32_t, uint32_t),
+                               void (*postprocess)(uint32_t));
 
 #ifdef __cplusplus
 }

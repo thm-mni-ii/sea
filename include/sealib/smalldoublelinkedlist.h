@@ -11,22 +11,22 @@ namespace Sealib {
  */
 class SmallDoubleLinkedList : public DoubleLinkedList {
  private:
-    std::vector<unsigned char> links;
-    unsigned char current;
+    std::vector<uint8_t> links;
+    uint8_t current;
 
  public:
-    explicit SmallDoubleLinkedList(unsigned char size);
+    explicit SmallDoubleLinkedList(uint8_t size);
     ~SmallDoubleLinkedList() override = default;
     /**
-     * @return the currently pointed to value and removes it, or (unsigned char)-1 if empty.
+     * @return the currently pointed to value and removes it, or (uint8_t)-1 if empty.
      */
-    unsigned int get() override;
+    uint32_t get() override;
 
      /**
      * @param element to be removed
-     * @return the removed element, or (unsigned char)-1 if the element was not present.
+     * @return the removed element, or (uint8_t)-1 if the element was not present.
      */
-    unsigned int remove(unsigned int idx) override;
+    uint32_t remove(uint32_t idx) override;
     /**
      * @return - true if empty, false otherwise
      */

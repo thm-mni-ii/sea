@@ -1,11 +1,11 @@
-Space Efficient Algorithms [![Build Status](https://travis-ci.org/thm-mni-ii/sea.svg?branch=master)](https://travis-ci.org/thm-mni-ii/sea) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Coverage Status](https://coveralls.io/repos/github/thm-mni-ii/sea/badge.svg?branch=master)](https://coveralls.io/github/thm-mni-ii/sea?branch=master)
-===
+# Space Efficient Algorithms 
+[![Build Status](https://travis-ci.org/thm-mni-ii/sea.svg?branch=master)](https://travis-ci.org/thm-mni-ii/sea) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Coverage Status](https://coveralls.io/repos/github/thm-mni-ii/sea/badge.svg?branch=master)](https://coveralls.io/github/thm-mni-ii/sea?branch=master) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=thm-mni-ii_sea&metric=alert_status)](https://sonarcloud.io/dashboard?id=thm-mni-ii_sea) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=thm-mni-ii_sea&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=thm-mni-ii_sea)
 
 SEA is a project to research and implement an open C++ library for Space-Efficient (Graph) Algorithms (SEA).
 Besides the running time of algorithms, their space requirements cause a problem if dealing with huge
-data sets or executing them on tiny devices where memory is heavily limited. Therefore, we want to provide algorithms and data structures to tackle this problem by treating space as a scarse ressourse.
+data sets or executing them on tiny devices where memory is heavily limited. Therefore, we want to provide algorithms and data structures to tackle this problem by treating space as a scarce resource.
 
-## Table of Content
+## Table of Contents
 * [Algorithms and Data Structures](#algorithms-and-data-structures)
     * [Algorithms](#algorithms)
     * [Data Structures](#data-structures)
@@ -16,7 +16,7 @@ data sets or executing them on tiny devices where memory is heavily limited. The
 * [Acknowledgments](#acknowledgments)
 
 ## Algorithms and Data Structures
-This section gives you a brief overview over the implemented algorithms and data structures. For a detailed documentation click on a algorithm (comming soon).
+This section gives you a brief overview over the implemented algorithms and data structures. For a detailed documentation click on a algorithm (coming soon).
 For some data structures and algorithms we also provide a folklore implementation that we use to check the space efficient algorithm and to run runtime and space consumption tests.
 
 ### Algorithms
@@ -35,7 +35,7 @@ For some data structures and algorithms we also provide a folklore implementatio
 2. Build a make file for your system by using CMake -> `cmake .`
 3. Build the artifacts by executing make -> `make`
 
-Now, the `include` folder contains the nessasary header files and the `lib` folder contains the build library.
+Now, the `include` folder contains the necessary header files and the `lib` folder contains the build library.
 
 If you encounter any bugs, missing or misleading documentation, do not hesitate to create an [issue ticket](https://github.com/thm-mni-ii/sea/issues/new).
 
@@ -43,11 +43,11 @@ If you encounter any bugs, missing or misleading documentation, do not hesitate 
 ```bash
 .
 ├── CMakeLists.txt  # CMake build script
-├── LICENSE         # Licence descriptionö
+├── LICENSE         # Licence description
 ├── README.md       # You are reading this file now
 ├── third-party     # Third party libraries
-├── include         # The libraries header files (*.h)
-├── src             # The libraries source files (*.cpp)
+├── include         # The library's header files (*.h)
+├── src             # The library's source files (*.cpp)
 ├── src-view        # The source files for the visualization (*.cpp)
 ├── test            # The test files
 ├── lib             # The library files

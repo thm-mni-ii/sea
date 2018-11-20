@@ -5,7 +5,7 @@
 
 namespace Sealib {
 // the standard numeric type (used mainly for node names)
-typedef unsigned int uint;
+typedef uint32_t uint;
 
 typedef std::function<void(uint)> Consumer;
 typedef std::function<void(uint, uint)> BiConsumer;
