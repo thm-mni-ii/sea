@@ -6,7 +6,7 @@
 using Sealib::GraphCreator;
 using Sealib::CompactGraph;
 
-TEST(GraphTest, compactgraph_integrity) {
+TEST(CompactGraphTest, compactgraph_integrity) {
     uint *A = new uint[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
     CompactGraph *g = new CompactGraph(A);
 
@@ -26,7 +26,7 @@ TEST(GraphTest, compactgraph_integrity) {
     delete g;
 }
 
-TEST(GraphTest, compactgraph_generation) {
+TEST(CompactGraphTest, fastGraphGeneration) {
     uint *A = GraphCreator::fastGraphGeneration(5, 2);
     CompactGraph *g = new CompactGraph(A);
 
@@ -50,4 +50,10 @@ TEST(GraphTest, compactgraph_generation) {
     ASSERT_EQ(g->getNodeDegree(4), 2);
 
     delete g;
+}
+
+TEST(CompactGraphTest, gilbertGraphGeneration) {
+    std::mt19937_64 gen;
+    CompactGraph g = GraphCreator::generateGilbertGraph(32, 0.3, &gen);
+    ASSERT_EQ(g.getOrder(), 32);
 }
