@@ -22,12 +22,12 @@ class LinearTimeInplaceDFSRunner {
   uint m_initialStartVertex;
   uint m_initialStartPos;
 
-  UserFunc1 m_preProcess;
-  UserFunc1 m_postProcess;
+  Consumer m_preProcess;
+  Consumer m_postProcess;
 
  public:
-  LinearTimeInplaceDFSRunner(uint *graph, UserFunc1 preProcess,
-                             UserFunc1 postProcess)
+  LinearTimeInplaceDFSRunner(uint *graph, Consumer preProcess,
+                             Consumer postProcess)
       : A(graph),
         n(A[0]),
         N(n + A[n + 1] + 1),

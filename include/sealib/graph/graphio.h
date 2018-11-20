@@ -12,11 +12,10 @@ class GraphExporter {
  public:
     /**
      * Exports a graph to GML.
-     * @param g the graph to export of type G
+     * @param g the graph to export
      * @param filename target file name
      */
-    template<class G>
-    static void exportGML(G *g, std::string filename);
+    static void exportGML(Graph *g, bool directed, std::string filename);
 };
 
 class GraphImporter {
@@ -26,7 +25,7 @@ class GraphImporter {
      * @param filename the source file name
      * @return graph of the desired type G
      */
-    template <class G>
+    template<class G>
     static G importGML(std::string filename);
 };
 }  // namespace Sealib

@@ -1,4 +1,4 @@
-#include "./segmentstack.h"
+#include "sealib/segmentstack.h"
 #include <math.h>
 #include <sstream>
 #include <stack>
@@ -12,8 +12,8 @@ using Sealib::ExtendedSegmentStack;
 
 SegmentStack::SegmentStack(uint32_t segmentSize)
     : q(segmentSize),
-      low(new Pair[q]),
-      high(new Pair[q]),
+      low(new std::pair<uint, uint>[q]),
+      high(new std::pair<uint, uint>[q]),
       lp(0),
       hp(0),
       tp(0) {}
@@ -23,7 +23,7 @@ SegmentStack::~SegmentStack() {
   delete[] high;
 }
 
-int SegmentStack::pop(Pair *r) {
+int SegmentStack::pop(std::pair<uint, uint> *r) {
   if (hp > 0) {
     *r = high[--hp];
   } else if (lp > 0) {
@@ -49,7 +49,7 @@ bool SegmentStack::isEmpty() {
 BasicSegmentStack::BasicSegmentStack(uint32_t segmentSize)
     : SegmentStack(segmentSize) {}
 
-int BasicSegmentStack::push(Pair u) {
+void BasicSegmentStack::push(std::pair<uint, uint> u) {
   if (lp < q) {
     low[lp++] = u;
   } else if (hp < q) {
@@ -57,13 +57,12 @@ int BasicSegmentStack::push(Pair u) {
   } else {
     last = low[lp - 1];
     tp++;
-    Pair *tmp = low;
+    std::pair<uint, uint> *tmp = low;
     low = high;
     high = tmp;
     hp = 0;
     high[hp++] = u;
   }
-  return 0;
 }
 
 void BasicSegmentStack::dropAll() {
@@ -86,10 +85,10 @@ bool BasicSegmentStack::isAligned() {
   if ((alignTarget == 2 && hp < q) || lp < q) {
     r = false;
   } else {
-    uint32_t lu = low[lp - 1].head(), lk = low[lp - 1].tail();
-    uint32_t hu = 0, hk = 0;
-    if (alignTarget == 2) hu = high[hp - 1].head(), hk = high[hp - 1].tail();
-    uint32_t tu = savedTrailer.head(), tk = savedTrailer.tail();
+    unsigned lu = low[lp - 1].first, lk = low[lp - 1].second;
+    unsigned hu = 0, hk = 0;
+    if (alignTarget == 2) hu = high[hp - 1].first, hk = high[hp - 1].second;
+    unsigned tu = savedTrailer.first, tk = savedTrailer.second;
     r = (alignTarget == 2 && hu == tu && hk == tk) ||
         (alignTarget == 1 && lu == tu && lk == tk);
   }
@@ -104,7 +103,7 @@ ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph *g, CompactArray *c)
       l(static_cast<uint32_t>(ceil(log2(size))) + 1),
       table(new CompactArray(size, l)),
       edges(new CompactArray(size, l)),
-      big(new Pair[q]),
+      big(new std::pair<uint, uint>[q]),
       bp(0),
       graph(g),
       n(graph->getOrder()),
@@ -128,13 +127,13 @@ uint32_t ExtendedSegmentStack::approximateEdge(uint u, uint k) {
 
 void ExtendedSegmentStack::storeEdges() {
   for (uint c = 0; c < lp; c++) {
-    uint u = low[c].head(), k = low[c].tail();
+    uint u = low[c].first, k = low[c].second;
     if (graph->getNodeDegree(u) > m / q) {
       if (trailers[tp].bi == INVALID) {
         trailers[tp].bi = bp;
         trailers[tp].bc = 0;
       }
-      big[bp++] = Pair(u, k - 1);  // another big vertex is stored
+      big[bp++] = std::pair<uint, uint>(u, k - 1);  // another big vertex is stored
       if (bp > q) throw std::out_of_range("big storage is full!");
     } else {  // store an approximation
       uint32_t f = approximateEdge(u, k);
@@ -143,8 +142,8 @@ void ExtendedSegmentStack::storeEdges() {
   }
 }
 
-int ExtendedSegmentStack::push(Pair p) {
-  uint pu = p.head();
+void ExtendedSegmentStack::push(std::pair<uint, uint> p) {
+  uint pu = p.first;
   if (lp < q) {
     table->insert(pu, tp);
     low[lp++] = p;
@@ -156,14 +155,13 @@ int ExtendedSegmentStack::push(Pair p) {
     storeEdges();
 
     tp++;
-    Pair *tmp = low;
+    std::pair<uint, uint> *tmp = low;
     low = high;
     high = tmp;
     hp = 0;
     high[hp++] = p;
     table->insert(pu, tp + 1);
   }
-  return 0;
 }
 
 bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
@@ -185,9 +183,9 @@ uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
     if (tp > 0) {  // tp>0 should be given in every restoration, which is
                    // precisely when this method may be called
       Trailer *t = trailers + (tp - 1);
-      Pair x = big[t->bi + t->bc];
+      std::pair<uint, uint> x = big[t->bi + t->bc];
       t->bc += 1;
-      return x.tail();
+      return x.second;
     } else {
       throw std::logic_error(
           "can't get edge from big vertex because there are no trailers");
@@ -197,7 +195,7 @@ uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
   }
 }
 
-int ExtendedSegmentStack::getRestoreTrailer(Pair *r) {
+int ExtendedSegmentStack::getRestoreTrailer(std::pair<uint, uint> *r) {
   if (tp > 1) {
     *r = trailers[tp - 2].x;
     return 0;
@@ -206,7 +204,7 @@ int ExtendedSegmentStack::getRestoreTrailer(Pair *r) {
   }
 }
 
-int ExtendedSegmentStack::getTopTrailer(Pair *r) {
+int ExtendedSegmentStack::getTopTrailer(std::pair<uint, uint> *r) {
   if (tp > 0) {
     *r = trailers[tp - 1].x;
     return 0;
@@ -215,8 +213,8 @@ int ExtendedSegmentStack::getTopTrailer(Pair *r) {
   }
 }
 
-void ExtendedSegmentStack::recolorLow(uint32_t v) {
-  for (uint32_t a = 0; a < q; a++) color->insert(low[a].head(), v);
+void ExtendedSegmentStack::recolorLow(unsigned v) {
+  for (unsigned a = 0; a < q; a++) color->insert(low[a].first, v);
 }
 
 bool ExtendedSegmentStack::isAligned() {

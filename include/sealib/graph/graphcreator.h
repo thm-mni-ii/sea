@@ -86,8 +86,22 @@ class GraphCreator {
     generateRandomBipartiteUndirectedGraph(uint32_t order1, uint32_t order2,
                                            double p, uint32_t seed);
 
+    /**
+     * Create a random undirected graph with an approximate degree.
+     * @param order number of nodes to generate
+     * @param approxDegree every node will have at least this many outgoing edges
+     * @return pair {G, m} where G is the graph and m is the actual number of edges in the graph
+     */
     static std::pair<UndirectedGraph *, uint32_t> createRandomUndirected(
         uint32_t order, uint32_t approxDegree);
+
+    /**
+     * Create an undirected windmill graph (m complete graphs of order n joined together at a common vertex).
+     * @param order order of each windmill part (n > 1)
+     * @param count number of windmill parts (m)
+     * @return the generated windmill graph W_n^m
+     */
+    static UndirectedGraph createWindmill(uint32_t order, uint32_t count);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPHCREATOR_H_

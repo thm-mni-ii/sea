@@ -1,23 +1,19 @@
 #ifndef SEALIB_ITERATOR_BFS_H_
 #define SEALIB_ITERATOR_BFS_H_
 
+#include <utility>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
 #include "sealib/graph/graph.h"
 #include "sealib/iterator/iterator.h"
 
-#define BFS_WHITE 0
-#define BFS_GRAY1 1
-#define BFS_GRAY2 2
-#define BFS_BLACK 3
-
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
-
-#define BFS_NOP_PROCESS (UserFunc1)0
-#define BFS_NOP_EXPLORE (UserFunc2)0
-
 namespace Sealib {
+
+const uint BFS_WHITE = 0, BFS_GRAY1 = 1, BFS_GRAY2 = 2, BFS_BLACK = 3;
+
+const Consumer BFS_NOP_PROCESS = [](uint) {};
+const BiConsumer BFS_NOP_EXPLORE = [](uint, uint) {};
+
 /**
  * Run a breadth-first search over a given graph, while executing the two
  * given user functions.
@@ -28,7 +24,7 @@ namespace Sealib {
  * To get the next result, call next().
  * To move the search to a possible next component, call nextComponent().
  */
-class BFS : Iterator<Pair> {
+class BFS : Iterator<std::pair<uint, uint>> {
  public:
   /**
    * Initialize or reset the BFS to the beginning.
@@ -55,7 +51,7 @@ class BFS : Iterator<Pair> {
    * starting node
    * @throws std::logic_error if no next node is available
    */
-  Pair next() override;
+  std::pair<uint, uint> next() override;
 
   /**
    * Create a new BFS iterator.
@@ -63,7 +59,7 @@ class BFS : Iterator<Pair> {
   * @param preprocess to be executed before processing a node u
   * @param preexplore to be executed before exploring an edge (u,v)
   */
-  BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe);
+  BFS(Graph *graph, Consumer pp, BiConsumer pe);
 
   ~BFS();
 
@@ -73,8 +69,8 @@ class BFS : Iterator<Pair> {
   CompactArray *color;
   uint u, dist;
   uint32_t innerGray, outerGray;
-  UserFunc1 preprocess;
-  UserFunc2 preexplore;
+  Consumer preprocess;
+  BiConsumer preexplore;
 
   bool hasGrayNode();
   uint getGrayNode();

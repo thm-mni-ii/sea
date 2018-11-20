@@ -179,6 +179,35 @@ std::pair<UndirectedGraph *, uint32_t> GraphCreator::createRandomUndirected(
     return {g, sum};
 }
 
+UndirectedGraph GraphCreator::createWindmill(uint32_t order,
+                                         uint32_t count) {
+    order--;
+    uint32_t n = order * count + 1;
+    UndirectedGraph g(n);
+    for (uint32_t a = 0; a < count; a++) {
+        // a = no. complete graphs
+        for (uint32_t b = a * order; b < (a + 1) * order - 1; b++) {
+            // b = no. source nodes
+            for (uint32_t c = b + 1; c < (a + 1) * order; c++) {
+                // c = no. dest. nodes
+                uint32_t i1 = g.getNodeDegree(b), i2 = g.getNodeDegree(c);
+                g.getNode(b).addAdjacency(c);
+                g.getNode(b).setCrossIndex(i1, i2);
+                g.getNode(c).addAdjacency(b);
+                g.getNode(c).setCrossIndex(i2, i1);
+            }
+        }
+    }
+    for (uint a = 0; a < n - 1; a++) {
+        uint32_t i1 = g.getNodeDegree(n - 1), i2 = g.getNodeDegree(a);
+        g.getNode(n - 1).addAdjacency(a);
+        g.getNode(n - 1).setCrossIndex(i1, i2);
+        g.getNode(a).addAdjacency(n - 1);
+        g.getNode(a).setCrossIndex(i2, i1);
+    }
+    return g;
+}
+
 static uint32_t *generateRawGilbertGraph(uint32_t order, double p,
                                          std::mt19937_64 *gen) {
     uint32_t size = 0;

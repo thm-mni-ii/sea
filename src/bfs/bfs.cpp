@@ -11,7 +11,7 @@ void BFS::init() {
   dist = 0;
   innerGray = BFS_GRAY1;
   outerGray = BFS_GRAY2;
-  if (preprocess != BFS_NOP_PROCESS) preprocess(0);
+  preprocess(0);
   color->insert(0, innerGray);
 }
 
@@ -22,7 +22,7 @@ bool BFS::nextComponent() {
       u = a;
       found = true;
       dist = 0;
-      if (preprocess != BFS_NOP_PROCESS) preprocess(u);
+      preprocess(u);
       color->insert(u, innerGray);
       break;
     }
@@ -66,7 +66,7 @@ uint BFS::getGrayNode() {
 
 bool BFS::more() { return hasGrayNode(); }
 
-Pair BFS::next() {
+std::pair<uint, uint> BFS::next() {
   u = getGrayNode();
   if (color->get(u) == outerGray) {
     uint32_t tmp = innerGray;
@@ -76,17 +76,17 @@ Pair BFS::next() {
   }
   for (uint k = 0; k < g->getNodeDegree(u); k++) {
     uint v = g->head(u, k);
-    if (preexplore != BFS_NOP_EXPLORE) preexplore(u, v);
+    preexplore(u, v);
     if (color->get(v) == BFS_WHITE) {
-      if (preprocess != BFS_NOP_PROCESS) preprocess(v);
+      preprocess(v);
       color->insert(v, outerGray);
     }
   }
   color->insert(u, BFS_BLACK);
-  return Pair(u, dist);
+  return std::pair<uint, uint>(u, dist);
 }
 
-BFS::BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe)
+BFS::BFS(Graph *graph, Consumer pp, BiConsumer pe)
     : g(graph),
       n(g->getOrder()),
       color(new CompactArray(n, 10)),
