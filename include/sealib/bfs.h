@@ -1,6 +1,7 @@
 #ifndef SEALIB_BFS_H_
 #define SEALIB_BFS_H_
 
+#include <utility>
 #include "sealib/_types.h"
 #include "sealib/compactarray.h"
 #include "sealib/graph.h"
