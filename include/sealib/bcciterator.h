@@ -1,5 +1,7 @@
 #ifndef SEALIB_BCCITERATOR_H_
 #define SEALIB_BCCITERATOR_H_
+
+#include <utility>
 #include "sealib/basicgraph.h"
 #include "sealib/edgemarker.h"
 #include "sealib/iterator.h"
