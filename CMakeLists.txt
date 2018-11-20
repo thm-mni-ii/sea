@@ -16,8 +16,8 @@ set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wswitch-default -Wswitch-enum \
 -Wdisabled-optimization -Winit-self -Wmissing-declarations -Wmissing-include-dirs \
 -Woverloaded-virtual -Wredundant-decls -Wsign-conversion -Wsign-promo \
 -Wstrict-overflow=5 -Wfloat-equal")
-set(BUILD_FLAGS "-std=c++11 -O3 -fno-builtin -ffast-math ${WARNING_FLAGS}")
-set(TEST_FLAGS "-std=c++11 -g -O0 -fno-builtin -ffast-math ${WARING_FLAGS}")
+set(BUILD_FLAGS "-std=c++11 -O3 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
+set(TEST_FLAGS "-std=c++11 -g -O0 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
 
 # --------------------------------------------------- #
 #                   Dependencies
