@@ -10,8 +10,8 @@ namespace Sealib {
 
 const uint BFS_WHITE = 0, BFS_GRAY1 = 1, BFS_GRAY2 = 2, BFS_BLACK = 3;
 
-const UserFunc1 BFS_NOP_PROCESS = [](uint) {};
-const UserFunc2 BFS_NOP_EXPLORE = [](uint, uint) {};
+const Consumer BFS_NOP_PROCESS = [](uint) {};
+const BiConsumer BFS_NOP_EXPLORE = [](uint, uint) {};
 
 /**
  * Run a breadth-first search over a given graph, while executing the two
@@ -58,7 +58,7 @@ class BFS : Iterator<std::pair<uint, uint>> {
   * @param preprocess to be executed before processing a node u
   * @param preexplore to be executed before exploring an edge (u,v)
   */
-  BFS(Graph *graph, UserFunc1 pp, UserFunc2 pe);
+  BFS(Graph *graph, Consumer pp, BiConsumer pe);
 
   ~BFS();
 
@@ -68,8 +68,8 @@ class BFS : Iterator<std::pair<uint, uint>> {
   CompactArray *color;
   uint u, dist;
   unsigned innerGray, outerGray;
-  UserFunc1 preprocess;
-  UserFunc2 preexplore;
+  Consumer preprocess;
+  BiConsumer preexplore;
 
   bool hasGrayNode();
   uint getGrayNode();

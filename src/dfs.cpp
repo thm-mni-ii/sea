@@ -7,9 +7,9 @@
 
 namespace Sealib {
 
-void DFS::process_standard(uint u0, Graph *g, uint *color, UserFunc1 preProcess,
-                           UserFunc2 preExplore, UserFunc2 postExplore,
-                           UserFunc1 postProcess) {
+void DFS::process_standard(uint u0, Graph *g, uint *color, Consumer preProcess,
+                           BiConsumer preExplore, BiConsumer postExplore,
+                           Consumer postProcess) {
     std::stack<std::pair<uint, uint>> *s =
         new std::stack<std::pair<uint, uint>>;
     s->push(std::pair<uint, uint>(u0, 0));
@@ -47,8 +47,8 @@ template <class SS>
 void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
                         void (*restoration)(uint, Graph *, CompactArray *,
                                             SS *),
-                        UserFunc1 preProcess, UserFunc2 preExplore,
-                        UserFunc2 postExplore, UserFunc1 postProcess) {
+                        Consumer preProcess, BiConsumer preExplore,
+                        BiConsumer postExplore, Consumer postProcess) {
     s->push(std::pair<uint, uint>(u0, 0));
     std::pair<uint, uint> x;
     while (!s->isEmpty()) {
@@ -176,8 +176,8 @@ void DFS::restore_top(uint u0, Graph *g, CompactArray *color,
 
 template <class S>
 void DFS::process_static(uint u0, BasicGraph *g, CompactArray *color, S *back,
-                         UserFunc1 preprocess, UserFunc2 preexplore,
-                         UserFunc2 postexplore, UserFunc1 postprocess) {
+                         Consumer preprocess, BiConsumer preexplore,
+                         BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
     back->insert(u0, std::numeric_limits<uint>::max());
     preprocess(u0);
@@ -214,8 +214,8 @@ void DFS::process_static(uint u0, BasicGraph *g, CompactArray *color, S *back,
     }
 }
 
-void DFS::standardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
-                      UserFunc2 postExplore, UserFunc1 postProcess) {
+void DFS::standardDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
+                      BiConsumer postExplore, Consumer postProcess) {
     uint *color = new uint[g->getOrder()];
     for (uint a = 0; a < g->getOrder(); a++) color[a] = DFS_WHITE;
     for (uint u = 0; u < g->getOrder(); u++) {
@@ -227,8 +227,8 @@ void DFS::standardDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
     delete[] color;
 }
 
-void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
-                  UserFunc2 postExplore, UserFunc1 postProcess) {
+void DFS::nBitDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
+                  BiConsumer postExplore, Consumer postProcess) {
     unsigned int n = g->getOrder();
     double e = 0.2;
     unsigned q = static_cast<unsigned>(ceil(
@@ -251,8 +251,8 @@ void DFS::nBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
     }
 }
 
-void DFS::nloglognBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
-                         UserFunc2 postExplore, UserFunc1 postProcess) {
+void DFS::nloglognBitDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
+                         BiConsumer postExplore, Consumer postProcess) {
     unsigned int n = g->getOrder();
     CompactArray color(n, 3);
     ExtendedSegmentStack s(n, g, &color);
@@ -264,9 +264,9 @@ void DFS::nloglognBitDFS(Graph *g, UserFunc1 preProcess, UserFunc2 preExplore,
     }
 }
 
-void DFS::nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
-                       UserFunc2 preexplore, UserFunc2 postexplore,
-                       UserFunc1 postprocess) {
+void DFS::nplusmBitDFS(BasicGraph *g, Consumer preprocess,
+                       BiConsumer preexplore, BiConsumer postexplore,
+                       Consumer postprocess) {
     unsigned int n = g->getOrder();
     CompactArray color(n, 3);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
@@ -285,8 +285,8 @@ void DFS::nplusmBitDFS(BasicGraph *g, UserFunc1 preprocess,
     }
 }
 
-void DFS::runLinearTimeInplaceDFS(uint *graph, UserFunc1 preProcess,
-                                  UserFunc1 postProcess, uint startVertex) {
+void DFS::runLinearTimeInplaceDFS(uint *graph, Consumer preProcess,
+                                  Consumer postProcess, uint startVertex) {
     auto *ilDFSRunner =
         new LinearTimeInplaceDFSRunner(graph, preProcess, postProcess);
     ilDFSRunner->run(startVertex);
