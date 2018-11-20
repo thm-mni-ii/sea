@@ -49,7 +49,7 @@ bool SegmentStack::isEmpty() {
 BasicSegmentStack::BasicSegmentStack(unsigned segmentSize)
     : SegmentStack(segmentSize) {}
 
-int BasicSegmentStack::push(std::pair<uint, uint> u) {
+void BasicSegmentStack::push(std::pair<uint, uint> u) {
   if (lp < q) {
     low[lp++] = u;
   } else if (hp < q) {
@@ -63,7 +63,6 @@ int BasicSegmentStack::push(std::pair<uint, uint> u) {
     hp = 0;
     high[hp++] = u;
   }
-  return 0;
 }
 
 void BasicSegmentStack::dropAll() {
@@ -143,7 +142,7 @@ void ExtendedSegmentStack::storeEdges() {
   }
 }
 
-int ExtendedSegmentStack::push(std::pair<uint, uint> p) {
+void ExtendedSegmentStack::push(std::pair<uint, uint> p) {
   uint pu = p.first;
   if (lp < q) {
     table->insert(pu, tp);
@@ -163,7 +162,6 @@ int ExtendedSegmentStack::push(std::pair<uint, uint> p) {
     high[hp++] = p;
     table->insert(pu, tp + 1);
   }
-  return 0;
 }
 
 bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
