@@ -1,4 +1,4 @@
-n*log(log(n))-Bit Depth-First Search
+O(n*log(log(n)))-Bit Depth-First Search
 ===
 The depth-first search over a graph G=(V,E) will *process* every node and *explore* every edge exactly once. The user can supply four *user-defined procedures*: `preprocess`, `preexplore`, `postexplore` and `postprocess`.
 
@@ -19,7 +19,7 @@ This space-efficient variant
 ```cpp
 Graph *g=GraphCreator::createRandomImbalanced(500);
 
-DFS::nloglognBitDFS(g,DFS_NOP_PROCESS,DFS_NOP_EXPLORE,DFS_NOP_EXPLORE,DFS_NOP_PROCESS);  // quiet run
+DFS::nloglognBitDFS(g);  // quiet run
 
 DFS::nBitDFS(g,p0,e0,e1,p1);  // supply procedures to do something with the current node or edge
 

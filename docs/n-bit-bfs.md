@@ -1,4 +1,4 @@
-n-Bit Breadth-First Search
+O(n)-Bit Breadth-First Search
 ===
 The breadth-first search over a graph G=(V,E) will find all *connected components* of G and output the tuple (u,dist) for each node, which is shows the distance of u to the starting node of the current component. Two *user-defined procedures* are available: `preprocess` and `preexplore`.
 
@@ -12,7 +12,7 @@ This space-efficient variant
 
 ## Efficiency
 * Time: O(n+m)
-* Space: O(2n) bits
+* Space: O(n) bits
 
 ## Example
 ```cpp
