@@ -48,7 +48,7 @@ class Bitset : Sequence<bool, uint64_t> {
 
     Bitset();
 
-    ~Bitset() = default;
+    ~Bitset() override = default;
 
     /**
      * @param bit idx of the bit

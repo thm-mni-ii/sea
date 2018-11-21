@@ -144,9 +144,8 @@ Sealib::Bitset<BlockType, AllocatorType>::getShiftedBlock(Bitset::sizeType idx) 
     BlockType b2 = mbits[(idx+len-1)/len];
 
     BlockType bitIdx = idx % len;
-    BlockType bitMask = (BlockType(1) << len) - BlockType(1);
 
-    return (b1 >> bitIdx | b2 << (len - bitIdx)) & bitMask;
+    return (b1 >> bitIdx | b2 << (len - bitIdx));
 }
 
 namespace Sealib {
