@@ -8,7 +8,7 @@ This space-efficient variant
 	- *init()*: initializes the BFS
 	- *more()*: returns true if there is more to do in this connected component
 	- *next()*: gets the next node and distance from the component
-	- *nextComponent()*: advance to the next component, or return false if the graph is completely explored
+	- *nextComponent()*: advances to the next component, or returns false if the graph is completely explored
 
 ## Efficiency
 * Time: O(n+m)
