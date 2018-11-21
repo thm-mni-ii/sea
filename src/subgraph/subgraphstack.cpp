@@ -10,7 +10,7 @@ using Sealib::BaseSubGraph;
 using Sealib::RecursiveSubGraph;
 using Sealib::SubGraphStack;
 
-uint64_t SubGraphStack::refs[6] = {0, 1, 3, 15, 65535, (uint64_t) -1};
+uint64_t SubGraphStack::refs[6] = {0, 1, 3, 15, 65535};
 
 SubGraphStack::SubGraphStack(std::shared_ptr<UndirectedGraph> g_) : clientList(),
                                                                currentRef(0),
