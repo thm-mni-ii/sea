@@ -1,6 +1,7 @@
 #ifndef SEALIB_LOCALRANKTABLE_H_
 #define SEALIB_LOCALRANKTABLE_H_
 
+#include <cstdint>
 #include <vector>
 
 namespace Sealib {
@@ -11,7 +12,7 @@ namespace Sealib {
 */
 class LocalRankTable {
  private:
-    std::vector<std::vector<unsigned char>> localRankLookupTable;
+    std::vector<std::vector<uint8_t>> localRankLookupTable;
     /**
      * Used in getLocalRank for the first initialization of the table, never used again.
      */
@@ -26,7 +27,7 @@ class LocalRankTable {
     * @param index in the segment
     * @return bits set up to and including the i-th bit
     */
-    static unsigned char getLocalRank(unsigned char segment, unsigned char i);
+    static uint8_t getLocalRank(uint8_t segment, uint8_t i);
 
     //  singleton instance only in the function getLocalSelect, these should not be used
     LocalRankTable(LocalRankTable const &) = delete;

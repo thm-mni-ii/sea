@@ -11,7 +11,7 @@ TEST(SimpleTrailStructureTest, enter) {
 
     ASSERT_EQ(ts.enter(2), 3);
     ASSERT_EQ(ts.enter(4), 0);
-    ASSERT_EQ(ts.enter(1), (unsigned int) -1);  // last element
+    ASSERT_EQ(ts.enter(1), (uint32_t) -1);  // last element
 }
 
 TEST(SimpleTrailStructureTest, leave) {

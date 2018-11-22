@@ -1,5 +1,6 @@
 #ifndef SEALIB_LOCALSELECTTABLE_H_
 #define SEALIB_LOCALSELECTTABLE_H_
+#include <cstdint>
 #include <vector>
 
 namespace Sealib {
@@ -10,7 +11,7 @@ namespace Sealib {
 */
 class LocalSelectTable {
  private:
-    std::vector<std::vector<unsigned char>> localSelectLookupTable;
+    std::vector<std::vector<uint8_t>> localSelectLookupTable;
     /**
      * Used in getLocalSelect for the first initialization of the table, never used again.
      */
@@ -25,7 +26,7 @@ class LocalSelectTable {
     * @param i-th set bit to be selected
     * @return index of the i-th bit, or (unsinged char) - 1 if there is none
     */
-    static unsigned char getLocalSelect(unsigned char segment, unsigned char i);
+    static uint8_t getLocalSelect(uint8_t segment, uint8_t i);
 
     //  singleton instance only in the function getLocalSelect, these should not be used
     LocalSelectTable(LocalSelectTable const &) = delete;

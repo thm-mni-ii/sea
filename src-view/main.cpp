@@ -8,10 +8,10 @@
 #include <stack>
 #include <string>
 #include "sealib/_types.h"
-#include "sealib/compactgraph.h"
-#include "sealib/dfs.h"
-#include "sealib/graphcreator.h"
-#include "sealib/graphrepresentations.h"
+#include "sealib/graph/compactgraph.h"
+#include "sealib/iterator/dfs.h"
+#include "sealib/graph/graphcreator.h"
+#include "sealib/graph/graphrepresentations.h"
 #include "sealib/runtimetest.h"
 
 using std::cout;
@@ -24,20 +24,20 @@ using namespace Sealib;  // NOLINT
 #define DENSE \
   ([](double n) { return (std::pow(n, 2.) / std::log2(n)) / (n * (n - 1.)); })
 
-unsigned int controllSum = (2 * (1 + 2 + 3 + 4 + 5));
-stack<unsigned int> controllStack;
+uint32_t controllSum = (2 * (1 + 2 + 3 + 4 + 5));
+stack<uint32_t> controllStack;
 
-void preTwo(unsigned int a) {
+void preTwo(uint32_t a) {
   std::cout << "PRE-PROCESS(" << a << ")" << std::endl;
   controllSum = controllSum - a;
   controllStack.push(a);
   std::cout << "newSum: " << controllSum << std::endl;
 }
 
-void postTwo(unsigned int a) {
+void postTwo(uint32_t a) {
   std::cout << "POST-PROCESS(" << a << ")" << std::endl;
   controllSum = controllSum - a;
-  unsigned int ex = controllStack.top();
+  uint32_t ex = controllStack.top();
   controllStack.pop();
   if (ex != a) {
     std::cout << "panic expected " << a << " on stack, got " << ex << std::endl;
@@ -46,19 +46,19 @@ void postTwo(unsigned int a) {
   std::cout << "newSum: " << controllSum << std::endl;
 }
 
-unsigned int controllSumZero = (2 * (1 + 2 + 3 + 4));
-stack<unsigned int> controllStack2;
+uint32_t controllSumZero = (2 * (1 + 2 + 3 + 4));
+stack<uint32_t> controllStack2;
 
-void preZero(unsigned int a) {
+void preZero(uint32_t a) {
   std::cout << "PRE-PROCESS(" << a << ")" << std::endl;
   controllStack2.push(a);
   controllSumZero = controllSumZero - a;
   std::cout << "newSum: " << controllSum << std::endl;
 }
 
-void postZero(unsigned int a) {
+void postZero(uint32_t a) {
   std::cout << "POST-PROCESS(" << a << ")" << std::endl;
-  unsigned int ex = controllStack2.top();
+  uint32_t ex = controllStack2.top();
   controllSumZero = controllSumZero - a;
   controllStack2.pop();
   if (ex != a) {
@@ -75,21 +75,20 @@ void dummy2(uint u, uint v) {}
 
 void runTests(double (*p)(double), std::string filename) {
   RuntimeTest test1, test2;
-  for (unsigned int i = 1; i <= 2; ++i) {
+  for (uint32_t i = 1; i <= 2; ++i) {
     double n = 20000 * i;
-    for (unsigned int j = 0; j < 2; ++j) {
+    for (uint32_t j = 0; j < 2; ++j) {
       double pN = p(n);
       double m = n * (n - 1) * pN;
-      auto A = Graphrepresentations::generateRawGilbertGraph(n, pN, &gen);
-      std::unique_ptr<Compactgraph> g(new Compactgraph(A));
+      CompactGraph g = GraphCreator::generateGilbertGraph(n, pN, &gen);
       test1.runTest(
-          [&g]() { DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy); },
+          [&g]() { DFS::standardDFS(&g, dummy, dummy2, dummy2, dummy); },
           n, m);
       test2.runTest(
-          [&A]() {
-            Graphrepresentations::standardToBeginpointer(A);
-            Graphrepresentations::swapRepresentation(A);
-            DFS::runLinearTimeInplaceDFS(A, dummy, dummy, 1);
+          [&g]() {
+            Graphrepresentations::standardToBeginpointer(g.getData());
+            Graphrepresentations::swapRepresentation(g.getData());
+            DFS::runLinearTimeInplaceDFS(g.getData(), dummy, dummy, 1);
           },
           n, m);
     }
@@ -103,9 +102,9 @@ void runTest(uint n, uint (*fm)(uint n)) {
   RuntimeTest test1, test2;
   auto _n = n;
   for (uint i = 1; i <= 1; i++) {
-    for (unsigned int j = 0; j < 1; ++j) {
-      auto A = Graphrepresentations::fastGraphGeneration(_n, fm(_n));
-      std::unique_ptr<Compactgraph> g(new Compactgraph(A));
+    for (uint32_t j = 0; j < 1; ++j) {
+      auto A = GraphCreator::fastGraphGeneration(_n, fm(_n));
+      std::unique_ptr<CompactGraph> g(new CompactGraph(A));
       test1.runTest(
           [&g]() { DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy); },
           _n, fm(_n));
@@ -124,22 +123,22 @@ void runTest(uint n, uint (*fm)(uint n)) {
 void runtime_dfs() {
   RuntimeTest t1, t2, t3;
   for (uint n = 1e5; n <= 1e6; n += 10000) {
-    Graph *g = GraphCreator::createRandomFixed(n, 5);
+    DirectedGraph g = GraphCreator::createRandomFixed(n, 5);
     t1.runTest(
-        [g]() {
-          DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+        [&g]() {
+          DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
                               DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         },
         n, 0);
         t2.runTest(
-        [g]() {
-          DFS::nBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+        [&g]() {
+          DFS::nBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
                               DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         },
         n, 0);
         t3.runTest(
-        [g]() {
-          DFS::standardDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+        [&g]() {
+          DFS::standardDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
                               DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         },
         n, 0);
