@@ -1,4 +1,6 @@
 #include "sealib/bfs/inplaceBFS.h"
+#include "sealib/graph/compactgraph.h"
+#include "sealib/collection/compactarray.h"
 #include <cmath>
 
 using Sealib::ChoiceDictionaryDummy;

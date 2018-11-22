@@ -5,7 +5,7 @@
 
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
-#include "sealib/collection/compactgraph.h"
+#include "sealib/graph/compactgraph.h"
 
 #define BFS_WHITE 0
 #define BFS_LIGHTGRAY 1
