@@ -1,4 +1,4 @@
-#include "sealib/bfs/inplaceBFS.h"
+#include "sealib/iterator/inplaceBFS.h"
 #include "sealib/graph/compactgraph.h"
 #include "sealib/collection/compactarray.h"
 #include <cmath>
@@ -99,11 +99,9 @@ uint InplaceBFS::read(uint i) {
     unsigned int wordsize = sizeof(g->getData()[0]) * 8;
     unsigned int c_prime = g->getData()[order];
     unsigned int wordsize_packed = wordsize - c_prime;
-    unsigned int c_prime_mask = static_cast<unsigned int>(-1)
-                                << (wordsize - c_prime);
-    unsigned int initial_prefix = order + 2 & c_prime_mask;
-    unsigned int current_prefix = initial_prefix >> (wordsize - c_prime);
-    unsigned int pos_index = (unsigned int)order - pow(2, c_prime);
+    unsigned int c_prime_mask = ~0u << (wordsize - c_prime);
+    unsigned int current_prefix = (order + 2 & c_prime_mask) >> (wordsize - c_prime);
+    unsigned int pos_index = (unsigned int)order - (1 << c_prime);
     while (i >= g->getData()[pos_index] && g->getData()[pos_index] != 0 &&
            pos_index < order) {
         current_prefix++;
@@ -113,8 +111,7 @@ uint InplaceBFS::read(uint i) {
     unsigned int offset = startbit & (wordsize - 1);
     unsigned int index = (startbit >> (unsigned int)log2(wordsize)) + 1;
     if (offset + wordsize_packed > wordsize) {
-        unsigned int leftbits = wordsize - offset;
-        unsigned int rightbits = wordsize_packed - leftbits;
+        unsigned int rightbits = wordsize_packed -(wordsize - offset);
         unsigned int value =
             (g->getData()[index] << rightbits) |
             (g->getData()[index + 1] >> (wordsize - rightbits));
