@@ -43,7 +43,7 @@ class ChoiceDictionaryDummy : public CompactArray {
 
 class InplaceBFS {
  private:
-    Compactgraph *g;
+    CompactGraph *g;
     ChoiceDictionaryDummy *color;
     uint round_number;
     UserFunc1 preprocess;
@@ -60,8 +60,7 @@ class InplaceBFS {
      * @param pp function pointer for preprocess function
      * @param pe function pointer for postprocess function
      * */
-    InplaceBFS(Compactgraph *g, ChoiceDictionaryDummy *color, UserFunc1 pp,
-               UserFunc2 pe);
+    InplaceBFS(CompactGraph *g, ChoiceDictionaryDummy *color, UserFunc1 pp, UserFunc2 pe);
 
     void runInplaceBFS();
 };

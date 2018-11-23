@@ -4,7 +4,7 @@
 #include <cmath>
 
 using Sealib::ChoiceDictionaryDummy;
-using Sealib::Compactgraph;
+using Sealib::CompactGraph;
 using Sealib::InplaceBFS;
 
 ChoiceDictionaryDummy::ChoiceDictionaryDummy(uint n) : CompactArray(n, 4) {
@@ -32,8 +32,7 @@ void ChoiceDictionaryDummy::setColor(uint v, uint color) { insert(v, color); }
 
 uint ChoiceDictionaryDummy::color(uint v) { return get(v); }
 
-InplaceBFS::InplaceBFS(Compactgraph *graph, ChoiceDictionaryDummy *c,
-                       UserFunc1 pp, UserFunc2 pe) {
+InplaceBFS::InplaceBFS(CompactGraph *graph, ChoiceDictionaryDummy *c, UserFunc1 pp, UserFunc2 pe) {
     this->g = graph;
     this->color = c;
     for (uint i = 0; i < g->getOrder(); ++i) {

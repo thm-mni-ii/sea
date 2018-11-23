@@ -196,7 +196,6 @@ void Graphrepresentations::standardToShifted(unsigned int* g) {
     unsigned int changing_positions_index =
         order - static_cast<unsigned int>(pow(2, c_prime));
     for (unsigned int pos : changing_positions) {
-        std::cout << pos << std::endl;
         g[changing_positions_index++] = pos;
     }
     g[changing_positions_index] = 0;
@@ -217,9 +216,6 @@ void Graphrepresentations::shiftedToStandard(unsigned int* g) {
         changing_positions.push_back(g[i++]);
     }
     changing_positions.push_back(g[i]);
-    for (auto pos : changing_positions) {
-        std::cout << pos << std::endl;
-    }
     int changing_pos = changing_positions.size() - 1;
     unsigned int current_prefix =
         (initial_prefix >> (wordsize - c_prime)) + changing_positions.size();
