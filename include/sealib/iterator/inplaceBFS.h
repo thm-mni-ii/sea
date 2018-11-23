@@ -1,5 +1,5 @@
-#ifndef SEALIB_INPLACEBFS_H_
-#define SEALIB_INPLACEBFS_H_
+#ifndef SEALIB_ITERATOR_INPLACEBFS_H_
+#define SEALIB_ITERATOR_INPLACEBFS_H_
 
 #include <memory>
 
@@ -66,4 +66,4 @@ class InplaceBFS {
 };
 }  // namespace Sealib
 
-#endif  // SEALIB_INPLACEBFS_H_
+#endif  // SEALIB_ITERATOR_INPLACEBFS_H_
