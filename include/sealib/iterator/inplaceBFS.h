@@ -42,13 +42,6 @@ class ChoiceDictionaryDummy : public CompactArray {
 };
 
 class InplaceBFS {
- private:
-    CompactGraph *g;
-    ChoiceDictionaryDummy *color;
-    uint round_number;
-    UserFunc1 preprocess;
-    UserFunc2 preexplore;
-
  public:
     uint read(uint i);
     /* Creates an InplaceBFS Object with a give Graph and
@@ -60,9 +53,17 @@ class InplaceBFS {
      * @param pp function pointer for preprocess function
      * @param pe function pointer for postprocess function
      * */
-    InplaceBFS(CompactGraph *g, ChoiceDictionaryDummy *color, UserFunc1 pp, UserFunc2 pe);
+    InplaceBFS(CompactGraph *g, ChoiceDictionaryDummy *color, UserFunc1 pp,
+               UserFunc2 pe);
 
     void runInplaceBFS();
+
+ private:
+    CompactGraph *g;
+    ChoiceDictionaryDummy *color;
+    uint round_number;
+    UserFunc1 preprocess;
+    UserFunc2 preexplore;
 };
 }  // namespace Sealib
 
