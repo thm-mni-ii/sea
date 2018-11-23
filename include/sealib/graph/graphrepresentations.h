@@ -24,18 +24,6 @@ namespace Sealib {
 class Graphrepresentations {
  public:
     /**
-     * Copies a graph object declared in graph.h into the standard
-     * representation used for inplace DFS and BFS
-     * @param g Graph to be transformed.
-     */
-    //  static uint32_t* graphToStandard(Graph* g);
-    /**
-     * Copies a graph from standard representation to a graph object
-     * declared in graph.h
-     * @param g graph in standard representation
-     */
-    // static Graph* standardToGraph(uint32_t* g);
-    /**
      * Transforms a graph inplace from standard to crosspointer representation
      * @param g graph in standard representation
      * TODO: handle cases of nodes with degree 0 and 1
@@ -77,4 +65,4 @@ class Graphrepresentations {
     static void shiftedToStandard(unsigned int *g);
 };
 }  // namespace Sealib
-#endif  // SEALIB_GRAPHREPRESENTATIONS_H_
+#endif  // SEALIB_GRAPH_GRAPHREPRESENTATIONS_H_

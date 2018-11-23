@@ -46,6 +46,7 @@ class CompactArray : public Sequence<uint> {
              valueMask;
   }
   const uint valueWidth, valuesPerGroup, valueMask;
+
  private:
   std::unique_ptr<uint[]> data;
 };

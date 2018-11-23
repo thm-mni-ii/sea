@@ -28,7 +28,7 @@ typedef void (*UserFunc2)(uint, uint);
 namespace Sealib {
 class ChoiceDictionaryDummy : public CompactArray {
  public:
-    ChoiceDictionaryDummy(uint n);
+    explicit ChoiceDictionaryDummy(uint n);
     void init(uint color);
     bool more();
     uint next();
