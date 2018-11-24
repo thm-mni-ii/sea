@@ -1,6 +1,7 @@
 #ifndef SEALIB_DICTIONARY_CHOICEDICTIONARY_H_
 #define SEALIB_DICTIONARY_CHOICEDICTIONARY_H_
 #include <cstdint>
+#include <vector>
 
 #define SHIFT_OFFSET 1UL
 #define POINTER_OFFSET 1UL
@@ -36,10 +37,11 @@ class ChoiceDictionary {
      * @param pointer Points to the next available word in validator and
      * pointer-1 to the last linked word in validator.
      *
-     * @param wordSize Either 32 or 64 depending on system architecture
+     * @param wordSize 64 for uint64_t
      */
-    uint64_t *primary, *secondary, *validator, wordCount, pointer;
     uint32_t wordSize;
+    uint64_t wordCount, pointer;
+    std::vector<uint64_t> primary, secondary, validator;
 
     void createDataStructure(uint64_t size);
 
@@ -113,8 +115,6 @@ class ChoiceDictionary {
     uint32_t getWordSize();
 
     uint64_t getSecondarySize();
-
-    ~ChoiceDictionary();
 };
 }  // namespace Sealib
 #endif  // SEALIB_DICTIONARY_CHOICEDICTIONARY_H_
