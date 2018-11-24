@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include "sealib/graph/graphcreator.h"
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 TEST(GraphIOTest, exportGML) {
     UndirectedGraph g = GraphCreator::createWindmill(3, 4);
@@ -17,3 +17,5 @@ TEST(GraphIOTest, importGML) {
     }
     EXPECT_EQ(g.getNodeDegree(g.getOrder()-1)/2, 8);
 }
+
+}  // namespace Sealib

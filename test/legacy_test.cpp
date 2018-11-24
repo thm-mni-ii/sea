@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 #ifdef __clang__
 /* G++ will complain about this (the tests should be successful anyway): */
@@ -63,3 +63,5 @@ TEST(LegacyTest, dfs) {
 #ifdef __clang__
 }
 #endif
+
+}  // namespace Sealib

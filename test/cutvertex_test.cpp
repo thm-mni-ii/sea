@@ -3,7 +3,7 @@
 #include "sealib/iterator/cutvertexiterator.h"
 #include "sealib/graph/graphcreator.h"
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 TEST(CutVertexIteratorTest, windmillGraph) {
     UndirectedGraph g = GraphCreator::createWindmill(3, 4);
@@ -42,3 +42,5 @@ TEST(CutVertexIteratorTest, lineGraph) {
     }
     EXPECT_FALSE(c.isCutVertex(n - 1));
 }
+
+}  // namespace Sealib
