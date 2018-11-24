@@ -175,8 +175,8 @@ void DFS::restore_top(uint u0, Graph *g, CompactArray *color,
 }
 
 template <class S>
-void DFS::process_static(uint u0, UndirectedGraph *g, CompactArray *color, S *back,
-                         Consumer preprocess, BiConsumer preexplore,
+void DFS::process_static(uint u0, UndirectedGraph *g, CompactArray *color,
+                         S *back, Consumer preprocess, BiConsumer preexplore,
                          BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
     back->insert(u0, std::numeric_limits<uint>::max());

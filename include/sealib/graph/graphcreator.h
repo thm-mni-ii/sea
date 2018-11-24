@@ -61,9 +61,11 @@ class GraphCreator {
     static DirectedGraph createRandomGenerated(uint32_t order);
 
     /**
-     * Create a random "imbalanced" graph, which contains a handful of very large nodes.
+     * Create a random "imbalanced" graph, which contains a handful of very
+     * large nodes.
      * @param order number of nodes
-     * @return the resulting graph: some nodes have a very large degree (they are "big")
+     * @return the resulting graph: some nodes have a very large degree (they
+     * are "big")
      */
     static DirectedGraph createRandomImbalanced(uint32_t order);
 
@@ -89,14 +91,17 @@ class GraphCreator {
     /**
      * Create a random undirected graph with an approximate degree.
      * @param order number of nodes to generate
-     * @param approxDegree every node will have at least this many outgoing edges
-     * @return pair {G, m} where G is the graph and m is the actual number of edges in the graph
+     * @param approxDegree every node will have at least this many outgoing
+     * edges
+     * @return pair {G, m} where G is the graph and m is the actual number of
+     * edges in the graph
      */
     static std::pair<UndirectedGraph *, uint32_t> createRandomUndirected(
         uint32_t order, uint32_t approxDegree);
 
     /**
-     * Create an undirected windmill graph (m complete graphs of order n joined together at a common vertex).
+     * Create an undirected windmill graph (m complete graphs of order n joined
+     * together at a common vertex).
      * @param order order of each windmill part (n > 1)
      * @param count number of windmill parts (m)
      * @return the generated windmill graph W_n^m

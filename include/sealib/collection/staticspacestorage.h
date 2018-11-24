@@ -3,9 +3,9 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/bitset.h"
-#include "sealib/graph/graph.h"
-#include "sealib/dictionary/rankselect.h"
 #include "sealib/collection/sequence.h"
+#include "sealib/dictionary/rankselect.h"
+#include "sealib/graph/graph.h"
 
 namespace Sealib {
 /**
