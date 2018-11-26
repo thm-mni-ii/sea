@@ -95,12 +95,14 @@ class ChoiceDictionary {
 
     /**
      * Returns an arbitrary bit position that is set to 1.
+     * @throws std::exception if empty
      */
     uint64_t choice();
 
     /**
      * Sets a bit at specified index to 0.
      * @param index Index of bit that should be set to 0.
+     * @throws std::exception if empty
      */
     void remove(uint64_t index);
 
