@@ -165,7 +165,7 @@ void Graphrepresentations::shiftedToStandard(unsigned int* g) {
             changing_pos--;
             current_prefix--;
         }
-        unsigned int startbit = wordsize_packed * (i - 1);
+        unsigned int startbit = wordsize_packed * (j - 1);
         unsigned int offset = startbit & (wordsize - 1);
         unsigned int index = (startbit >> (unsigned int)log2(wordsize)) + 1;
         if (offset + wordsize_packed > wordsize) {
