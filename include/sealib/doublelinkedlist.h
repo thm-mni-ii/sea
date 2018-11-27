@@ -1,5 +1,6 @@
 #ifndef SEALIB_DOUBLELINKEDLIST_H_
 #define SEALIB_DOUBLELINKEDLIST_H_
+#include <cstdint>
 
 namespace Sealib {
 /**
@@ -16,12 +17,12 @@ class DoubleLinkedList {
     /**
      * @return the currently pointed to value and removes it, or error value if empty.
      */
-    virtual unsigned int get() = 0;
+    virtual uint32_t get() = 0;
     /**
     * @param element to be removed
     * @return the removed element, or error value if the element was not present.
     */
-    virtual unsigned int remove(unsigned int idx) = 0;
+    virtual uint32_t remove(uint32_t idx) = 0;
     /**
      * @return - true if empty, false otherwise
      */

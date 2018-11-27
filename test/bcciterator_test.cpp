@@ -1,12 +1,12 @@
-#include "sealib/bcciterator.h"
+#include "sealib/iterator/bcciterator.h"
 #include <gtest/gtest.h>
-#include "sealib/graphcreator.h"
+#include "sealib/graph/graphcreator.h"
 
 using namespace Sealib;  // NOLINT
 
 TEST(BCCIteratorTest, windmillGraph) {
-    BasicGraph *g = GraphCreator::createWindmill(5, 4);
-    BCCIterator b(g);
+    UndirectedGraph g = GraphCreator::createWindmill(5, 4);
+    BCCIterator b(&g);
     b.init();
     b.start(1, 16);
     std::set<uint> nodes;
@@ -45,7 +45,7 @@ TEST(BCCIteratorTest, windmillGraph) {
 
 TEST(BCCIteratorTest, lineGraph) {
     uint size = 10;
-    BasicGraph g(size);
+    UndirectedGraph g(size);
     for (uint a = 0; a < size - 1; a++) {
         uint i1 = g.getNodeDegree(a), i2 = g.getNodeDegree(a + 1);
         g.getNode(a).addAdjacency(a + 1);

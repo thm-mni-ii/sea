@@ -1,30 +1,30 @@
 #include <gtest/gtest.h>
 #include <iostream>
-#include "sealib/cutvertexiterator.h"
-#include "sealib/graphcreator.h"
+#include "sealib/iterator/cutvertexiterator.h"
+#include "sealib/graph/graphcreator.h"
 
 using namespace Sealib;  // NOLINT
 
 TEST(CutVertexIteratorTest, windmillGraph) {
-    BasicGraph *g = GraphCreator::createWindmill(3, 4);
-    CutVertexIterator c(g);
+    UndirectedGraph g = GraphCreator::createWindmill(3, 4);
+    CutVertexIterator c(&g);
     c.init();
 
     // there should be exactly one cut vertex (the windmill's center, which has
     // the last index in G)
     EXPECT_TRUE(c.more());
-    EXPECT_EQ(c.next(), g->getOrder() - 1);
+    EXPECT_EQ(c.next(), g.getOrder() - 1);
     EXPECT_FALSE(c.more());
 
-    for (uint a = 0; a < g->getOrder() - 1; a++) {
+    for (uint a = 0; a < g.getOrder() - 1; a++) {
         EXPECT_FALSE(c.isCutVertex(a));
     }
-    EXPECT_TRUE(c.isCutVertex(g->getOrder() - 1));
+    EXPECT_TRUE(c.isCutVertex(g.getOrder() - 1));
 }
 
 TEST(CutVertexIteratorTest, lineGraph) {
     uint n = 20;
-    BasicGraph g(n);
+    UndirectedGraph g(n);
     for (uint a = 0; a < n - 1; a++) {
         uint i1 = g.getNodeDegree(a), i2 = g.getNodeDegree(a + 1);
         g.getNode(a).addAdjacency(a + 1);

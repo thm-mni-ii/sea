@@ -1,4 +1,4 @@
-#include "sealib/bcciterator.h"
+#include "sealib/iterator/bcciterator.h"
 
 namespace Sealib {
 
@@ -7,7 +7,7 @@ BCCIterator::BCCIterator(EdgeMarker *edges)
     externalEdgeMarker = true;
 }
 
-BCCIterator::BCCIterator(BasicGraph *graph)
+BCCIterator::BCCIterator(UndirectedGraph *graph)
     : g(graph),
       n(g->getOrder()),
       e(new EdgeMarker(graph)),

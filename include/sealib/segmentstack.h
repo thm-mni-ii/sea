@@ -3,8 +3,8 @@
 
 #include <utility>
 #include "sealib/_types.h"
-#include "sealib/compactarray.h"
-#include "sealib/graph.h"
+#include "sealib/collection/compactarray.h"
+#include "sealib/graph/graph.h"
 
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12

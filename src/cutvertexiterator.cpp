@@ -1,6 +1,6 @@
-#include "sealib/cutvertexiterator.h"
-#include "sealib/choicedictionary.h"
-#include "sealib/staticspacestorage.h"
+#include "sealib/iterator/cutvertexiterator.h"
+#include "sealib/dictionary/choicedictionary.h"
+#include "sealib/collection/staticspacestorage.h"
 
 namespace Sealib {
 
@@ -9,7 +9,7 @@ CutVertexIterator::CutVertexIterator(EdgeMarker *edges)
     externalEdgeMarker = true;
 }
 
-CutVertexIterator::CutVertexIterator(BasicGraph *graph)
+CutVertexIterator::CutVertexIterator(UndirectedGraph *graph)
     : g(graph),
       n(g->getOrder()),
       e(new EdgeMarker(graph)),

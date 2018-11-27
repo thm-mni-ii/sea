@@ -3,7 +3,7 @@
 
 #include <sealib/localdycktable.h>
 #include <sealib/dyckmatchingstructure.h>
-#include <sealib/rankselect.h>
+#include <sealib/dictionary/rankselect.h>
 #include <map>
 
 namespace Sealib {
@@ -21,8 +21,8 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
      * @param recursions - maximum recursion depth
      */
     explicit RecursiveDyckMatchingStructure(
-        const Sealib::Bitset<unsigned char> &word_,
-        unsigned int recursions);
+        const Sealib::Bitset<uint8_t> &word_,
+        uint32_t recursions);
 
     /**
      * Constructs the matching structure for the given dyck word word_
@@ -30,23 +30,23 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
      * up to a maximum recursion depth of two.
      * @param word_ - valid dyck word. validity is not being tested
      */
-    explicit RecursiveDyckMatchingStructure(const Sealib::Bitset<unsigned char> &word_);
+    explicit RecursiveDyckMatchingStructure(const Sealib::Bitset<uint8_t> &word_);
 
     /**
      * finds the match of a parenthesis b in word in constant time
      * @param idx of the parenthesis b in word
      * @return idx of the match of b in word
      */
-    unsigned long getMatch(unsigned long idx) override;
+    uint64_t getMatch(uint64_t idx) override;
 
  private:
-    static const unsigned char segmentLength = 7;
-    unsigned int segments;
-    unsigned char lastSegment;
+    static const uint8_t segmentLength = 7;
+    uint32_t segments;
+    uint8_t lastSegment;
     RankSelect pioneerRankSelect;
     DyckMatchingStructure *pioneerMatchingStructure;
 
-    const Sealib::Bitset<unsigned char> initializePioneerRankSelectBitset();
+    const Sealib::Bitset<uint8_t> initializePioneerRankSelectBitset();
 };
 }  // namespace Sealib
 #endif  // SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_

@@ -46,13 +46,13 @@ TEST(LegacyTest, bitsetAndRankSelect) {
   EXPECT_EQ(rank(rs, 21), 0);
   EXPECT_EQ(rank(rs, 22), 1);
   EXPECT_EQ(select(rs, 2), 41);
-  EXPECT_EQ(select(rs, 4), (unsigned long)-1);
+  EXPECT_EQ(select(rs, 4), (uint64_t)-1);
   ASSERT_NO_FATAL_FAILURE(Sealib_RankSelect_delete(rs));
   ASSERT_NO_FATAL_FAILURE(Sealib_Bitset_delete(b));
 }
 
-static unsigned long c = 0;
-static void count(unsigned int u) { c += u; }
+static uint64_t c = 0;
+static void count(uint32_t u) { c += u; }
 
 TEST(LegacyTest, dfs) {
   void *g = Sealib_Graph_generateRandom(101);

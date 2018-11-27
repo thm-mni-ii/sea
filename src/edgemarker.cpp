@@ -1,8 +1,8 @@
-#include "sealib/edgemarker.h"
+#include "sealib/iterator/edgemarker.h"
 
 namespace Sealib {
 
-static std::vector<bool> makeEdges(BasicGraph *g) {
+static std::vector<bool> makeEdges(UndirectedGraph *g) {
     std::vector<bool> bits;
     uint m = 0;
     for (uint u = 0; u < g->getOrder(); u++) {
@@ -23,7 +23,7 @@ static std::vector<bool> makeEdges(BasicGraph *g) {
     return bits;
 }
 
-static Bitset<unsigned char> makeOffset(BasicGraph *g) {
+static Bitset<uint8_t> makeOffset(UndirectedGraph *g) {
     std::vector<bool> bits;
     for (uint u = 0; u < g->getOrder(); u++) {
         bits.push_back(1);
@@ -31,10 +31,10 @@ static Bitset<unsigned char> makeOffset(BasicGraph *g) {
             bits.push_back(0);
         }
     }
-    return Bitset<unsigned char>(bits);
+    return Bitset<uint8_t>(bits);
 }
 
-EdgeMarker::EdgeMarker(BasicGraph *graph)
+EdgeMarker::EdgeMarker(UndirectedGraph *graph)
     : g(graph),
       n(g->getOrder()),
       parent(g),

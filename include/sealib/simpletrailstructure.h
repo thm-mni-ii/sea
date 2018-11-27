@@ -1,7 +1,7 @@
 #ifndef SEALIB_SIMPLETRAILSTRUCTURE_H_
 #define SEALIB_SIMPLETRAILSTRUCTURE_H_
 
-#include <sealib/bitset.h>
+#include <sealib/collection/bitset.h>
 #include <vector>
 
 namespace Sealib {
@@ -12,32 +12,32 @@ namespace Sealib {
  */
 class SimpleTrailStructure {
  private:
-    unsigned int degree;
-    unsigned int nextUnused;
-    unsigned int lastClosed;
+    uint32_t degree;
+    uint32_t nextUnused;
+    uint32_t lastClosed;
 
-    Sealib::Bitset<unsigned char> inAndOut;
-    Sealib::Bitset<unsigned char> matched;
+    Sealib::Bitset<uint8_t> inAndOut;
+    Sealib::Bitset<uint8_t> matched;
 
-    Sealib::Bitset<unsigned char> flags;
+    Sealib::Bitset<uint8_t> flags;
 
-    unsigned int married[4];
+    uint32_t married[4];
 
-    std::vector<unsigned int> unused;
+    std::vector<uint32_t> unused;
 
     /**
      * Removes nextUnused from the double linked unused array.
      * Updates links and returns nextUnused.
      * @return nextUnused.
      */
-    inline unsigned int getNextUnused();
+    inline uint32_t getNextUnused();
 
  public:
     /**
      * Creates a trailsture object.
      * @param _degree Degree of the node, equals the number of outgoing arcs.
      */
-    explicit SimpleTrailStructure(unsigned int _degree);
+    explicit SimpleTrailStructure(uint32_t _degree);
 
     /**
      * Checks if the TrailStructure is currently grey.
@@ -63,20 +63,20 @@ class SimpleTrailStructure {
     /**
      * @return value of lastClosed variable.
      */
-    unsigned int getLastClosed() const;
+    uint32_t getLastClosed() const;
 
     /**
      * Leaves the node, gets arbitrary element from unused,
      * moves it to InAndOut and returns it.
-     * If the TrailStructure is black, it returns unsigned int max value.
+     * If the TrailStructure is black, it returns uint32_t max value.
      * @return 
      */
-    unsigned int leave();
+    uint32_t leave();
 
     /**
-     * @return Starting index of a Trail, or (unsigned int) - 1
+     * @return Starting index of a Trail, or (uint32_t) - 1
      */
-    unsigned int getStartingArc() const;
+    uint32_t getStartingArc() const;
 
     /**
      * @return true if there is a starting arc (unmatched, outgoing edge)
@@ -90,7 +90,7 @@ class SimpleTrailStructure {
      * @param i arc to enter
      * @return arc that was left, or unsiged int max value if no arc.
      */
-    unsigned int enter(unsigned int i);
+    uint32_t enter(uint32_t i);
 
     /**
      * Gets the match for a given matched arc.
@@ -98,7 +98,7 @@ class SimpleTrailStructure {
      * @param idx 
      * @return 
      */
-    unsigned int getMatched(unsigned int idx) const;
+    uint32_t getMatched(uint32_t idx) const;
 
     /**
      * Matches the elements i and o.
@@ -107,7 +107,7 @@ class SimpleTrailStructure {
      * @param i first element to be matched
      * @param o second element to be matched
      */
-    void marry(unsigned int i, unsigned int o);
+    void marry(uint32_t i, uint32_t o);
 };
 }  // namespace Sealib
 #endif  // SEALIB_SIMPLETRAILSTRUCTURE_H_
