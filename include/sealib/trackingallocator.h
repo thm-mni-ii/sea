@@ -46,7 +46,9 @@ class TrackingAllocator {
      * @tparam U
      */
     template<class U>
-    TrackingAllocator(const TrackingAllocator<U> &other) {}
+    TrackingAllocator(const TrackingAllocator<U> &other) {
+        (void) other;
+    }
 
     /**
      * Allocates numObjects *sizeof(T) * bytes space and writes that
@@ -69,6 +71,7 @@ class TrackingAllocator {
      * function to be called. This is rarely needed.
      */
     pointer allocate(size_type numObjects, const_void_pointer hint) {
+        (void) hint;
         return allocate(numObjects);
     }
 
