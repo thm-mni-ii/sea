@@ -17,9 +17,9 @@ This space-efficient variant
 
 ## Example
 ```cpp
-UndirectedGraph *g=GraphCreator::createWindmill(3,4);
+UndirectedGraph g=GraphCreator::createWindmill(3,4);
 
-CutVertexIterator c(g);
+CutVertexIterator c(&g);
 c.init();
 while(c.more()) {
     std::cout << "found: " << c.next() << "\n";

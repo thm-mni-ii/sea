@@ -16,14 +16,14 @@ This space-efficient variant
 
 ## Example
 ```cpp
-Graph *g=GraphCreator::createRandomFixed(500,2);
+DirectedGraph g=GraphCreator::createRandomFixed(500,2);
 
-BFS bfs(g,p0,e0);
+BFS bfs(&g, p0, e0);
 bfs.init();		// don't forget initialization of the iterator
 do {
 	while(bfs.more()) {
-		Pair s=bfs.next();
-		uint u=s.head(), dist=s.tail();
+		std::pair&lt;uint,uint&gt; s=bfs.next();
+		uint u=s.first, dist=s.second;
 		// ...
 	}
 } while(bfs.nextComponent());

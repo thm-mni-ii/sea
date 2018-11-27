@@ -21,9 +21,9 @@ This space-efficient variant
 
 ## Example
 ```cpp
-UndirectedGraph *g=GraphCreator::createWindmill(3,4);
+UndirectedGraph g=GraphCreator::createWindmill(3,4);
 
-BCCIterator b(g);
+BCCIterator b(&g);
 b.init();
 b.start(1,2);
 while(b.more()) {
