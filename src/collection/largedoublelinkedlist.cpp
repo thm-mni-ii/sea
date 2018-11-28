@@ -21,10 +21,13 @@ uint32_t Sealib::LargeDoubleLinkedList::remove(uint32_t idx) {
         return current;
     }
 
-    int32_t actualIdx = idx * 2;
+    auto actualIdx = static_cast<int32_t>(idx * 2);
 
-    int32_t prevIdx = actualIdx - links[actualIdx] * 2;
-    int32_t n = links.size();
+    int32_t prevIdx = actualIdx;
+
+    prevIdx -= static_cast<int32_t>(links[static_cast<uint64_t >(actualIdx)] * 2);
+
+    auto n = static_cast<int32_t>(links.size());
     int32_t mod = prevIdx % n;
     if (prevIdx < 0) {
         prevIdx = n + mod;
@@ -38,11 +41,12 @@ uint32_t Sealib::LargeDoubleLinkedList::remove(uint32_t idx) {
         current = (uint32_t) -1;
         return idx;
     }
-    links[prevIdx + 1] += links[actualIdx + 1];
+    links[static_cast<uint64_t >(prevIdx) + 1] += links[static_cast<uint64_t >(actualIdx) + 1];
 
-    int32_t nextIdx = actualIdx + links[actualIdx + 1] * 2;
+    int32_t nextIdx = actualIdx;
+    nextIdx += static_cast<int32_t>(links[static_cast<uint64_t >(actualIdx) + 1] * 2);
     nextIdx = nextIdx % n;
-    links[nextIdx] += links[actualIdx];
+    links[static_cast<uint64_t >(nextIdx)] += links[static_cast<uint64_t >(actualIdx)];
 
     current = static_cast<uint32_t>(nextIdx / 2);
     return current;
