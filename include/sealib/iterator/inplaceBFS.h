@@ -12,8 +12,8 @@
 #define BFS_DARKGRAY 2
 #define BFS_BLACK 3
 
-typedef void (*UserFunc1)(uint);
-typedef void (*UserFunc2)(uint, uint);
+typedef void (*UserFunc1)(uint, uint);
+typedef void (*UserFunc2)(uint, uint, uint);
 
 #define BFS_NOP_PROCESS (UserFunc1)0
 #define BFS_NOP_EXPLORE (UserFunc2)0

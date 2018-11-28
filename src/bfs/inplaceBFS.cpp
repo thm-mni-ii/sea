@@ -67,11 +67,11 @@ void InplaceBFS::runInplaceBFS() {
             bool isSameAdjacency = true;
             while (isSameAdjacency) {
                 if (preexplore != BFS_NOP_EXPLORE) {
-                    preexplore(u, v);
+                    preexplore(u, v, round_number);
                 }
                 if (color->color(u) == BFS_WHITE) {
                     if (preprocess != BFS_NOP_PROCESS) {
-                        preprocess(u);
+                        preprocess(u, round_number);
                     }
                     running = true;
                     if (round_number % 2 != 0) {
