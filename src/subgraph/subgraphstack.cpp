@@ -34,7 +34,7 @@ SubGraphStack::~SubGraphStack() {
 
 void Sealib::SubGraphStack::push(const Sealib::Bitset<uint8_t> &v,
                                  const Sealib::Bitset<uint8_t> &a) {
-    assert(currentRef+1 < SubGraphStack::refs.size());
+    assert(currentRef+2 < SubGraphStack::refs.size());
     if (clientList.size() - 1 == Sealib::SubGraphStack::refs[currentRef + 1]) {
         currentRef++;
     }
