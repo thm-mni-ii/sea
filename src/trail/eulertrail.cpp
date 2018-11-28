@@ -61,7 +61,8 @@ typename EulerTrail<TrailStructureType>::iterator EulerTrail<TrailStructureType>
 template<class TrailStructureType>
 typename EulerTrail<TrailStructureType>::iterator EulerTrail<TrailStructureType>::end() const {
     return EulerTrail<TrailStructureType>::iterator(
-        (EulerTrail<TrailStructureType> &) *this, trailStarts.rank(trailStarts.size()) + 1);
+        (const EulerTrail<TrailStructureType> &) *this,
+        static_cast<uint32_t>(trailStarts.rank(trailStarts.size()) + 1));
 }
 
 template<class TrailStructureType>

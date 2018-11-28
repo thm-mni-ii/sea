@@ -11,54 +11,54 @@ using Sealib::GraphCreator;
 static uint c1 = 0, c2 = 0;
 static uint tmp = 0;
 static void incr1(uint u) {
-  c1++;
-  tmp = u;
+    c1++;
+    tmp = u;
 }
 static void incr2(uint u, uint v) {
-  c2++;
-  tmp = u;
-  tmp = v;
+    c2++;
+    tmp = u;
+    tmp = v;
 }
 
 static uint GRAPHCOUNT = 4, order = 500, degree = 20;
 static std::vector<DirectedGraph> makeGraphs() {
-  std::vector<DirectedGraph> g;
-  for (uint c = 0; c < GRAPHCOUNT; c++) {
-    g.emplace_back(GraphCreator::createRandomFixed(order, degree));
-  }
-  return g;
+    std::vector<DirectedGraph> g;
+    for (uint c = 0; c < GRAPHCOUNT; c++) {
+        g.emplace_back(GraphCreator::createRandomFixed(order, degree));
+    }
+    return g;
 }
 
 class BFSTest : public ::testing::TestWithParam<DirectedGraph> {
  protected:
-  virtual void SetUp() { c1 = c2 = 0; }
+    virtual void SetUp() { c1 = c2 = 0; }
 };
 
 INSTANTIATE_TEST_CASE_P(ParamTests, BFSTest, ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
 TEST_P(BFSTest, userproc) {
-  DirectedGraph g = GetParam();
-  BFS bfs(&g, incr1, incr2);
-  bfs.init();
-  do {
-    while (bfs.more()) bfs.next();
-  } while (bfs.nextComponent());
-  EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, order * degree);
+    DirectedGraph g = GetParam();
+    BFS bfs(&g, incr1, incr2);
+    bfs.init();
+    do {
+        while (bfs.more()) bfs.next();
+    } while (bfs.nextComponent());
+    EXPECT_EQ(c1, order);
+    EXPECT_EQ(c2, order * degree);
 }
 
 TEST(BFSTest, nextComponent) {
-  c1 = c2 = 0;
-  DirectedGraph g = GraphCreator::createRandomFixed(order, 0);
-  BFS bfs(&g, incr1, incr2);
-  uint rc = 0;
-  bfs.init();
-  do {
-    rc++;
-    while (bfs.more()) bfs.next();
-  } while (bfs.nextComponent());
-  EXPECT_EQ(rc, order);
-  EXPECT_EQ(c1, order);
-  EXPECT_EQ(c2, 0);
+    c1 = c2 = 0;
+    DirectedGraph g = GraphCreator::createRandomFixed(order, 0);
+    BFS bfs(&g, incr1, incr2);
+    uint rc = 0;
+    bfs.init();
+    do {
+        rc++;
+        while (bfs.more()) bfs.next();
+    } while (bfs.nextComponent());
+    EXPECT_EQ(rc, order);
+    EXPECT_EQ(c1, order);
+    EXPECT_EQ(c2, 0);
 }

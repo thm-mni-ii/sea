@@ -10,7 +10,7 @@ using Sealib::BaseSubGraph;
 using Sealib::RecursiveSubGraph;
 using Sealib::SubGraphStack;
 
-uint64_t SubGraphStack::refs[6] = {0, 1, 3, 15, 65535};
+std::vector<uint64_t> SubGraphStack::refs = {0, 1, 3, 15, 65535, static_cast<uint64_t>(-1)};
 
 SubGraphStack::SubGraphStack(std::shared_ptr<UndirectedGraph> g_) : clientList(),
                                                                currentRef(0),
@@ -34,6 +34,7 @@ SubGraphStack::~SubGraphStack() {
 
 void Sealib::SubGraphStack::push(const Sealib::Bitset<uint8_t> &v,
                                  const Sealib::Bitset<uint8_t> &a) {
+    assert(currentRef+2 < SubGraphStack::refs.size());
     if (clientList.size() - 1 == Sealib::SubGraphStack::refs[currentRef + 1]) {
         currentRef++;
     }
@@ -111,6 +112,7 @@ uint64_t Sealib::SubGraphStack::phi(uint64_t i,
 
         while (rIdx != clientList[j]->getRidx()) {
             rIdx++;
+            assert(rIdx < SubGraphStack::refs.size());
             uR = clientList[refs[rIdx]]->phiInv(uR);
             if (uR == 0) return 0;
         }
@@ -152,6 +154,7 @@ uint64_t Sealib::SubGraphStack::psi(uint64_t i,
 
         while (rIdx != clientList[j]->getRidx()) {
             rIdx++;
+            assert(rIdx < SubGraphStack::refs.size());
             uR = clientList[refs[rIdx]]->psiInv(uR);
             if (uR == 0) return 0;
         }

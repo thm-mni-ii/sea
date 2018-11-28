@@ -17,11 +17,11 @@ This space-efficient variant
 
 ## Example
 ```cpp
-Graph *g=GraphCreator::createRandomImbalanced(500);
+DirectedGraph g=GraphCreator::createRandomImbalanced(500);
 
-DFS::nloglognBitDFS(g);  // quiet run
+DFS::nloglognBitDFS(&g);  // quiet run
 
-DFS::nBitDFS(g,p0,e0,e1,p1);  // supply procedures to do something with the current node or edge
+DFS::nBitDFS(&g, p0, e0, e1, p1);  // supply procedures to do something with the current node or edge
 
 
 // example procedures:

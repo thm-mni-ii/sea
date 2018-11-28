@@ -147,11 +147,11 @@ uint64_t Sealib::RecursiveDyckMatchingStructure::getMatch(uint64_t idx) {
             uint8_t pMatchSeg = word.getShiftedBlock(beg);
 
             int pMatchDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
-            for (int32_t i = matchSegmentIdx; i >= 0; i--) {
+            for (int64_t i = static_cast<int64_t >(matchSegmentIdx); i >= 0; i--) {
                 int candidateDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[i];
                 int candidateDepthDifference = pMatchDepth - candidateDepth;
                 if (candidateDepthDifference == depthDiff) {  // i is match
-                    return (pMatchSegment * segmentLength) + i;
+                    return (pMatchSegment * segmentLength) + static_cast<uint32_t >(i);
                 }
             }
         } else {
@@ -163,11 +163,11 @@ uint64_t Sealib::RecursiveDyckMatchingStructure::getMatch(uint64_t idx) {
             }
 
             int pMatchDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[matchSegmentIdx];
-            for (int32_t i = matchSegmentIdx; i >= 0; i--) {
+            for (int64_t i = static_cast<int64_t >(matchSegmentIdx); i >= 0; i--) {
                 int candidateDepth = LocalDyckTable::getLocalData(pMatchSeg).localDepths[i];
                 int candidateDepthDifference = pMatchDepth - candidateDepth;
                 if (candidateDepthDifference == depthDiff) {  // i is match
-                    return (pMatchSegment * segmentLength) + i;
+                    return (pMatchSegment * segmentLength) + static_cast<uint32_t >(i);
                 }
             }
         }

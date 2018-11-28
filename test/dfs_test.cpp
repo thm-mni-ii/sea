@@ -7,9 +7,10 @@
 #include "sealib/graph/graphcreator.h"
 #include "sealib/graph/undirectedgraph.h"
 
-using namespace Sealib;  // NOLINT
 using std::vector;
 using std::stack;
+
+namespace Sealib {
 
 static uint32_t c1 = 0, c2 = 0, c3 = 0, c4 = 0;
 static uint32_t tmp = 0;
@@ -129,3 +130,5 @@ TEST(DFSTest, inplace_dfs_all_of_grade_ge_2) {
     DFS::runLinearTimeInplaceDFS(graph, preTwo, postTwo, 1);
     EXPECT_EQ(0, controllSum);
 }
+
+}  // namespace Sealib

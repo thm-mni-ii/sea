@@ -179,8 +179,7 @@ std::pair<UndirectedGraph *, uint32_t> GraphCreator::createRandomUndirected(
     return {g, sum};
 }
 
-UndirectedGraph GraphCreator::createWindmill(uint32_t order,
-                                         uint32_t count) {
+UndirectedGraph GraphCreator::createWindmill(uint32_t order, uint32_t count) {
     order--;
     uint32_t n = order * count + 1;
     UndirectedGraph g(n);

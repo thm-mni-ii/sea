@@ -2,6 +2,7 @@
 #define SEALIB_SEGMENTSTACK_H_
 
 #include <utility>
+#include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
 #include "sealib/graph/graph.h"
@@ -31,13 +32,13 @@ class SegmentStack {
     int pop(std::pair<uint, uint> *r);
     bool isEmpty();
     virtual bool isAligned() = 0;
+    virtual ~SegmentStack() = default;
 
  protected:
     explicit SegmentStack(unsigned segmentSize);
-    virtual ~SegmentStack();
 
     unsigned q;
-    std::pair<uint, uint> *low, *high;
+    std::vector<std::pair<uint, uint>> low, high;
     unsigned lp, hp, tp;
 };
 
@@ -95,7 +96,6 @@ class ExtendedSegmentStack : public SegmentStack {
      * @param c Compact array holding color values
      */
     ExtendedSegmentStack(uint size, Graph *g, CompactArray *c);
-    ~ExtendedSegmentStack();
 
     void push(std::pair<uint, uint> u) override;
 
@@ -166,10 +166,10 @@ class ExtendedSegmentStack : public SegmentStack {
         Trailer() : bi(INVALID), bc(0) {}
     };
 
-    Trailer *trailers;
+    std::vector<Trailer> trailers;
     unsigned l;
-    CompactArray *table, *edges;
-    std::pair<uint, uint> *big;
+    CompactArray table, edges;
+    std::vector<std::pair<uint, uint>> big;
     unsigned bp;
     Graph *graph;
     unsigned m, n;

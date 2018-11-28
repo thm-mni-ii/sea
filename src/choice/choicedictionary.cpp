@@ -11,11 +11,14 @@ class emptyChoiceDictionary : public std::exception {
     }
 };
 
-ChoiceDictionary::ChoiceDictionary(uint64_t size) {
-    pointer = 0;
-    wordSize = sizeof(uint64_t) * 8;
-    createDataStructure(size);
-}
+ChoiceDictionary::ChoiceDictionary(uint64_t size)
+    :   wordSize(sizeof(uint64_t) * 8),
+        wordCount(size / wordSize + 1),
+        pointer(0),
+        primary(wordCount),
+        secondary((wordCount/(uint64_t)wordSize+1)*TUPEL_FACTOR),
+        validator(wordCount/(uint64_t)wordSize+1)
+    {}
 
 void ChoiceDictionary::insert(uint64_t index) {
     uint64_t primaryWord;
@@ -130,27 +133,6 @@ uint64_t ChoiceDictionary::getSecondarySize() {
     return wordCount / (uint64_t)wordSize + 1;
 }
 
-void ChoiceDictionary::createDataStructure(uint64_t size) {
-    uint64_t secondarySize;
-
-    wordCount = size / wordSize + 1;
-    secondarySize = wordCount / (uint64_t)wordSize + 1;
-
-    createPrimary();
-    createSecondary(secondarySize);
-    createValidator(secondarySize);
-}
-
-void ChoiceDictionary::createPrimary() { primary = new uint64_t[wordCount]; }
-
-void ChoiceDictionary::createSecondary(uint64_t secondarySize) {
-    secondary = new uint64_t[secondarySize * TUPEL_FACTOR];
-}
-
-void ChoiceDictionary::createValidator(uint64_t validatorSize) {
-    validator = new uint64_t[validatorSize];
-}
-
 void ChoiceDictionary::updateSecondary(uint64_t primaryIndex) {
     uint64_t targetBit;
     uint64_t secondaryWord;
@@ -232,8 +214,3 @@ bool ChoiceDictionary::hasColor(uint64_t primaryIndex) {
     }
 }
 
-ChoiceDictionary::~ChoiceDictionary() {
-    delete[] primary;
-    delete[] secondary;
-    delete[] validator;
-}

@@ -3,11 +3,11 @@
 
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
+#include "sealib/collection/staticspacestorage.h"
 #include "sealib/graph/graph.h"
 #include "sealib/graph/node.h"
 #include "sealib/graph/undirectedgraph.h"
 #include "sealib/segmentstack.h"
-#include "sealib/collection/staticspacestorage.h"
 
 namespace Sealib {
 
@@ -104,8 +104,7 @@ class DFS {
      * @param startVertex startVertex The begin of the DFS tree.
      * @author Simon Schniedenharn
      */
-    static void runLinearTimeInplaceDFS(uint32_t *graph,
-                                        Consumer preProcess,
+    static void runLinearTimeInplaceDFS(uint32_t *graph, Consumer preProcess,
                                         Consumer postProcess,
                                         uint32_t startVertex);
 
