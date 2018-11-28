@@ -1,7 +1,7 @@
 #include "sealib/iterator/dfs.h"
 #include <math.h>
+#include <memory>
 #include <sstream>
-#include <stack>
 #include <vector>
 #include "./inplacerunner.h"
 
@@ -10,12 +10,12 @@ namespace Sealib {
 void DFS::process_standard(uint u0, Graph *g, uint *color, Consumer preProcess,
                            BiConsumer preExplore, BiConsumer postExplore,
                            Consumer postProcess) {
-    std::stack<std::pair<uint, uint>> *s =
-        new std::stack<std::pair<uint, uint>>;
-    s->push(std::pair<uint, uint>(u0, 0));
-    while (!s->empty()) {
-        std::pair<uint, uint> x = s->top();
-        s->pop();
+    std::unique_ptr<std::pair<uint, uint>[]> s(
+        new std::pair<uint, uint>[g->getOrder()]);
+    uint sp = 0;
+    s[sp++] = std::pair<uint, uint>(u0, 0);
+    while (sp > 0) {
+        std::pair<uint, uint> x = s[--sp];
         uint u = x.first;
         uint k = x.second;
         if (color[u] == DFS_WHITE) {
@@ -23,11 +23,11 @@ void DFS::process_standard(uint u0, Graph *g, uint *color, Consumer preProcess,
             color[u] = DFS_GRAY;
         }
         if (k < g->getNodeDegree(u)) {
-            s->push(std::pair<uint, uint>(u, k + 1));
+            s[sp++] = std::pair<uint, uint>(u, k + 1);
             uint v = g->head(u, k);
             preExplore(u, v);
             if (color[v] == DFS_WHITE) {
-                s->push(std::pair<uint, uint>(v, 0));
+                s[sp++] = std::pair<uint, uint>(v, 0);
             } else {
                 postExplore(u, v);
             }
@@ -35,12 +35,11 @@ void DFS::process_standard(uint u0, Graph *g, uint *color, Consumer preProcess,
             color[u] = DFS_BLACK;
             postProcess(u);
             if (u != u0) {
-                uint pu = s->top().first;
+                uint pu = s[sp - 1].first;
                 postExplore(pu, u);
             }
         }
     }
-    delete s;
 }
 
 template <class SS>
