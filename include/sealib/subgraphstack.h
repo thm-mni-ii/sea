@@ -25,12 +25,12 @@ namespace Sealib {
  * for which we construct additional rank-select structures.
  */
 class SubGraphStack {
-    static uint64_t refs[6];
-
     friend class SubGraph;
     friend class RecursiveSubGraph;
     friend class BaseSubGraph;
  private:
+    static constexpr uint8_t rSize = 7;
+    static uint64_t refs[rSize];
     std::vector<SubGraph *> clientList;
     uint64_t currentRef;
     uint64_t tuned;
