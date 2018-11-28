@@ -1,10 +1,16 @@
 #include "sealib/iterator/bfs.h"
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
-using Sealib::BFS;
-using Sealib::CompactArray;
-using Sealib::Graph;
+namespace Sealib {
+
+class NoMoreGrayNodes : std::exception {
+    const char *what() const noexcept {
+        return "BFS: no more gray nodes found; did you forget to call "
+               "nextComponent()?";
+    }
+};
 
 void BFS::init() {
     u = 0;
@@ -13,6 +19,7 @@ void BFS::init() {
     outerGray = BFS_GRAY2;
     preprocess(0);
     color.insert(0, innerGray);
+    isInner.insert(0);
 }
 
 bool BFS::nextComponent() {
@@ -24,6 +31,7 @@ bool BFS::nextComponent() {
             dist = 0;
             preprocess(u);
             color.insert(u, innerGray);
+            isInner.insert(u);
             break;
         }
     }
@@ -31,37 +39,29 @@ bool BFS::nextComponent() {
 }
 
 bool BFS::hasGrayNode() {
-    // needs 4-color CD:
-    // try {
-    //   c.choice();
-    //   return true;
-    // } catch(std::exception) {
-    //   return false;
-    // }
-
-    // TEMPORARY solution:
-    for (uint a = 0; a < n; a++) {
-        if (color.get(a) == BFS_GRAY1 || color.get(a) == BFS_GRAY2) return true;
+    try {
+        isInner.choice();
+    } catch (std::exception e) {
+        try {
+            isOuter.choice();
+        } catch (std::exception e2) {
+            return false;
+        }
     }
-    return false;
+    return true;
 }
 uint BFS::getGrayNode() {
-    // return choice();
-
-    // TEMPORARY solution:
-    for (uint a = 0; a < n; a++) {
-        if (color.get(a) == innerGray) {
-            return a;
+    uint r = INVALID;
+    try {
+        r = isInner.choice();
+    } catch (std::exception e) {
+        try {
+            r = isOuter.choice();
+        } catch (std::exception e2) {
+            throw NoMoreGrayNodes();
         }
     }
-    for (uint a = 0; a < n; a++) {
-        if (color.get(a) == outerGray) {
-            return a;
-        }
-    }
-    throw std::logic_error(
-        "BFS: no more gray nodes found; did you forget to call "
-        "nextComponent()?");
+    return r;
 }
 
 bool BFS::more() { return hasGrayNode(); }
@@ -72,6 +72,7 @@ std::pair<uint, uint> BFS::next() {
         uint32_t tmp = innerGray;
         innerGray = outerGray;
         outerGray = tmp;
+        std::swap(isInner, isOuter);
         dist++;
     }
     for (uint k = 0; k < g->getNodeDegree(u); k++) {
@@ -80,13 +81,23 @@ std::pair<uint, uint> BFS::next() {
         if (color.get(v) == BFS_WHITE) {
             preprocess(v);
             color.insert(v, outerGray);
+            isOuter.insert(v);
         }
     }
+    isInner.remove(u);
     color.insert(u, BFS_BLACK);
     return std::pair<uint, uint>(u, dist);
 }
 
 BFS::BFS(Graph *graph, Consumer pp, BiConsumer pe)
-    : g(graph), n(g->getOrder()), color(n, 4), preprocess(pp), preexplore(pe) {
+    : g(graph),
+      n(g->getOrder()),
+      color(n, 4),
+      isInner(n),
+      isOuter(n),
+      preprocess(pp),
+      preexplore(pe) {
     for (uint a = 0; a < n; a++) color.insert(a, BFS_WHITE);
 }
+
+}  // namespace Sealib
