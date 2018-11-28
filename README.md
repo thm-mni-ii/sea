@@ -6,14 +6,35 @@ Besides the running time of algorithms, their space requirements cause a problem
 data sets or executing them on tiny devices where memory is heavily limited. Therefore, we want to provide algorithms and data structures to tackle this problem by treating space as a scarce resource.
 
 ## Table of Contents
-* [Project Structure](#project-structure)
-* [Build](#build)
 * [Algorithms and Data Structures](#algorithms-and-data-structures)
     * [Algorithms](#algorithms)
     * [Data Structures](#data-structures)
+* [Project Structure](#project-structure)
+* [Build](#build)
+* [Using the library](#using-the-library)
 * [Research](#research)
 * [Licence](#licence)
 * [Acknowledgments](#acknowledgments)
+
+## Algorithms and Data Structures
+This section gives you a brief overview over the implemented algorithms and data structures. For a detailed documentation click on a algorithm (coming soon).
+For some data structures and algorithms we also provide a folklore implementation that we use to check the space efficient algorithm and to run runtime and space consumption tests.
+
+### Algorithms
+* Depth First Search
+    * A folklore depth first search that runs in O(n + m) time, using O((n + m) log n) bits.
+    * A depth first search that runs in O((n + m) log n) time, using O((log(3)+ε) n) bits. [Read more ...](docs/n-bit-dfs.md) 
+    * A depth first search that runs in O(n + m) time, using O(n log(log(n))) bits. [Read more ...](docs/nloglogn-bit-dfs.md) 
+    * A depth first search of an undirected graph that runs in O(n + m) time, using O(n + m) bits. [Read more ...](docs/nplusm-bit-dfs.md)
+    
+
+### Data Structures
+* Graph(G = {V, E}): A adjacency list graph representation that occupies O((n + m) log n) bits.
+* Bitset(n): A bitset of n bits that supports access in O(1) time and occupies O(n) bits.
+* [ChoiceDictionary](docs/choice-dictionary.md): A bitset that supports a choice operation in O(1) time that returns the position of a bit set to 1. The total representation requires O(n + n/w + 3n/(w^2)) bits of memory.
+* RankSelect(n): A bit sequence that supports the operations *rank(k)* and *select(k)* in O(1) time and occupies O(n) bits. *rank(k)* returns the number of set bits up to index k, and *select(k)* returns the index of the k-th set bit.
+* StaticSpaceStorage(n): A sequence of n bit packs of variable size that can be accessed in O(1) time and occupies O(n + N) bits. N is the total usable size of the static-space storage.
+
 
 ## Project Structure
 ```bash
@@ -75,26 +96,6 @@ Compile with:
 export LD_LIBRARY_PATH=<library-path>
 clang++ -I<include-path> -L<libary-path> -o reachable reachable.cpp -lsealib
 ```
-
-
-## Algorithms and Data Structures
-This section gives you a brief overview over the implemented algorithms and data structures. For a detailed documentation click on a algorithm (coming soon).
-For some data structures and algorithms we also provide a folklore implementation that we use to check the space efficient algorithm and to run runtime and space consumption tests.
-
-### Algorithms
-* Depth First Search
-    * A folklore depth first search that runs in O(n + m) time, using O((n + m) log n) bits.
-    * A depth first search that runs in O((n + m) log n) time, using O((log(3)+ε) n) bits. [Read more ...](docs/n-bit-dfs.md) 
-    * A depth first search that runs in O(n + m) time, using O(n log(log(n))) bits. [Read more ...](docs/nloglogn-bit-dfs.md) 
-    * A depth first search of an undirected graph that runs in O(n + m) time, using O(n + m) bits. [Read more ...](docs/nplusm-bit-dfs.md)
-    
-
-### Data Structures
-* Graph(G = {V, E}): A adjacency list graph representation that occupies O((n + m) log n) bits.
-* Bitset(n): A bitset of n bits that supports access in O(1) time and occupies O(n) bits.
-* [ChoiceDictionary](docs/choice-dictionary.md): A bitset that supports a choice operation in O(1) time that returns the position of a bit set to 1. The total representation requires O(n + n/w + 3n/(w^2)) bits of memory.
-* RankSelect(n): A bit sequence that supports the operations *rank(k)* and *select(k)* in O(1) time and occupies O(n) bits. *rank(k)* returns the number of set bits up to index k, and *select(k)* returns the index of the k-th set bit.
-* StaticSpaceStorage(n): A sequence of n bit packs of variable size that can be accessed in O(1) time and occupies O(n + N) bits. N is the total usable size of the static-space storage.
 
 
 ## Research
