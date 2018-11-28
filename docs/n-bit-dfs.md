@@ -14,11 +14,11 @@ This space-efficient variant
 
 ## Example
 ```cpp
-Graph *g=new Graph(nodes,order);
+DirectedGraph g=GraphCreator::createRandomGenerated(50);
 
-DFS::nBitDFS(g);  // quiet run
+DFS::nBitDFS(&g);  // quiet run
 
-DFS::nBitDFS(g,p0,e0,e1,p1);  // supply procedures to do something with the current node or edge
+DFS::nBitDFS(&g, p0, e0, e1, p1);  // supply procedures to do something with the current node or edge
 
 
 // example procedures:

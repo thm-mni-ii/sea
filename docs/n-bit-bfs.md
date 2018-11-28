@@ -8,7 +8,7 @@ This space-efficient variant
 	- *init()*: initializes the BFS
 	- *more()*: returns true if there is more to do in this connected component
 	- *next()*: gets the next node and distance from the component
-	- *nextComponent()*: advance to the next component, or return false if the graph is completely explored
+	- *nextComponent()*: advances to the next component, or returns false if the graph is completely explored
 
 ## Efficiency
 * Time: O(n+m)
@@ -16,14 +16,14 @@ This space-efficient variant
 
 ## Example
 ```cpp
-Graph *g=GraphCreator::createRandomFixed(500,2);
+DirectedGraph g=GraphCreator::createRandomFixed(500,2);
 
-BFS bfs(g,p0,e0);
+BFS bfs(&g, p0, e0);
 bfs.init();		// don't forget initialization of the iterator
 do {
 	while(bfs.more()) {
-		Pair s=bfs.next();
-		uint u=s.head(), dist=s.tail();
+		std::pair&lt;uint,uint&gt; s=bfs.next();
+		uint u=s.first, dist=s.second;
 		// ...
 	}
 } while(bfs.nextComponent());
