@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <sealib/choicedictionaryiterator.h>
+#include <sealib/iterator/choicedictionaryiterator.h>
 
 #include <algorithm>
 #include <array>
@@ -8,29 +8,29 @@
 using Sealib::ChoiceDictionaryIterator;
 
 TEST(ChoiceDictionaryIteratorTest, iterator_integrity) {
-    const unsigned long int size = 25000;
-    const unsigned long int setSize = 5000;
+    const uint64_t size = 25000;
+    const uint64_t setSize = 5000;
 
     Sealib::ChoiceDictionary *c = new Sealib::ChoiceDictionary(size);
     ChoiceDictionaryIterator *iterator = new ChoiceDictionaryIterator(c);
 
-    std::array<unsigned long int, setSize> set;
+    std::array<uint64_t, setSize> set;
 
-    unsigned int count = 0;
-    unsigned long int num = 0;
-    unsigned seed = 0;
+    uint32_t count = 0;
+    uint64_t num = 0;
+    uint32_t seed = 0;
 
-    for (unsigned long int i = 0; i < setSize; i++) {
+    for (uint64_t i = 0; i < setSize; i++) {
         set[i] = num;
         num += 5;
     }
 
     std::shuffle(set.begin(), set.end(), std::default_random_engine(seed));
 
-    for (unsigned long int number : set) {
+    for (uint64_t number : set) {
         c->insert(number);
     }
-    for (unsigned long int i = 0; i < 64; i+=5) {
+    for (uint64_t i = 0; i < 64; i+=5) {
         c->remove(i);
     }
     c->remove(12000);
@@ -41,8 +41,8 @@ TEST(ChoiceDictionaryIteratorTest, iterator_integrity) {
 
     iterator->init();
     while (iterator->more()) {
-        unsigned long int index = iterator->next();
-        for (unsigned long int number : set) {
+        uint64_t index = iterator->next();
+        for (uint64_t number : set) {
             if (index == number) {
                 count++;
                 break;

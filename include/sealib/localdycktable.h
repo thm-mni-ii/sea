@@ -1,6 +1,7 @@
 #ifndef SEALIB_LOCALDYCKTABLE_H_
 #define SEALIB_LOCALDYCKTABLE_H_
 
+#include <cstdint>
 #include <vector>
 
 namespace Sealib {
@@ -10,21 +11,21 @@ namespace Sealib {
  */
 class LocalDyckTable {
  public:
-    static constexpr const unsigned int kSegLen = 7;
+    static constexpr const uint32_t kSegLen = 7;
     /**
      * Capsules the Data we want to lookup in the table in a single class.
      */
     class Data {
      public:
-        unsigned char localMatches[kSegLen];  // array of local matches
+        uint8_t localMatches[kSegLen];  // array of local matches
         char localDepths[kSegLen];  // array of local depths
-        unsigned char leftPioneer;  // left pioneer, if there is one
-        unsigned char rightPioneer;  // right pioneer, if there is one
+        uint8_t leftPioneer;  // left pioneer, if there is one
+        uint8_t rightPioneer;  // right pioneer, if there is one
 
         /**
          * @param segment to be used for data creation, meaning the local dyck segment
          */
-        explicit Data(unsigned char segment);
+        explicit Data(uint8_t segment);
         Data();
         ~Data() = default;
     };
@@ -32,10 +33,10 @@ class LocalDyckTable {
     /**
     * Values are stored in a lookup table.
     * The lookup table is a static instance in this function that is initialized on the first call.
-    * @param segment - unsigned char representing a bit vector of size 8
+    * @param segment - uint8_t representing a bit vector of size 8
     * @return Local Dyck Data matching the segment
     */
-    static const Data& getLocalData(unsigned char segment);
+    static const Data& getLocalData(uint8_t segment);
 
     //  singleton instance only in the function getLocalSelect, these should not be used
     LocalDyckTable(LocalDyckTable const &) = delete;
