@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include "sealib/graph/graphcreator.h"
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 TEST(BCCIteratorTest, windmillGraph) {
     UndirectedGraph g = GraphCreator::createWindmill(5, 4);
@@ -74,3 +74,5 @@ TEST(BCCIteratorTest, lineGraph) {
     EXPECT_NE(nodes.find(5), nodes.end());
     EXPECT_NE(edges.find({4, 5}), edges.end());
 }
+
+}  // namespace Sealib

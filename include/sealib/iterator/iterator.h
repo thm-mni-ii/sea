@@ -28,7 +28,7 @@ class Iterator {
    */
   virtual T next() = 0;
 
-  virtual ~Iterator() {}
+  virtual ~Iterator() = default;
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_ITERATOR_H_

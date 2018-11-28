@@ -40,6 +40,6 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint32_t),
 
 #ifdef __cplusplus
 }
-}   // namespace Sealib
+}  // namespace Sealib
 #endif
 #endif  // SEALIB_LEGACY_H_

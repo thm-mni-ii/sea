@@ -30,7 +30,7 @@ class SubGraphStack {
     friend class BaseSubGraph;
  private:
     static constexpr uint8_t rSize = 7;
-    static uint64_t refs[rSize];
+    static std::vector<uint64_t> refs;
     std::vector<SubGraph *> clientList;
     uint64_t currentRef;
     uint64_t tuned;

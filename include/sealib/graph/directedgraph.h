@@ -35,8 +35,6 @@ class DirectedGraph : public Graph {
      */
     DirectedGraph();
 
-    ~DirectedGraph() override = default;
-
     /**
      * Created a graph with the specified order and without any edges.
      * @param order - order of the graph

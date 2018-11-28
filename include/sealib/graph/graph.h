@@ -30,7 +30,7 @@ class Graph {
     */
     virtual uint32_t getOrder() const = 0;
 
-    virtual ~Graph() {}
+    virtual ~Graph() = default;
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPH_H_
