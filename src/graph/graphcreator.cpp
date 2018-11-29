@@ -129,7 +129,7 @@ Sealib::DirectedGraph GraphCreator::createRandomImbalanced(uint32_t order) {
     return DirectedGraph(n);
 }
 
-Sealib::DirectedGraph Sealib::GraphCreator::createRandomFixed(
+Sealib::DirectedGraph Sealib::GraphCreator::createRandomKRegularGraph(
     uint32_t order, uint32_t degreePerNode) {
     std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
     std::vector<Node> n(order);

@@ -13,28 +13,21 @@ using std::stack;
 namespace Sealib {
 
 static uint32_t c1 = 0, c2 = 0, c3 = 0, c4 = 0;
-static uint32_t tmp = 0;
 
-static void incr1(uint u) {
+static void incr1(uint) {
     c1++;
-    tmp = u;
 }
 
-static void incr4(uint u) {
+static void incr4(uint) {
     c4++;
-    tmp = u;
 }
 
-static void incr2(uint u, uint v) {
+static void incr2(uint, uint) {
     c2++;
-    tmp = u;
-    tmp = v;
 }
 
-static void incr3(uint u, uint v) {
+static void incr3(uint, uint) {
     c3++;
-    tmp = u;
-    tmp = v;
 }
 
 /*void p0(uint u) { printf("preprocess %u\n", u); }
@@ -50,7 +43,7 @@ static const uint32_t order = 200;
 static std::vector<DirectedGraph> makeGraphs() {
     std::vector<DirectedGraph> g;
     for (uint c = 0; c < GRAPHCOUNT; c++) {
-        g.push_back(Sealib::GraphCreator::createRandomFixed(order, DEGREE));
+        g.push_back(Sealib::GraphCreator::createRandomKRegularGraph(order, DEGREE));
     }
     return g;
 }

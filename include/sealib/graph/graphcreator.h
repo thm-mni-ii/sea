@@ -41,15 +41,15 @@ class GraphCreator {
     createSharedGraphFromAdjacencyMatrix(uint32_t **adjMatrix, uint32_t order);
 
     /**
-     * Create a random graph with a fixed number of neighbours per node.
+     * Create a random k-regular graph, i.e., a graph with a fixed number
+     * of neighbours per node.
      * @param order number of nodes the graph should contain
-     * @param degreePerNode the degree of each node; the edges will go to any
+     * @param k the degree of each node; the edges will go to any
      * random node
      * @return the resulting graph G (n = order, m = degreePerNode*order)
      * @author Simon Heuser
      */
-    static DirectedGraph createRandomFixed(uint32_t order,
-                                           uint32_t degreePerNode);
+    static DirectedGraph createRandomKRegularGraph(uint32_t order, uint32_t k);
 
     /**
      * Create a completely random graph with a given number of nodes. Each node
