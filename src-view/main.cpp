@@ -70,10 +70,10 @@ void postZero(uint32_t a) {
 
 std::mt19937_64 gen;
 
-void dummy(uint v) {}
-void dummy2(uint u, uint v) {}
+void dummy(uint) {}
+void dummy2(uint, uint) {}
 
-void runTests(double (*p)(double), std::string filename) {
+void runTests(double (*p)(double), std::string) {
   RuntimeTest test1, test2;
   for (uint32_t i = 1; i <= 2; ++i) {
     double n = 20000 * i;
@@ -98,7 +98,7 @@ void runTests(double (*p)(double), std::string filename) {
   test2.printResults();
 }
 
-void runTest(uint n, uint (*fm)(uint n)) {
+void runTest(uint n, uint (*fm)(uint)) {
   RuntimeTest test1, test2;
   auto _n = n;
   for (uint i = 1; i <= 1; i++) {
@@ -123,7 +123,7 @@ void runTest(uint n, uint (*fm)(uint n)) {
 void runtime_dfs() {
   RuntimeTest t1, t2, t3;
   for (uint n = 1e5; n <= 1e6; n += 10000) {
-    DirectedGraph g = GraphCreator::createRandomFixed(n, 5);
+    DirectedGraph g = GraphCreator::createRandomKRegularGraph(n, 5);
     t1.runTest(
         [&g]() {
           DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
