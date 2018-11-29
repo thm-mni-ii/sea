@@ -4,6 +4,7 @@
 #include <utility>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
+#include "sealib/dictionary/choicedictionary.h"
 #include "sealib/graph/graph.h"
 #include "sealib/iterator/iterator.h"
 
@@ -67,6 +68,7 @@ class BFS : Iterator<std::pair<uint, uint>> {
     CompactArray color;
     uint u, dist;
     uint32_t innerGray, outerGray;
+    ChoiceDictionary isInner, isOuter;
     Consumer preprocess;
     BiConsumer preexplore;
 
