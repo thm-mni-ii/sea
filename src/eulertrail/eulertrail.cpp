@@ -1,6 +1,6 @@
-#include <sealib/eulertrail.h>
-#include <sealib/simpletrailstructure.h>
-#include <sealib/trailstructure.h>
+#include <sealib/eulertrail/eulertrail.h>
+#include <sealib/eulertrail/simpletrailstructure.h>
+#include <sealib/eulertrail/trailstructure.h>
 
 using Sealib::EulerTrail;
 

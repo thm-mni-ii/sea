@@ -4,7 +4,7 @@
 #include "sealib/_types.h"
 #include "sealib/collection/bitset.h"
 #include "sealib/collection/sequence.h"
-#include "sealib/dictionary/rankselect.h"
+#include "sealib/rankselect/rankselect.h"
 #include "sealib/graph/graph.h"
 
 namespace Sealib {

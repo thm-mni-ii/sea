@@ -1,4 +1,4 @@
-#include "./basesubgraph.h"
+#include "basesubgraph.h"
 #include <iostream>
 #include <utility>
 

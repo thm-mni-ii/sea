@@ -1,4 +1,4 @@
-#include <sealib/simpletrailstructure.h>
+#include <sealib/eulertrail/simpletrailstructure.h>
 #include <cstdlib>
 #include <iostream>
 

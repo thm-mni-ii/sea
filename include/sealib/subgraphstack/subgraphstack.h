@@ -3,7 +3,7 @@
 
 #include <sealib/graph/undirectedgraph.h>
 #include <sealib/collection/bitset.h>
-#include <sealib/dictionary/rankselect.h>
+#include <sealib/rankselect/rankselect.h>
 #include <memory>
 #include <utility>
 #include <vector>

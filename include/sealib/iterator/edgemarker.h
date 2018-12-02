@@ -3,7 +3,7 @@
 #include "sealib/graph/undirectedgraph.h"
 #include "sealib/collection/compactarray.h"
 #include "sealib/iterator/dfs.h"
-#include "sealib/dictionary/rankselect.h"
+#include "sealib/rankselect/rankselect.h"
 #include "sealib/collection/staticspacestorage.h"
 
 namespace Sealib {

@@ -1,7 +1,7 @@
 #ifndef SEALIB_TRACKINGALLOCATOR_H_
 #define SEALIB_TRACKINGALLOCATOR_H_
 
-#include <sealib/bytecounter.h>
+#include <sealib/measurement/bytecounter.h>
 #include <cstdlib>
 #include <memory>
 #include <limits>

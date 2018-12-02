@@ -1,4 +1,4 @@
-#include <sealib/recursivedyckmatchingstructure.h>
+#include <sealib/eulertrail/recursivedyckmatchingstructure.h>
 #include <cmath>
 #include <iostream>
 

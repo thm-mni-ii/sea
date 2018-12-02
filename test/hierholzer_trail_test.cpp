@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <sealib/graph/graphcreator.h>
-#include "../src/trail/naiveeulertrail.h"
-#include <sealib/simpletrailstructure.h>
-#include <sealib/eulertrail.h>
+#include "../src/eulertrail/naiveeulertrail.h"
+#include <sealib/eulertrail/simpletrailstructure.h>
+#include <sealib/eulertrail/eulertrail.h>
 #include <stdlib.h>
 
 TEST(EulerTrailTest, hierholzerTrail) {

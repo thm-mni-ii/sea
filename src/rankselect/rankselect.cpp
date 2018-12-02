@@ -1,5 +1,5 @@
-#include <sealib/dictionary/rankselect.h>
-#include <sealib/localselecttable.h>
+#include <sealib/rankselect/rankselect.h>
+#include "localselecttable.h"
 #include <iostream>
 #include <utility>
 

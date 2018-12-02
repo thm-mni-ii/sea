@@ -1,4 +1,4 @@
-#include <sealib/dyckmatchingstructure.h>
+#include <sealib/eulertrail/dyckmatchingstructure.h>
 #include <iostream>
 
 uint64_t Sealib::DyckMatchingStructure::getMatchNaive(

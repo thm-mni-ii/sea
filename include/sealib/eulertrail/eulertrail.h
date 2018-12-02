@@ -1,10 +1,10 @@
 #ifndef SEALIB_EULERTRAIL_H_
 #define SEALIB_EULERTRAIL_H_
 
-#include <sealib/dictionary/rankselect.h>
+#include <sealib/rankselect/rankselect.h>
 #include <sealib/graph/undirectedgraph.h>
-#include <sealib/simpletrailstructure.h>
-#include <sealib/trailstructure.h>
+#include <sealib/eulertrail/simpletrailstructure.h>
+#include <sealib/eulertrail/trailstructure.h>
 #include <ostream>
 #include <vector>
 #include <tuple>

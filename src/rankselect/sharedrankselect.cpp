@@ -1,5 +1,5 @@
-#include <sealib/sharedrankselect.h>
-#include <sealib/localselecttable.h>
+#include <sealib/rankselect/sharedrankselect.h>
+#include "localselecttable.h"
 #include <iostream>
 #include <utility>
 

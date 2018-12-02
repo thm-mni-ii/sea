@@ -1,9 +1,9 @@
 #include <sealib/collection/bitset.h>
-#include <sealib/dictionary/rankselect.h>
-#include <sealib/recursivedyckmatchingstructure.h>
-#include <sealib/smalldoublelinkedlist.h>
-#include <sealib/largedoublelinkedlist.h>
-#include <sealib/trailstructure.h>
+#include <sealib/rankselect/rankselect.h>
+#include <sealib/eulertrail/recursivedyckmatchingstructure.h>
+#include <sealib/eulertrail/smalldoublelinkedlist.h>
+#include <sealib/eulertrail/largedoublelinkedlist.h>
+#include <sealib/eulertrail/trailstructure.h>
 #include <cstdlib>
 #include <iostream>
 #include <cmath>

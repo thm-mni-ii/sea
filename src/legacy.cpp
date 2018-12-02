@@ -1,6 +1,6 @@
 #include "sealib/legacy.h"
 #include "sealib/collection/bitset.h"
-#include "sealib/dictionary/rankselect.h"
+#include "sealib/rankselect/rankselect.h"
 #include "sealib/graph/graphcreator.h"
 #include "sealib/iterator/choicedictionaryiterator.h"
 #include "sealib/iterator/dfs.h"

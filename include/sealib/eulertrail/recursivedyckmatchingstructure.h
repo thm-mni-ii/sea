@@ -1,9 +1,9 @@
 #ifndef SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
 #define SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
 
-#include <sealib/localdycktable.h>
-#include <sealib/dyckmatchingstructure.h>
-#include <sealib/dictionary/rankselect.h>
+#include "../../../src/eulertrail/localdycktable.h"
+#include <sealib/eulertrail/dyckmatchingstructure.h>
+#include <sealib/rankselect/rankselect.h>
 #include <map>
 
 namespace Sealib {

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <sealib/trackingallocator.h>
-#include <sealib/bytecounter.h>
+#include <sealib/measurement/trackingallocator.h>
+#include <sealib/measurement/bytecounter.h>
 #include <vector>
 
 TEST(TrackingAllocatorTest, vectorTest) {

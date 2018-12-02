@@ -12,7 +12,7 @@
 #include "sealib/iterator/dfs.h"
 #include "sealib/graph/graphcreator.h"
 #include "sealib/graph/graphrepresentations.h"
-#include "sealib/runtimetest.h"
+#include "measurement/runtimetest.h"
 
 using std::cout;
 using std::stack;

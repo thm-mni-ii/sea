@@ -1,7 +1,7 @@
 #ifndef SEALIB_SMALLDOUBLELINKEDLIST_H_
 #define SEALIB_SMALLDOUBLELINKEDLIST_H_
 
-#include <sealib/doublelinkedlist.h>
+#include <sealib/eulertrail/doublelinkedlist.h>
 #include <vector>
 #include <ostream>
 

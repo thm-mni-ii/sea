@@ -1,8 +1,8 @@
 #ifndef SRC_SUBGRAPH_SUBGRAPH_H_
 #define SRC_SUBGRAPH_SUBGRAPH_H_
 #include <sealib/collection/bitset.h>
-#include <sealib/dictionary/rankselect.h>
-#include <sealib/subgraphstack.h>
+#include <sealib/rankselect/rankselect.h>
+#include <sealib/subgraphstack/subgraphstack.h>
 #include <string>
 #include <tuple>
 

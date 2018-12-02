@@ -1,5 +1,5 @@
-#include <sealib/localranktable.h>
-#include <sealib/rankstructure.h>
+#include "localranktable.h"
+#include <sealib/rankselect/rankstructure.h>
 #include <iostream>
 #include <cmath>
 #include <utility>
