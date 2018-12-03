@@ -87,10 +87,10 @@ void postZero(unsigned int a) {
 
 std::mt19937_64 gen;
 
-void dummy(uint v) {}
-void dummy2(uint u, uint v) {}
+void dummy(uint) {}
+void dummy2(uint, uint) {}
 
-void runTests(double (*p)(double), std::string filename) {
+void runTests(double (*p)(double), std::string) {
   RuntimeTest test1, test2;
   for (unsigned int i = 1; i <= 2; ++i) {
     double n = 20000 * i;
@@ -116,7 +116,7 @@ void runTests(double (*p)(double), std::string filename) {
   test2.printResults();
 }
 
-void runTest(uint n, uint (*fm)(uint n)) {
+void runTest(uint n, uint (*fm)(uint)) {
   RuntimeTest test1, test2;
   auto _n = n;
   for (uint i = 1; i <= 1; i++) {
@@ -138,49 +138,26 @@ void runTest(uint n, uint (*fm)(uint n)) {
   test2.printResults();
 }
 
-void runtime_iterate() {
-  std::random_device rnd;
-  RuntimeTest t1, t2, t3, t4;
-  for (uint64_t n = 1e6; n <= 1e7; n += 10000) {
-    std::uniform_int_distribution<uint64_t> dist(0, n - 1);
-    uint64_t p = n / 100;
-    std::vector<uint64_t> pos(p);
-    for (uint64_t a; a < p; a++) pos.emplace_back(dist(rnd));
-    // CompactArray c(n, 2);
-    {
-      ChoiceDictionary cd(n);
-      for (uint64_t a : pos) cd.insert(a);
-      ChoiceDictionaryIterator i(&cd);
-      i.init();
-      t1.runTest(
-          [&i]() {
-            std::vector<unsigned long> r;
-            while (i.more()) r.push_back(i.next());
-          },
-          n, 0);
-    }
-    {
-      std::unique_ptr<char[]> l(new char[n]);
-      for (uint64_t a : pos) l[a] = 1;
-      t2.runTest(
-          [&l, n]() {
-            std::vector<uint64_t> r;
-            for (uint64_t a = 0; a < n; a++) {
-              if (l[a] == 1) {
-                r.push_back(a);
-              }
-            }
-          },
-          n, 0);
-    }
-    /*t3.runTest(
-        [&c, n]() {
-          std::vector<uint64_t> r;
-          for (uint64_t a = 0; a < n; a++) {
-            if (c.get(a) == 1) {
-              r.push_back(a);
-            }
-          }
+void runtime_dfs() {
+  RuntimeTest t1, t2, t3;
+  for (uint n = 1e5; n <= 1e6; n += 10000) {
+    DirectedGraph g = GraphCreator::createRandomKRegularGraph(n, 5);
+    t1.runTest(
+        [&g]() {
+          DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+        },
+        n, 0);
+        t2.runTest(
+        [&g]() {
+          DFS::nBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+        },
+        n, 0);
+        t3.runTest(
+        [&g]() {
+          DFS::standardDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
+                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         },
         n, 0);*/
     {
