@@ -1,10 +1,10 @@
 #ifndef SEALIB_COLLECTION_COMPACTARRAY_H_
 #define SEALIB_COLLECTION_COMPACTARRAY_H_
 
-#include <memory>
 #include "sealib/_types.h"
 #include "sealib/collection/bitset.h"
 #include "sealib/collection/sequence.h"
+#include <vector>
 
 using Sealib::Bitset;
 
@@ -48,7 +48,7 @@ class CompactArray : public Sequence<uint> {
 
  private:
     const uint valueWidth, valuesPerGroup, valueMask;
-    std::unique_ptr<uint[]> data;
+    std::vector<uint> data;
 };
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_COMPACTARRAY_H_

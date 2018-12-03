@@ -80,7 +80,7 @@ void tikz_example2() {
     doc.close();
 }
 
-void tikz_example3() {
+/*void tikz_example3() {
     DirectedGraph g = Sealib::GraphCreator::createRandomKRegularGraph(10, 4);
     std::shared_ptr<TikzGraph> vg = TikzGenerator::generateTikzElement(&g);
     TikzGraph *tg = vg.get();
@@ -144,12 +144,10 @@ void tikz_example3() {
 
     doc.close();
 
-    /* Convert PDF to GIF:
-      convert -density 200 -delay 100 -background white -alpha remove
-      out-bfs.pdf
-      out-bfs.gif       //NOLINT
-    */
-}
+    // Convert PDF to GIF:
+    // convert -density 200 -delay 100 -background white -alpha remove out-bfs.pdf out-bfs.gif
+    
+}*/
 
 int main() {
   VisualTest::testBFS();

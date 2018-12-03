@@ -62,7 +62,7 @@ class BFS : Iterator<std::pair<uint, uint>> {
     */
     BFS(Graph *g, Consumer pp, BiConsumer pe);
 
-    BFS(Graph *g, CompactArray *color, Consumer pp, BiConsumer pe);
+    BFS(Graph *g, CompactArray color, Consumer pp, BiConsumer pe);
 
  private:
     Graph *g;

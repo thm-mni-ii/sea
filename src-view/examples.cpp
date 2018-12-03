@@ -37,12 +37,12 @@ VisualBFS::VisualBFS(Graph *graph, CompactArray color, std::string filename,
 void VisualBFS::emit() {
   doc->beginBlock();
   doc->add(pic);
-  doc->add(TikzGenerator::generateTikzElement(c, g->getOrder(), "color", "yshift=-8cm"));
+  doc->add(TikzGenerator::generateTikzElement(&c, g->getOrder(), "color", "yshift=-8cm"));
   doc->endBlock();
 }
 
 void VisualBFS::run() {
-  BFS b(g, &c,
+  BFS b(g, c,
         [this](uint u) {
           tg->getNodes().at(u).setOptions(Examples::style_lightgray);
           emit();
@@ -84,7 +84,7 @@ VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
 void VisualDFS::emit() {
   doc->beginBlock();
   doc->add(pic);
-  doc->add(TikzGenerator::generateTikzElement(*c, g->getOrder(), "color", "yshift=-8cm"));
+  doc->add(TikzGenerator::generateTikzElement(c, g->getOrder(), "color", "yshift=-8cm"));
   std::vector<uint> l, h, t;
   for (uint a = 0; a < lp; a++) l.push_back(low[a].first);
   for (uint a = 0; a < hp; a++) h.push_back(high[a].first);

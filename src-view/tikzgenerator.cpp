@@ -50,7 +50,7 @@ SealibVisual::TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<SealibVisual::TikzGraph>
-SealibVisual::TikzGenerator::generateTikzElement(const Sealib::Graph *t,
+SealibVisual::TikzGenerator::generateTikzElement(const Sealib::Graph *g,
                                                  bool directed) {
   using std::string;
   using std::shared_ptr;
@@ -58,18 +58,18 @@ SealibVisual::TikzGenerator::generateTikzElement(const Sealib::Graph *t,
   using std::make_tuple;
   using std::to_string;
   shared_ptr<SealibVisual::TikzGraph> graph(
-      new SealibVisual::TikzGraph(t->getOrder()));
+      new SealibVisual::TikzGraph(g->getOrder()));
 
   for (auto &a : graph->getNodes()) {
     a.setOptions("draw, circle");
   }
 
-  for (unsigned int i = 0; i < t->getOrder(); i++) {
-    for (unsigned int a = 0; i < t->getNodeDegree(i); a++) {
+  for (unsigned int i = 0; i < g->getOrder(); i++) {
+    for (unsigned int j = 0; j < g->getNodeDegree(i); j++) {
       tuple<std::string, std::string> key =
-          make_tuple(to_string(i), to_string(a));
+          make_tuple(to_string(i), to_string(j));
       tuple<std::string, std::string> keyReverse =
-          make_tuple(to_string(a), to_string(i));
+          make_tuple(to_string(j), to_string(i));
 
       if (!graph->containsEdge(key) && !graph->containsEdge(keyReverse)) {
         if (directed) {
@@ -88,10 +88,10 @@ using Sealib::CompactArray;
 using SealibVisual::TikzElement;
 using SealibVisual::TikzPicture;
 std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
-    CompactArray &c, unsigned long size, std::string name, std::string positionOpts) {
+    CompactArray *c, size_t size, std::string name, std::string positionOpts) {
   std::vector<std::string> u;
   for (unsigned a = 0; a < size; a++) {
-    u.push_back(std::to_string(c.get(a)));
+    u.push_back(std::to_string(c->get(a)));
   }
   std::shared_ptr<TikzElement> array(new TikzArray(u, "C", "array", true));
   std::shared_ptr<TikzNode> label(new TikzNode("", "below=0.1cm of C", name));

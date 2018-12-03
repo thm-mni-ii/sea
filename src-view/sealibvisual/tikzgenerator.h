@@ -28,7 +28,7 @@ class TikzGenerator {
 
   // Needs tikz libraries: matrix, positioning
   static std::shared_ptr<TikzPicture> generateTikzElement(
-      Sealib::CompactArray &, unsigned long, std::string name = "",
+      Sealib::CompactArray *, size_t, std::string name = "",
       std::string positionOpts = "");
 
   static std::shared_ptr<TikzPicture> generateTikzElement(

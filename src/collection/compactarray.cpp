@@ -25,7 +25,7 @@ CompactArray::CompactArray(uint size, uint values)
     : valueWidth(static_cast<uint>(ceil(log2(values)))),
       valuesPerGroup(safeDiv(8 * sizeof(uint), valueWidth)),
       valueMask((1 << valueWidth) - 1),
-      data(new uint[safeDiv(size, valuesPerGroup) + 1]) {
+      data(safeDiv(size, valuesPerGroup) + 1) {
     if (valueWidth >= sizeof(uint) * 8) {
         throw std::domain_error("v is too big (max v = bitsize(uint))");
     }
