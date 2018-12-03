@@ -6,9 +6,9 @@
 #include "./tikznode.h"
 #include "./tikzpicture.h"
 
-#include <sealib/basicgraph.h>
-#include <sealib/bitset.h>
-#include <sealib/compactarray.h>
+#include <sealib/graph/undirectedgraph.h>
+#include <sealib/collection/bitset.h>
+#include <sealib/collection/compactarray.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -24,7 +24,7 @@ class TikzGenerator {
       const Sealib::Bitset<unsigned char> &);
 
   static std::shared_ptr<TikzGraph> generateTikzElement(
-      const Sealib::BasicGraph &, bool directed = false);
+      const Sealib::UndirectedGraph &, bool directed = false);
 
   // Needs tikz libraries: matrix, positioning
   static std::shared_ptr<TikzPicture> generateTikzElement(

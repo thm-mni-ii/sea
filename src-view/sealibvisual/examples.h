@@ -1,9 +1,9 @@
 #ifndef SEALIBVISUAL_EXAMPLES_H_
 #define SEALIBVISUAL_EXAMPLES_H_
-#include <sealib/basicgraph.h>
-#include <sealib/bfs.h>
-#include <sealib/compactarray.h>
-#include <sealib/dfs.h>
+#include <sealib/graph/undirectedgraph.h>
+#include <sealib/iterator/bfs.h>
+#include <sealib/collection/compactarray.h>
+#include <sealib/iterator/dfs.h>
 #include <sealib/segmentstack.h>
 #include "./tikzdocument.h"
 #include "./tikzgraph.h"
@@ -18,14 +18,14 @@ class Examples {
 
 class VisualBFS {
  private:
-  Sealib::BasicGraph *g;
+  Sealib::UndirectedGraph *g;
   Sealib::CompactArray *c;
   TikzDocument *doc;
   std::shared_ptr<TikzPicture> pic;
   std::shared_ptr<TikzGraph> tg;
 
  public:
-  VisualBFS(Sealib::BasicGraph *, Sealib::CompactArray *,
+  VisualBFS(Sealib::UndirectedGraph *, Sealib::CompactArray *,
             std::string filename = "example.tex",
             std::string mode = "standalone");
   void run();
@@ -34,14 +34,14 @@ class VisualBFS {
 
 class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
  private:
-  Sealib::BasicGraph *g;
+  Sealib::UndirectedGraph *g;
+  std::shared_ptr<TikzGraph> tg;
   Sealib::CompactArray *c;
   TikzDocument *doc;
   std::shared_ptr<TikzPicture> pic;
-  std::shared_ptr<TikzGraph> tg;
 
  public:
-  VisualDFS(Sealib::BasicGraph *, Sealib::CompactArray *,
+  VisualDFS(Sealib::UndirectedGraph *, Sealib::CompactArray *,
             std::string filename = "example.tex",
             std::string mode = "standalone");
   void run();

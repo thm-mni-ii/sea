@@ -1,9 +1,9 @@
 #include <sealib/_types.h>
-#include <sealib/choicedictionaryiterator.h>
-#include <sealib/compactgraph.h>
-#include <sealib/dfs.h>
-#include <sealib/graphcreator.h>
-#include <sealib/graphrepresentations.h>
+#include <sealib/iterator/choicedictionaryiterator.h>
+#include <sealib/graph/compactgraph.h>
+#include <sealib/iterator/dfs.h>
+#include <sealib/graph/graphcreator.h>
+#include <sealib/graph/graphrepresentations.h>
 #include <sealib/runtimetest.h>
 #include <chrono>
 #include <cmath>
@@ -14,7 +14,6 @@
 #include <sstream>
 #include <stack>
 #include <string>
-#include "sealib/bitarray.h"
 #include "sealibvisual/examples.h"
 #include "sealibvisual/tikzarray.h"
 #include "sealibvisual/tikzdocument.h"
@@ -239,7 +238,7 @@ void tikz_example2() {
   adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
   adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
 
-  Sealib::BasicGraph bg =
+  Sealib::UndirectedGraph bg =
       *Sealib::GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
   std::shared_ptr<SealibVisual::TikzElement> vg =
       SealibVisual::TikzGenerator::generateTikzElement(bg);
@@ -279,7 +278,7 @@ void tikz_example2() {
 }
 
 void tikz_example3() {
-  BasicGraph *g = Sealib::GraphCreator::createRandomFixed(10, 4);
+  UndirectedGraph *g = Sealib::GraphCreator::createRandomFixed(10, 4);
   std::shared_ptr<TikzGraph> vg = TikzGenerator::generateTikzElement(*g);
   TikzGraph *tg = vg.get();
   for (auto &e : tg->getEdges()) {
@@ -353,7 +352,7 @@ using SealibVisual::VisualDFS;
 using SealibVisual::VisualBFS;
 void tikz_exampleDFS() {
   uint n = 20;
-  BasicGraph *g = Sealib::GraphCreator::createRandomFixed(n, 3);
+  UndirectedGraph *g = Sealib::GraphCreator::createRandomFixed(n, 3);
   Sealib::CompactArray c(n, 3);
   VisualDFS d(g, &c, "out-dfs3.tex");
   d.run();
@@ -362,7 +361,7 @@ void tikz_exampleDFS() {
 
 void tikz_exampleBFS() {
   uint n = 20;
-  BasicGraph *g = Sealib::GraphCreator::createRandomFixed(n, 3);
+  UndirectedGraph *g = Sealib::GraphCreator::createRandomFixed(n, 3);
   Sealib::CompactArray c(n, 4);
   VisualBFS b(g, &c, "out-bfs3.tex");
   b.run();

@@ -16,7 +16,7 @@
 
 namespace Sealib {
 typedef Bitset<unsigned char> bitset_t;
-typedef BasicGraph basicgraph_t;
+typedef UndirectedGraph basicgraph_t;
 }
 
 namespace SealibVisual {
