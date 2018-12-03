@@ -1,5 +1,5 @@
-#ifndef SEALIB_LOCALRANKTABLE_H_
-#define SEALIB_LOCALRANKTABLE_H_
+#ifndef SRC_RANKSELECT_LOCALRANKTABLE_H_
+#define SRC_RANKSELECT_LOCALRANKTABLE_H_
 
 #include <cstdint>
 #include <vector>
@@ -34,4 +34,4 @@ class LocalRankTable {
     void operator=(LocalRankTable const &) = delete;
 };
 }  // namespace Sealib
-#endif  // SEALIB_LOCALRANKTABLE_H_
+#endif  // SRC_RANKSELECT_LOCALRANKTABLE_H_

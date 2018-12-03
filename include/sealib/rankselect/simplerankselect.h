@@ -1,5 +1,5 @@
-#ifndef SEALIB_DICTIONARY_SIMPLERANKSELECT_H_
-#define SEALIB_DICTIONARY_SIMPLERANKSELECT_H_
+#ifndef SEALIB_RANKSELECT_SIMPLERANKSELECT_H_
+#define SEALIB_RANKSELECT_SIMPLERANKSELECT_H_
 
 #include <sealib/collection/bitset.h>
 #include <memory>
@@ -36,4 +36,4 @@ class SimpleRankSelect {
     ~SimpleRankSelect();
 };
 }  // namespace Sealib
-#endif  // SEALIB_DICTIONARY_SIMPLERANKSELECT_H_
+#endif  // SEALIB_RANKSELECT_SIMPLERANKSELECT_H_

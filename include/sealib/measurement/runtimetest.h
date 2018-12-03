@@ -1,5 +1,5 @@
-#ifndef SEALIB_RUNTIMETEST_H_
-#define SEALIB_RUNTIMETEST_H_
+#ifndef SEALIB_MEASUREMENT_RUNTIMETEST_H_
+#define SEALIB_MEASUREMENT_RUNTIMETEST_H_
 #include <sys/times.h>
 #include <unistd.h>
 #include <cstdint>
@@ -81,4 +81,4 @@ void RuntimeTest::saveCSV(std::string filepath) {
     }
 }
 
-#endif  // SEALIB_RUNTIMETEST_H_
+#endif  // SEALIB_MEASUREMENT_RUNTIMETEST_H_

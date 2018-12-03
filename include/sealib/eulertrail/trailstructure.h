@@ -1,5 +1,5 @@
-#ifndef SEALIB_TRAILSTRUCTURE_H_
-#define SEALIB_TRAILSTRUCTURE_H_
+#ifndef SEALIB_EULERTRAIL_TRAILSTRUCTURE_H_
+#define SEALIB_EULERTRAIL_TRAILSTRUCTURE_H_
 
 #include "../../../src/eulertrail/localdycktable.h"
 #include <sealib/rankselect/rankselect.h>
@@ -156,4 +156,4 @@ class TrailStructure {
     uint32_t getMatchedNaive(uint32_t idx);
 };
 }  // namespace Sealib
-#endif  // SEALIB_TRAILSTRUCTURE_H_
+#endif  // SEALIB_EULERTRAIL_TRAILSTRUCTURE_H_

@@ -1,5 +1,5 @@
-#ifndef SRC_SUBGRAPH_SUBGRAPH_H_
-#define SRC_SUBGRAPH_SUBGRAPH_H_
+#ifndef SRC_SUBGRAPHSTACK_SUBGRAPH_H_
+#define SRC_SUBGRAPHSTACK_SUBGRAPH_H_
 #include <sealib/collection/bitset.h>
 #include <sealib/rankselect/rankselect.h>
 #include <sealib/subgraphstack/subgraphstack.h>
@@ -153,4 +153,4 @@ class SubGraph {
     SubGraph() = delete;
 };
 }  // namespace Sealib
-#endif  // SRC_SUBGRAPH_SUBGRAPH_H_
+#endif  // SRC_SUBGRAPHSTACK_SUBGRAPH_H_

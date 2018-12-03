@@ -1,5 +1,5 @@
-#ifndef SEALIB_LOCALDYCKTABLE_H_
-#define SEALIB_LOCALDYCKTABLE_H_
+#ifndef SRC_EULERTRAIL_LOCALDYCKTABLE_H_
+#define SRC_EULERTRAIL_LOCALDYCKTABLE_H_
 
 #include <cstdint>
 #include <vector>
@@ -49,4 +49,4 @@ class LocalDyckTable {
     ~LocalDyckTable() = default;
 };
 }  // namespace Sealib
-#endif  // SEALIB_LOCALDYCKTABLE_H_
+#endif  // SRC_EULERTRAIL_LOCALDYCKTABLE_H_

@@ -1,5 +1,5 @@
-#ifndef SEALIB_SHAREDRANKSTRUCTURE_H_
-#define SEALIB_SHAREDRANKSTRUCTURE_H_
+#ifndef SEALIB_RANKSELECT_SHAREDRANKSTRUCTURE_H_
+#define SEALIB_RANKSELECT_SHAREDRANKSTRUCTURE_H_
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 
 #include <sealib/collection/bitset.h>
@@ -68,4 +68,4 @@ class SharedRankStructure {
     uint32_t setBefore(uint64_t segment) const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_SHAREDRANKSTRUCTURE_H_
+#endif  // SEALIB_RANKSELECT_SHAREDRANKSTRUCTURE_H_

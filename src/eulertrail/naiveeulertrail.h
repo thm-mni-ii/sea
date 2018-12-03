@@ -1,5 +1,5 @@
-#ifndef SRC_TRAIL_NAIVEEULERTRAIL_H_
-#define SRC_TRAIL_NAIVEEULERTRAIL_H_
+#ifndef SRC_EULERTRAIL_NAIVEEULERTRAIL_H_
+#define SRC_EULERTRAIL_NAIVEEULERTRAIL_H_
 
 #include <sealib/graph/undirectedgraph.h>
 #include "./simpletrail.h"
@@ -28,4 +28,4 @@ class NaiveEulerTrail {
     explicit NaiveEulerTrail(const std::shared_ptr<UndirectedGraph> &graph);
 };
 }  // namespace Sealib
-#endif  //  SRC_TRAIL_NAIVEEULERTRAIL_H_
+#endif  //  SRC_EULERTRAIL_NAIVEEULERTRAIL_H_

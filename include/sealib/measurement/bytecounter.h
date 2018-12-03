@@ -1,5 +1,5 @@
-#ifndef SEALIB_BYTECOUNTER_H_
-#define SEALIB_BYTECOUNTER_H_
+#ifndef SEALIB_MEASUREMENT_BYTECOUNTER_H_
+#define SEALIB_MEASUREMENT_BYTECOUNTER_H_
 #include <cstdlib>
 
 namespace Sealib {
@@ -16,4 +16,4 @@ class ByteCounter {
     static size_t &get();
 };
 }  // namespace Sealib
-#endif  // SEALIB_BYTECOUNTER_H_
+#endif  // SEALIB_MEASUREMENT_BYTECOUNTER_H_

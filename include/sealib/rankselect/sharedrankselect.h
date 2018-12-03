@@ -1,5 +1,5 @@
-#ifndef SEALIB_SHAREDRANKSELECT_H_
-#define SEALIB_SHAREDRANKSELECT_H_
+#ifndef SEALIB_RANKSELECT_SHAREDRANKSELECT_H_
+#define SEALIB_RANKSELECT_SHAREDRANKSELECT_H_
 
 #include <sealib/rankselect/sharedrankstructure.h>
 #include <sealib/collection/bitset.h>
@@ -41,4 +41,4 @@ class SharedRankSelect {
     ~SharedRankSelect();
 };
 }  // namespace Sealib
-#endif  // SEALIB_SHAREDRANKSELECT_H_
+#endif  // SEALIB_RANKSELECT_SHAREDRANKSELECT_H_

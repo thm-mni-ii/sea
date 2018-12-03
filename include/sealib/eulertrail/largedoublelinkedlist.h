@@ -1,5 +1,5 @@
-#ifndef SEALIB_LARGEDOUBLELINKEDLIST_H_
-#define SEALIB_LARGEDOUBLELINKEDLIST_H_
+#ifndef SEALIB_EULERTRAIL_LARGEDOUBLELINKEDLIST_H_
+#define SEALIB_EULERTRAIL_LARGEDOUBLELINKEDLIST_H_
 
 #include <sealib/eulertrail/doublelinkedlist.h>
 #include <vector>
@@ -33,4 +33,4 @@ class LargeDoubleLinkedList : public DoubleLinkedList {
     bool isEmpty() override;
 };
 }  // namespace Sealib
-#endif  //  SEALIB_LARGEDOUBLELINKEDLIST_H_
+#endif  //  SEALIB_EULERTRAIL_LARGEDOUBLELINKEDLIST_H_

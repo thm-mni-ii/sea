@@ -1,5 +1,5 @@
-#ifndef SEALIB_DYCKMATCHINGSTRUCTURE_H_
-#define SEALIB_DYCKMATCHINGSTRUCTURE_H_
+#ifndef SEALIB_EULERTRAIL_DYCKMATCHINGSTRUCTURE_H_
+#define SEALIB_EULERTRAIL_DYCKMATCHINGSTRUCTURE_H_
 
 #include <sealib/collection/bitset.h>
 #include <iostream>
@@ -53,4 +53,4 @@ class DyckMatchingStructure {
     static constexpr const uint8_t mSegmentLength = 7;
 };
 }  // namespace Sealib
-#endif  // SEALIB_DYCKMATCHINGSTRUCTURE_H_
+#endif  // SEALIB_EULERTRAIL_DYCKMATCHINGSTRUCTURE_H_

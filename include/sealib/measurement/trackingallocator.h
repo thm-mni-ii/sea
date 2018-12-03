@@ -1,5 +1,5 @@
-#ifndef SEALIB_TRACKINGALLOCATOR_H_
-#define SEALIB_TRACKINGALLOCATOR_H_
+#ifndef SEALIB_MEASUREMENT_TRACKINGALLOCATOR_H_
+#define SEALIB_MEASUREMENT_TRACKINGALLOCATOR_H_
 
 #include <sealib/measurement/bytecounter.h>
 #include <cstdlib>
@@ -123,4 +123,4 @@ class TrackingAllocator {
     }
 };
 }  // namespace Sealib
-#endif  // SEALIB_TRACKINGALLOCATOR_H_
+#endif  // SEALIB_MEASUREMENT_TRACKINGALLOCATOR_H_

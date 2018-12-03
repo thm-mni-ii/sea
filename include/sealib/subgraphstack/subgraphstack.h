@@ -1,5 +1,5 @@
-#ifndef SEALIB_SUBGRAPHSTACK_H_
-#define SEALIB_SUBGRAPHSTACK_H_
+#ifndef SEALIB_SUBGRAPHSTACK_SUBGRAPHSTACK_H_
+#define SEALIB_SUBGRAPHSTACK_SUBGRAPHSTACK_H_
 
 #include <sealib/graph/undirectedgraph.h>
 #include <sealib/collection/bitset.h>
@@ -237,4 +237,4 @@ class SubGraphStack {
     virtual ~SubGraphStack();
 };
 }  // namespace Sealib
-#endif  // SEALIB_SUBGRAPHSTACK_H_
+#endif  // SEALIB_SUBGRAPHSTACK_SUBGRAPHSTACK_H_
