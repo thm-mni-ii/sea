@@ -13,18 +13,18 @@ using namespace Sealib;   // NOLINT
 
 namespace SealibVisual {
 
-const char *Examples::style_white = "circle,draw=black,fill=white",
+char const *Examples::style_white = "circle,draw=black,fill=white",
            *Examples::style_lightgray = "circle,draw=black,fill=gray!50",
            *Examples::style_gray = "circle,draw=black,fill=gray",
            *Examples::style_black = "circle,text=white,fill=black";
 
 //  --- VISUAL BREADTH-FIRST SEARCH ---
 
-VisualBFS::VisualBFS(UndirectedGraph *graph, CompactArray *color, std::string filename,
+VisualBFS::VisualBFS(Graph *graph, CompactArray color, std::string filename,
                      std::string mode)
     : g(graph),
-      tg(TikzGenerator::generateTikzElement(*g, true)),
-      c(color),
+      tg(TikzGenerator::generateTikzElement(g, true)),
+      c(std::move(color)),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
       pic(new TikzPicture(
@@ -37,12 +37,12 @@ VisualBFS::VisualBFS(UndirectedGraph *graph, CompactArray *color, std::string fi
 void VisualBFS::emit() {
   doc->beginBlock();
   doc->add(pic);
-  doc->add(TikzGenerator::generateTikzElement(*c, "color", "yshift=-8cm"));
+  doc->add(TikzGenerator::generateTikzElement(c, g->getOrder(), "color", "yshift=-8cm"));
   doc->endBlock();
 }
 
 void VisualBFS::run() {
-  BFS b(g, c,
+  BFS b(g, &c,
         [this](uint u) {
           tg->getNodes().at(u).setOptions(Examples::style_lightgray);
           emit();
@@ -64,13 +64,13 @@ void VisualBFS::run() {
   doc->close();
 }
 
-// --- VISUAL DEPTH-FIRST SEARCH
+// --- VISUAL DEPTH-FIRST SEARCH ---
 
-VisualDFS::VisualDFS(UndirectedGraph *graph, CompactArray *color, std::string filename,
+VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
                      std::string mode)
     : ExtendedSegmentStack(graph->getOrder(), graph, color),
       g(graph),
-      tg(TikzGenerator::generateTikzElement(*g, true)),
+      tg(TikzGenerator::generateTikzElement(g, true)),
       c(color),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
@@ -84,7 +84,7 @@ VisualDFS::VisualDFS(UndirectedGraph *graph, CompactArray *color, std::string fi
 void VisualDFS::emit() {
   doc->beginBlock();
   doc->add(pic);
-  doc->add(TikzGenerator::generateTikzElement(*c, "color", "yshift=-8cm"));
+  doc->add(TikzGenerator::generateTikzElement(*c, g->getOrder(), "color", "yshift=-8cm"));
   std::vector<uint> l, h, t;
   for (uint a = 0; a < lp; a++) l.push_back(low[a].first);
   for (uint a = 0; a < hp; a++) h.push_back(high[a].first);
@@ -103,13 +103,13 @@ void VisualDFS::run() {
     if (c->get(u) == DFS_WHITE) {
       process_small<ExtendedSegmentStack>(
           u, g, c, this, restore_top,
-          [this](uint u) {
-            tg->getNodes().at(u).setOptions(Examples::style_gray);
+          [this](uint ui) {
+            tg->getNodes().at(ui).setOptions(Examples::style_gray);
             emit();
           },
           DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-          [this](uint u) {
-            tg->getNodes().at(u).setOptions(Examples::style_black);
+          [this](uint ui) {
+            tg->getNodes().at(ui).setOptions(Examples::style_black);
             emit();
           });
     }

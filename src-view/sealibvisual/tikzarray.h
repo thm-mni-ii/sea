@@ -17,19 +17,20 @@ class TikzArray : public TikzElement {
     bool showIndices;
 
  public:
-    explicit TikzArray(const std::vector<std::string> &content,
-                       std::string name = "array",
-                       std::string options = "matrix of nodes, ampersand replacement=\\&",
-                       bool showIndices = false);
+    explicit TikzArray(const std::vector<std::string> &_content,
+                       std::string _name = "array",
+                       std::string _options = "matrix of nodes, ampersand replacement=\\&",
+                       bool _showIndices = false)
+        : content(_content), name(_name), options(_options), showIndices(_showIndices) {}
 
     std::ostream &out(std::ostream &os) const override;
 
-    std::vector<std::string> &getContent();
-    const std::vector<std::string> &getContent() const;
-    const std::string &getName() const;
-    void setName(const std::string &name);
-    const std::string &getOptions() const;
-    void setOptions(const std::string &options);
+    std::vector<std::string> &getContent() { return content; }
+    const std::vector<std::string> &getContent() const { return content; }
+    const std::string &getName() const { return name; }
+    void setName(const std::string &_name) { name=_name; }
+    const std::string &getOptions() const { return options; }
+    void setOptions(const std::string &_options) { options=_options; }
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZARRAY_H_

@@ -60,7 +60,9 @@ class BFS : Iterator<std::pair<uint, uint>> {
     * @param preprocess to be executed before processing a node u
     * @param preexplore to be executed before exploring an edge (u,v)
     */
-    BFS(Graph *graph, Consumer pp, BiConsumer pe);
+    BFS(Graph *g, Consumer pp, BiConsumer pe);
+
+    BFS(Graph *g, CompactArray *color, Consumer pp, BiConsumer pe);
 
  private:
     Graph *g;

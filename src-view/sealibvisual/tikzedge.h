@@ -14,12 +14,13 @@ class TikzEdge : public TikzElement {
 
  public:
     TikzEdge() = default;
-    TikzEdge(const std::string &from, const std::string &to, const std::string &options = "--");
-    const std::string &getFrom() const;
-    const std::string &getTo() const;
-    const std::string &getOptions() const;
+    TikzEdge(const std::string &_from, const std::string &_to, const std::string &_options = "--")
+      :  from(_from), to(_to), options(_options) {}
+    const std::string &getFrom() const { return from; }
+    const std::string &getTo() const { return to; }
+    const std::string &getOptions() const { return options; }
 
-    void setOptions(const std::string &options);
+    void setOptions(const std::string &_options) { options=_options; }
  protected:
     std::ostream &out(std::ostream &os) const override;
 };

@@ -1,19 +1,5 @@
 #include "sealibvisual/tikzdocument.h"
 #include <iostream>
-using std::endl;
-
-SealibVisual::TikzDocument::TikzDocument(std::string filename,
-                                         std::string tikzLibraries,
-                                         std::string gdLibraries, bool lualatex,
-                                         std::string mode)
-    : filename(filename),
-      file(filename),
-      tikzLibraries(tikzLibraries),
-      gdLibraries(gdLibraries),
-      lualatex(lualatex),
-      mode(mode) {
-  initialize();
-}
 
 void SealibVisual::TikzDocument::initialize() {
   using std::endl;
@@ -51,7 +37,7 @@ void SealibVisual::TikzDocument::initialize() {
 
 void SealibVisual::TikzDocument::close() {
   if (mode == "standalone") {
-    file << "\\end{document}" << endl;
+    file << "\\end{document}" << std::endl;
     file << "% Closing document.";
   }
   file.close();

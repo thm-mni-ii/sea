@@ -100,4 +100,15 @@ BFS::BFS(Graph *graph, Consumer pp, BiConsumer pe)
     for (uint a = 0; a < n; a++) color.insert(a, BFS_WHITE);
 }
 
+BFS::BFS(Graph *graph, CompactArray *c, Consumer pp, BiConsumer pe)
+    : g(graph),
+      n(g->getOrder()),
+      color(std::move(*c)),
+      isInner(n),
+      isOuter(n),
+      preprocess(pp),
+      preexplore(pe) {
+    for (uint a = 0; a < n; a++) color.insert(a, BFS_WHITE);
+}
+
 }  // namespace Sealib

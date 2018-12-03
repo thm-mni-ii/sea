@@ -16,7 +16,8 @@ class TikzPicture : public TikzElement {
     bool scope;
 
  public:
-    explicit TikzPicture(std::string options = "", bool scope=true);
+    explicit TikzPicture(std::string _options = "", bool _scope=true) 
+        : elements(), options(std::move(_options)), scope(_scope) {}
     void add(std::shared_ptr<TikzElement> tikzElement);
 
  protected:

@@ -13,14 +13,6 @@ std::vector<std::string> &SealibVisual::TikzDraw::getEdges() {
     return edges;
 }
 
-SealibVisual::TikzDraw::TikzDraw(
-    const std::vector<std::string> &points,
-    const std::vector<std::string> &edges,
-    std::string options) :
-    points(points),
-    edges(edges),
-    options(options) {}
-
 std::ostream &SealibVisual::TikzDraw::out(std::ostream &os) const {
     const std::string defaultEdge = "--";
 

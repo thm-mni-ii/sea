@@ -12,10 +12,10 @@ namespace SealibVisual {
 class TikzDocument {
  private:
   std::string filename;
+  std::ofstream file;
   std::string tikzLibraries;
   std::string gdLibraries;
   bool lualatex;
-  std::ofstream file;
   std::string mode;
   const std::string blockName = "tikzpicture";
 
@@ -27,9 +27,17 @@ class TikzDocument {
    * (lua)latex document, to animate the resulting document, use 'convert' on
    * the PDF; "beamer": (lua)latex code to include in a beamer presentation)
    */
-  explicit TikzDocument(std::string filename, std::string tikzLibraries = "",
-                        std::string gdLibraries = "", bool lualatex = false,
-                        std::string mode = "standalone");
+  explicit TikzDocument(std::string _filename, std::string _tikzLibraries = "",
+                        std::string _gdLibraries = "", bool _lualatex = false,
+                        std::string _mode = "standalone") 
+    : filename(_filename),
+      file(_filename),
+      tikzLibraries(_tikzLibraries),
+      gdLibraries(_gdLibraries),
+      lualatex(_lualatex),
+      mode(_mode) {
+        initialize();
+      }
   void close();
 
   bool isOpen();

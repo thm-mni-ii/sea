@@ -10,15 +10,6 @@
 #include "sealibvisual/tikzpicture.h"
 #include "sealibvisual/tikzstack.h"
 
-#include "sealib/basicgraph.h"
-#include "sealib/bitset.h"
-#include "sealib/compactarray.h"
-
-namespace Sealib {
-typedef Bitset<unsigned char> bitset_t;
-typedef UndirectedGraph basicgraph_t;
-}
-
 namespace SealibVisual {
 
 std::shared_ptr<SealibVisual::TikzPicture>
@@ -59,7 +50,7 @@ SealibVisual::TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<SealibVisual::TikzGraph>
-SealibVisual::TikzGenerator::generateTikzElement(const Sealib::basicgraph_t &t,
+SealibVisual::TikzGenerator::generateTikzElement(const Sealib::Graph *t,
                                                  bool directed) {
   using std::string;
   using std::shared_ptr;
@@ -67,18 +58,18 @@ SealibVisual::TikzGenerator::generateTikzElement(const Sealib::basicgraph_t &t,
   using std::make_tuple;
   using std::to_string;
   shared_ptr<SealibVisual::TikzGraph> graph(
-      new SealibVisual::TikzGraph(t.getOrder()));
+      new SealibVisual::TikzGraph(t->getOrder()));
 
   for (auto &a : graph->getNodes()) {
     a.setOptions("draw, circle");
   }
 
-  for (unsigned int i = 0; i < t.getOrder(); i++) {
-    for (const auto &a : t.getNode(i).getAdj()) {
+  for (unsigned int i = 0; i < t->getOrder(); i++) {
+    for (unsigned int a = 0; i < t->getNodeDegree(i); a++) {
       tuple<std::string, std::string> key =
-          make_tuple(to_string(i), to_string(a.vertex));
+          make_tuple(to_string(i), to_string(a));
       tuple<std::string, std::string> keyReverse =
-          make_tuple(to_string(a.vertex), to_string(i));
+          make_tuple(to_string(a), to_string(i));
 
       if (!graph->containsEdge(key) && !graph->containsEdge(keyReverse)) {
         if (directed) {
@@ -97,9 +88,9 @@ using Sealib::CompactArray;
 using SealibVisual::TikzElement;
 using SealibVisual::TikzPicture;
 std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
-    CompactArray &c, std::string name, std::string positionOpts) {
+    CompactArray &c, unsigned long size, std::string name, std::string positionOpts) {
   std::vector<std::string> u;
-  for (unsigned a = 0; a < c.size(); a++) {
+  for (unsigned a = 0; a < size; a++) {
     u.push_back(std::to_string(c.get(a)));
   }
   std::shared_ptr<TikzElement> array(new TikzArray(u, "C", "array", true));

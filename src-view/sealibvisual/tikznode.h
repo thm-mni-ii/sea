@@ -16,24 +16,28 @@ class TikzNode : public TikzElement {
     std::string coordinate;
 
  public:
-    explicit TikzNode(const std::string &name,
-                      const std::string &options = "",
-                      const std::string &content = "",
-                      const std::string &coordinate = "");
+    explicit TikzNode(const std::string &_name,
+                      const std::string &_options = "",
+                      const std::string &_content = "",
+                      const std::string &_coordinate = "")
+      : name(_name),
+        options(_options),
+        content(_content),
+        coordinate(_coordinate) {}
 
     TikzNode() = default;
 
     std::ostream &out(std::ostream &os) const override;
 
-    const std::string &getName() const;
-    void setName(const std::string &name);
-    const std::string &getOptions() const;
-    void setOptions(const std::string &options);
-    const std::string &getCoordinate() const;
-    void setCoordinate(const std::string &coordinate);
-    const std::string &getContent() const;
-    void setContent(const std::string &content);
-    void setContent(const TikzElement &element);
+    std::string const &getName() const { return name; }
+    void setName(const std::string &_name) { name=_name; }
+    std::string const &getOptions() const { return options; }
+    void setOptions(const std::string &_options) { options=_options; }
+    std::string const &getCoordinate() const { return coordinate; }
+    void setCoordinate(const std::string &_coordinate) { coordinate=_coordinate; }
+    std::string const &getContent() const { return content; }
+    void setContent(const std::string &_content) { content=_content; }
+    void setContent(const TikzElement &_element) { content=_element.toString(); }
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZNODE_H_

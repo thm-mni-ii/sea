@@ -13,9 +13,6 @@ std::ostream &SealibVisual::TikzPicture::out(std::ostream &os) const {
   return os;
 }
 
-SealibVisual::TikzPicture::TikzPicture(std::string options, bool scope)
-    : elements(), options(std::move(options)), scope(scope) {}
-
 void SealibVisual::TikzPicture::add(std::shared_ptr<TikzElement> tikzElement) {
   elements.emplace_back(tikzElement);
 }

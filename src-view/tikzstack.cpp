@@ -20,7 +20,7 @@ std::ostream &TikzStack::out(std::ostream &os) const {
         os << i;
         os << " \\& ";
       }
-      os << content[i];
+      os << content[size_t(i)];
       os << " \\\\ ";
     }
     os << std::endl

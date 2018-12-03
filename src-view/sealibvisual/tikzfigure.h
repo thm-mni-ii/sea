@@ -20,12 +20,17 @@ class TikzFigure : public TikzElement {
  protected:
     std::ostream &out(std::ostream &os) const override;
  public:
-    TikzFigure(const std::string &caption,
-               const std::shared_ptr<TikzPicture> &content);
-    const std::string &getCaption();
-    void setCaption(const std::string &caption);
-    std::shared_ptr<TikzElement> &getContent();
-    void setContent(const std::shared_ptr<TikzElement> &content);
+    TikzFigure(const std::string &_caption,
+               const std::shared_ptr<TikzPicture> &_content)
+        : caption(_caption), content(_content) {}
+    const std::string &getCaption() { return caption; }
+    void setCaption(const std::string &_caption) {
+        caption=_caption;
+    }
+    std::shared_ptr<TikzElement> &getContent() { return content; }
+    void setContent(const std::shared_ptr<TikzElement> &_content) {
+        content=_content;
+    }
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZFIGURE_H_
