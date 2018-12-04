@@ -29,8 +29,10 @@ void SealibVisual::TikzDocument::initialize() {
       file << "% \\usegdlibrary{" << gdLibraries << "}" << endl;
     file << "% \\begin{document}" << endl;
     file << "% ...\n";
+    file << "% \\begin{tikzpicture}" << endl;
     file << "% \\input{" << filename
          << "}\t\t% You can auto-animate with \\transduration{1.5}, etc.\n";
+    file << "% \\end{tikzpicture}" << endl;
     file << "% ...\n";
   }
 }
@@ -68,17 +70,15 @@ void SealibVisual::TikzDocument::add(const SealibVisual::TikzElement &element) {
 
 void SealibVisual::TikzDocument::beginBlock() {
   static unsigned slide = 1;
-  if (mode == "standalone") {
-    file << "\\begin{" << blockName << "}\n";
-  } else if (mode == "beamer") {
+  if (mode == "beamer") {
     file << "\n\\only<" << slide << ">{\n";
     slide++;
+  } else {
+     file << "\\begin{" << blockName << "}\n";
   }
 }
 
 void SealibVisual::TikzDocument::endBlock() {
-  if (mode == "standalone")
-    file << "\\end{" << blockName << "}\n";
-  else if (mode == "beamer")
-    file << "\n}\n";
+  if (mode == "beamer") file << "\n}\n";
+  else file << "\\end{" << blockName << "}\n";
 }
