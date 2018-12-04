@@ -1,6 +1,6 @@
 #include "sealibvisual/tikznode.h"
-#include <utility>
 #include <sstream>
+#include <utility>
 #include <vector>
 
 std::ostream &SealibVisual::TikzNode::out(std::ostream &os) const {
@@ -8,9 +8,9 @@ std::ostream &SealibVisual::TikzNode::out(std::ostream &os) const {
     if (!coordinate.empty()) {
         coordinateString = " at " + coordinate + " ";
     }
-    return os << "\\node" <<
-              "(" << name << ")" <<
-              "[" << options << "]" <<
-              coordinateString <<
-              "{" << content << "}" << ";" << std::endl;
+    return os << "\\node"
+              << "(" << name << ")"
+              << "[" << options << "]" << coordinateString << "{" << content
+              << "}"
+              << ";" << std::endl;
 }

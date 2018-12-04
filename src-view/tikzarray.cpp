@@ -1,11 +1,11 @@
 #include "sealibvisual/tikzarray.h"
-#include <utility>
 #include <sstream>
+#include <utility>
 
 std::ostream &SealibVisual::TikzArray::out(std::ostream &os) const {
-    os << "\\matrix" <<
-       "(" << name << ")" <<
-       "[" << options << "]";
+    os << "\\matrix"
+       << "(" << name << ")"
+       << "[" << options << "]";
 
     // array content
     os << "{\n\t";
@@ -29,7 +29,9 @@ std::ostream &SealibVisual::TikzArray::out(std::ostream &os) const {
             os << " \\\\";
         }
     }
-    os << std::endl <<  "}" << ";" << std::endl;
+    os << std::endl
+       << "}"
+       << ";" << std::endl;
     // array content end
 
     return os;

@@ -14,6 +14,7 @@
 #include <sstream>
 #include <stack>
 #include <string>
+#include "./test_visual.h"
 #include "sealibvisual/examples.h"
 #include "sealibvisual/tikzarray.h"
 #include "sealibvisual/tikzdocument.h"
@@ -23,12 +24,11 @@
 #include "sealibvisual/tikznode.h"
 #include "sealibvisual/tikzpicture.h"
 #include "sealibvisual/tikzstyle.h"
-#include "./test_visual.h"
 
 using std::cout;
 using std::stack;
-using namespace Sealib;  // NOLINT
-using namespace SealibVisual;   // NOLINT
+using namespace Sealib;        // NOLINT
+using namespace SealibVisual;  // NOLINT
 
 void tikz_example() {}
 
@@ -145,10 +145,9 @@ void tikz_example2() {
     doc.close();
 
     // Convert PDF to GIF:
-    // convert -density 200 -delay 100 -background white -alpha remove out-bfs.pdf out-bfs.gif
-    
+    // convert -density 200 -delay 100 -background white -alpha remove
+out-bfs.pdf out-bfs.gif
+
 }*/
 
-int main() {
-  VisualTest::testBFS();
-}
+int main() { VisualTest::testBFS(); }

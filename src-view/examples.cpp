@@ -6,7 +6,7 @@
 #include "sealibvisual/tikzgenerator.h"
 #include "sealibvisual/tikzgraph.h"
 
-using namespace Sealib;   // NOLINT
+using namespace Sealib;  // NOLINT
 
 namespace SealibVisual {
 
@@ -28,37 +28,38 @@ VisualBFS::VisualBFS(Graph *graph, CompactArray color, std::string filename,
           "spring electrical layout, sibling distance=15mm, node "
           "distance=20mm, node sep=1cm, arrows={->}, line "
           "width=1pt, color=black")) {
-  pic->add(tg);
+    pic->add(tg);
 }
 
 void VisualBFS::emit() {
-  doc->beginBlock();
-  doc->add(pic);
-  doc->add(TikzGenerator::generateTikzElement(&c, g->getOrder(), "color", "yshift=-8cm"));
-  doc->endBlock();
+    doc->beginBlock();
+    doc->add(pic);
+    doc->add(TikzGenerator::generateTikzElement(&c, g->getOrder(), "color",
+                                                "yshift=-8cm"));
+    doc->endBlock();
 }
 
 void VisualBFS::run() {
-  BFS b(reinterpret_cast<Graph*>(g), c,
-        [this](uint u) {
-          tg->getNodes().at(u).setOptions(Examples::style_lightgray);
-          emit();
-        },
-        [this](uint u, uint) {
-          if (tg->getNodes().at(u).getOptions() != Examples::style_gray) {
-            tg->getNodes().at(u).setOptions(Examples::style_gray);
+    BFS b(reinterpret_cast<Graph *>(g), c,
+          [this](uint u) {
+              tg->getNodes().at(u).setOptions(Examples::style_lightgray);
+              emit();
+          },
+          [this](uint u, uint) {
+              if (tg->getNodes().at(u).getOptions() != Examples::style_gray) {
+                  tg->getNodes().at(u).setOptions(Examples::style_gray);
+                  emit();
+              }
+          });
+    b.init();
+    do {
+        while (b.more()) {
+            std::pair<uint, uint> p = b.next();
+            tg->getNodes().at(p.first).setOptions(Examples::style_black);
             emit();
-          }
-        });
-  b.init();
-  do {
-    while (b.more()) {
-      std::pair<uint, uint> p = b.next();
-      tg->getNodes().at(p.first).setOptions(Examples::style_black);
-      emit();
-    }
-  } while (b.nextComponent());
-  doc->close();
+        }
+    } while (b.nextComponent());
+    doc->close();
 }
 
 // --- VISUAL DEPTH-FIRST SEARCH ---
@@ -75,43 +76,44 @@ VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
           "spring electrical layout, sibling distance=15mm, node "
           "distance=20mm, node sep=1cm, arrows={->}, line "
           "width=1pt, color=black")) {
-  pic->add(tg);
+    pic->add(tg);
 }
 
 void VisualDFS::emit() {
-  doc->beginBlock();
-  doc->add(pic);
-  doc->add(TikzGenerator::generateTikzElement(c, g->getOrder(), "color", "yshift=-8cm"));
-  std::vector<uint> l, h, t;
-  for (uint a = 0; a < lp; a++) l.push_back(low[a].first);
-  for (uint a = 0; a < hp; a++) h.push_back(high[a].first);
-  for (uint a = 0; a < tp; a++) t.push_back(trailers[a].x.first);
-  doc->add(TikzGenerator::generateTikzElement(
-      l, "$S_L$", true, "yshift=-8cm, xshift=8cm, name=SL"));
-  doc->add(TikzGenerator::generateTikzElement(
-      h, "$S_H$", true, "yshift=-8cm, xshift=10cm, name=SH"));
-  doc->add(TikzGenerator::generateTikzElement(
-      t, "T", true, "yshift=-8cm, xshift=12cm, name=T"));
-  doc->endBlock();
+    doc->beginBlock();
+    doc->add(pic);
+    doc->add(TikzGenerator::generateTikzElement(c, g->getOrder(), "color",
+                                                "yshift=-8cm"));
+    std::vector<uint> l, h, t;
+    for (uint a = 0; a < lp; a++) l.push_back(low[a].first);
+    for (uint a = 0; a < hp; a++) h.push_back(high[a].first);
+    for (uint a = 0; a < tp; a++) t.push_back(trailers[a].x.first);
+    doc->add(TikzGenerator::generateTikzElement(
+        l, "$S_L$", true, "yshift=-8cm, xshift=8cm, name=SL"));
+    doc->add(TikzGenerator::generateTikzElement(
+        h, "$S_H$", true, "yshift=-8cm, xshift=10cm, name=SH"));
+    doc->add(TikzGenerator::generateTikzElement(
+        t, "T", true, "yshift=-8cm, xshift=12cm, name=T"));
+    doc->endBlock();
 }
 
 void VisualDFS::run() {
-  for (uint u = 0; u < g->getOrder(); u++) {
-    if (c->get(u) == DFS_WHITE) {
-      process_small<ExtendedSegmentStack>(
-          u, reinterpret_cast<Graph*>(g), c, this, restore_top,
-          [this](uint ui) {
-            tg->getNodes().at(ui).setOptions(Examples::style_gray);
-            emit();
-          },
-          DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-          [this](uint ui) {
-            tg->getNodes().at(ui).setOptions(Examples::style_black);
-            emit();
-          });
+    for (uint u = 0; u < g->getOrder(); u++) {
+        if (c->get(u) == DFS_WHITE) {
+            process_small<ExtendedSegmentStack>(
+                u, reinterpret_cast<Graph *>(g), c, this, restore_top,
+                [this](uint ui) {
+                    tg->getNodes().at(ui).setOptions(Examples::style_gray);
+                    emit();
+                },
+                DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                [this](uint ui) {
+                    tg->getNodes().at(ui).setOptions(Examples::style_black);
+                    emit();
+                });
+        }
     }
-  }
-  doc->close();
+    doc->close();
 }
 
-}   // namespace SealibVisual
+}  // namespace SealibVisual

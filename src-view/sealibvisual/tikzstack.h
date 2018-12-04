@@ -7,17 +7,18 @@
 
 namespace SealibVisual {
 /**
-* Visualizes a vertical array that grows upwards.
-*
-* @author Simon Heuser
+* Representation of a stack (a vertical array that grows upwards).
 */
 class TikzStack : public TikzArray {
  public:
-  explicit TikzStack(
-      const std::vector<std::string> &content, std::string name = "array",
-      std::string options = "matrix of nodes, ampersand replacement=\\&",
-      bool showIndices = false);
-  std::ostream &out(std::ostream &os) const override;
+    /**
+     * Creates a new TikzStack. (see TikzArray for help)
+     */
+    explicit TikzStack(
+        const std::vector<std::string> &content, std::string name = "array",
+        std::string options = "matrix of nodes, ampersand replacement=\\&",
+        bool showIndices = false);
+    std::ostream &out(std::ostream &os) const override;
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZSTACK_H_

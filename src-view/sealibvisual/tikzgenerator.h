@@ -6,39 +6,42 @@
 #include "./tikznode.h"
 #include "./tikzpicture.h"
 
-#include <sealib/graph/directedgraph.h>
-#include <sealib/graph/undirectedgraph.h>
 #include <sealib/collection/bitset.h>
 #include <sealib/collection/compactarray.h>
+#include <sealib/graph/directedgraph.h>
+#include <sealib/graph/undirectedgraph.h>
 #include <memory>
 #include <string>
 #include <vector>
 
 namespace SealibVisual {
+/**
+ * Class to generate Tikz representations of given input objects.
+ */
 class TikzGenerator {
  public:
-  TikzGenerator() = delete;
+    TikzGenerator() = delete;
 
-  static std::shared_ptr<TikzPicture> generateTikzElement(
-      const Sealib::Bitset<unsigned char> &, const std::string &name);
-  static std::shared_ptr<TikzPicture> generateTikzElement(
-      const Sealib::Bitset<unsigned char> &);
+    static std::shared_ptr<TikzPicture> generateTikzElement(
+        const Sealib::Bitset<unsigned char> &, const std::string &name);
+    static std::shared_ptr<TikzPicture> generateTikzElement(
+        const Sealib::Bitset<unsigned char> &);
 
-  static std::shared_ptr<TikzGraph> generateTikzElement(
-      Sealib::UndirectedGraph const *g);
-  static std::shared_ptr<TikzGraph> generateTikzElement(
-      Sealib::DirectedGraph const *g);
     static std::shared_ptr<TikzGraph> generateTikzElement(
-      Sealib::Graph const *g);
+        Sealib::UndirectedGraph const *g);
+    static std::shared_ptr<TikzGraph> generateTikzElement(
+        Sealib::DirectedGraph const *g);
+    static std::shared_ptr<TikzGraph> generateTikzElement(
+        Sealib::Graph const *g);
 
-  // Needs tikz libraries: matrix, positioning
-  static std::shared_ptr<TikzPicture> generateTikzElement(
-      Sealib::CompactArray *, size_t, std::string name = "",
-      std::string positionOpts = "");
+    // Needs tikz libraries: matrix, positioning
+    static std::shared_ptr<TikzPicture> generateTikzElement(
+        Sealib::CompactArray *, size_t, std::string name = "",
+        std::string positionOpts = "");
 
-  static std::shared_ptr<TikzPicture> generateTikzElement(
-      std::vector<unsigned int> &, std::string name = "", bool vertical = false,
-      std::string positionOpts = "");
+    static std::shared_ptr<TikzPicture> generateTikzElement(
+        std::vector<unsigned int> &, std::string name = "",
+        bool vertical = false, std::string positionOpts = "");
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZGENERATOR_H_

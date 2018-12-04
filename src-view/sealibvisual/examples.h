@@ -1,51 +1,80 @@
 #ifndef SEALIBVISUAL_EXAMPLES_H_
 #define SEALIBVISUAL_EXAMPLES_H_
-#include <sealib/iterator/bfs.h>
 #include <sealib/collection/compactarray.h>
+#include <sealib/graph/directedgraph.h>
+#include <sealib/iterator/bfs.h>
 #include <sealib/iterator/dfs.h>
 #include <sealib/segmentstack.h>
-#include <sealib/graph/directedgraph.h>
+#include <string>
 #include "./tikzdocument.h"
 #include "./tikzgraph.h"
 #include "./tikzpicture.h"
-#include <string>
+
+/**
+ * This file contains example algorithms, animated with TEX output.
+ */
 
 namespace SealibVisual {
 class Examples {
  public:
-  static const char *style_white, *style_lightgray, *style_gray, *style_black;
+    static const char *style_white, *style_lightgray, *style_gray, *style_black;
 };
 
+/**
+ * BFS visualisation.
+ */
 class VisualBFS {
- private:
-  Sealib::Graph *g;
-  std::shared_ptr<TikzGraph> tg;
-  Sealib::CompactArray c;
-  TikzDocument *doc;
-  std::shared_ptr<TikzPicture> pic;
-
  public:
-  VisualBFS(Sealib::Graph *, Sealib::CompactArray,
-            std::string filename = "example.tex",
-            std::string mode = "standalone");
-  void run();
-  void emit();
+    /**
+     * Creates a new BFS visualisation.
+     * @param Graph Graph to use
+     * @param CompactArray Color array to use
+     * @param filename Output file name
+     * @param mode Output mode: "standalone" or "beamer"
+     */
+    VisualBFS(Sealib::Graph *, Sealib::CompactArray,
+              std::string filename = "example.tex",
+              std::string mode = "standalone");
+    /**
+     * Runs the visualisation and creates the TEX output.
+     */
+    void run();
+
+ private:
+    Sealib::Graph *g;
+    std::shared_ptr<TikzGraph> tg;
+    Sealib::CompactArray c;
+    TikzDocument *doc;
+    std::shared_ptr<TikzPicture> pic;
+
+    void emit();
 };
 
 class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
- private:
-  Sealib::Graph *g;
-  std::shared_ptr<TikzGraph> tg;
-  Sealib::CompactArray *c;
-  TikzDocument *doc;
-  std::shared_ptr<TikzPicture> pic;
-
  public:
-  VisualDFS(Sealib::Graph *, Sealib::CompactArray *,
-            std::string filename = "example.tex",
-            std::string mode = "standalone");
-  void run();
-  void emit();
+    /**
+     * Creates a new DFS visualisation.
+     * @param Graph Graph to use
+     * @param CompactArray Color array to use
+     * @param filename Output file name
+     * @param mode Output mode: "standalone" or "beamer"
+     */
+    VisualDFS(Sealib::Graph *, Sealib::CompactArray *,
+              std::string filename = "example.tex",
+              std::string mode = "standalone");
+    /**
+     * Runs the visualisation and creates the TEX output.
+     */
+    void run();
+
+ private:
+    Sealib::Graph *g;
+    std::shared_ptr<TikzGraph> tg;
+    Sealib::CompactArray *c;
+    TikzDocument *doc;
+    std::shared_ptr<TikzPicture> pic;
+
+    void emit();
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_EXAMPLES_H_
