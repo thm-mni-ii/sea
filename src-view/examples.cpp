@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-#include "sealib/graph/undirectedgraph.h"
-#include "sealib/iterator/bfs.h"
-#include "sealib/iterator/dfs.h"
 #include "sealib/graph/graphcreator.h"
 #include "sealibvisual/tikzgenerator.h"
 #include "sealibvisual/tikzgraph.h"
@@ -23,7 +20,7 @@ char const *Examples::style_white = "circle,draw=black,fill=white",
 VisualBFS::VisualBFS(Graph *graph, CompactArray color, std::string filename,
                      std::string mode)
     : g(graph),
-      tg(TikzGenerator::generateTikzElement(g, true)),
+      tg(TikzGenerator::generateTikzElement(g)),
       c(std::move(color)),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
@@ -42,7 +39,7 @@ void VisualBFS::emit() {
 }
 
 void VisualBFS::run() {
-  BFS b(g, c,
+  BFS b(reinterpret_cast<Graph*>(g), c,
         [this](uint u) {
           tg->getNodes().at(u).setOptions(Examples::style_lightgray);
           emit();
@@ -70,7 +67,7 @@ VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
                      std::string mode)
     : ExtendedSegmentStack(graph->getOrder(), graph, color),
       g(graph),
-      tg(TikzGenerator::generateTikzElement(g, true)),
+      tg(TikzGenerator::generateTikzElement(g)),
       c(color),
       doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
                            "layered,force", true, mode)),
@@ -102,7 +99,7 @@ void VisualDFS::run() {
   for (uint u = 0; u < g->getOrder(); u++) {
     if (c->get(u) == DFS_WHITE) {
       process_small<ExtendedSegmentStack>(
-          u, g, c, this, restore_top,
+          u, reinterpret_cast<Graph*>(g), c, this, restore_top,
           [this](uint ui) {
             tg->getNodes().at(ui).setOptions(Examples::style_gray);
             emit();

@@ -16,22 +16,21 @@ namespace SealibVisual {
  */
 class TikzGraph : public TikzElement {
     using key_t = std::tuple<std::string, std::string>;
-    using edge_t = SealibVisual::TikzEdge;
-    using node_t = SealibVisual::TikzNode;
-    using map_t = std::map<key_t, edge_t>;
+    using map_t = std::map<key_t, TikzEdge>;
  private:
     map_t edges;
-    std::vector<node_t> nodes;
+    std::vector<TikzNode> nodes;
 
  public:
     explicit TikzGraph(unsigned int nodes);
 
     std::ostream &out(std::ostream &os) const override;
 
-    edge_t &addEdge(const key_t &edge, std::string options = "--");
-    map_t &getEdges();
-    std::vector<node_t> &getNodes();
-    bool containsEdge(const key_t &key) const;
+    TikzEdge &addEdge(const key_t &edge, std::string options = "--");
+    
+    map_t &getEdges() { return edges; }
+    std::vector<TikzNode> &getNodes() { return nodes; }
+    bool containsEdge(const key_t &key) const { return edges.count(key)>0; }
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZGRAPH_H_

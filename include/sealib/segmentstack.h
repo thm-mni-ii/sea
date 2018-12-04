@@ -11,9 +11,9 @@
 #define DFS_DO_RESTORE (unsigned)12
 
 #ifdef SEALIBVISUAL_EXAMPLES_H_
-  namespace SealibVisual {
-    class VisualDFS;
-  }
+namespace SealibVisual {
+class VisualDFS;
+}
 #endif  // SEALIBVISUAL_EXAMPLES_H
 
 namespace Sealib {

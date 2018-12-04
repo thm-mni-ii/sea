@@ -4,6 +4,7 @@
 #include <sealib/collection/compactarray.h>
 #include <sealib/iterator/dfs.h>
 #include <sealib/segmentstack.h>
+#include <sealib/graph/directedgraph.h>
 #include "./tikzdocument.h"
 #include "./tikzgraph.h"
 #include "./tikzpicture.h"

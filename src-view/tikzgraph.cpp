@@ -1,5 +1,6 @@
 #include "sealibvisual/tikzgraph.h"
 using SealibVisual::TikzGraph;
+using SealibVisual::TikzEdge;
 using std::vector;
 
 TikzGraph::TikzGraph(unsigned int n) : nodes(n) {
@@ -20,20 +21,7 @@ std::ostream &TikzGraph::out(std::ostream &os) const {
     return os;
 }
 
-bool TikzGraph::containsEdge(const key_t &key) const {
-    return edges.count(key) > 0;
-}
-
-TikzGraph::edge_t &TikzGraph::addEdge(const key_t &key, std::string options) {
-    edges[key] = edge_t(std::get<0>(key), std::get<1>(key), options);
+TikzEdge &TikzGraph::addEdge(const key_t &key, std::string options) {
+    edges[key] = TikzEdge(std::get<0>(key), std::get<1>(key), options);
     return edges[key];
 }
-
-TikzGraph::map_t &TikzGraph::getEdges() {
-    return edges;
-}
-
-vector<TikzGraph::node_t> &TikzGraph::getNodes() {
-    return nodes;
-}
-

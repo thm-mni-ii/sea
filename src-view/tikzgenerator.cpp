@@ -13,8 +13,8 @@
 namespace SealibVisual {
 
 std::shared_ptr<SealibVisual::TikzPicture>
-SealibVisual::TikzGenerator::generateTikzElement(
-    const Sealib::Bitset<unsigned char> &t, const std::string name) {
+TikzGenerator::generateTikzElement(
+    const Sealib::Bitset<unsigned char> &t, const std::string &name) {
   std::vector<std::string> arr(t.size());
 
   for (unsigned int i = 0; i < t.size(); i++) {
@@ -44,20 +44,14 @@ SealibVisual::TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<SealibVisual::TikzPicture>
-SealibVisual::TikzGenerator::generateTikzElement(
+TikzGenerator::generateTikzElement(
     const Sealib::Bitset<unsigned char> &t) {
   return generateTikzElement(t, "bitset");
 }
 
 std::shared_ptr<SealibVisual::TikzGraph>
-SealibVisual::TikzGenerator::generateTikzElement(const Sealib::Graph *g,
-                                                 bool directed) {
-  using std::string;
-  using std::shared_ptr;
-  using std::tuple;
-  using std::make_tuple;
-  using std::to_string;
-  shared_ptr<SealibVisual::TikzGraph> graph(
+TikzGenerator::generateTikzElement(Sealib::UndirectedGraph const *g) {
+  std::shared_ptr<SealibVisual::TikzGraph> graph(
       new SealibVisual::TikzGraph(g->getOrder()));
 
   for (auto &a : graph->getNodes()) {
@@ -66,22 +60,44 @@ SealibVisual::TikzGenerator::generateTikzElement(const Sealib::Graph *g,
 
   for (unsigned int i = 0; i < g->getOrder(); i++) {
     for (unsigned int j = 0; j < g->getNodeDegree(i); j++) {
-      tuple<std::string, std::string> key =
-          make_tuple(to_string(i), to_string(j));
-      tuple<std::string, std::string> keyReverse =
-          make_tuple(to_string(j), to_string(i));
+      std::tuple<std::string, std::string> key =
+          std::make_tuple(std::to_string(i), std::to_string(g->head(i,j)));
+      std::tuple<std::string, std::string> keyReverse =
+          std::make_tuple(std::to_string(g->head(i,j)), std::to_string(i));
 
       if (!graph->containsEdge(key) && !graph->containsEdge(keyReverse)) {
-        if (directed) {
-          graph->addEdge(key, "->");
-        } else {
-          graph->addEdge(key);
-        }
+        graph->addEdge(key);
       }
     }
   }
 
   return graph;
+}
+
+std::shared_ptr<TikzGraph>
+TikzGenerator::generateTikzElement(Sealib::Graph const *g) {
+  std::shared_ptr<TikzGraph> graph(new TikzGraph(g->getOrder()));
+
+  for (auto &a : graph->getNodes()) {
+    a.setOptions("draw, circle");
+  }
+
+  for (unsigned int i = 0; i < g->getOrder(); i++) {
+    for (unsigned int j = 0; j < g->getNodeDegree(i); j++) {
+      std::tuple<std::string, std::string> key =
+          std::make_tuple(std::to_string(i), std::to_string(g->head(i,j)));
+
+      if (!graph->containsEdge(key)) {
+        graph->addEdge(key, "->");
+      }
+    }
+  }
+  return graph;
+}
+
+std::shared_ptr<TikzGraph>
+TikzGenerator::generateTikzElement(Sealib::DirectedGraph const *g) {
+  return generateTikzElement(static_cast<Sealib::Graph const*>(g));
 }
 
 using Sealib::CompactArray;

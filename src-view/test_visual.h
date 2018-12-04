@@ -1,4 +1,5 @@
-#include <gtest/gtest.h>
+#ifndef SRC_VIEW_TEST_VISUAL_H_
+#define SRC_VIEW_TEST_VISUAL_H_
 #include <vector>
 #include "sealibvisual/examples.h"
 #include "sealibvisual/tikzgenerator.h"
@@ -44,3 +45,4 @@ class VisualTest {
 };
 
 }  // namespace SealibVisual
+#endif  // SRC_VIEW_TEST_VISUAL_H_
