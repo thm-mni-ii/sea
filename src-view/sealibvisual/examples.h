@@ -98,6 +98,8 @@ class VisualEdgeMarker : public Sealib::EdgeMarker {
    TikzDocument doc;
 
    void emit();
+
+   std::string getStyle(uint u, uint k);
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_EXAMPLES_H_

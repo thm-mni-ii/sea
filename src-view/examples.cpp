@@ -130,6 +130,7 @@ VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, std::string filename,
       doc(filename, "matrix,graphdrawing,positioning", "layered,force", true,
           mode) {
     pic->add(tg);
+    emit();
 }
 
 void VisualEdgeMarker::emit() {
@@ -138,28 +139,38 @@ void VisualEdgeMarker::emit() {
     doc.endBlock();
 }
 
+std::string VisualEdgeMarker::getStyle(uint u, uint k) {
+    std::stringstream options;
+        options << "--";
+        switch (getEdgeData(u,k)&TYPE_MASK) {
+            case FULL:
+                options << ",blue,solid";
+                break;
+            case HALF:
+                options << ",blue,densely dashed";
+                break;
+            case UNMARKED:
+                options << ",blue,loosely dashed";
+                break;
+            case BACK:
+                options << ",densely dotted";
+            case CROSS:
+                options << ",gray,thin";
+            default:
+                break;
+        }
+        return options.str();
+}
+
 void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
     if (k != INVALID) {  // ???
         EdgeMarker::initEdge(u, k, type);
         std::cout << "initializing " << std::to_string(u) << ","
                   << std::to_string(g->head(u, k)) << "\n";
-        std::stringstream options;
-        options << "--";
-        switch (type) {
-            case FULL:
-                options << ",line width=3mm,solid";
-                break;
-            case HALF:
-                options << ",line width=3mm,densely dashed";
-                break;
-            case UNMARKED:
-                options << ",line width=3mm,loosely dashed";
-                break;
-            default:
-                break;
+        auto edge=tg->getEdges().find({std::to_string(u), std::to_string(g->head(u, k))});
+        if(edge!=tg->getEdges().end()) {    // ???
+            edge->second.setOptions(getStyle(u,k));
         }
-        tg->getEdges()[{std::to_string(u), std::to_string(g->head(u, k))}]
-            .setOptions(options.str());
         emit();
     }
 }
@@ -167,6 +178,11 @@ void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
 void VisualEdgeMarker::setMark(uint u, uint k, uint8_t mark) {
     if (k != INVALID) {  // ???
         EdgeMarker::setMark(u, k, mark);
+        auto edge=tg->getEdges().find({std::to_string(u), std::to_string(g->head(u, k))});
+        if(edge!=tg->getEdges().end()) {    // ???
+            edge->second.setOptions(getStyle(u,k));
+        }
+        emit();
     }
 }
 
