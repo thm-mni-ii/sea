@@ -1,29 +1,16 @@
 #include "sealib/iterator/cutvertexiterator.h"
-#include "sealib/dictionary/choicedictionary.h"
 #include "sealib/collection/staticspacestorage.h"
+#include "sealib/dictionary/choicedictionary.h"
 
 namespace Sealib {
-
-CutVertexIterator::CutVertexIterator(EdgeMarker *edges)
-    : g(edges->getGraph()), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {
-    externalEdgeMarker = true;
-}
 
 CutVertexIterator::CutVertexIterator(UndirectedGraph *graph)
     : g(graph),
       n(g->getOrder()),
-      e(new EdgeMarker(graph)),
+      e(g),
       cc(n),
       cut(n),
-      cutI(&cut) {
-    externalEdgeMarker = false;
-}
-
-CutVertexIterator::~CutVertexIterator() {
-    if (!externalEdgeMarker) {
-        delete e;
-    }
-}
+      cutI(&cut) {}
 
 void CutVertexIterator::init() {
     {
@@ -42,16 +29,18 @@ void CutVertexIterator::init() {
         }
     }
 
-    e->identifyEdges();
+    if (!externalEdgeMarker) {
+        e.identifyEdges();
 
-    e->markTreeEdges();
+        e.markTreeEdges();
+    }
 
     for (uint u = 0; u < n; u++) {
         if (cc.get(u)) {
             // u is root of a DFS tree
             uint num = 0;
             for (uint k = 0; k < g->getNodeDegree(u); k++) {
-                if (e->isTreeEdge(u, k) && e->isParent(u, k)) {
+                if (e.isTreeEdge(u, k) && e.isParent(u, k)) {
                     num++;
                 }
                 if (num > 1) {
@@ -61,8 +50,8 @@ void CutVertexIterator::init() {
             }
         } else {
             for (uint k = 0; k < g->getNodeDegree(u); k++) {
-                if (e->isTreeEdge(u, k) && e->isParent(u, k) &&
-                    !e->isFullMarked(u, k)) {
+                if (e.isTreeEdge(u, k) && e.isParent(u, k) &&
+                    !e.isFullMarked(u, k)) {
                     cut.insert(u);
                     break;
                 }

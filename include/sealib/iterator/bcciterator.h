@@ -22,15 +22,6 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
     explicit BCCIterator(UndirectedGraph *g);
 
     /**
-     * Create a new BCC iterator from an existing EdgeMarker object.
-     * @param e EdgeMarker that holds the markings and edge types for a graph G
-     * (e.g. created by CutVertexIterator)
-     */
-    explicit BCCIterator(EdgeMarker *e);
-
-    ~BCCIterator();
-
-    /**
      * Initialize the iterator. If no external EdgeMarker was given, identifies
      * tree edges and marks them.
      */
@@ -58,17 +49,10 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
      */
     std::pair<uint, uint> next() override;
 
-    /**
-     * Moves the EdgeMarker object out of this instance to reuse it somewhere
-     * else.
-     * @return the used EdgeMarker
-     */
-    inline EdgeMarker getEdgeMarker() { return std::move(*e); }
-
  private:
     UndirectedGraph *g;
     uint n;
-    EdgeMarker *e;
+    EdgeMarker e;
     CompactArray color;
     StaticSpaceStorage parent;
 
@@ -79,8 +63,6 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
     bool oneMoreOutput = false;
     bool outputtingBackEdges = false;
     bool firstNode;
-
-    bool externalEdgeMarker;
 };
 }  // namespace Sealib
 

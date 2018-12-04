@@ -4,6 +4,7 @@
 #include <sealib/graph/directedgraph.h>
 #include <sealib/iterator/bfs.h>
 #include <sealib/iterator/dfs.h>
+#include <sealib/iterator/edgemarker.h>
 #include <sealib/segmentstack.h>
 #include <string>
 #include "./tikzdocument.h"
@@ -44,7 +45,7 @@ class VisualBFS {
     Sealib::Graph *g;
     std::shared_ptr<TikzGraph> tg;
     Sealib::CompactArray c;
-    TikzDocument *doc;
+    TikzDocument doc;
     std::shared_ptr<TikzPicture> pic;
 
     void emit();
@@ -71,10 +72,32 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
     Sealib::Graph *g;
     std::shared_ptr<TikzGraph> tg;
     Sealib::CompactArray *c;
-    TikzDocument *doc;
+    TikzDocument doc;
     std::shared_ptr<TikzPicture> pic;
 
     void emit();
+};
+
+class VisualEdgeMarker : public Sealib::EdgeMarker {
+ public:
+   explicit VisualEdgeMarker(Sealib::UndirectedGraph *, 
+      std::string filename = "example.tex",
+      std::string mode = "standalone");
+
+   void initEdge(uint u, uint k, uint8_t type) override;
+
+   void setMark(uint u, uint k, uint8_t mark) override;
+
+   ~VisualEdgeMarker() {
+      doc.close();
+   }
+
+ private:
+   std::shared_ptr<TikzGraph> tg;
+   std::shared_ptr<TikzPicture> pic;
+   TikzDocument doc;
+
+   void emit();
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_EXAMPLES_H_

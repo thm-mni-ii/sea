@@ -131,10 +131,6 @@ class DFS {
 
     static void restore_top(uint u0, Graph *g, CompactArray *color,
                             ExtendedSegmentStack *s);
-
-#ifdef SEALIB_ITERATOR_EDGEMARKER_H_
-    friend class EdgeMarker;
-#endif
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_DFS_H_

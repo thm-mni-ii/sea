@@ -22,14 +22,6 @@ class CutVertexIterator : Iterator<uint>, DFS {
     explicit CutVertexIterator(UndirectedGraph *g);
 
     /**
-     * Create a new cut vertex iterator from an existing EdgeMarker.
-     * @param e EdgeMarker that holds the markings and edge types for a graph G
-     */
-    explicit CutVertexIterator(EdgeMarker *e);
-
-    ~CutVertexIterator();
-
-    /**
      * Initialize the iterator: first identify all tree and back edges, then
      * mark tree edges, finally enter cut vertices into a local choice
      * dictionary.
@@ -55,17 +47,10 @@ class CutVertexIterator : Iterator<uint>, DFS {
      */
     bool isCutVertex(uint u);
 
-    /**
-     * Moves the EdgeMarker object out of this instance to reuse it somewhere
-     * else.
-     * @return the used EdgeMarker
-     */
-    inline EdgeMarker getEdgeMarker() { return std::move(*e); }
-
  private:
     UndirectedGraph *g;
     uint n;
-    EdgeMarker *e;
+    EdgeMarker e;
     ChoiceDictionary cc;
     ChoiceDictionary cut;
     ChoiceDictionaryIterator cutI;

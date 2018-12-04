@@ -4,6 +4,7 @@
 #include "sealibvisual/examples.h"
 #include "sealibvisual/tikzgenerator.h"
 #include "sealib/graph/graphcreator.h"
+#include "sealib/iterator/edgemarker.h"
 
 namespace SealibVisual {
 
@@ -24,6 +25,14 @@ class VisualTest {
         Sealib::CompactArray c(n, 3);
         VisualDFS d(&g, &c, "out-dfs3.tex");
         d.run();
+    }
+
+    static void testCutVertex() {
+        uint n=20;
+        Sealib::UndirectedGraph *g = Sealib::GraphCreator::createRandomUndirected(n,2).first;
+        VisualEdgeMarker e(g, "out-cutvertex.tex");
+        e.identifyEdges();
+        e.markTreeEdges();
     }
 
     static void testBitset() {

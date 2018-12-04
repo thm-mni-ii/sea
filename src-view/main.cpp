@@ -59,4 +59,4 @@ void tikz_example() {
     doc.close();
 }
 
-int main() { SealibVisual::VisualTest::testDFS(); }
+int main() { SealibVisual::VisualTest::testCutVertex(); }

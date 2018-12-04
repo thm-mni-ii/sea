@@ -2,31 +2,16 @@
 
 namespace Sealib {
 
-BCCIterator::BCCIterator(EdgeMarker *edges)
-    : g(edges->getGraph()), n(g->getOrder()), e(edges), color(n, 3), parent(g) {
-    externalEdgeMarker = true;
-}
-
 BCCIterator::BCCIterator(UndirectedGraph *graph)
     : g(graph),
       n(g->getOrder()),
-      e(new EdgeMarker(graph)),
+      e(graph),
       color(n, 3),
-      parent(g) {
-    externalEdgeMarker = false;
-}
-
-BCCIterator::~BCCIterator() {
-    if (!externalEdgeMarker) {
-        delete e;
-    }
-}
+      parent(g) {}
 
 void BCCIterator::init() {
-    if (!externalEdgeMarker) {
-        e->identifyEdges();
-        e->markTreeEdges();
-    }
+    e.identifyEdges();
+    e.markTreeEdges();
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
 }
 
@@ -47,16 +32,16 @@ bool BCCIterator::more() {
     } else {
         while (true) {
             if (edge < g->getNodeDegree(node)) {
-                if (e->isTreeEdge(node, edge) &&
-                    (!e->isParent(node, edge) || e->isFullMarked(node, edge))) {
-                    if (!e->isFullMarked(node, edge)) {
+                if (e.isTreeEdge(node, edge) &&
+                    (!e.isParent(node, edge) || e.isFullMarked(node, edge))) {
+                    if (!e.isFullMarked(node, edge)) {
                         endOnNextNode = true;
                     }
                     uint v = g->head(node, edge);
                     if (color.get(v) == DFS_WHITE) {
                         color.insert(v, DFS_GRAY);
                         parent.insert(v, std::get<1>(g->mate(node, edge)));
-                        if (e->isFullMarked(node, edge)) {
+                        if (e.isFullMarked(node, edge)) {
                             outputtingBackEdges = true;
                         }
                         node = v;
@@ -96,7 +81,7 @@ std::pair<uint, uint> BCCIterator::next() {
         } else if (outputtingBackEdges) {
             bool haveEdge = false;
             while (k < g->getNodeDegree(node)) {
-                if (e->isBackEdge(node, k) && !e->isParent(node, k)) {
+                if (e.isBackEdge(node, k) && !e.isParent(node, k)) {
                     r = std::pair<uint, uint>(g->head(node, k), node);
                     k++;
                     haveEdge = true;

@@ -1,7 +1,8 @@
 #include "sealibvisual/examples.h"
 
 #include <iostream>
-
+#include <map>
+#include <string>
 #include "sealib/graph/graphcreator.h"
 #include "sealibvisual/tikzgenerator.h"
 #include "sealibvisual/tikzgraph.h"
@@ -22,8 +23,8 @@ VisualBFS::VisualBFS(Graph *graph, CompactArray color, std::string filename,
     : g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
       c(std::move(color)),
-      doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
-                           "layered,force", true, mode)),
+      doc(filename, "matrix,graphdrawing,positioning", "layered,force", true,
+          mode),
       pic(new TikzPicture(
           "spring electrical layout, sibling distance=15mm, node "
           "distance=20mm, node sep=1cm, arrows={->}, line "
@@ -32,11 +33,11 @@ VisualBFS::VisualBFS(Graph *graph, CompactArray color, std::string filename,
 }
 
 void VisualBFS::emit() {
-    doc->beginBlock();
-    doc->add(pic);
-    doc->add(TikzGenerator::generateTikzElement(&c, g->getOrder(), "color",
-                                                "yshift=-8cm"));
-    doc->endBlock();
+    doc.beginBlock();
+    doc.add(pic);
+    doc.add(TikzGenerator::generateTikzElement(&c, g->getOrder(), "color",
+                                               "yshift=-8cm"));
+    doc.endBlock();
 }
 
 void VisualBFS::run() {
@@ -59,7 +60,7 @@ void VisualBFS::run() {
             emit();
         }
     } while (b.nextComponent());
-    doc->close();
+    doc.close();
 }
 
 // --- VISUAL DEPTH-FIRST SEARCH ---
@@ -70,8 +71,8 @@ VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
       g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
       c(color),
-      doc(new TikzDocument(filename, "matrix,graphdrawing,positioning",
-                           "layered,force", true, mode)),
+      doc(filename, "matrix,graphdrawing,positioning", "layered,force", true,
+          mode),
       pic(new TikzPicture(
           "spring electrical layout, sibling distance=15mm, node "
           "distance=20mm, node sep=1cm, arrows={->}, line "
@@ -80,21 +81,21 @@ VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
 }
 
 void VisualDFS::emit() {
-    doc->beginBlock();
-    doc->add(pic);
-    doc->add(TikzGenerator::generateTikzElement(c, g->getOrder(), "color",
-                                                "yshift=-8cm"));
+    doc.beginBlock();
+    doc.add(pic);
+    doc.add(TikzGenerator::generateTikzElement(c, g->getOrder(), "color",
+                                               "yshift=-8cm"));
     std::vector<uint> l, h, t;
     for (uint a = 0; a < lp; a++) l.push_back(low[a].first);
     for (uint a = 0; a < hp; a++) h.push_back(high[a].first);
     for (uint a = 0; a < tp; a++) t.push_back(trailers[a].x.first);
-    doc->add(TikzGenerator::generateTikzElement(
+    doc.add(TikzGenerator::generateTikzElement(
         l, "$S_L$", true, "yshift=-8cm, xshift=8cm, name=SL"));
-    doc->add(TikzGenerator::generateTikzElement(
+    doc.add(TikzGenerator::generateTikzElement(
         h, "$S_H$", true, "yshift=-8cm, xshift=10cm, name=SH"));
-    doc->add(TikzGenerator::generateTikzElement(
+    doc.add(TikzGenerator::generateTikzElement(
         t, "T", true, "yshift=-8cm, xshift=12cm, name=T"));
-    doc->endBlock();
+    doc.endBlock();
 }
 
 void VisualDFS::run() {
@@ -113,7 +114,60 @@ void VisualDFS::run() {
                 });
         }
     }
-    doc->close();
+    doc.close();
+}
+
+// --- VISUAL EDGE MARKER ---
+
+VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, std::string filename,
+                                   std::string mode)
+    : EdgeMarker(graph),
+      tg(TikzGenerator::generateTikzElement(g)),
+      pic(new TikzPicture(
+          "spring electrical layout, sibling distance=15mm, node "
+          "distance=20mm, node sep=1cm, arrows={->}, line "
+          "width=1pt, color=black")),
+      doc(filename, "matrix,graphdrawing,positioning", "layered,force", true,
+          mode) {
+    pic->add(tg);
+}
+
+void VisualEdgeMarker::emit() {
+    doc.beginBlock();
+    doc.add(pic);
+    doc.endBlock();
+}
+
+void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
+    if (k != INVALID) {  // ???
+        EdgeMarker::initEdge(u, k, type);
+        std::cout << "initializing " << std::to_string(u) << ","
+                  << std::to_string(g->head(u, k)) << "\n";
+        std::stringstream options;
+        options << "--";
+        switch (type) {
+            case FULL:
+                options << ",line width=3mm,solid";
+                break;
+            case HALF:
+                options << ",line width=3mm,densely dashed";
+                break;
+            case UNMARKED:
+                options << ",line width=3mm,loosely dashed";
+                break;
+            default:
+                break;
+        }
+        tg->getEdges()[{std::to_string(u), std::to_string(g->head(u, k))}]
+            .setOptions(options.str());
+        emit();
+    }
+}
+
+void VisualEdgeMarker::setMark(uint u, uint k, uint8_t mark) {
+    if (k != INVALID) {  // ???
+        EdgeMarker::setMark(u, k, mark);
+    }
 }
 
 }  // namespace SealibVisual
