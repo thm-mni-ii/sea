@@ -135,6 +135,9 @@ void VisualEdgeMarker::emit() {
 std::string VisualEdgeMarker::getStyle(uint u, uint k) {
     std::stringstream options;
     options << "--";
+    if (isParent(u, k)) {
+        options << ",\">\" very near start";
+    }
     switch (getEdgeData(u, k) & TYPE_MASK) {
         case FULL:
             options << ",blue,solid";
@@ -146,7 +149,7 @@ std::string VisualEdgeMarker::getStyle(uint u, uint k) {
             options << ",blue,dotted";
             break;
         case BACK:
-            options << ",densely dotted";
+            options << ",dotted";
         case CROSS:
             options << ",gray,thin";
         default:
@@ -181,7 +184,6 @@ void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
 void VisualEdgeMarker::setMark(uint u, uint k, uint8_t mark) {
     if (k != INVALID) {  // ???
         EdgeMarker::setMark(u, k, mark);
-        std::string a = std::to_string(u), b = std::to_string(g->head(u, k));
         updateEdge(u, k);
         emit();
     }

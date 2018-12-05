@@ -31,7 +31,8 @@ class VisualTest {
         uint n = 20;
         Sealib::UndirectedGraph *g =
             Sealib::GraphCreator::createRandomUndirected(n, 2).first;
-        TikzDocument doc("out-cutvertex.tex", "matrix,graphdrawing,positioning",
+        TikzDocument doc("out-cutvertex.tex",
+                         "matrix,graphdrawing,positioning,quotes",
                          "layered,force", true);
         std::shared_ptr<TikzPicture> pic(new TikzPicture(
             "spring electrical layout, sibling distance=15mm, node "
