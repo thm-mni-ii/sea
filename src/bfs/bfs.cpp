@@ -89,7 +89,7 @@ std::pair<uint, uint> BFS::next() {
     return std::pair<uint, uint>(u, dist);
 }
 
-BFS::BFS(Graph *graph, Consumer pp, BiConsumer pe)
+BFS::BFS(Graph const *graph, Consumer pp, BiConsumer pe)
     : g(graph),
       n(g->getOrder()),
       color(n, 4),

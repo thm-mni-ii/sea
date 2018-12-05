@@ -2,7 +2,7 @@
 
 namespace Sealib {
 
-static std::vector<bool> makeEdges(UndirectedGraph *g) {
+static std::vector<bool> makeEdges(UndirectedGraph const *g) {
     std::vector<bool> bits;
     uint m = 0;
     for (uint u = 0; u < g->getOrder(); u++) {
@@ -23,7 +23,7 @@ static std::vector<bool> makeEdges(UndirectedGraph *g) {
     return bits;
 }
 
-static Bitset<uint8_t> makeOffset(UndirectedGraph *g) {
+static Bitset<uint8_t> makeOffset(UndirectedGraph const *g) {
     std::vector<bool> bits;
     for (uint u = 0; u < g->getOrder(); u++) {
         bits.push_back(1);
@@ -34,7 +34,7 @@ static Bitset<uint8_t> makeOffset(UndirectedGraph *g) {
     return Bitset<uint8_t>(bits);
 }
 
-EdgeMarker::EdgeMarker(UndirectedGraph *graph)
+EdgeMarker::EdgeMarker(UndirectedGraph const *graph)
     : g(graph),
       n(g->getOrder()),
       parent(g),

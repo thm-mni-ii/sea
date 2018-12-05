@@ -34,7 +34,7 @@
 
 namespace Sealib {
 
-void GraphExporter::exportGML(Graph* g, bool directed, std::string filename) {
+void GraphExporter::exportGML(Graph const *g, bool directed, std::string filename) {
     std::ofstream out(filename);
     out << "graph [\ndirected " << directed << "\n";
     for (uint32_t u = 0; u < g->getOrder(); u++) {

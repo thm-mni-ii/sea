@@ -9,7 +9,7 @@ CutVertexIterator::CutVertexIterator(EdgeMarker *edges)
     externalEdgeMarker = true;
 }
 
-CutVertexIterator::CutVertexIterator(UndirectedGraph *graph)
+CutVertexIterator::CutVertexIterator(UndirectedGraph const *graph)
     : g(graph),
       n(g->getOrder()),
       e(new EdgeMarker(graph)),

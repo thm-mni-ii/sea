@@ -10,7 +10,7 @@ namespace Sealib {
 void *Sealib_Graph_new(uint32_t **m, uint32_t order) {
     return GraphCreator::createGraphPointerFromAdjacencyMatrix(m, order);
 }
-void Sealib_Graph_delete(void *self) { delete static_cast<Graph *>(self); }
+void Sealib_Graph_delete(void *self) { delete static_cast<Graph const *>(self); }
 void *Sealib_Graph_generateRandom(uint32_t order) {
     std::vector<Node> n(order);
     static std::random_device rng;
@@ -95,7 +95,7 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint32_t),
     if (preexplore == nullptr) preexplore = [](uint, uint) {};
     if (postexplore == nullptr) postexplore = [](uint, uint) {};
     if (postprocess == nullptr) postprocess = [](uint) {};
-    DFS::nloglognBitDFS(static_cast<Graph *>(graph), preprocess, preexplore,
+    DFS::nloglognBitDFS(static_cast<Graph const *>(graph), preprocess, preexplore,
                         postexplore, postprocess);
 }
 }  // namespace Sealib

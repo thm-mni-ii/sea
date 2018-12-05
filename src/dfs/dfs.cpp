@@ -7,7 +7,7 @@
 
 namespace Sealib {
 
-void DFS::process_standard(uint u0, Graph *g, uint *color, Consumer preProcess,
+void DFS::process_standard(uint u0, Graph const *g, uint *color, Consumer preProcess,
                            BiConsumer preExplore, BiConsumer postExplore,
                            Consumer postProcess) {
     std::unique_ptr<std::pair<uint, uint>[]> s(
@@ -43,8 +43,8 @@ void DFS::process_standard(uint u0, Graph *g, uint *color, Consumer preProcess,
 }
 
 template <class SS>
-void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
-                        void (*restoration)(uint, Graph *, CompactArray *,
+void DFS::process_small(uint u0, Graph const *g, CompactArray *color, SS *s,
+                        void (*restoration)(uint, Graph const *, CompactArray *,
                                             SS *),
                         Consumer preProcess, BiConsumer preExplore,
                         BiConsumer postExplore, Consumer postProcess) {
@@ -92,7 +92,7 @@ void DFS::process_small(uint u0, Graph *g, CompactArray *color, SS *s,
     }
 }
 
-void DFS::restore_full(uint u0, Graph *g, CompactArray *color,
+void DFS::restore_full(uint u0, Graph const *g, CompactArray *color,
                        BasicSegmentStack *s) {
     s->saveTrailer();
     s->dropAll();
@@ -126,7 +126,7 @@ void DFS::restore_full(uint u0, Graph *g, CompactArray *color,
  *    k: outgoing edge that points to a gray, top-segment node (if c is false, k
  * is an 'enclosing' edge)
  */
-static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
+static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph const *g,
                                       CompactArray *c,
                                       ExtendedSegmentStack *s) {
     std::pair<bool, uint> r = std::make_pair(false, static_cast<uint>(-1));
@@ -145,7 +145,7 @@ static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph *g,
     return r;
 }
 
-void DFS::restore_top(uint u0, Graph *g, CompactArray *color,
+void DFS::restore_top(uint u0, Graph const *g, CompactArray *color,
                       ExtendedSegmentStack *s) {
     std::pair<uint, uint> x;
     uint u = u0, k = 0;
@@ -174,7 +174,7 @@ void DFS::restore_top(uint u0, Graph *g, CompactArray *color,
 }
 
 template <class S>
-void DFS::process_static(uint u0, UndirectedGraph *g, CompactArray *color,
+void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
                          S *back, Consumer preprocess, BiConsumer preexplore,
                          BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
@@ -213,7 +213,7 @@ void DFS::process_static(uint u0, UndirectedGraph *g, CompactArray *color,
     }
 }
 
-void DFS::standardDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
+void DFS::standardDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
                       BiConsumer postExplore, Consumer postProcess) {
     uint *color = new uint[g->getOrder()];
     for (uint a = 0; a < g->getOrder(); a++) color[a] = DFS_WHITE;
@@ -226,7 +226,7 @@ void DFS::standardDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
     delete[] color;
 }
 
-void DFS::nBitDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
+void DFS::nBitDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
                   BiConsumer postExplore, Consumer postProcess) {
     uint32_t n = g->getOrder();
     double e = 0.2;
@@ -250,7 +250,7 @@ void DFS::nBitDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
     }
 }
 
-void DFS::nloglognBitDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
+void DFS::nloglognBitDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
                          BiConsumer postExplore, Consumer postProcess) {
     uint32_t n = g->getOrder();
     CompactArray color(n, 3);
@@ -263,7 +263,7 @@ void DFS::nloglognBitDFS(Graph *g, Consumer preProcess, BiConsumer preExplore,
     }
 }
 
-void DFS::nplusmBitDFS(UndirectedGraph *g, Consumer preprocess,
+void DFS::nplusmBitDFS(UndirectedGraph const *g, Consumer preprocess,
                        BiConsumer preexplore, BiConsumer postexplore,
                        Consumer postprocess) {
     uint32_t n = g->getOrder();

@@ -7,7 +7,7 @@ BCCIterator::BCCIterator(EdgeMarker *edges)
     externalEdgeMarker = true;
 }
 
-BCCIterator::BCCIterator(UndirectedGraph *graph)
+BCCIterator::BCCIterator(UndirectedGraph const *graph)
     : g(graph),
       n(g->getOrder()),
       e(new EdgeMarker(graph)),

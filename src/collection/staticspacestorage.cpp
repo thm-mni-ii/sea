@@ -91,7 +91,7 @@ StaticSpaceStorage::StaticSpaceStorage(const std::vector<bool> &bits)
     checkSize(&bits, bitsize);
 }
 
-static std::vector<bool> makeBits(Sealib::Graph *g) {
+static std::vector<bool> makeBits(Sealib::Graph const *g) {
     std::vector<bool> bits;
     for (uint u = 0; u < g->getOrder(); u++) {
         bits.push_back(1);
@@ -102,5 +102,5 @@ static std::vector<bool> makeBits(Sealib::Graph *g) {
     return bits;
 }
 
-StaticSpaceStorage::StaticSpaceStorage(Graph *g)
+StaticSpaceStorage::StaticSpaceStorage(Graph const *g)
     : StaticSpaceStorage(makeBits(g)) {}

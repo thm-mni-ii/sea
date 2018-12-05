@@ -85,7 +85,7 @@ bool BasicSegmentStack::isAligned() {
 
 //  -- EXTENDED --
 
-ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph *g, CompactArray *c)
+ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph const *g, CompactArray *c)
     : SegmentStack(static_cast<uint32_t>(ceil(size / log2(size)))),
       trailers(size / q + 1),
       l(static_cast<uint32_t>(ceil(log2(size))) + 1),
