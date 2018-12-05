@@ -1,8 +1,10 @@
+#include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
 #include <math.h>
 #include <stdexcept>
 
 using Sealib::CompactArray;
+using Sealib::uint;
 
 void CompactArray::insert(uint i, uint v) {
     uint gi = i / valuesPerGroup;

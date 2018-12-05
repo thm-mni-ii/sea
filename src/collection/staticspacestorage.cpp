@@ -1,3 +1,4 @@
+#include "sealib/_types.h"
 #include "sealib/collection/staticspacestorage.h"
 #include <cmath>
 #include <numeric>
@@ -20,6 +21,7 @@
 
 #define END }
 
+using Sealib::uint;
 using Sealib::Bitset;
 using Sealib::RankSelect;
 using Sealib::StaticSpaceStorage;

@@ -12,7 +12,7 @@ This space-efficient variant
 	- The outgoing edges of *big vertices* are stored separately (there are at most n/log(n) big vertices so that they occupy no more than O(n) bits)
 
 ## Efficiency
-* Time: O((n+m))
+* Time: O(n+m)
 * Space: O(n log(log(n))) bits
 
 ## Example
