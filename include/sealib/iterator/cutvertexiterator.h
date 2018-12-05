@@ -6,6 +6,7 @@
 #include "sealib/iterator/dfs.h"
 #include "sealib/iterator/edgemarker.h"
 #include "sealib/iterator/iterator.h"
+#include <memory>
 
 namespace Sealib {
 /**
@@ -20,6 +21,8 @@ class CutVertexIterator : Iterator<uint>, DFS {
      * @param g the undirected graph G=(V,E)
      */
     explicit CutVertexIterator(UndirectedGraph *g);
+
+    explicit CutVertexIterator(std::shared_ptr<EdgeMarker> e);
 
     /**
      * Initialize the iterator: first identify all tree and back edges, then
@@ -48,16 +51,14 @@ class CutVertexIterator : Iterator<uint>, DFS {
     bool isCutVertex(uint u);
 
  private:
+    std::shared_ptr<EdgeMarker> e;
     UndirectedGraph *g;
     uint n;
-    EdgeMarker e;
     ChoiceDictionary cc;
     ChoiceDictionary cut;
     ChoiceDictionaryIterator cutI;
 
     void markParents(uint w, uint u, StaticSpaceStorage *parent);
-
-    bool externalEdgeMarker;
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_CUTVERTEXITERATOR_H_

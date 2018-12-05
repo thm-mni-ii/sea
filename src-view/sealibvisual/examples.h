@@ -3,6 +3,7 @@
 #include <sealib/collection/compactarray.h>
 #include <sealib/graph/directedgraph.h>
 #include <sealib/iterator/bfs.h>
+#include <sealib/iterator/cutvertexiterator.h>
 #include <sealib/iterator/dfs.h>
 #include <sealib/iterator/edgemarker.h>
 #include <sealib/segmentstack.h>
@@ -80,26 +81,37 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
 
 class VisualEdgeMarker : public Sealib::EdgeMarker {
  public:
-   explicit VisualEdgeMarker(Sealib::UndirectedGraph *, 
-      std::string filename = "example.tex",
-      std::string mode = "standalone");
+    VisualEdgeMarker(Sealib::UndirectedGraph *g, TikzDocument *doc,
+                     std::shared_ptr<TikzPicture> pic,
+                     std::shared_ptr<TikzGraph> tg);
 
-   void initEdge(uint u, uint k, uint8_t type) override;
+    void initEdge(uint u, uint k, uint8_t type) override;
 
-   void setMark(uint u, uint k, uint8_t mark) override;
-
-   ~VisualEdgeMarker() {
-      doc.close();
-   }
+    void setMark(uint u, uint k, uint8_t mark) override;
 
  private:
-   std::shared_ptr<TikzGraph> tg;
-   std::shared_ptr<TikzPicture> pic;
-   TikzDocument doc;
+    TikzDocument *doc;
+    std::shared_ptr<TikzPicture> pic;
+    std::shared_ptr<TikzGraph> tg;
 
-   void emit();
+    void emit();
 
-   std::string getStyle(uint u, uint k);
+    std::string getStyle(uint u, uint k);
+    inline void updateEdge(uint u, uint k);
+
+    friend class VisualCutVertex;
+};
+
+class VisualCutVertex : public Sealib::CutVertexIterator {
+ public:
+    VisualCutVertex(std::shared_ptr<VisualEdgeMarker> e);
+
+    uint next() override;
+
+ private:
+    std::shared_ptr<VisualEdgeMarker> e;
+
+    void emit(uint u);
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_EXAMPLES_H_

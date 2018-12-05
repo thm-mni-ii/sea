@@ -119,47 +119,52 @@ void VisualDFS::run() {
 
 // --- VISUAL EDGE MARKER ---
 
-VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, std::string filename,
-                                   std::string mode)
-    : EdgeMarker(graph),
-      tg(TikzGenerator::generateTikzElement(g)),
-      pic(new TikzPicture(
-          "spring electrical layout, sibling distance=15mm, node "
-          "distance=20mm, node sep=1cm, arrows={->}, line "
-          "width=1pt, color=black")),
-      doc(filename, "matrix,graphdrawing,positioning", "layered,force", true,
-          mode) {
-    pic->add(tg);
+VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, TikzDocument *_doc,
+                                   std::shared_ptr<TikzPicture> _pic,
+                                   std::shared_ptr<TikzGraph> _tg)
+    : EdgeMarker(graph), doc(_doc), pic(_pic), tg(_tg) {
     emit();
 }
 
 void VisualEdgeMarker::emit() {
-    doc.beginBlock();
-    doc.add(pic);
-    doc.endBlock();
+    doc->beginBlock();
+    doc->add(pic);
+    doc->endBlock();
 }
 
 std::string VisualEdgeMarker::getStyle(uint u, uint k) {
     std::stringstream options;
-        options << "--";
-        switch (getEdgeData(u,k)&TYPE_MASK) {
-            case FULL:
-                options << ",blue,solid";
-                break;
-            case HALF:
-                options << ",blue,densely dashed";
-                break;
-            case UNMARKED:
-                options << ",blue,loosely dashed";
-                break;
-            case BACK:
-                options << ",densely dotted";
-            case CROSS:
-                options << ",gray,thin";
-            default:
-                break;
-        }
-        return options.str();
+    options << "--";
+    switch (getEdgeData(u, k) & TYPE_MASK) {
+        case FULL:
+            options << ",blue,solid";
+            break;
+        case HALF:
+            options << ",blue,densely dashed";
+            break;
+        case UNMARKED:
+            options << ",blue,dotted";
+            break;
+        case BACK:
+            options << ",densely dotted";
+        case CROSS:
+            options << ",gray,thin";
+        default:
+            break;
+    }
+    return options.str();
+}
+
+void VisualEdgeMarker::updateEdge(uint u, uint k) {
+    std::string a = std::to_string(u), b = std::to_string(g->head(u, k));
+    auto edge = tg->getEdges().find({a, b});
+    if (edge != tg->getEdges().end()) {
+        edge->second.setOptions(getStyle(u, k));
+    } else {
+        auto edgeReverse = tg->getEdges().find({b, a});
+        assert(edgeReverse != tg->getEdges().end());
+        edgeReverse->second.setOptions(getStyle(u, k));
+    }
 }
 
 void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
@@ -167,10 +172,7 @@ void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
         EdgeMarker::initEdge(u, k, type);
         std::cout << "initializing " << std::to_string(u) << ","
                   << std::to_string(g->head(u, k)) << "\n";
-        auto edge=tg->getEdges().find({std::to_string(u), std::to_string(g->head(u, k))});
-        if(edge!=tg->getEdges().end()) {    // ???
-            edge->second.setOptions(getStyle(u,k));
-        }
+        updateEdge(u, k);
         emit();
     }
 }
@@ -178,12 +180,29 @@ void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
 void VisualEdgeMarker::setMark(uint u, uint k, uint8_t mark) {
     if (k != INVALID) {  // ???
         EdgeMarker::setMark(u, k, mark);
-        auto edge=tg->getEdges().find({std::to_string(u), std::to_string(g->head(u, k))});
-        if(edge!=tg->getEdges().end()) {    // ???
-            edge->second.setOptions(getStyle(u,k));
-        }
+        std::string a = std::to_string(u), b = std::to_string(g->head(u, k));
+        updateEdge(u, k);
         emit();
     }
+}
+
+// --- VISUAL CUT-VERTEX ITERATOR ---
+
+VisualCutVertex::VisualCutVertex(std::shared_ptr<VisualEdgeMarker> edges)
+    : CutVertexIterator(edges), e(edges) {}
+
+void VisualCutVertex::emit(uint u) {
+    e->doc->beginBlock();
+    std::cout << u << " is a cut vertex\n";
+    e->tg->getNodes()[u].setOptions("circle,draw=blue,double");
+    e->doc->add(e->pic);
+    e->doc->endBlock();
+}
+
+uint VisualCutVertex::next() {
+    uint r = CutVertexIterator::next();
+    emit(r);
+    return r;
 }
 
 }  // namespace SealibVisual
