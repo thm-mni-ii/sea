@@ -64,6 +64,8 @@ class CutVertexIterator : Iterator<uint>, DFS {
     ChoiceDictionaryIterator cutI;
 
     void markParents(uint w, uint u, StaticSpaceStorage *parent);
+
+    inline void findCCs();
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_CUTVERTEXITERATOR_H_
