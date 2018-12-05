@@ -1,12 +1,12 @@
 #ifndef SEALIB_ITERATOR_CUTVERTEXITERATOR_H_
 #define SEALIB_ITERATOR_CUTVERTEXITERATOR_H_
+#include <memory>
 #include "sealib/_types.h"
 #include "sealib/graph/undirectedgraph.h"
 #include "sealib/iterator/choicedictionaryiterator.h"
 #include "sealib/iterator/dfs.h"
 #include "sealib/iterator/edgemarker.h"
 #include "sealib/iterator/iterator.h"
-#include <memory>
 
 namespace Sealib {
 /**
@@ -17,11 +17,16 @@ namespace Sealib {
 class CutVertexIterator : Iterator<uint>, DFS {
  public:
     /**
-     * Create a new cut vertex iterator for an undirected graph G.
+     * Create a new cut-vertex iterator for an undirected graph G.
      * @param g the undirected graph G=(V,E)
      */
     explicit CutVertexIterator(UndirectedGraph *g);
 
+    /**
+     * Create a new cut-vertex iterator from a given edge marker (allows
+     * recycling).
+     * @param e shared pointer to an EdgeMarker
+     */
     explicit CutVertexIterator(std::shared_ptr<EdgeMarker> e);
 
     /**

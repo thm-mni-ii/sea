@@ -1,6 +1,7 @@
 #ifndef SEALIB_ITERATOR_BCCITERATOR_H_
 #define SEALIB_ITERATOR_BCCITERATOR_H_
 
+#include <memory>
 #include <utility>
 #include "sealib/graph/undirectedgraph.h"
 #include "sealib/iterator/edgemarker.h"
@@ -20,6 +21,12 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
      * @param g undirected graph G=(V,E)
      */
     explicit BCCIterator(UndirectedGraph *g);
+
+    /**
+     * Create a new BCC iterator from a given edge marker (allows recycling).
+     * @param e shared pointer to an EdgeMarker
+     */
+    explicit BCCIterator(std::shared_ptr<EdgeMarker> e);
 
     /**
      * Initialize the iterator. If no external EdgeMarker was given, identifies
@@ -50,9 +57,9 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
     std::pair<uint, uint> next() override;
 
  private:
+    std::shared_ptr<EdgeMarker> e;
     UndirectedGraph *g;
     uint n;
-    EdgeMarker e;
     CompactArray color;
     StaticSpaceStorage parent;
 
