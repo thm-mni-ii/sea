@@ -156,12 +156,13 @@ std::string VisualEdgeMarker::getStyle(uint u, uint k) {
 }
 
 void VisualEdgeMarker::updateEdge(uint u, uint k) {
+    using key_t = std::tuple<std::string, std::string>;
     std::string a = std::to_string(u), b = std::to_string(g->head(u, k));
-    auto edge = tg->getEdges().find({a, b});
+    auto edge = tg->getEdges().find(key_t{a, b});
     if (edge != tg->getEdges().end()) {
         edge->second.setOptions(getStyle(u, k));
     } else {
-        auto edgeReverse = tg->getEdges().find({b, a});
+        auto edgeReverse = tg->getEdges().find(key_t{b, a});
         assert(edgeReverse != tg->getEdges().end());
         edgeReverse->second.setOptions(getStyle(u, k));
     }
