@@ -1,6 +1,7 @@
 #include <sealib/graph/graphcreator.h>
 #include <stdlib.h>
 #include <algorithm>
+#include <cassert>
 #include <iostream>
 #include <limits>
 #include <random>
@@ -159,24 +160,29 @@ Sealib::DirectedGraph Sealib::GraphCreator::createRandomGenerated(
     return DirectedGraph(n);
 }
 
-std::pair<UndirectedGraph *, uint32_t> GraphCreator::createRandomUndirected(
-    uint32_t order, uint32_t approxDegree) {
-    UndirectedGraph *g = new UndirectedGraph(order);
+UndirectedGraph GraphCreator::createRandomKRegularUndirectedGraph(
+    uint32_t order, uint32_t degreePerNode) {
+    UndirectedGraph g(order);
     std::uniform_int_distribution<uint32_t> dist(0, order - 1);
-    uint64_t sum = 0;
     for (uint32_t a = 0; a < order; a++) {
-        while (g->getNodeDegree(a) < approxDegree) {
+        while (g.getNodeDegree(a) < degreePerNode) {
             uint32_t b = dist(rng);
-            Node &n1 = g->getNode(a), &n2 = g->getNode(b);
-            uint32_t i1 = g->getNodeDegree(a), i2 = g->getNodeDegree(b);
+            do {
+                b = (b + 1) % order;
+                // don't allow self edges except when `a` is the last node
+            } while (g.getNodeDegree(b) == degreePerNode ||
+                     (b != order - 1 && b == a));
+            assert(g.getNodeDegree(b) < degreePerNode);
+            Node &n1 = g.getNode(a), &n2 = g.getNode(b);
+            uint32_t i1 = g.getNodeDegree(a), i2 = g.getNodeDegree(b);
             n1.addAdjacency(b);
             n1.setCrossIndex(i1, i2);
             n2.addAdjacency(a);
             n2.setCrossIndex(i2, i1);
-            sum += 2;
         }
+        assert(g.getNodeDegree(a) == degreePerNode);
     }
-    return {g, sum};
+    return g;
 }
 
 UndirectedGraph GraphCreator::createWindmill(uint32_t order, uint32_t count) {

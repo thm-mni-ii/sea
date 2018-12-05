@@ -1,29 +1,14 @@
 #include "sealib/iterator/cutvertexiterator.h"
-#include "sealib/dictionary/choicedictionary.h"
 #include "sealib/collection/staticspacestorage.h"
+#include "sealib/dictionary/choicedictionary.h"
 
 namespace Sealib {
 
-CutVertexIterator::CutVertexIterator(EdgeMarker *edges)
-    : g(edges->getGraph()), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {
-    externalEdgeMarker = true;
-}
-
 CutVertexIterator::CutVertexIterator(UndirectedGraph *graph)
-    : g(graph),
-      n(g->getOrder()),
-      e(new EdgeMarker(graph)),
-      cc(n),
-      cut(n),
-      cutI(&cut) {
-    externalEdgeMarker = false;
-}
+    : CutVertexIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {}
 
-CutVertexIterator::~CutVertexIterator() {
-    if (!externalEdgeMarker) {
-        delete e;
-    }
-}
+CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
+    : e(edges), g(e->getGraph()), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {}
 
 void CutVertexIterator::init() {
     {

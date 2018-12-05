@@ -2,31 +2,15 @@
 
 namespace Sealib {
 
-BCCIterator::BCCIterator(EdgeMarker *edges)
-    : g(edges->getGraph()), n(g->getOrder()), e(edges), color(n, 3), parent(g) {
-    externalEdgeMarker = true;
-}
-
 BCCIterator::BCCIterator(UndirectedGraph *graph)
-    : g(graph),
-      n(g->getOrder()),
-      e(new EdgeMarker(graph)),
-      color(n, 3),
-      parent(g) {
-    externalEdgeMarker = false;
-}
+    : BCCIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {}
 
-BCCIterator::~BCCIterator() {
-    if (!externalEdgeMarker) {
-        delete e;
-    }
-}
+BCCIterator::BCCIterator(std::shared_ptr<EdgeMarker> edges)
+    : e(edges), g(e->getGraph()), n(g->getOrder()), color(n, 3), parent(g) {}
 
 void BCCIterator::init() {
-    if (!externalEdgeMarker) {
-        e->identifyEdges();
-        e->markTreeEdges();
-    }
+    e->identifyEdges();
+    e->markTreeEdges();
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
 }
 

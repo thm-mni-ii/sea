@@ -75,4 +75,13 @@ TEST(BCCIteratorTest, lineGraph) {
     EXPECT_NE(edges.find({4, 5}), edges.end());
 }
 
+TEST(BCCIteratorTest, stability) {
+    UndirectedGraph g =
+        GraphCreator::createRandomKRegularUndirectedGraph(2000, 5);
+    BCCIterator b(&g);
+    b.init();
+    while (b.more()) b.next();
+    SUCCEED();
+}
+
 }  // namespace Sealib

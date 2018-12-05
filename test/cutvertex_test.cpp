@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
-#include "sealib/iterator/cutvertexiterator.h"
 #include "sealib/graph/graphcreator.h"
+#include "sealib/iterator/cutvertexiterator.h"
 
 namespace Sealib {
 
@@ -41,6 +41,15 @@ TEST(CutVertexIteratorTest, lineGraph) {
         EXPECT_TRUE(c.isCutVertex(a));
     }
     EXPECT_FALSE(c.isCutVertex(n - 1));
+}
+
+TEST(CutVertexIteratorTest, stability) {
+    UndirectedGraph g =
+        GraphCreator::createRandomKRegularUndirectedGraph(2000, 5);
+    CutVertexIterator c(&g);
+    c.init();
+    while (c.more()) c.next();
+    SUCCEED();
 }
 
 }  // namespace Sealib
