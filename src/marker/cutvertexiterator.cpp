@@ -1,6 +1,6 @@
 #include "sealib/iterator/cutvertexiterator.h"
-#include "sealib/dictionary/choicedictionary.h"
 #include "sealib/collection/staticspacestorage.h"
+#include "sealib/dictionary/choicedictionary.h"
 
 namespace Sealib {
 

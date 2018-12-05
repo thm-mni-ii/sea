@@ -14,21 +14,13 @@ namespace Sealib {
 
 static uint32_t c1 = 0, c2 = 0, c3 = 0, c4 = 0;
 
-static void incr1(uint) {
-    c1++;
-}
+static void incr1(uint) { c1++; }
 
-static void incr4(uint) {
-    c4++;
-}
+static void incr4(uint) { c4++; }
 
-static void incr2(uint, uint) {
-    c2++;
-}
+static void incr2(uint, uint) { c2++; }
 
-static void incr3(uint, uint) {
-    c3++;
-}
+static void incr3(uint, uint) { c3++; }
 
 /*void p0(uint u) { printf("preprocess %u\n", u); }
 void p1(uint u) { printf("postprocess %u\n", u); }
@@ -43,7 +35,8 @@ static const uint32_t order = 200;
 static std::vector<DirectedGraph> makeGraphs() {
     std::vector<DirectedGraph> g;
     for (uint c = 0; c < GRAPHCOUNT; c++) {
-        g.push_back(Sealib::GraphCreator::createRandomKRegularGraph(order, DEGREE));
+        g.push_back(
+            Sealib::GraphCreator::createRandomKRegularGraph(order, DEGREE));
     }
     return g;
 }
@@ -87,13 +80,12 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 TEST(DFSTest, nplusmBitUserproc) {
     c1 = c2 = c3 = c4 = 0;
     uint n = 4000;
-    auto r = GraphCreator::createRandomUndirected(n, 20);
-    UndirectedGraph *g = r.first;
-    uint m = r.second;
-    DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);
+    UndirectedGraph g =
+        GraphCreator::createRandomKRegularUndirectedGraph(n, 20);
+    DFS::nplusmBitDFS(&g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, n);
-    EXPECT_EQ(c2, m);
-    EXPECT_EQ(c3, m);
+    EXPECT_EQ(c2, n * 20);
+    EXPECT_EQ(c3, n * 20);
     EXPECT_EQ(c4, n);
 }
 

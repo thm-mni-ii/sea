@@ -77,7 +77,7 @@ bool reachable(DirectedGraph *g, uint a, uint b) {
 }
 
 int main(void) {
-    DirectedGraph g = GraphCreator::createRandomFixed(100, 30);
+    DirectedGraph g = GraphCreator::createRandomKRegularGraph(100, 30);
     bool result = reachable(&g, 10, 25);
 }
 ```

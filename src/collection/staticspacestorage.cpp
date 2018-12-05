@@ -1,7 +1,7 @@
-#include "sealib/_types.h"
 #include "sealib/collection/staticspacestorage.h"
 #include <cmath>
 #include <numeric>
+#include "sealib/_types.h"
 #define PRELUDE                                                        \
     uint64_t start = rankSelect.select(i + 1) - i - 1;                 \
     uint64_t end = start + getSize(i) - 1;                             \

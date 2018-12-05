@@ -1,10 +1,10 @@
 #ifndef SEALIB_ITERATOR_EDGEMARKER_H_
 #define SEALIB_ITERATOR_EDGEMARKER_H_
-#include "sealib/graph/undirectedgraph.h"
 #include "sealib/collection/compactarray.h"
-#include "sealib/iterator/dfs.h"
-#include "sealib/dictionary/rankselect.h"
 #include "sealib/collection/staticspacestorage.h"
+#include "sealib/dictionary/rankselect.h"
+#include "sealib/graph/undirectedgraph.h"
+#include "sealib/iterator/dfs.h"
 
 namespace Sealib {
 /**

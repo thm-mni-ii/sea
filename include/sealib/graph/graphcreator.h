@@ -46,7 +46,7 @@ class GraphCreator {
      * @param order number of nodes the graph should contain
      * @param k the degree of each node; the edges will go to any
      * random node
-     * @return the resulting graph G (n = order, m = degreePerNode*order)
+     * @return the resulting graph G (n = order, m = k*order)
      * @author Simon Heuser
      */
     static DirectedGraph createRandomKRegularGraph(uint32_t order, uint32_t k);
@@ -89,15 +89,14 @@ class GraphCreator {
                                            double p, uint32_t seed);
 
     /**
-     * Create a random undirected graph with an approximate degree.
+     * Create a random k-regular undirected graph.
+     * (Can take a long time for large graphs!)
      * @param order number of nodes to generate
-     * @param approxDegree every node will have at least this many outgoing
-     * edges
-     * @return pair {G, m} where G is the graph and m is the actual number of
-     * edges in the graph
+     * @param k outgoing edges per node
+     * @return the resulting undirected graph
      */
-    static std::pair<UndirectedGraph *, uint32_t> createRandomUndirected(
-        uint32_t order, uint32_t approxDegree);
+    static UndirectedGraph createRandomKRegularUndirectedGraph(
+        uint32_t order, uint32_t outdegreePerNode);
 
     /**
      * Create an undirected windmill graph (m complete graphs of order n joined

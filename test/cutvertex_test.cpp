@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
-#include "sealib/iterator/cutvertexiterator.h"
 #include "sealib/graph/graphcreator.h"
+#include "sealib/iterator/cutvertexiterator.h"
 
 namespace Sealib {
 
