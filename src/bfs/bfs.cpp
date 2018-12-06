@@ -75,7 +75,7 @@ std::pair<uint, uint> BFS::next() {
         std::swap(isInner, isOuter);
         dist++;
     }
-    for (uint k = 0; k < g->getNodeDegree(u); k++) {
+    for (uint k = 0; k < g->deg(u); k++) {
         uint v = g->head(u, k);
         preexplore(u, v);
         if (color.get(v) == BFS_WHITE) {

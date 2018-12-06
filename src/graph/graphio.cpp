@@ -43,7 +43,7 @@ void GraphExporter::exportGML(Graph const *g, bool directed, std::string filenam
     }
     uint32_t edgeId = g->getOrder();
     for (uint32_t u = 0; u < g->getOrder(); u++) {
-        for (uint32_t k = 0; k < g->getNodeDegree(u); k++) {
+        for (uint32_t k = 0; k < g->deg(u); k++) {
             out << "edge [\nid " << edgeId++ << "\n";
             out << "source " << u << "\n";
             out << "target " << g->head(u, k) << "\n";
@@ -72,10 +72,22 @@ static void tokenize(const std::string& str, std::vector<std::string>* tokens,
     }
 }
 
-
 template<class G>
+static void addAdj(G *g, uint u, uint v);
+
+template<>
+static void addAdj<DirectedGraph>(DirectedGraph *g,uint u,uint v) {
+    g->getNode(u).addAdjacency(v);
+}
+template<>
+static void addAdj<UndirectedGraph>(UndirectedGraph *g,uint u,uint v) {
+    g->getNode(u).addAdjacency({v,g->deg(v)-1});
+    g->getNode(v).addAdjacency({u,g->deg(u)-1});
+}
+
+template<class G, class N>
 static G importGMLBase(std::string filename) {
-    G g;
+    G g(0);
     bool directed;
     bool ok = true;
 
@@ -100,7 +112,7 @@ static G importGMLBase(std::string filename) {
             READ("[");
             READ("id");
             index++;
-            Node u;
+            N u;
             g.addNode(u);
             GET_CLOSING_BRACKET
         } else {
@@ -121,14 +133,7 @@ static G importGMLBase(std::string filename) {
             READ("target");
             v = uint(std::stoi(tok[index]));
             index++;
-            g.getNode(u).addAdjacency(v);
-            if (!directed) {
-                g.getNode(v).addAdjacency(u);
-                g.getNode(u).setCrossIndex(g.getNodeDegree(u) - 1,
-                                            g.getNodeDegree(v) - 1);
-                g.getNode(v).setCrossIndex(g.getNodeDegree(v) - 1,
-                                            g.getNodeDegree(u) - 1);
-            }
+            addAdj(&g,u,v);
             GET_CLOSING_BRACKET
             m++;
         } else {
@@ -141,11 +146,11 @@ static G importGMLBase(std::string filename) {
 
 template<>
 UndirectedGraph GraphImporter::importGML<UndirectedGraph>(std::string filename) {
-    return importGMLBase<UndirectedGraph>(filename);
+    return importGMLBase<UndirectedGraph,NodeU>(filename);
 }
 template<>
 DirectedGraph GraphImporter::importGML<DirectedGraph>(std::string filename) {
-    return importGMLBase<DirectedGraph>(filename);
+    return importGMLBase<DirectedGraph,NodeD>(filename);
 }
 
 }   // namespace Sealib

@@ -46,7 +46,7 @@ bool BCCIterator::more() {
         return false;
     } else {
         while (true) {
-            if (edge < g->getNodeDegree(node)) {
+            if (edge < g->deg(node)) {
                 if (e->isTreeEdge(node, edge) &&
                     (!e->isParent(node, edge) || e->isFullMarked(node, edge))) {
                     if (!e->isFullMarked(node, edge)) {
@@ -55,7 +55,7 @@ bool BCCIterator::more() {
                     uint v = g->head(node, edge);
                     if (color.get(v) == DFS_WHITE) {
                         color.insert(v, DFS_GRAY);
-                        parent.insert(v, std::get<1>(g->mate(node, edge)));
+                        parent.insert(v, g->mate(node, edge));
                         if (e->isFullMarked(node, edge)) {
                             outputtingBackEdges = true;
                         }
@@ -68,9 +68,7 @@ bool BCCIterator::more() {
             } else {
                 color.insert(node, DFS_BLACK);
                 if (node != startEdge.second) {
-                    std::tuple<uint, uint> p =
-                        g->mate(node, static_cast<uint>(parent.get(node)));
-                    uint pu = std::get<0>(p), pk = std::get<1>(p);
+                    uint pk = g->mate(node, static_cast<uint>(parent.get(node))), pu=g->head(node,pk);
                     node = pu;
                     edge = pk + 1;
                 } else {
@@ -95,7 +93,7 @@ std::pair<uint, uint> BCCIterator::next() {
             latestNode = node;
         } else if (outputtingBackEdges) {
             bool haveEdge = false;
-            while (k < g->getNodeDegree(node)) {
+            while (k < g->deg(node)) {
                 if (e->isBackEdge(node, k) && !e->isParent(node, k)) {
                     r = std::pair<uint, uint>(g->head(node, k), node);
                     k++;
@@ -105,7 +103,7 @@ std::pair<uint, uint> BCCIterator::next() {
                     k++;
                 }
             }
-            if (k >= g->getNodeDegree(node) && !haveEdge) {
+            if (k >= g->deg(node) && !haveEdge) {
                 k = 0;
                 outputtingBackEdges = false;
                 return next();

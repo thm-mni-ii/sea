@@ -7,9 +7,9 @@
 
 namespace Sealib {
 
-void DFS::process_standard(uint u0, Graph const *g, uint *color, Consumer preProcess,
-                           BiConsumer preExplore, BiConsumer postExplore,
-                           Consumer postProcess) {
+void DFS::process_standard(uint u0, Graph const *g, uint *color,
+                           Consumer preProcess, BiConsumer preExplore,
+                           BiConsumer postExplore, Consumer postProcess) {
     std::unique_ptr<std::pair<uint, uint>[]> s(
         new std::pair<uint, uint>[g->getOrder()]);
     uint sp = 0;
@@ -22,7 +22,7 @@ void DFS::process_standard(uint u0, Graph const *g, uint *color, Consumer prePro
             preProcess(u);
             color[u] = DFS_GRAY;
         }
-        if (k < g->getNodeDegree(u)) {
+        if (k < g->deg(u)) {
             s[sp++] = std::pair<uint, uint>(u, k + 1);
             uint v = g->head(u, k);
             preExplore(u, v);
@@ -65,7 +65,7 @@ void DFS::process_small(uint u0, Graph const *g, CompactArray *color, SS *s,
             preProcess(u);
             color->insert(u, DFS_GRAY);
         }
-        if (k < g->getNodeDegree(u)) {
+        if (k < g->deg(u)) {
             s->push(std::pair<uint, uint>(u, k + 1));
             uint v = g->head(u, k);
             preExplore(u, v);
@@ -107,7 +107,7 @@ void DFS::restore_full(uint u0, Graph const *g, CompactArray *color,
         s->pop(&x);
         uint u = x.first, k = x.second;
         if (color->get(u) == DFS_WHITE) color->insert(u, DFS_GRAY);
-        if (k < g->getNodeDegree(u)) {
+        if (k < g->deg(u)) {
             s->push(std::pair<uint, uint>(u, k + 1));
             if (s->isAligned()) break;
             uint v = g->head(u, k);
@@ -126,11 +126,11 @@ void DFS::restore_full(uint u0, Graph const *g, CompactArray *color,
  *    k: outgoing edge that points to a gray, top-segment node (if c is false, k
  * is an 'enclosing' edge)
  */
-static std::pair<bool, uint> findEdge(const uint u, const uint k, Graph const *g,
-                                      CompactArray *c,
+static std::pair<bool, uint> findEdge(const uint u, const uint k,
+                                      Graph const *g, CompactArray *c,
                                       ExtendedSegmentStack *s) {
     std::pair<bool, uint> r = std::make_pair(false, static_cast<uint>(-1));
-    for (uint i = k; i < g->getNodeDegree(u); i++) {
+    for (uint i = k; i < g->deg(u); i++) {
         uint v = g->head(u, i);
         if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
             r = std::make_pair(true, i);
@@ -182,13 +182,13 @@ void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
     preprocess(u0);
     uint u = u0, k = 0;
     while (true) {
-        if (k < g->getNodeDegree(u)) {
+        if (k < g->deg(u)) {
             uint v = g->head(u, k);
             preexplore(u, k);
             if (color->get(v) == DFS_WHITE) {
                 preprocess(v);
                 color->insert(v, DFS_GRAY);
-                back->insert(v, std::get<1>(g->mate(u, k)));
+                back->insert(v, g->mate(u, k));
                 u = v;
                 k = 0;
                 continue;
@@ -200,9 +200,7 @@ void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
             color->insert(u, DFS_BLACK);
             postprocess(u);
             if (u != u0) {
-                std::tuple<uint, uint> p =
-                    g->mate(u, static_cast<uint>(back->get(u)));
-                uint pu = std::get<0>(p), pk = std::get<1>(p);
+                uint pk = g->mate(u, static_cast<uint>(back->get(u))), pu=g->head(u,pk);
                 postexplore(pu, pk);
                 u = pu;
                 k = pk + 1;
@@ -213,8 +211,9 @@ void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
     }
 }
 
-void DFS::standardDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
-                      BiConsumer postExplore, Consumer postProcess) {
+void DFS::standardDFS(Graph const *g, Consumer preProcess,
+                      BiConsumer preExplore, BiConsumer postExplore,
+                      Consumer postProcess) {
     uint *color = new uint[g->getOrder()];
     for (uint a = 0; a < g->getOrder(); a++) color[a] = DFS_WHITE;
     for (uint u = 0; u < g->getOrder(); u++) {
@@ -250,8 +249,9 @@ void DFS::nBitDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
     }
 }
 
-void DFS::nloglognBitDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
-                         BiConsumer postExplore, Consumer postProcess) {
+void DFS::nloglognBitDFS(Graph const *g, Consumer preProcess,
+                         BiConsumer preExplore, BiConsumer postExplore,
+                         Consumer postProcess) {
     uint32_t n = g->getOrder();
     CompactArray color(n, 3);
     ExtendedSegmentStack s(n, g, &color);
@@ -272,7 +272,7 @@ void DFS::nplusmBitDFS(UndirectedGraph const *g, Consumer preprocess,
     std::vector<bool> bits;
     for (uint u = 0; u < n; u++) {
         bits.push_back(1);
-        for (uint k = 0; k < ceil(log2(g->getNodeDegree(u) + 1)); k++) {
+        for (uint k = 0; k < ceil(log2(g->deg(u) + 1)); k++) {
             bits.push_back(0);
         }
     }

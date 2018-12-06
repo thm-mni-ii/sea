@@ -10,49 +10,54 @@ namespace Sealib {
  * A Node object containing the nodes adjacencies and its degree.
  * @author Johannes Meintrup
  */
+template <class T>
 class Node {
- private:
-    std::vector<Sealib::Adjacency> adj;
-
  public:
-    /**
-     * Creates a node out of its adjacencies.
-     * @param _adj array of adjacencies.
-     * @param _deg degree of this node.
-    */
-    Node(const Adjacency *adj_, uint64_t deg_);
-
-    /**
-     * Creates a node out of its adjacencies.
-     * @param _adj vector of adjacencies.
-    */
-    explicit Node(const std::vector<Sealib::Adjacency> &adj_);
-
-    Node() = default;
-
-    /**
-     * @return Returns a pointer to the adjacency array.
-     */
-    const std::vector<Adjacency> &getAdj() const;
-
-    /**
-     * @return Returns the degree of the node.
-     */
-    uint32_t getDegree() const;
-
-    /**
-     * Make a cross pointer from "this" to an "other" adjacency array
-     * @param adjIndex index of endpoint in "this" adjacency array
-     * @param crossIndex index of endpoint in the "other" adjacency array
-     */
-     void setCrossIndex(uint32_t adjIndex, uint32_t crossIndex);
-
-     /**
-      * Adds a new Adjacency.
-      * @param vertex - vertex of the Adjacency.
-      * Set the crossindex manually after adding a new adjacency
-      */
-      void addAdjacency(uint32_t vertex);
+    Node() : adj(0) {}
+    explicit Node(std::vector<T> const &p) : adj(p) {}
+    uint getDegree() const { return adj.size(); }
+    std::vector<T> const &getAdj() const { return adj; }
+    std::vector<T> &getAdj() { return adj; }
+    void addAdjacency(T const &v) { adj.emplace_back(v); }
+ private:
+    std::vector<T> adj;
 };
+
+typedef Node<uint>
+    NodeD;
+typedef Node<std::pair<uint, uint>> NodeU;
+
+// class UndirectedNode : Node<std::pair<uint,uint>> {
+// public:
+//    /**
+//     * Creates a node out of its adjacencies.
+//     * @param _adj vector of adjacencies.
+//    */
+//    explicit Node(const std::vector<Sealib::Adjacency> &adj_);
+//
+//    /**
+//     * @return Returns a pointer to the adjacency array.
+//     */
+//    const std::vector<Adjacency> &getAdj() const;
+//
+//    /**
+//     * @return Returns the degree of the node.
+//     */
+//    uint32_t getDegree() const;
+//
+//    /**
+//     * Make a cross pointer from "this" to an "other" adjacency array
+//     * @param adjIndex index of endpoint in "this" adjacency array
+//     * @param crossIndex index of endpoint in the "other" adjacency array
+//     */
+//     void setCrossIndex(uint32_t adjIndex, uint32_t crossIndex);
+//
+//     /**
+//      * Adds a new Adjacency.
+//      * @param vertex - vertex of the Adjacency.
+//      * Set the crossindex manually after adding a new adjacency
+//      */
+//      void addAdjacency(uint32_t vertex);
+//};
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_NODE_H_

@@ -6,11 +6,11 @@ static std::vector<bool> makeEdges(UndirectedGraph const *g) {
     std::vector<bool> bits;
     uint m = 0;
     for (uint u = 0; u < g->getOrder(); u++) {
-        if (g->getNodeDegree(u) == 0) {
+        if (g->deg(u) == 0) {
             bits.push_back(1);
             m++;
         } else {
-            for (uint k = 0; k < g->getNodeDegree(u); k++) {
+            for (uint k = 0; k < g->deg(u); k++) {
                 bits.push_back(1);
                 m++;
                 bits.push_back(0);
@@ -27,7 +27,7 @@ static Bitset<uint8_t> makeOffset(UndirectedGraph const *g) {
     std::vector<bool> bits;
     for (uint u = 0; u < g->getOrder(); u++) {
         bits.push_back(1);
-        for (uint k = 0; k < g->getNodeDegree(u); k++) {
+        for (uint k = 0; k < g->deg(u); k++) {
             bits.push_back(0);
         }
     }
@@ -57,8 +57,8 @@ void EdgeMarker::identifyEdges() {
                             // initializing {u,v} as a back edge with v parent
                             // of u
                             // (closer to root)
-                            std::tuple<uint, uint> p = g->mate(u, k);
-                            initEdge(std::get<0>(p), std::get<1>(p), BACK);
+                            uint pk=g->mate(u,k);
+                            initEdge(g->head(u,pk), pk, BACK);
                         } else {
                             initEdge(u, k, CROSS);
                         }
@@ -79,7 +79,7 @@ void EdgeMarker::markTreeEdges() {
                 [this, a](uint u) {
                     if (u == a /*?*/ ||
                         isTreeEdge(u, static_cast<uint>(parent.get(u)))) {
-                        for (uint k = 0; k < g->getNodeDegree(u); k++) {
+                        for (uint k = 0; k < g->deg(u); k++) {
                             uint v = g->head(u, k);
                             if (isBackEdge(u, k) && isParent(u, k)) {
                                 // {u,v} is a back edge and u is closer to root:
@@ -95,7 +95,7 @@ void EdgeMarker::markTreeEdges() {
 
 void EdgeMarker::markParents(uint w, uint u) {
     uint k = static_cast<uint>(parent.get(w));
-    if (k < g->getNodeDegree(w)) {
+    if (k < g->deg(w)) {
         // if k>deg(w), then w is already root (?)
         uint v = g->head(w, k);  // assert(isTreeEdge(w,k));
         while (v != u && !isFullMarked(w, k)) {
@@ -111,8 +111,7 @@ void EdgeMarker::markParents(uint w, uint u) {
 }
 
 void EdgeMarker::initEdge(uint u, uint k, uint8_t type) {
-    auto p = g->mate(u, k);
-    uint v = std::get<0>(p), k2 = std::get<1>(p);
+    uint k2 = g->mate(u, k), v = g->head(u,k2);
     uint ui = edgeIndex(u) + k, vi = edgeIndex(v) + k2;
     edges.insert(ui, edges.get(ui) | type);
     edges.insert(vi, edges.get(vi) | type);
@@ -120,8 +119,7 @@ void EdgeMarker::initEdge(uint u, uint k, uint8_t type) {
 }
 
 void EdgeMarker::setMark(uint u, uint k, uint8_t mark) {
-    auto p = g->mate(u, k);
-    uint v = std::get<0>(p), k2 = std::get<1>(p);
+    uint k2 = g->mate(u, k), v = g->head(u,k2);
     uint ui = edgeIndex(u) + k, vi = edgeIndex(v) + k2;
     edges.insert(ui, edges.get(ui) & PARENT_MASK);
     edges.insert(vi, edges.get(vi) & PARENT_MASK);

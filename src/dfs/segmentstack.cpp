@@ -85,7 +85,8 @@ bool BasicSegmentStack::isAligned() {
 
 //  -- EXTENDED --
 
-ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph const *g, CompactArray *c)
+ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph const *g,
+                                           CompactArray *c)
     : SegmentStack(static_cast<uint32_t>(ceil(size / log2(size)))),
       trailers(size / q + 1),
       l(static_cast<uint32_t>(ceil(log2(size))) + 1),
@@ -97,11 +98,11 @@ ExtendedSegmentStack::ExtendedSegmentStack(uint size, Graph const *g, CompactArr
       n(graph->getOrder()),
       color(c) {
     m = 0;
-    for (uint a = 0; a < n; a++) m += g->getNodeDegree(a);
+    for (uint a = 0; a < n; a++) m += g->deg(a);
 }
 
 uint32_t ExtendedSegmentStack::approximateEdge(uint u, uint k) {
-    double g = ceil(graph->getNodeDegree(u) / static_cast<double>(l));
+    double g = ceil(graph->deg(u) / static_cast<double>(l));
     uint32_t f = static_cast<uint32_t>(floor((k - 1) / g));
     return f;
 }
@@ -109,7 +110,7 @@ uint32_t ExtendedSegmentStack::approximateEdge(uint u, uint k) {
 void ExtendedSegmentStack::storeEdges() {
     for (uint c = 0; c < lp; c++) {
         uint u = low[c].first, k = low[c].second;
-        if (graph->getNodeDegree(u) > m / q) {
+        if (graph->deg(u) > m / q) {
             if (trailers[tp].bi == INVALID) {
                 trailers[tp].bi = bp;
                 trailers[tp].bc = 0;
@@ -153,13 +154,13 @@ bool ExtendedSegmentStack::isInTopSegment(uint u, bool restoring) {
 }
 
 uint ExtendedSegmentStack::retrieveEdge(uint u, uint32_t f) {
-    uint32_t g = static_cast<uint32_t>(
-        ceil(graph->getNodeDegree(u) / static_cast<double>(l)));
+    uint32_t g =
+        static_cast<uint32_t>(ceil(graph->deg(u) / static_cast<double>(l)));
     return f * g;
 }
 
 uint ExtendedSegmentStack::getOutgoingEdge(uint u) {
-    if (graph->getNodeDegree(u) > m / q) {
+    if (graph->deg(u) > m / q) {
         if (tp > 0) {  // tp>0 should be given in every restoration, which is
                        // precisely when this method may be called
             Trailer &t = trailers[tp - 1];

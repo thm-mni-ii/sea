@@ -14,7 +14,7 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
     uint64_t dSum = 0;
     bitset_t q(rGraph->getOrder());
     for (uint32_t i = 0; i < rGraph->getOrder(); i++) {
-        uint64_t deg = rGraph->getNodeDegree(i);
+        uint64_t deg = rGraph->deg(i);
         dSum += deg;
         if (deg > 0) {
             q[i] = 1;
@@ -24,8 +24,8 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
     bitset_t p(dSum);
     uint64_t deg = 0;
     for (uint32_t i = 0; i < rGraph->getOrder(); i++) {
-        if (rGraph->getNodeDegree(i) > 0) {
-            deg += rGraph->getNodeDegree(i);
+        if (rGraph->deg(i) > 0) {
+            deg += rGraph->deg(i);
             p[deg - 1] = 1;
         }
     }
@@ -40,14 +40,13 @@ uint64_t Sealib::BaseSubGraph::head(uint64_t u,
 
 std::tuple<uint64_t, uint64_t>
 Sealib::BaseSubGraph::mate(uint64_t u, uint64_t k) const {
-    std::tuple<uint64_t, uint64_t>
-        mate = rGraph->mate(
-            static_cast<uint32_t>(u - 1),
-            static_cast<uint32_t>(k - 1));
+    uint mate = rGraph->mate(
+            static_cast<uint>(u - 1),
+            static_cast<uint>(k - 1));
     return
         std::tuple<uint64_t, uint64_t>(
-            std::get<0>(mate) + 1,
-            std::get<1>(mate) + 1);
+            rGraph->head(u,mate)+1,
+            mate+1);
 }
 
 uint64_t Sealib::BaseSubGraph::phi(uint64_t u) const {
