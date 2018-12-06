@@ -45,7 +45,7 @@ TEST(CutVertexIteratorTest, lineGraph) {
 
 TEST(CutVertexIteratorTest, stability) {
     UndirectedGraph g =
-        GraphCreator::createRandomKRegularUndirectedGraph(2000, 5);
+        GraphCreator::createRandomGeneratedUndirected(2000);
     CutVertexIterator c(&g);
     c.init();
     while (c.more()) c.next();

@@ -61,6 +61,13 @@ class GraphCreator {
     static DirectedGraph createRandomGenerated(uint32_t order);
 
     /**
+     * Generate a random undirected graph. Each node will have at least 5 connections to other nodes.
+     * @param order number of nodes
+     * @return the resulting undirected graph: n = order, m = O(n)
+     */
+    static UndirectedGraph createRandomGeneratedUndirected(uint32_t order);
+
+    /**
      * Create a random "imbalanced" graph, which contains a handful of very
      * large nodes.
      * @param order number of nodes
@@ -87,7 +94,6 @@ class GraphCreator {
     static std::unique_ptr<UndirectedGraph>
     generateRandomBipartiteUndirectedGraph(uint32_t order1, uint32_t order2,
                                            double p, uint32_t seed);
-
     /**
      * Create a random k-regular undirected graph.
      * (Can take a long time for large graphs!)
