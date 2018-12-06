@@ -46,25 +46,26 @@ void EdgeMarker::identifyEdges() {
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
-            DFS::process_static(
-                a, g, &color, &parent, DFS_NOP_PROCESS,
-                [this, &color](uint u, uint k) {
-                    if (!isInitialized(u, k)) {
-                        uint v = g->head(u, k);
-                        if (color.get(v) == DFS_WHITE) {
-                            initEdge(u, k, UNMARKED);
-                        } else if (color.get(v) == DFS_GRAY) {
-                            // initializing {u,v} as a back edge with v parent
-                            // of u
-                            // (closer to root)
-                            uint pk=g->mate(u,k);
-                            initEdge(g->head(u,pk), pk, BACK);
-                        } else {
-                            initEdge(u, k, CROSS);
-                        }
-                    }
-                },
-                DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+            DFS::process_static(a, g, &color, &parent, DFS_NOP_PROCESS,
+                                [this, &color](uint u, uint k) {
+                                    if (!isInitialized(u, k)) {
+                                        uint v = g->head(u, k);
+                                        if (color.get(v) == DFS_WHITE) {
+                                            initEdge(u, k, UNMARKED);
+                                        } else if (color.get(v) == DFS_GRAY) {
+                                            // initializing {u,v} as a back edge
+                                            // with v parent
+                                            // of u
+                                            // (closer to root)
+                                            uint pk = g->mate(u, k);
+                                            initEdge(g->head(u, k), pk,
+                                                     BACK);  // SEGFAULT
+                                        } else {
+                                            initEdge(u, k, CROSS);
+                                        }
+                                    }
+                                },
+                                DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         }
     }
 }
@@ -111,7 +112,7 @@ void EdgeMarker::markParents(uint w, uint u) {
 }
 
 void EdgeMarker::initEdge(uint u, uint k, uint8_t type) {
-    uint k2 = g->mate(u, k), v = g->head(u,k2);
+    uint k2 = g->mate(u, k), v = g->head(u, k);
     uint ui = edgeIndex(u) + k, vi = edgeIndex(v) + k2;
     edges.insert(ui, edges.get(ui) | type);
     edges.insert(vi, edges.get(vi) | type);
@@ -119,7 +120,7 @@ void EdgeMarker::initEdge(uint u, uint k, uint8_t type) {
 }
 
 void EdgeMarker::setMark(uint u, uint k, uint8_t mark) {
-    uint k2 = g->mate(u, k), v = g->head(u,k2);
+    uint k2 = g->mate(u, k), v = g->head(u, k);
     uint ui = edgeIndex(u) + k, vi = edgeIndex(v) + k2;
     edges.insert(ui, edges.get(ui) & PARENT_MASK);
     edges.insert(vi, edges.get(vi) & PARENT_MASK);

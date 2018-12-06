@@ -76,13 +76,13 @@ template<class G>
 static void addAdj(G *g, uint u, uint v);
 
 template<>
-static void addAdj<DirectedGraph>(DirectedGraph *g,uint u,uint v) {
+static void addAdj<DirectedGraph>(DirectedGraph *g, uint u, uint v) {
     g->getNode(u).addAdjacency(v);
 }
 template<>
-static void addAdj<UndirectedGraph>(UndirectedGraph *g,uint u,uint v) {
-    g->getNode(u).addAdjacency({v,g->deg(v)-1});
-    g->getNode(v).addAdjacency({u,g->deg(u)-1});
+static void addAdj<UndirectedGraph>(UndirectedGraph *g, uint u, uint v) {
+    g->getNode(u).addAdjacency({v, g->deg(v)-1});
+    g->getNode(v).addAdjacency({u, g->deg(u)-1});
 }
 
 template<class G, class N>
@@ -133,7 +133,7 @@ static G importGMLBase(std::string filename) {
             READ("target");
             v = uint(std::stoi(tok[index]));
             index++;
-            addAdj(&g,u,v);
+            addAdj(&g, u, v);
             GET_CLOSING_BRACKET
             m++;
         } else {
@@ -146,11 +146,11 @@ static G importGMLBase(std::string filename) {
 
 template<>
 UndirectedGraph GraphImporter::importGML<UndirectedGraph>(std::string filename) {
-    return importGMLBase<UndirectedGraph,NodeU>(filename);
+    return importGMLBase<UndirectedGraph, NodeU>(filename);
 }
 template<>
 DirectedGraph GraphImporter::importGML<DirectedGraph>(std::string filename) {
-    return importGMLBase<DirectedGraph,NodeD>(filename);
+    return importGMLBase<DirectedGraph, NodeD>(filename);
 }
 
 }   // namespace Sealib

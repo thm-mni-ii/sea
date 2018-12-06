@@ -200,7 +200,8 @@ void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
             color->insert(u, DFS_BLACK);
             postprocess(u);
             if (u != u0) {
-                uint pk = g->mate(u, static_cast<uint>(back->get(u))), pu=g->head(u,pk);
+                uint pk = g->mate(u, static_cast<uint>(back->get(u))),
+                     pu = g->head(u, static_cast<uint>(back->get(u)));
                 postexplore(pu, pk);
                 u = pu;
                 k = pk + 1;

@@ -1,5 +1,5 @@
-#include <vector>
 #include "sealib/legacy.h"
+#include <vector>
 #include "sealib/collection/bitset.h"
 #include "sealib/dictionary/rankselect.h"
 #include "sealib/graph/graphcreator.h"
@@ -24,7 +24,7 @@ void *Sealib_Graph_generateRandom(uint32_t order) {
         for (uint32_t b = 0; b < deg; b++) {
             ad.emplace_back(rnd(rng));
         }
-        n[a]=NodeD(ad);
+        n[a] = NodeD(ad);
     }
     return new DirectedGraph(n);
 }

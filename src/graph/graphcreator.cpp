@@ -91,9 +91,9 @@ Sealib::GraphCreator::generateRandomBipartiteUndirectedGraph(uint order1,
                 uint n1idx = node1.getDegree();
                 uint n2idx = node2.getDegree();
 
-                node1.addAdjacency({n2,n2idx});
+                node1.addAdjacency({n2, n2idx});
 
-                node2.addAdjacency({n1,n1idx});
+                node2.addAdjacency({n1, n1idx});
             }
         }
     }
@@ -170,8 +170,8 @@ UndirectedGraph GraphCreator::createRandomKRegularUndirectedGraph(
             assert(g.deg(b) < degreePerNode);
             NodeU &n1 = g.getNode(a), &n2 = g.getNode(b);
             uint i1 = g.deg(a), i2 = g.deg(b);
-            n1.addAdjacency({b,i2});
-            n2.addAdjacency({a,i1});
+            n1.addAdjacency({b, i2});
+            n2.addAdjacency({a, i1});
         }
         assert(g.deg(a) == degreePerNode);
     }
@@ -189,15 +189,15 @@ UndirectedGraph GraphCreator::createWindmill(uint order, uint count) {
             for (uint c = b + 1; c < (a + 1) * order; c++) {
                 // c = no. dest. nodes
                 uint i1 = g.deg(b), i2 = g.deg(c);
-                g.getNode(b).addAdjacency({c,i2});
-                g.getNode(c).addAdjacency({b,i1});
+                g.getNode(b).addAdjacency({c, i2});
+                g.getNode(c).addAdjacency({b, i1});
             }
         }
     }
     for (uint a = 0; a < n - 1; a++) {
         uint i1 = g.deg(n - 1), i2 = g.deg(a);
-        g.getNode(n - 1).addAdjacency({a,i2});
-        g.getNode(a).addAdjacency({n - 1,i1});
+        g.getNode(n - 1).addAdjacency({a, i2});
+        g.getNode(a).addAdjacency({n - 1, i1});
     }
     return g;
 }

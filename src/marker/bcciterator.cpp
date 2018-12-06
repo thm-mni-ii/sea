@@ -68,7 +68,9 @@ bool BCCIterator::more() {
             } else {
                 color.insert(node, DFS_BLACK);
                 if (node != startEdge.second) {
-                    uint pk = g->mate(node, static_cast<uint>(parent.get(node))), pu=g->head(node,pk);
+                    uint pk =
+                             g->mate(node, static_cast<uint>(parent.get(node))),
+                         pu = g->head(node, pk);
                     node = pu;
                     edge = pk + 1;
                 } else {
