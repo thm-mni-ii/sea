@@ -17,7 +17,7 @@ void BCCIterator::start(uint u, uint v) {
     node = v;
     edge = 0;
     firstNode = true;
-    parent.insert(node, std::numeric_limits<uint>::max());
+    parent.insert(node, INVALID);
     color.insert(node, DFS_GRAY);
 }
 

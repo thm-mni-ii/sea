@@ -164,7 +164,8 @@ UndirectedGraph GraphCreator::createRandomGeneratedUndirected(uint32_t order) {
     UndirectedGraph g(order);
     std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
     for (uint32_t a = 0; a < order; a++) {
-        for(uint b=0; b<5; b++) {
+        for (uint c = 0; c < 5; c++) {
+            uint b = rnd(rng);
             Node &n1 = g.getNode(a), &n2 = g.getNode(b);
             uint32_t i1 = g.getNodeDegree(a), i2 = g.getNodeDegree(b);
             n1.addAdjacency(b);

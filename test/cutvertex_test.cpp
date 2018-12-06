@@ -44,8 +44,7 @@ TEST(CutVertexIteratorTest, lineGraph) {
 }
 
 TEST(CutVertexIteratorTest, stability) {
-    UndirectedGraph g =
-        GraphCreator::createRandomGeneratedUndirected(2000);
+    UndirectedGraph g = GraphCreator::createRandomGeneratedUndirected(2000);
     CutVertexIterator c(&g);
     c.init();
     while (c.more()) c.next();

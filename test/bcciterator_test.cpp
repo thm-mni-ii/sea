@@ -76,10 +76,11 @@ TEST(BCCIteratorTest, lineGraph) {
 }
 
 TEST(BCCIteratorTest, stability) {
-    UndirectedGraph g =
-        GraphCreator::createRandomKRegularUndirectedGraph(2000, 5);
+    UndirectedGraph g = GraphCreator::createRandomGeneratedUndirected(2000);
     BCCIterator b(&g);
     b.init();
+    b.start(0, 150);  // we can name an arbitrary edge because only the second
+                      // vertex matters for the purpose of this test
     while (b.more()) b.next();
     SUCCEED();
 }

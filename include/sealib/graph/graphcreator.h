@@ -61,7 +61,8 @@ class GraphCreator {
     static DirectedGraph createRandomGenerated(uint32_t order);
 
     /**
-     * Generate a random undirected graph. Each node will have at least 5 connections to other nodes.
+     * Generate a random undirected graph. Each node will have at least 5
+     * connections to other nodes.
      * @param order number of nodes
      * @return the resulting undirected graph: n = order, m = O(n)
      */
