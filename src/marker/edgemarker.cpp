@@ -39,7 +39,10 @@ EdgeMarker::EdgeMarker(UndirectedGraph *graph)
       n(g->getOrder()),
       parent(g),
       edges(makeEdges(g)),
-      offset(makeOffset(g)) {}
+      offset(makeOffset(g)) {
+    identifyEdges();
+    markTreeEdges();
+}
 
 void EdgeMarker::identifyEdges() {
     CompactArray color(n, 3);
@@ -51,7 +54,9 @@ void EdgeMarker::identifyEdges() {
                 [this, &color](uint u, uint k) {
                     if (!isInitialized(u, k)) {
                         uint v = g->head(u, k);
-                        if (color.get(v) == DFS_WHITE) {
+                        if (u == v) {
+                            initEdge(u, k, NONE);
+                        } else if (color.get(v) == DFS_WHITE) {
                             initEdge(u, k, UNMARKED);
                         } else if (color.get(v) == DFS_GRAY) {
                             // initializing {u,v} as a back edge with v parent

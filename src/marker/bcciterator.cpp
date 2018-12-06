@@ -9,8 +9,6 @@ BCCIterator::BCCIterator(std::shared_ptr<EdgeMarker> edges)
     : e(edges), g(e->getGraph()), n(g->getOrder()), color(n, 3), parent(g) {}
 
 void BCCIterator::init() {
-    e->identifyEdges();
-    e->markTreeEdges();
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
 }
 

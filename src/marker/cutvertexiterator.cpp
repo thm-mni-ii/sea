@@ -5,10 +5,7 @@
 namespace Sealib {
 
 CutVertexIterator::CutVertexIterator(UndirectedGraph *graph)
-    : CutVertexIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {
-    e->identifyEdges();
-    e->markTreeEdges();
-}
+    : CutVertexIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {}
 
 CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
     : e(edges), g(e->getGraph()), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {}
@@ -17,8 +14,6 @@ void CutVertexIterator::findCCs() {
     CompactArray color(n, 3);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     StaticSpaceStorage parent(g);
-
-    // identify connected components
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             cc.insert(a);
