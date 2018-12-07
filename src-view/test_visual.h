@@ -5,6 +5,7 @@
 #include "sealib/iterator/edgemarker.h"
 #include "sealibvisual/examples.h"
 #include "sealibvisual/tikzgenerator.h"
+#include "sealib/graph/graphio.h"
 
 namespace SealibVisual {
 
@@ -14,16 +15,18 @@ class VisualTest {
         uint n = 20;
         Sealib::DirectedGraph g =
             Sealib::GraphCreator::createRandomKRegularGraph(n, 3);
-        VisualBFS b(&g, Sealib::CompactArray(n, 4), "out-bfs3.tex");
+        VisualBFS b(&g, Sealib::CompactArray(n, 4), "out-bfs.tex");
         b.run();
     }
 
     static void testDFS() {
-        uint n = 20;
+        uint n = 50;
         Sealib::DirectedGraph g =
-            Sealib::GraphCreator::createRandomKRegularGraph(n, 3);
+            Sealib::GraphCreator::createRandomKRegularGraph(n, 1);
+        //Sealib::GraphExporter::exportGML(&g,true,"dfs.gml");
+        //Sealib::DirectedGraph g=Sealib::GraphImporter::importGML<Sealib::DirectedGraph>("dfs.gml");
         Sealib::CompactArray c(n, 3);
-        VisualDFS d(&g, &c, "out-dfs3.tex");
+        VisualDFS d(&g, &c, "out-dfs.tex", "beamer");
         d.run();
     }
 

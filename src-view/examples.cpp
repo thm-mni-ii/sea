@@ -71,30 +71,29 @@ VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
       g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
       c(color),
-      doc(filename, "matrix,graphdrawing,positioning", "layered,force", true,
+      doc(filename, "matrix,graphdrawing,positioning", "trees", true,
           mode),
       pic(new TikzPicture(
-          "spring electrical layout, sibling distance=15mm, node "
+          "tree layout, sibling distance=15mm, node "
           "distance=20mm, node sep=1cm, arrows={->}, line "
           "width=1pt, color=black")) {
     pic->add(tg);
+    emit();
 }
 
 void VisualDFS::emit() {
     doc.beginBlock();
     doc.add(pic);
-    doc.add(TikzGenerator::generateTikzElement(c, g->getOrder(), "color",
-                                               "yshift=-8cm"));
     std::vector<uint> l, h, t;
     for (uint a = 0; a < lp; a++) l.push_back(low[a].first);
     for (uint a = 0; a < hp; a++) h.push_back(high[a].first);
     for (uint a = 0; a < tp; a++) t.push_back(trailers[a].x.first);
     doc.add(TikzGenerator::generateTikzElement(
-        l, "$S_L$", true, "yshift=-8cm, xshift=8cm, name=SL"));
+        l, "$S_L$", true, "yshift=-8cm, xshift=10cm, name=SL"));
     doc.add(TikzGenerator::generateTikzElement(
-        h, "$S_H$", true, "yshift=-8cm, xshift=10cm, name=SH"));
+        h, "$S_H$", true, "yshift=-8cm, xshift=12cm, name=SH"));
     doc.add(TikzGenerator::generateTikzElement(
-        t, "T", true, "yshift=-8cm, xshift=12cm, name=T"));
+        t, "T", true, "yshift=-8cm, xshift=14cm, name=T"));
     doc.endBlock();
 }
 
