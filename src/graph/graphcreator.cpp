@@ -6,6 +6,7 @@
 #include <limits>
 #include <random>
 #include <set>
+#include <unordered_set>
 
 using Sealib::DirectedGraph;
 using Sealib::UndirectedGraph;
@@ -160,20 +161,32 @@ UndirectedGraph GraphCreator::createRandomKRegularUndirectedGraph(
     uint order, uint degreePerNode) {
     UndirectedGraph g(order);
     std::uniform_int_distribution<uint> dist(0, order - 1);
+    std::unordered_set<uint> todo;
     for (uint a = 0; a < order; a++) {
-        while (g.deg(a) < degreePerNode) {
-            uint b = dist(rng);
-            do {
-                b = (b + 1) % order;
-                // don't allow self edges except when `a` is the last node
-            } while (g.deg(b) == degreePerNode || (b != order - 1 && b == a));
-            assert(g.deg(b) < degreePerNode);
-            NodeU &n1 = g.getNode(a), &n2 = g.getNode(b);
-            uint i1 = g.deg(a), i2 = g.deg(b);
-            n1.addAdjacency({b, i2});
-            n2.addAdjacency({a, i1});
+        todo.insert(a);
+    }
+    while (!todo.empty()) {
+        uint a = *todo.begin();
+        todo.erase(a);
+        uint b;
+        if (!todo.empty()) {
+            auto todoI = todo.begin();
+            std::advance(todoI, dist(rng) % todo.size());
+            b = *todoI;
+            todo.erase(b);
+        } else {
+            b = a;
         }
-        assert(g.deg(a) == degreePerNode);
+        NodeU &n1 = g.getNode(a), &n2 = g.getNode(b);
+        uint i1 = g.deg(a), i2 = g.deg(b);
+        n1.addAdjacency({b, i2});
+        n2.addAdjacency({a, i1});
+        if (g.deg(a) < degreePerNode) {
+            todo.insert(a);
+        }
+        if (g.deg(b) < degreePerNode) {
+            todo.insert(b);
+        }
     }
     return g;
 }

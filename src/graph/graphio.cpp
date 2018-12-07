@@ -76,11 +76,11 @@ template<class G>
 static void addAdj(G *g, uint u, uint v);
 
 template<>
-static void addAdj<DirectedGraph>(DirectedGraph *g, uint u, uint v) {
+void addAdj<DirectedGraph>(DirectedGraph *g, uint u, uint v) {
     g->getNode(u).addAdjacency(v);
 }
 template<>
-static void addAdj<UndirectedGraph>(UndirectedGraph *g, uint u, uint v) {
+void addAdj<UndirectedGraph>(UndirectedGraph *g, uint u, uint v) {
     g->getNode(u).addAdjacency({v, g->deg(v)-1});
     g->getNode(v).addAdjacency({u, g->deg(u)-1});
 }
