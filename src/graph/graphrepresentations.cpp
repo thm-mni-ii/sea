@@ -7,7 +7,6 @@
 #include <vector>
 #include <algorithm>
 #include <set>
-#include "sealib/graph/adjacency.h"
 #include "sealib/graph/compactgraph.h"
 #include "sealib/graph/node.h"
 
