@@ -3,15 +3,13 @@
 #include <stdexcept>
 #include "sealib/_types.h"
 
-#include <iostream>
-
 #define PRELUDE                                                              \
     uint g1 = i * valueWidth / BITSIZE, g2 = (i + 1) * valueWidth / BITSIZE; \
     uint b1 = (i * valueWidth) % BITSIZE,                                    \
          b2 = ((i + 1) * valueWidth) % BITSIZE - 1;                          \
     uint s = BITSIZE - b2 - 1;
 
-#define IF_SINGLE_GROUP if (g1 == g2 || b2 == 0) {
+#define IF_SINGLE_GROUP if (g1 == g2) {
 #define ELSE_IF_DOUBLE_GROUP                          \
     }                                                 \
     else { /*NOLINT*/                                 \
@@ -42,25 +40,17 @@ uint CompactArray::get(uint i) const {
     uint r;
     PRELUDE
     IF_SINGLE_GROUP
-    std::cout << "single\n";
     r = (data[g1] >> s) & singleMask;
     ELSE_IF_DOUBLE_GROUP
-    std::cout << "double\n";
     r = (data[g1] & startMask) << (b2 + 1);
     r |= (data[g2] & (endMask << s)) >> s;
     END return r;
 }
 
-static constexpr uint safeDiv(uint p1, uint p2) {
-    return p2 == 0 ? 0 : p1 / p2;
-}
-
-static constexpr uint ceilDiv(uint p1, uint p2) { return (p1 + p2 - 1) / p2; }
-
 CompactArray::CompactArray(uint size, uint values)
     : valueWidth(static_cast<uint>(ceil(log2(values)))),
       singleMask((ONE << valueWidth) - 1),
-      data(size * valueWidth / BITSIZE) {
+      data(size * valueWidth / BITSIZE + 1) {
     if (valueWidth >= sizeof(uint) * 8) {
         throw std::domain_error("v is too big (max v = bitsize(uint))");
     }
