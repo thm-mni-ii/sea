@@ -55,7 +55,7 @@ class ExtendedSegmentStackTest : public ::testing::Test {
     ExtendedSegmentStack *s;
     uint32_t q;
     CompactArray *c;
-    DirectedGraph g;
+    DirectedGraph g{0};
     virtual void SetUp() {
         uint32_t n = 256;
         g = Sealib::GraphCreator::createRandomKRegularGraph(n, 10);
@@ -72,7 +72,7 @@ class ExtendedSegmentStackTest2 : public ::testing::Test {
     ExtendedSegmentStack *s;
     uint32_t q;
     CompactArray *c;
-    DirectedGraph g;
+    DirectedGraph g{0};
     virtual void SetUp() {
         uint32_t n = 128;
         g = Sealib::GraphCreator::createRandomImbalanced(n);
@@ -163,9 +163,9 @@ TEST_F(ExtendedSegmentStackTest, outgoingEdgeSmall) {
 TEST_F(ExtendedSegmentStackTest2, outgoingEdgeBig) {
     uint m = 0;
     std::set<uint> big;
-    for (uint u = 0; u < g.getOrder(); u++) m += g.getNodeDegree(u);
+    for (uint u = 0; u < g.getOrder(); u++) m += g.deg(u);
     for (uint u = 0; u < g.getOrder(); u++) {
-        if (g.getNodeDegree(u) > m / q) {
+        if (g.deg(u) > m / q) {
             big.insert(u);
         }
     }

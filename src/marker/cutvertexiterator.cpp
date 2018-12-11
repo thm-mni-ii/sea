@@ -1,6 +1,6 @@
 #include "sealib/iterator/cutvertexiterator.h"
-#include "sealib/dictionary/choicedictionary.h"
 #include "sealib/collection/staticspacestorage.h"
+#include "sealib/dictionary/choicedictionary.h"
 
 namespace Sealib {
 
@@ -9,7 +9,7 @@ CutVertexIterator::CutVertexIterator(EdgeMarker *edges)
     externalEdgeMarker = true;
 }
 
-CutVertexIterator::CutVertexIterator(UndirectedGraph *graph)
+CutVertexIterator::CutVertexIterator(UndirectedGraph const *graph)
     : g(graph),
       n(g->getOrder()),
       e(new EdgeMarker(graph)),
@@ -50,7 +50,7 @@ void CutVertexIterator::init() {
         if (cc.get(u)) {
             // u is root of a DFS tree
             uint num = 0;
-            for (uint k = 0; k < g->getNodeDegree(u); k++) {
+            for (uint k = 0; k < g->deg(u); k++) {
                 if (e->isTreeEdge(u, k) && e->isParent(u, k)) {
                     num++;
                 }
@@ -60,7 +60,7 @@ void CutVertexIterator::init() {
                 }
             }
         } else {
-            for (uint k = 0; k < g->getNodeDegree(u); k++) {
+            for (uint k = 0; k < g->deg(u); k++) {
                 if (e->isTreeEdge(u, k) && e->isParent(u, k) &&
                     !e->isFullMarked(u, k)) {
                     cut.insert(u);

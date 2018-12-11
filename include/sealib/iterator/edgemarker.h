@@ -1,10 +1,10 @@
 #ifndef SEALIB_ITERATOR_EDGEMARKER_H_
 #define SEALIB_ITERATOR_EDGEMARKER_H_
-#include "sealib/graph/undirectedgraph.h"
 #include "sealib/collection/compactarray.h"
-#include "sealib/iterator/dfs.h"
-#include "sealib/dictionary/rankselect.h"
 #include "sealib/collection/staticspacestorage.h"
+#include "sealib/dictionary/rankselect.h"
+#include "sealib/graph/undirectedgraph.h"
+#include "sealib/iterator/dfs.h"
 
 namespace Sealib {
 /**
@@ -20,7 +20,7 @@ class EdgeMarker {
      * Create a new edge marker from a given undirected graph.
      * @param g undirected graph
      */
-    explicit EdgeMarker(UndirectedGraph *g);
+    explicit EdgeMarker(UndirectedGraph const *g);
 
     /**
      * Run a DFS to classify edges of G. When an outging edge (u,k) points to a
@@ -48,7 +48,7 @@ class EdgeMarker {
      * Get the graph that this edge marker is using.
      * @return pointer to the undirected graph used
      */
-    CONSTEXPR_IF_CLANG UndirectedGraph *getGraph() const { return g; }
+    CONSTEXPR_IF_CLANG UndirectedGraph const *getGraph() const { return g; }
 
     /** Edge data: (4 bits)
      *      TTTP
@@ -83,7 +83,7 @@ class EdgeMarker {
     }
 
  private:
-    UndirectedGraph *g;
+    UndirectedGraph const *g;
     uint n;
     StaticSpaceStorage parent;
     StaticSpaceStorage edges;

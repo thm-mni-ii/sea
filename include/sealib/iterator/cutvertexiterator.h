@@ -19,7 +19,7 @@ class CutVertexIterator : Iterator<uint>, DFS {
      * Create a new cut vertex iterator for an undirected graph G.
      * @param g the undirected graph G=(V,E)
      */
-    explicit CutVertexIterator(UndirectedGraph *g);
+    explicit CutVertexIterator(UndirectedGraph const *g);
 
     /**
      * Create a new cut vertex iterator from an existing EdgeMarker.
@@ -63,7 +63,7 @@ class CutVertexIterator : Iterator<uint>, DFS {
     inline EdgeMarker getEdgeMarker() { return std::move(*e); }
 
  private:
-    UndirectedGraph *g;
+    UndirectedGraph const *g;
     uint n;
     EdgeMarker *e;
     ChoiceDictionary cc;

@@ -19,7 +19,7 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
      * Create a new BCC iterator from a given undirected graph.
      * @param g undirected graph G=(V,E)
      */
-    explicit BCCIterator(UndirectedGraph *g);
+    explicit BCCIterator(UndirectedGraph const *g);
 
     /**
      * Create a new BCC iterator from an existing EdgeMarker object.
@@ -66,7 +66,7 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
     inline EdgeMarker getEdgeMarker() { return std::move(*e); }
 
  private:
-    UndirectedGraph *g;
+    UndirectedGraph const *g;
     uint n;
     EdgeMarker *e;
     CompactArray color;

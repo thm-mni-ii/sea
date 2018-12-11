@@ -42,7 +42,8 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void standardDFS(Graph *g, Consumer preprocess = DFS_NOP_PROCESS,
+    static void standardDFS(Graph const *g,
+                            Consumer preprocess = DFS_NOP_PROCESS,
                             BiConsumer preexplore = DFS_NOP_EXPLORE,
                             BiConsumer postexplore = DFS_NOP_EXPLORE,
                             Consumer postprocess = DFS_NOP_PROCESS);
@@ -57,7 +58,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nBitDFS(Graph *g, Consumer preprocess = DFS_NOP_PROCESS,
+    static void nBitDFS(Graph const *g, Consumer preprocess = DFS_NOP_PROCESS,
                         BiConsumer preexplore = DFS_NOP_EXPLORE,
                         BiConsumer postexplore = DFS_NOP_EXPLORE,
                         Consumer postprocess = DFS_NOP_PROCESS);
@@ -73,7 +74,8 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nloglognBitDFS(Graph *g, Consumer preprocess = DFS_NOP_PROCESS,
+    static void nloglognBitDFS(Graph const *g,
+                               Consumer preprocess = DFS_NOP_PROCESS,
                                BiConsumer preexplore = DFS_NOP_EXPLORE,
                                BiConsumer postexplore = DFS_NOP_EXPLORE,
                                Consumer postprocess = DFS_NOP_PROCESS);
@@ -90,7 +92,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nplusmBitDFS(UndirectedGraph *g,
+    static void nplusmBitDFS(UndirectedGraph const *g,
                              Consumer preprocess = DFS_NOP_PROCESS,
                              BiConsumer preexplore = DFS_NOP_EXPLORE,
                              BiConsumer postexplore = DFS_NOP_EXPLORE,
@@ -109,27 +111,27 @@ class DFS {
                                         uint32_t startVertex);
 
  protected:
-    static void process_standard(uint u0, Graph *g, uint *color,
+    static void process_standard(uint u0, Graph const *g, uint *color,
                                  Consumer preprocess, BiConsumer preexplore,
                                  BiConsumer postexplore, Consumer postprocess);
 
     template <class SS>
-    static void process_small(uint u0, Graph *g, CompactArray *color, SS *s,
-                              void (*restoration)(uint, Graph *, CompactArray *,
-                                                  SS *),
+    static void process_small(uint u0, Graph const *g, CompactArray *color,
+                              SS *s, void (*restoration)(uint, Graph const *,
+                                                         CompactArray *, SS *),
                               Consumer preprocess, BiConsumer preexplore,
                               BiConsumer postexplore, Consumer postprocess);
 
     template <class S>
-    static void process_static(uint u0, UndirectedGraph *g, CompactArray *color,
-                               S *back, Consumer preprocess,
-                               BiConsumer preexplore, BiConsumer postexplore,
-                               Consumer postprocess);
+    static void process_static(uint u0, UndirectedGraph const *g,
+                               CompactArray *color, S *back,
+                               Consumer preprocess, BiConsumer preexplore,
+                               BiConsumer postexplore, Consumer postprocess);
 
-    static void restore_full(uint u0, Graph *g, CompactArray *color,
+    static void restore_full(uint u0, Graph const *g, CompactArray *color,
                              BasicSegmentStack *s);
 
-    static void restore_top(uint u0, Graph *g, CompactArray *color,
+    static void restore_top(uint u0, Graph const *g, CompactArray *color,
                             ExtendedSegmentStack *s);
 
 #ifdef SEALIB_ITERATOR_EDGEMARKER_H_

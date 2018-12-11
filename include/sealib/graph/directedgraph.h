@@ -9,78 +9,61 @@ namespace Sealib {
 /**
  * A directed graph G = (V, E) with nodes V = [0, n - 1].
  * The graph stores its edges V inside adjacency arrays.
- * @complexity (O((n + m) log n)) bits Stores a undirected graph with n vertices
- * and m edges using (n + 4m) log n bits.
+ * Complexity: (O((n + m) log n)) bits Stores a directed graph with n vertices
+ * and m edges using (n + m) log n bits.
  */
 class DirectedGraph : public Graph {
- private:
-    std::vector<Sealib::Node> nodes;
-
  public:
-    /**
-     * Creates a graph out of its nodes.
-     * @param _nodes Array of nodes.
-     * @param _order Order of the graph (equals the length of the nodes array).
-     */
-    DirectedGraph(Node *nodes_, uint32_t order_);
-
     /**
      * Created a new graph object with the nodes provided by the nodes_ vector
      * @param nodes_ vector of nodes (ref)
      */
-    explicit DirectedGraph(const std::vector<Sealib::Node> &nodes_);
-
-    /**
-     * Created a new empty graph object with no nodes
-     */
-    DirectedGraph();
+    explicit DirectedGraph(std::vector<NodeD> const &_nodes) : nodes(_nodes) {}
 
     /**
      * Created a graph with the specified order and without any edges.
      * @param order - order of the graph
      */
-    explicit DirectedGraph(uint32_t order);
+    explicit DirectedGraph(uint order) : nodes(order) {}
 
     /**
      * Adds a new node to the graph
      * @param const ref of node to be added
      */
-    void addNode(const Sealib::Node &node);
+    void addNode(NodeD const &node) { nodes.emplace_back(node); }
 
     /**
      * Getter for a specific node in the nodes array.
-     * @param u index in the nodes array.
-     * @return Pointer to the Node in the nodes array.
+     * @param u index in the nodes array
+     * @return Reference to the Node in the nodes array (const or non-const
+     * version)
      */
-    const Node &getNode(uint32_t u) const;
-
-    /**
-     * Getter for a specific node in the nodes array.
-     * @param u index in the nodes array.
-     * @return Pointer to the Node in the nodes array.
-     */
-    Node &getNode(uint32_t u);
+    NodeD const &getNode(uint u) const { return nodes[u]; }
+    NodeD &getNode(uint u) { return nodes[u]; }
 
     /**
      * Returns the degree of the node that u points at.
-     * @param u Vertex u
-     * @return Returns d that is the degree of node v.
+     * @param u Vertex number
+     * @return degree of node u
      */
-    uint32_t getNodeDegree(uint32_t u) const override;
+    uint deg(uint u) const override { return nodes[u].getDegree(); }
 
     /**
      * Returns the vertex v that u points at with its k-th edge.
      * @param u Vertex u
      * @param k index in the adjacency vector of node u
-     * @return Returns v that is the k-th neighbor of u.
+     * @return the k-th neighbor of u
      */
-    uint32_t head(uint32_t u, uint32_t k) const override;
+    uint head(uint u, uint k) const override { return nodes[u].getAdj()[k]; }
 
     /**
-     * @return Returns the order of the graph, i.e, the total number of
+     * @return the order of the graph, i.e, the total number of
      * vertices.
      */
-    uint32_t getOrder() const override;
+    uint getOrder() const override { return nodes.size(); }
+
+ private:
+    std::vector<NodeD> nodes;
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_DIRECTEDGRAPH_H_
