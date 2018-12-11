@@ -12,11 +12,11 @@ TEST(CompactGraphTest, compactgraph_integrity) {
 
     ASSERT_EQ(g->getOrder(), 5);
 
-    ASSERT_EQ(g->getNodeDegree(0), 2);
-    ASSERT_EQ(g->getNodeDegree(1), 2);
-    ASSERT_EQ(g->getNodeDegree(2), 2);
-    ASSERT_EQ(g->getNodeDegree(3), 2);
-    ASSERT_EQ(g->getNodeDegree(4), 1);
+    ASSERT_EQ(g->deg(0), 2);
+    ASSERT_EQ(g->deg(1), 2);
+    ASSERT_EQ(g->deg(2), 2);
+    ASSERT_EQ(g->deg(3), 2);
+    ASSERT_EQ(g->deg(4), 1);
 
     // vertex enumeration start with 0 in compact graph representation
     ASSERT_EQ(g->head(0, 0), 2);
@@ -43,11 +43,11 @@ TEST(CompactGraphTest, fastGraphGeneration) {
     ASSERT_LE(g->head(4, 0), 5);
     ASSERT_LE(g->head(4, 1), 5);
 
-    ASSERT_EQ(g->getNodeDegree(0), 2);
-    ASSERT_EQ(g->getNodeDegree(1), 2);
-    ASSERT_EQ(g->getNodeDegree(2), 2);
-    ASSERT_EQ(g->getNodeDegree(3), 2);
-    ASSERT_EQ(g->getNodeDegree(4), 2);
+    ASSERT_EQ(g->deg(0), 2);
+    ASSERT_EQ(g->deg(1), 2);
+    ASSERT_EQ(g->deg(2), 2);
+    ASSERT_EQ(g->deg(3), 2);
+    ASSERT_EQ(g->deg(4), 2);
 
     delete g;
 }

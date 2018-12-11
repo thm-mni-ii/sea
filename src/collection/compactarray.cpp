@@ -1,7 +1,7 @@
-#include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
 #include <math.h>
 #include <stdexcept>
+#include "sealib/_types.h"
 
 using Sealib::CompactArray;
 using Sealib::uint;

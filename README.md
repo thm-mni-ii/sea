@@ -60,12 +60,11 @@ This example shows how to use the contents of the library.
 #include <sealib/iterator/dfs.h>
 #include <sealib/graph/graphcreator.h>
 
-bool reachable(uint a, uint b) {
+bool reachable(DirectedGraph *g, uint a, uint b) {
     bool ret = false;
-    DirectedGraph g = GraphCreator::createRandomFixed(100, 30);
     ChoiceDictionary started(100);
     ChoiceDictionary done(100);
-    DFS::nloglognBitDFS(&g,
+    DFS::nloglognBitDFS(g,
                         [&](uint u) {
                             started.insert(u);
                             if (u == b && started.get(a) && !done.get(a)) {
@@ -75,6 +74,11 @@ bool reachable(uint a, uint b) {
                         DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                         [&](uint u) { done.insert(u); });
     return ret;
+}
+
+int main(void) {
+    DirectedGraph g = GraphCreator::createRandomKRegularGraph(100, 30);
+    bool result = reachable(&g, 10, 25);
 }
 ```
 

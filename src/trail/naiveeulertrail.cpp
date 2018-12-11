@@ -60,8 +60,8 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
         uint32_t uMate;
         do {
             uint32_t from = u;
-            uMate = g->getNode(u).getAdj()[k].crossIndex;
-            u = g->getNode(u).getAdj()[k].vertex;  // next node
+            uMate = g->getNode(u).getAdj()[k].second;
+            u = g->getNode(u).getAdj()[k].first;  // next node
             k = ts[u]->enter(uMate);
             tempTrail.addArc(std::make_tuple(from, u));
         } while (k != (uint32_t) -1);
