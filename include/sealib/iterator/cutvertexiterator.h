@@ -20,7 +20,7 @@ class CutVertexIterator : Iterator<uint>, DFS {
      * Create a new cut-vertex iterator for an undirected graph G.
      * @param g the undirected graph G=(V,E)
      */
-    explicit CutVertexIterator(UndirectedGraph *g);
+    explicit CutVertexIterator(UndirectedGraph const *g);
 
     /**
      * Create a new cut-vertex iterator from a given edge marker (allows
@@ -57,13 +57,15 @@ class CutVertexIterator : Iterator<uint>, DFS {
 
  private:
     std::shared_ptr<EdgeMarker> e;
-    UndirectedGraph *g;
+    UndirectedGraph const *g;
     uint n;
     ChoiceDictionary cc;
     ChoiceDictionary cut;
     ChoiceDictionaryIterator cutI;
 
     void markParents(uint w, uint u, StaticSpaceStorage *parent);
+
+    inline void findCCs();
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_CUTVERTEXITERATOR_H_

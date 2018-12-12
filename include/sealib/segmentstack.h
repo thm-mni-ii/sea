@@ -101,7 +101,7 @@ class ExtendedSegmentStack : public SegmentStack {
      * @param g Directed graph G=(V,E)
      * @param c Compact array holding color values
      */
-    ExtendedSegmentStack(uint size, Graph *g, CompactArray *c);
+    ExtendedSegmentStack(uint size, Graph const *g, CompactArray *c);
 
     void push(std::pair<uint, uint> u) override;
 
@@ -177,16 +177,16 @@ class ExtendedSegmentStack : public SegmentStack {
     CompactArray table, edges;
     std::vector<std::pair<uint, uint>> big;
     unsigned bp;
-    Graph *graph;
+    Graph const *graph;
     unsigned m, n;
     CompactArray *color;
 
     static constexpr unsigned INVALID = static_cast<unsigned>(-1);
     void storeEdges();
 
-    #ifdef SEALIBVISUAL_EXAMPLES_H_
+#ifdef SEALIBVISUAL_EXAMPLES_H_
     friend class SealibVisual::VisualDFS;
-    #endif  // SEALIBVISUAL_EXAMPLES_H
+#endif  // SEALIBVISUAL_EXAMPLES_H
 };
 }  // namespace Sealib
 #endif  // SEALIB_SEGMENTSTACK_H_

@@ -7,70 +7,11 @@
 #include <vector>
 #include <algorithm>
 #include <set>
-#include "sealib/graph/adjacency.h"
 #include "sealib/graph/compactgraph.h"
 #include "sealib/graph/node.h"
 
 using Sealib::Graphrepresentations;
 using Sealib::CompactGraph;
-
-/*
-uint32_t* Graphrepresentations::graphToStandard(Graph* g) {
-  uint32_t order = g->getOrder();
-  uint32_t numEdges = 0;
-  for (uint32_t i = 0; i < order; ++i) {
-    numEdges += g->getNode(i)->getDegree();
-  }
-  uint32_t* standardgraph = new uint32_t[order + 2 + numEdges];
-  standardgraph[0] = order;
-  standardgraph[order + 1] = numEdges;
-  uint32_t adjptr = order + 2;
-  for (uint32_t i = 1; i <= order; ++i) {
-    Node* node = g->getNode(i - 1);
-    uint32_t degree = node->getDegree();
-    Adjacency* adj = node->getAdj();
-    standardgraph[i] = adjptr;
-    for (uint32_t j = 0; j < degree; ++j) {
-      standardgraph[adjptr + j] = adj[j].vertex + 1;
-    }
-    adjptr += degree;
-  }
-  return standardgraph;
-}
-
-Graph* Graphrepresentations::standardToGraph(uint32_t* a) {
-  uint32_t order = a[0];
-  uint32_t size = a[order + 1];
-  // save the total number of size of the array so we dont have to
-  // determine the last vertex in a special case
-  a[order + 1] = order + size + 2;
-  Node* nodes = static_cast<Node*>(malloc(sizeof(Node) * order));
-  for (uint32_t i = 0; i < order; ++i) {
-    // vertex names in standard representations start at 1
-    uint32_t v = i + 1;
-    // if a node points to itself it has no edges
-    if (a[v] == v) {
-      nodes[i] = Node(nullptr, 0);
-    } else {
-      // if the neighboring nodes are pointing on themself
-      // we have to skip them to determine the degree
-      uint32_t pos = 1;
-      while (a[v + pos] < order + 1) {
-        ++pos;
-      }
-      uint32_t degree = a[v + pos] - a[v];
-      Adjacency* adj =
-          static_cast<Adjacency*>(malloc(sizeof(Adjacency) * degree));
-      for (uint32_t j = 0; j < degree; ++j) {
-        // a[a[v]] points to adj array of v
-        adj[j] = Adjacency(a[a[v] + j] - 1);
-      }
-      nodes[i] = Node(adj, degree);
-    }
-  }
-  return new Graph(nodes, order);
-}
-*/
 
 void Graphrepresentations::standardToCrosspointer(uint32_t* a) {
   uint32_t n = a[0], v, u, pv, pu;

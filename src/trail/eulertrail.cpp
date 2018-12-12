@@ -24,8 +24,8 @@ template<class TrailStructureType>
 typename EulerTrail<TrailStructureType>::iterator
 &EulerTrail<TrailStructureType>::iterator::operator++() {
     if (arc != (uint32_t) -1) {
-        uint32_t uCross = eulerTrail.graph->getNode(mIndex).getAdj()[arc].crossIndex;
-        mIndex = eulerTrail.graph->getNode(mIndex).getAdj()[arc].vertex;
+        uint32_t uCross = eulerTrail.graph->getNode(mIndex).getAdj()[arc].second;
+        mIndex = eulerTrail.graph->getNode(mIndex).getAdj()[arc].first;
         arc = eulerTrail.trail[mIndex].getMatched(uCross);
         if (arc == uCross) {
             arc = (uint32_t) -1;
@@ -122,8 +122,8 @@ EulerTrail<TrailStructureType>::initializeTrail() {
         uint32_t k = kFirst;
         uint32_t uMate;
         do {
-            uMate = graph->getNode(u).getAdj()[k].crossIndex;
-            u = graph->getNode(u).getAdj()[k].vertex;  // next node
+            uMate = graph->getNode(u).getAdj()[k].second;
+            u = graph->getNode(u).getAdj()[k].first;  // next node
             k = trail_.at(u).enter(uMate);
         } while (k != (uint32_t) -1);
 

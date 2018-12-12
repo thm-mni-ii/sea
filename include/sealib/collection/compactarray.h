@@ -1,10 +1,10 @@
 #ifndef SEALIB_COLLECTION_COMPACTARRAY_H_
 #define SEALIB_COLLECTION_COMPACTARRAY_H_
 
+#include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/bitset.h"
 #include "sealib/collection/sequence.h"
-#include <vector>
 
 using Sealib::Bitset;
 
@@ -40,14 +40,10 @@ class CompactArray : public Sequence<uint> {
      * @param i index to get the value from
      * @return the found value
      */
-    inline uint get(uint i) const override {
-        return (data[i / valuesPerGroup] >>
-                ((valuesPerGroup - (i % valuesPerGroup) - 1) * valueWidth)) &
-               valueMask;
-    }
+    uint get(uint i) const override;
 
  private:
-    const uint valueWidth, valuesPerGroup, valueMask;
+    uint valueWidth, singleMask;
     std::vector<uint> data;
 };
 }  // namespace Sealib

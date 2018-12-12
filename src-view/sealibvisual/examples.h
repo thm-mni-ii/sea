@@ -81,16 +81,15 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
 
 class VisualEdgeMarker : public Sealib::EdgeMarker {
  public:
-    VisualEdgeMarker(Sealib::UndirectedGraph *g, TikzDocument *doc,
-                     std::shared_ptr<TikzPicture> pic,
-                     std::shared_ptr<TikzGraph> tg);
+    VisualEdgeMarker(Sealib::UndirectedGraph *g);
+    ~VisualEdgeMarker();
 
     void initEdge(uint u, uint k, uint8_t type) override;
 
     void setMark(uint u, uint k, uint8_t mark) override;
 
  private:
-    TikzDocument *doc;
+    TikzDocument doc;
     std::shared_ptr<TikzPicture> pic;
     std::shared_ptr<TikzGraph> tg;
 

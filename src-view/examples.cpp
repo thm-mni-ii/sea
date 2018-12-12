@@ -71,12 +71,10 @@ VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
       g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
       c(color),
-      doc(filename, "matrix,graphdrawing,positioning", "trees", true,
-          mode),
-      pic(new TikzPicture(
-          "tree layout, sibling distance=15mm, node "
-          "distance=20mm, node sep=1cm, arrows={->}, line "
-          "width=1pt, color=black")) {
+      doc(filename, "matrix,graphdrawing,positioning", "trees", true, mode),
+      pic(new TikzPicture("tree layout, sibling distance=15mm, node "
+                          "distance=20mm, node sep=1cm, arrows={->}, line "
+                          "width=1pt, color=black")) {
     pic->add(tg);
     emit();
 }
@@ -118,17 +116,24 @@ void VisualDFS::run() {
 
 // --- VISUAL EDGE MARKER ---
 
-VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, TikzDocument *_doc,
-                                   std::shared_ptr<TikzPicture> _pic,
-                                   std::shared_ptr<TikzGraph> _tg)
-    : EdgeMarker(graph), doc(_doc), pic(_pic), tg(_tg) {
+VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph)
+    : EdgeMarker(graph),
+      doc("out-cutvertex.tex", "matrix,graphdrawing,positioning,quotes",
+          "layered,force", true),
+      pic(new TikzPicture(
+          "spring electrical layout, sibling distance=15mm, node "
+          "distance=20mm, node sep=1cm, arrows={->}, line "
+          "width=1pt, color=black")),
+      tg(TikzGenerator::generateTikzElement(g)) {
     emit();
 }
 
+VisualEdgeMarker::~VisualEdgeMarker() { doc.close(); }
+
 void VisualEdgeMarker::emit() {
-    doc->beginBlock();
-    doc->add(pic);
-    doc->endBlock();
+    doc.beginBlock();
+    doc.add(pic);
+    doc.endBlock();
 }
 
 std::string VisualEdgeMarker::getStyle(uint u, uint k) {
@@ -194,11 +199,11 @@ VisualCutVertex::VisualCutVertex(std::shared_ptr<VisualEdgeMarker> edges)
     : CutVertexIterator(edges), e(edges) {}
 
 void VisualCutVertex::emit(uint u) {
-    e->doc->beginBlock();
+    e->doc.beginBlock();
     std::cout << u << " is a cut vertex\n";
     e->tg->getNodes()[u].setOptions("circle,draw=blue,double");
-    e->doc->add(e->pic);
-    e->doc->endBlock();
+    e->doc.add(e->pic);
+    e->doc.endBlock();
 }
 
 uint VisualCutVertex::next() {

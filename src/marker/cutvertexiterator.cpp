@@ -4,38 +4,33 @@
 
 namespace Sealib {
 
-CutVertexIterator::CutVertexIterator(UndirectedGraph *graph)
+CutVertexIterator::CutVertexIterator(UndirectedGraph const *graph)
     : CutVertexIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {}
 
 CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
     : e(edges), g(e->getGraph()), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {}
 
-void CutVertexIterator::init() {
-    {
-        CompactArray color(n, 3);
-        for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-        StaticSpaceStorage parent(g);
-
-        // identify connected components
-        for (uint a = 0; a < n; a++) {
-            if (color.get(a) == DFS_WHITE) {
-                cc.insert(a);
-                process_static(a, g, &color, &parent, DFS_NOP_PROCESS,
-                               DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                               DFS_NOP_PROCESS);
-            }
+void CutVertexIterator::findCCs() {
+    CompactArray color(n, 3);
+    for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
+    StaticSpaceStorage parent(g);
+    for (uint a = 0; a < n; a++) {
+        if (color.get(a) == DFS_WHITE) {
+            cc.insert(a);
+            process_static(a, g, &color, &parent, DFS_NOP_PROCESS,
+                           DFS_NOP_EXPLORE, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         }
     }
+}
 
-    e->identifyEdges();
-
-    e->markTreeEdges();
+void CutVertexIterator::init() {
+    findCCs();
 
     for (uint u = 0; u < n; u++) {
         if (cc.get(u)) {
             // u is root of a DFS tree
             uint num = 0;
-            for (uint k = 0; k < g->getNodeDegree(u); k++) {
+            for (uint k = 0; k < g->deg(u); k++) {
                 if (e->isTreeEdge(u, k) && e->isParent(u, k)) {
                     num++;
                 }
@@ -45,7 +40,7 @@ void CutVertexIterator::init() {
                 }
             }
         } else {
-            for (uint k = 0; k < g->getNodeDegree(u); k++) {
+            for (uint k = 0; k < g->deg(u); k++) {
                 if (e->isTreeEdge(u, k) && e->isParent(u, k) &&
                     !e->isFullMarked(u, k)) {
                     cut.insert(u);

@@ -1,7 +1,7 @@
-#include "sealib/_types.h"
 #include "sealib/iterator/bfs.h"
 #include <gtest/gtest.h>
 #include <stdio.h>
+#include "sealib/_types.h"
 #include "sealib/graph/graph.h"
 #include "sealib/graph/graphcreator.h"
 
@@ -11,12 +11,8 @@ using Sealib::DirectedGraph;
 using Sealib::GraphCreator;
 
 static uint c1 = 0, c2 = 0;
-static void incr1(uint) {
-    c1++;
-}
-static void incr2(uint, uint) {
-    c2++;
-}
+static void incr1(uint) { c1++; }
+static void incr2(uint, uint) { c2++; }
 
 static uint GRAPHCOUNT = 4, order = 500, degree = 20;
 static std::vector<DirectedGraph> makeGraphs() {

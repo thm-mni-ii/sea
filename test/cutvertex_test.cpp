@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <iostream>
-#include "sealib/iterator/cutvertexiterator.h"
 #include "sealib/graph/graphcreator.h"
+#include "sealib/iterator/cutvertexiterator.h"
 
 namespace Sealib {
 
@@ -26,11 +26,9 @@ TEST(CutVertexIteratorTest, lineGraph) {
     uint n = 20;
     UndirectedGraph g(n);
     for (uint a = 0; a < n - 1; a++) {
-        uint i1 = g.getNodeDegree(a), i2 = g.getNodeDegree(a + 1);
-        g.getNode(a).addAdjacency(a + 1);
-        g.getNode(a).setCrossIndex(i1, i2);
-        g.getNode(a + 1).addAdjacency(a);
-        g.getNode(a + 1).setCrossIndex(i2, i1);
+        uint i1 = g.deg(a), i2 = g.deg(a + 1);
+        g.getNode(a).addAdjacency({a + 1, i2});
+        g.getNode(a + 1).addAdjacency({a, i1});
     }
 
     CutVertexIterator c(&g);

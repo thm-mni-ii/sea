@@ -13,9 +13,9 @@ TEST(GraphIOTest, importGML) {
     UndirectedGraph g = GraphImporter::importGML<UndirectedGraph>("graphio1.gml");
     EXPECT_EQ(g.getOrder(), 9);
     for (uint u = 0; u < g.getOrder()-1; u++) {
-        EXPECT_EQ(g.getNodeDegree(u)/2, 2);
+        EXPECT_EQ(g.deg(u)/2, 2);
     }
-    EXPECT_EQ(g.getNodeDegree(g.getOrder()-1)/2, 8);
+    EXPECT_EQ(g.deg(g.getOrder()-1)/2, 8);
 }
 
 }  // namespace Sealib

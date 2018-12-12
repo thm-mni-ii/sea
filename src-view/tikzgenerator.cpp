@@ -57,7 +57,7 @@ std::shared_ptr<SealibVisual::TikzGraph> TikzGenerator::generateTikzElement(
     }
 
     for (unsigned int i = 0; i < g->getOrder(); i++) {
-        for (unsigned int j = 0; j < g->getNodeDegree(i); j++) {
+        for (unsigned int j = 0; j < g->deg(i); j++) {
             std::tuple<std::string, std::string> key = std::make_tuple(
                 std::to_string(i), std::to_string(g->head(i, j)));
             std::tuple<std::string, std::string> keyReverse = std::make_tuple(
@@ -81,7 +81,7 @@ std::shared_ptr<TikzGraph> TikzGenerator::generateTikzElement(
     }
 
     for (unsigned int i = 0; i < g->getOrder(); i++) {
-        for (unsigned int j = 0; j < g->getNodeDegree(i); j++) {
+        for (unsigned int j = 0; j < g->deg(i); j++) {
             std::tuple<std::string, std::string> key = std::make_tuple(
                 std::to_string(i), std::to_string(g->head(i, j)));
 

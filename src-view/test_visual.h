@@ -32,23 +32,12 @@ class VisualTest {
 
     static void testCutVertex() {
         uint n = 20;
-        Sealib::UndirectedGraph *g =
-            Sealib::GraphCreator::createRandomUndirected(n, 2).first;
-        TikzDocument doc("out-cutvertex.tex",
-                         "matrix,graphdrawing,positioning,quotes",
-                         "layered,force", true);
-        std::shared_ptr<TikzPicture> pic(new TikzPicture(
-            "spring electrical layout, sibling distance=15mm, node "
-            "distance=20mm, node sep=1cm, arrows={->}, line "
-            "width=1pt, color=black"));
-        std::shared_ptr<TikzGraph> tg = TikzGenerator::generateTikzElement(g);
-        pic->add(tg);
-        std::shared_ptr<VisualEdgeMarker> e(
-            new VisualEdgeMarker(g, &doc, pic, tg));
+        Sealib::UndirectedGraph g =
+            Sealib::GraphCreator::createRandomKRegularUndirectedGraph(n, 2);
+        std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g));
         VisualCutVertex c(e);
         c.init();
         while (c.more()) c.next();
-        doc.close();
     }
 
     static void testBitset() {

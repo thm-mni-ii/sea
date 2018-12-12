@@ -75,7 +75,7 @@ std::pair<uint, uint> BFS::next() {
         std::swap(isInner, isOuter);
         dist++;
     }
-    for (uint k = 0; k < g->getNodeDegree(u); k++) {
+    for (uint k = 0; k < g->deg(u); k++) {
         uint v = g->head(u, k);
         preexplore(u, v);
         if (color.get(v) == BFS_WHITE) {
@@ -89,7 +89,7 @@ std::pair<uint, uint> BFS::next() {
     return std::pair<uint, uint>(u, dist);
 }
 
-BFS::BFS(Graph *graph, Consumer pp, BiConsumer pe)
+BFS::BFS(Graph const *graph, Consumer pp, BiConsumer pe)
     : g(graph),
       n(g->getOrder()),
       color(n, 4),
@@ -100,7 +100,7 @@ BFS::BFS(Graph *graph, Consumer pp, BiConsumer pe)
     for (uint a = 0; a < n; a++) color.insert(a, BFS_WHITE);
 }
 
-BFS::BFS(Graph *graph, CompactArray c, Consumer pp, BiConsumer pe)
+BFS::BFS(Graph const *graph, CompactArray c, Consumer pp, BiConsumer pe)
     : g(graph),
       n(g->getOrder()),
       color(std::move(c)),
