@@ -5,7 +5,9 @@
 namespace Sealib {
 
 CutVertexIterator::CutVertexIterator(UndirectedGraph const *graph)
-    : CutVertexIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {}
+    : CutVertexIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {
+        e->init();
+    }
 
 CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
     : e(edges), g(e->getGraph()), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {}

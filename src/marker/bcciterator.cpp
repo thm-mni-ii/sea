@@ -3,7 +3,9 @@
 namespace Sealib {
 
 BCCIterator::BCCIterator(UndirectedGraph const *graph)
-    : BCCIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {}
+    : BCCIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {
+        e->init();
+    }
 
 BCCIterator::BCCIterator(std::shared_ptr<EdgeMarker> edges)
     : e(edges), g(e->getGraph()), n(g->getOrder()), color(n, 3), parent(g) {}
