@@ -37,32 +37,32 @@ TEST(GraphTest, graph_integrity) {
     ASSERT_EQ(g.getNode(3).getDegree(), 2);
 
     // verify the adj vector contents of each node
-    ASSERT_EQ(g.getNode(0).getAdj()[0].vertex, 1);
-    ASSERT_EQ(g.getNode(0).getAdj()[1].vertex, 1);
-    ASSERT_EQ(g.getNode(0).getAdj()[2].vertex, 3);
+    ASSERT_EQ(g.getNode(0).getAdj()[0].first, 1);
+    ASSERT_EQ(g.getNode(0).getAdj()[1].first, 1);
+    ASSERT_EQ(g.getNode(0).getAdj()[2].first, 3);
 
-    ASSERT_EQ(g.getNode(1).getAdj()[0].vertex, 0);
-    ASSERT_EQ(g.getNode(1).getAdj()[1].vertex, 0);
-    ASSERT_EQ(g.getNode(1).getAdj()[2].vertex, 2);
+    ASSERT_EQ(g.getNode(1).getAdj()[0].first, 0);
+    ASSERT_EQ(g.getNode(1).getAdj()[1].first, 0);
+    ASSERT_EQ(g.getNode(1).getAdj()[2].first, 2);
 
-    ASSERT_EQ(g.getNode(2).getAdj()[0].vertex, 1);
-    ASSERT_EQ(g.getNode(2).getAdj()[1].vertex, 3);
+    ASSERT_EQ(g.getNode(2).getAdj()[0].first, 1);
+    ASSERT_EQ(g.getNode(2).getAdj()[1].first, 3);
 
-    ASSERT_EQ(g.getNode(3).getAdj()[0].vertex, 0);
-    ASSERT_EQ(g.getNode(3).getAdj()[1].vertex, 2);
+    ASSERT_EQ(g.getNode(3).getAdj()[0].first, 0);
+    ASSERT_EQ(g.getNode(3).getAdj()[1].first, 2);
 
     // verify the adj vector crossindexes of each node
-    ASSERT_EQ(g.getNode(0).getAdj()[0].crossIndex, 0);
-    ASSERT_EQ(g.getNode(0).getAdj()[1].crossIndex, 1);
-    ASSERT_EQ(g.getNode(0).getAdj()[2].crossIndex, 0);
+    ASSERT_EQ(g.getNode(0).getAdj()[0].second, 0);
+    ASSERT_EQ(g.getNode(0).getAdj()[1].second, 1);
+    ASSERT_EQ(g.getNode(0).getAdj()[2].second, 0);
 
-    ASSERT_EQ(g.getNode(1).getAdj()[0].crossIndex, 0);
-    ASSERT_EQ(g.getNode(1).getAdj()[1].crossIndex, 1);
-    ASSERT_EQ(g.getNode(1).getAdj()[2].crossIndex, 0);
+    ASSERT_EQ(g.getNode(1).getAdj()[0].second, 0);
+    ASSERT_EQ(g.getNode(1).getAdj()[1].second, 1);
+    ASSERT_EQ(g.getNode(1).getAdj()[2].second, 0);
 
-    ASSERT_EQ(g.getNode(2).getAdj()[0].crossIndex, 2);
-    ASSERT_EQ(g.getNode(2).getAdj()[1].crossIndex, 1);
+    ASSERT_EQ(g.getNode(2).getAdj()[0].second, 2);
+    ASSERT_EQ(g.getNode(2).getAdj()[1].second, 1);
 
-    ASSERT_EQ(g.getNode(3).getAdj()[0].crossIndex, 2);
-    ASSERT_EQ(g.getNode(3).getAdj()[1].crossIndex, 1);
+    ASSERT_EQ(g.getNode(3).getAdj()[0].second, 2);
+    ASSERT_EQ(g.getNode(3).getAdj()[1].second, 1);
 }

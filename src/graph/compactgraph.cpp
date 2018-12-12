@@ -7,7 +7,7 @@ CompactGraph::CompactGraph(uint32_t _A[]) {
 	this->A = std::unique_ptr<uint32_t[]>(_A);
 }
 
-uint32_t CompactGraph::getNodeDegree(uint32_t u) const {
+uint32_t CompactGraph::deg(uint32_t u) const {
 	// Fix index u = u+1
 	++u;
 	// Following node

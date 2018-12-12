@@ -47,11 +47,9 @@ TEST(BCCIteratorTest, lineGraph) {
     uint size = 10;
     UndirectedGraph g(size);
     for (uint a = 0; a < size - 1; a++) {
-        uint i1 = g.getNodeDegree(a), i2 = g.getNodeDegree(a + 1);
-        g.getNode(a).addAdjacency(a + 1);
-        g.getNode(a).setCrossIndex(i1, i2);
-        g.getNode(a + 1).addAdjacency(a);
-        g.getNode(a + 1).setCrossIndex(i2, i1);
+        uint i1 = g.deg(a), i2 = g.deg(a + 1);
+        g.getNode(a).addAdjacency({a + 1, i2});
+        g.getNode(a + 1).addAdjacency({a, i1});
     }
 
     BCCIterator b(&g);

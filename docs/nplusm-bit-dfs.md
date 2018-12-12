@@ -14,11 +14,11 @@ This space-efficient variant *only works with undirected graphs*:
 
 ## Example
 ```cpp
-UndirectedGraph *g=GraphCreator::createRandomUndirected(100,5).first;
+UndirectedGraph g=GraphCreator::createRandomKRegularUndirectedGraph(100,5)
 
-DFS::nplusmBitDFS(g);  // quiet run
+DFS::nplusmBitDFS(&g);  // quiet run
 
-DFS::nplusmBitDFS(g, p0, e0, e1, p1);  // supply procedures to do something with the current node or edge
+DFS::nplusmBitDFS(&g, p0, e0, e1, p1);  // supply procedures to do something with the current node or edge
 
 
 // example procedures:

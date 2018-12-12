@@ -1,4 +1,5 @@
 #include "sealib/legacy.h"
+#include <vector>
 #include "sealib/collection/bitset.h"
 #include "sealib/dictionary/rankselect.h"
 #include "sealib/graph/graphcreator.h"
@@ -10,20 +11,22 @@ namespace Sealib {
 void *Sealib_Graph_new(uint32_t **m, uint32_t order) {
     return GraphCreator::createGraphPointerFromAdjacencyMatrix(m, order);
 }
-void Sealib_Graph_delete(void *self) { delete static_cast<Graph *>(self); }
+void Sealib_Graph_delete(void *self) {
+    delete static_cast<Graph const *>(self);
+}
 void *Sealib_Graph_generateRandom(uint32_t order) {
-    std::vector<Node> n(order);
+    std::vector<NodeD> n(order);
     static std::random_device rng;
     std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
     for (uint32_t a = 0; a < order; a++) {
         uint32_t deg = rnd(rng);
-        std::vector<Adjacency> ad(deg);
+        std::vector<uint> ad;
         for (uint32_t b = 0; b < deg; b++) {
-            ad[b] = Adjacency(rnd(rng));
+            ad.emplace_back(rnd(rng));
         }
-        n[a] = Node(ad);
+        n[a] = NodeD(ad);
     }
-    return new UndirectedGraph(n);
+    return new DirectedGraph(n);
 }
 
 void *Sealib_ChoiceDictionary_new(uint32_t size) {
@@ -95,7 +98,7 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint32_t),
     if (preexplore == nullptr) preexplore = [](uint, uint) {};
     if (postexplore == nullptr) postexplore = [](uint, uint) {};
     if (postprocess == nullptr) postprocess = [](uint) {};
-    DFS::nloglognBitDFS(static_cast<Graph *>(graph), preprocess, preexplore,
-                        postexplore, postprocess);
+    DFS::nloglognBitDFS(static_cast<Graph const *>(graph), preprocess,
+                        preexplore, postexplore, postprocess);
 }
 }  // namespace Sealib
