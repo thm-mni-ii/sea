@@ -81,7 +81,7 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
 
 class VisualEdgeMarker : public Sealib::EdgeMarker {
  public:
-    VisualEdgeMarker(Sealib::UndirectedGraph *g);
+    VisualEdgeMarker(Sealib::UndirectedGraph *g, std::string filename, std::string mode = "standalone");
     ~VisualEdgeMarker();
 
     void initEdge(uint u, uint k, uint8_t type) override;

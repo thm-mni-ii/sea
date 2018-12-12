@@ -34,7 +34,8 @@ class VisualTest {
         uint n = 20;
         Sealib::UndirectedGraph g =
             Sealib::GraphCreator::createRandomKRegularUndirectedGraph(n, 2);
-        std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g));
+        std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g,"out-cutvertex.tex"));
+        e->init();
         VisualCutVertex c(e);
         c.init();
         while (c.more()) c.next();

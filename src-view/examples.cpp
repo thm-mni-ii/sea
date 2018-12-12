@@ -116,15 +116,17 @@ void VisualDFS::run() {
 
 // --- VISUAL EDGE MARKER ---
 
-VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph)
+VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, std::string filename,
+                                   std::string mode)
     : EdgeMarker(graph),
-      doc("out-cutvertex.tex", "matrix,graphdrawing,positioning,quotes",
-          "layered,force", true),
+      doc(filename, "matrix,graphdrawing,positioning,quotes", "layered,force",
+          true, mode),
       pic(new TikzPicture(
           "spring electrical layout, sibling distance=15mm, node "
           "distance=20mm, node sep=1cm, arrows={->}, line "
           "width=1pt, color=black")),
       tg(TikzGenerator::generateTikzElement(g)) {
+    pic->add(tg);
     emit();
 }
 
@@ -138,9 +140,13 @@ void VisualEdgeMarker::emit() {
 
 std::string VisualEdgeMarker::getStyle(uint u, uint k) {
     std::stringstream options;
-    options << "--";
+    uint v = g->head(u, k);
     if (isParent(u, k)) {
-        options << ",\">\" very near start";
+        options << (u < v ? "->" : "<-");
+    } else if (!isParent(u, k)) {
+        options << (u < v ? "<-" : "->");
+    } else {
+        options << "--";
     }
     switch (getEdgeData(u, k) & TYPE_MASK) {
         case FULL:
@@ -176,21 +182,17 @@ void VisualEdgeMarker::updateEdge(uint u, uint k) {
 }
 
 void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
-    if (k != INVALID) {  // ???
-        EdgeMarker::initEdge(u, k, type);
-        std::cout << "initializing " << std::to_string(u) << ","
-                  << std::to_string(g->head(u, k)) << "\n";
-        updateEdge(u, k);
-        emit();
-    }
+    EdgeMarker::initEdge(u, k, type);
+    // std::cout << "initializing " << u << ","
+    //            << g->head(u,k) << "\n";
+    updateEdge(u, k);
+    emit();
 }
 
 void VisualEdgeMarker::setMark(uint u, uint k, uint8_t mark) {
-    if (k != INVALID) {  // ???
-        EdgeMarker::setMark(u, k, mark);
-        updateEdge(u, k);
-        emit();
-    }
+    EdgeMarker::setMark(u, k, mark);
+    updateEdge(u, k);
+    emit();
 }
 
 // --- VISUAL CUT-VERTEX ITERATOR ---

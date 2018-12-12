@@ -39,10 +39,7 @@ EdgeMarker::EdgeMarker(UndirectedGraph const *graph)
       n(g->getOrder()),
       parent(g),
       edges(makeEdges(g)),
-      offset(makeOffset(g)) {
-    identifyEdges();
-    markTreeEdges();
-}
+      offset(makeOffset(g)) {}
 
 void EdgeMarker::identifyEdges() {
     CompactArray color(n, 3);
@@ -80,7 +77,7 @@ void EdgeMarker::markTreeEdges() {
         if (color.get(a) == DFS_WHITE) {
             DFS::process_static(
                 a, g, &color, &parent,
-                [this, a](uint u) {
+                [this, &a](uint u) {
                     if (u == a /*?*/ ||
                         isTreeEdge(u, static_cast<uint>(parent.get(u)))) {
                         for (uint k = 0; k < g->deg(u); k++) {
@@ -99,35 +96,29 @@ void EdgeMarker::markTreeEdges() {
 
 void EdgeMarker::markParents(uint w, uint u) {
     uint k = static_cast<uint>(parent.get(w));
-    if (k < g->deg(w)) {
-        // if k>deg(w), then w is already root (?)
-        uint v = g->head(w, k);  // assert(isTreeEdge(w,k));
-        while (v != u && !isFullMarked(w, k)) {
-            setMark(w, k, FULL);
-            w = v;
-            k = static_cast<uint>(parent.get(w));
-            v = g->head(w, k);
-        }
-        if (v == u) {
-            if (!isFullMarked(w, k)) setMark(w, k, HALF);
-        }
+    uint v = w;
+    // if k>=deg(w), then w is already root (?)
+    while (v != u && !isFullMarked(v, k)) {
+        setMark(v, k, FULL);
+        v = g->head(v, k);
+        k = static_cast<uint>(parent.get(v));
+    }
+    if (v == u) {
+        if (!isFullMarked(v, k)) setMark(v, k, HALF);
     }
 }
 
 void EdgeMarker::initEdge(uint u, uint k, uint8_t type) {
     uint k2 = g->mate(u, k), v = g->head(u, k);
     uint ui = edgeIndex(u) + k, vi = edgeIndex(v) + k2;
-    edges.insert(ui, edges.get(ui) | type);
-    edges.insert(vi, edges.get(vi) | type);
-    edges.insert(ui, edges.get(ui) | PARENT);
+    edges.insert(ui, (type | PARENT));
+    edges.insert(vi, type);
 }
 
 void EdgeMarker::setMark(uint u, uint k, uint8_t mark) {
     uint k2 = g->mate(u, k), v = g->head(u, k);
     uint ui = edgeIndex(u) + k, vi = edgeIndex(v) + k2;
-    edges.insert(ui, edges.get(ui) & PARENT_MASK);
-    edges.insert(vi, edges.get(vi) & PARENT_MASK);
-    edges.insert(ui, edges.get(ui) | mark);
-    edges.insert(vi, edges.get(vi) | mark);
+    edges.insert(ui, (edges.get(ui) & PARENT_MASK) | mark);
+    edges.insert(vi, (edges.get(vi) & PARENT_MASK) | mark);
 }
 }  // namespace Sealib

@@ -29,6 +29,11 @@ class EdgeMarker : DFS {
      */
     explicit EdgeMarker(UndirectedGraph const *g);
 
+    void init() {
+        identifyEdges();
+        markTreeEdges();
+    }
+
     /**
      * Get the graph that this edge marker is using.
      * @return pointer to the undirected graph used
