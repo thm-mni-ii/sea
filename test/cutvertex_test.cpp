@@ -41,4 +41,12 @@ TEST(CutVertexIteratorTest, lineGraph) {
     EXPECT_FALSE(c.isCutVertex(n - 1));
 }
 
+TEST(CutVertexIteratorTest, stability) {
+    UndirectedGraph g = GraphCreator::createRandomGeneratedUndirected(2000);
+    CutVertexIterator c(&g);
+    c.init();
+    while (c.more()) c.next();
+    SUCCEED();
+}
+
 }  // namespace Sealib
