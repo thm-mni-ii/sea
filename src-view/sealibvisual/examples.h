@@ -4,6 +4,7 @@
 #include <sealib/graph/directedgraph.h>
 #include <sealib/iterator/bfs.h>
 #include <sealib/iterator/cutvertexiterator.h>
+#include <sealib/iterator/bcciterator.h>
 #include <sealib/iterator/dfs.h>
 #include <sealib/iterator/edgemarker.h>
 #include <sealib/segmentstack.h>
@@ -81,7 +82,7 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
 
 class VisualEdgeMarker : public Sealib::EdgeMarker {
  public:
-    VisualEdgeMarker(Sealib::UndirectedGraph *g, std::string filename, std::string mode = "standalone");
+    VisualEdgeMarker(Sealib::UndirectedGraph *g, std::string filename, std::string mode = "standalone", bool silent=false);
     ~VisualEdgeMarker();
 
     void initEdge(uint u, uint k, uint8_t type) override;
@@ -92,6 +93,7 @@ class VisualEdgeMarker : public Sealib::EdgeMarker {
     TikzDocument doc;
     std::shared_ptr<TikzPicture> pic;
     std::shared_ptr<TikzGraph> tg;
+    bool silent;
 
     void emit();
 
@@ -99,6 +101,7 @@ class VisualEdgeMarker : public Sealib::EdgeMarker {
     inline void updateEdge(uint u, uint k);
 
     friend class VisualCutVertex;
+    friend class VisualBCC;
 };
 
 class VisualCutVertex : public Sealib::CutVertexIterator {
@@ -110,7 +113,19 @@ class VisualCutVertex : public Sealib::CutVertexIterator {
  private:
     std::shared_ptr<VisualEdgeMarker> e;
 
-    void emit(uint u);
+    void emit();
+};
+
+class VisualBCC : public Sealib::BCCIterator {
+   public:
+      VisualBCC(std::shared_ptr<VisualEdgeMarker> e);
+
+      std::pair<uint,uint> next() override;
+
+   private:
+      std::shared_ptr<VisualEdgeMarker> e;
+
+      void emit();
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_EXAMPLES_H_

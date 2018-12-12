@@ -98,13 +98,12 @@ void EdgeMarker::markParents(uint w, uint u) {
     uint k = static_cast<uint>(parent.get(w));
     uint v = w;
     // if k>=deg(w), then w is already root (?)
-    while (g->head(v,k) != u && !isFullMarked(v, k)) {
+    while (g->head(v, k) != u && !isFullMarked(v, k)) {
         setMark(v, k, FULL);
         v = g->head(v, k);
         k = static_cast<uint>(parent.get(v));
     }
-    if (g->head(v,k)==u&&!isFullMarked(v, k)) setMark(v, k, HALF);
-    
+    if (g->head(v, k) == u && !isFullMarked(v, k)) setMark(v, k, HALF);
 }
 
 void EdgeMarker::initEdge(uint u, uint k, uint8_t type) {

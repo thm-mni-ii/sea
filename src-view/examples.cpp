@@ -117,7 +117,7 @@ void VisualDFS::run() {
 // --- VISUAL EDGE MARKER ---
 
 VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, std::string filename,
-                                   std::string mode)
+                                   std::string mode, bool flagSilent)
     : EdgeMarker(graph),
       doc(filename, "matrix,graphdrawing,positioning,quotes", "layered,force",
           true, mode),
@@ -125,9 +125,9 @@ VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, std::string filename,
           "spring electrical layout, sibling distance=15mm, node "
           "distance=20mm, node sep=1cm, arrows={->}, line "
           "width=1pt, color=black")),
-      tg(TikzGenerator::generateTikzElement(g)) {
+      tg(TikzGenerator::generateTikzElement(g)),
+      silent(flagSilent) {
     pic->add(tg);
-    emit();
 }
 
 VisualEdgeMarker::~VisualEdgeMarker() { doc.close(); }
@@ -186,31 +186,67 @@ void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
     // std::cout << "initializing " << u << ","
     //            << g->head(u,k) << "\n";
     updateEdge(u, k);
-    emit();
+    if (!silent) emit();
 }
 
 void VisualEdgeMarker::setMark(uint u, uint k, uint8_t mark) {
     EdgeMarker::setMark(u, k, mark);
     updateEdge(u, k);
-    emit();
+    if (!silent) emit();
 }
 
 // --- VISUAL CUT-VERTEX ITERATOR ---
 
 VisualCutVertex::VisualCutVertex(std::shared_ptr<VisualEdgeMarker> edges)
-    : CutVertexIterator(edges), e(edges) {}
+    : CutVertexIterator(edges), e(edges) {
+    emit();
+}
 
-void VisualCutVertex::emit(uint u) {
+void VisualCutVertex::emit() {
     e->doc.beginBlock();
-    std::cout << u << " is a cut vertex\n";
-    e->tg->getNodes()[u].setOptions("circle,draw=blue,double");
     e->doc.add(e->pic);
     e->doc.endBlock();
 }
 
 uint VisualCutVertex::next() {
     uint r = CutVertexIterator::next();
-    emit(r);
+    std::cout << r << " is a cut vertex\n";
+    e->tg->getNodes()[r].setOptions("circle,draw=blue,double");
+    emit();
+    return r;
+}
+
+// --- VISUAL BICONNECTED-COMPONENT ITERATOR ---
+
+VisualBCC::VisualBCC(std::shared_ptr<VisualEdgeMarker> edges)
+    : BCCIterator(edges), e(edges) {
+    emit();
+}
+
+void VisualBCC::emit() {
+    e->doc.beginBlock();
+    e->doc.add(e->pic);
+    e->doc.endBlock();
+}
+
+std::pair<uint, uint> VisualBCC::next() {
+    std::pair<uint, uint> r = BCCIterator::next();
+    std::cout << "got " << r.first << "," << r.second << "\n";
+    if (r.second == INVALID) {
+        e->tg->getNodes()[r.first].setOptions("circle,draw=red");
+    } else {
+        using key_t = std::tuple<std::string, std::string>;
+        std::string a = std::to_string(r.first), b = std::to_string(r.second);
+        auto edge = e->tg->getEdges().find(key_t{a, b});
+        if (edge != e->tg->getEdges().end()) {
+            edge->second.setOptions("--,draw=red,solid");
+        } else {
+            auto edgeReverse = e->tg->getEdges().find(key_t{b, a});
+            assert(edgeReverse != e->tg->getEdges().end());
+            edgeReverse->second.setOptions("--,draw=red,solid");
+        }
+    }
+    emit();
     return r;
 }
 

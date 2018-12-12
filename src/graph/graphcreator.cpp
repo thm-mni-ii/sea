@@ -165,8 +165,8 @@ UndirectedGraph GraphCreator::createRandomGeneratedUndirected(uint order) {
             uint b = rnd(rng);
             NodeU &n1 = g.getNode(a), &n2 = g.getNode(b);
             uint i1 = g.deg(a), i2 = g.deg(b);
-            n1.addAdjacency({b,i2});
-            n2.addAdjacency({a,i1});
+            n1.addAdjacency({b, i2});
+            n2.addAdjacency({a, i1});
         }
     }
     return g;

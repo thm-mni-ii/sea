@@ -33,12 +33,23 @@ class VisualTest {
     static void testCutVertex() {
         uint n = 20;
         Sealib::UndirectedGraph g =
-            Sealib::GraphCreator::createRandomKRegularUndirectedGraph(n, 2);
-        std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g,"out-cutvertex.tex"));
+            Sealib::GraphCreator::createWindmill(3,4);
+        std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g,"out-cutvertex.tex","beamer"));
         e->init();
         VisualCutVertex c(e);
         c.init();
         while (c.more()) c.next();
+    }
+
+    static void testBCC() {
+        uint n=20;
+        Sealib::UndirectedGraph g=Sealib::GraphCreator::createRandomKRegularUndirectedGraph(n,2);
+        std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g,"out-bcc.tex","standalone",true));
+        e->init();
+        VisualBCC b(e);
+        b.init();
+        b.start(10,g.head(10,0));
+        while (b.more()) b.next();
     }
 
     static void testBitset() {
