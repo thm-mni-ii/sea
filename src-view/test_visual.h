@@ -42,20 +42,20 @@ class VisualTest {
     }
 
     static void testBCC() {
-        //Sealib::UndirectedGraph g=Sealib::GraphCreator::createRandomKRegularUndirectedGraph(20,2);
+        Sealib::UndirectedGraph g=Sealib::GraphCreator::createRandomKRegularUndirectedGraph(20,2);
         //Sealib::UndirectedGraph g=Sealib::GraphCreator::createWindmill(3,4);
-        uint size = 10;
+        /*uint size = 10;
         Sealib::UndirectedGraph g(size);
         for (uint a = 0; a < size - 1; a++) {
             uint i1 = g.deg(a), i2 = g.deg(a + 1);
             g.getNode(a).addAdjacency({a + 1, i2});
             g.getNode(a + 1).addAdjacency({a, i1});
-        }
+        }*/
         std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g,"out-bcc.tex","standalone",true));
         e->init();
         VisualBCC b(e);
         b.init();
-        b.start(4,g.head(4,0));
+        b.start(42,4);
         while (b.more()) b.next();
     }
 

@@ -25,46 +25,49 @@ void BCCIterator::start(uint u, uint v) {
 }
 
 bool BCCIterator::more() {
-    if (status == HAVE_NEXT) {
-        return true;
-    } else if (status == END) {
-        return false;
-    } else {
-        while (true) {
-            if (edge < g->deg(node)) {
-                if (e->isTreeEdge(node, edge) &&
-                    (e->isFullMarked(node, edge) || !e->isParent(node, edge))) {
-                    if (!e->isFullMarked(node, edge)) {
-                        status = END;
-                    }
-                    uint v = g->head(node, edge);
-                    if (color.get(v) == DFS_WHITE) {
-                        color.insert(v, DFS_GRAY);
-                        parent.insert(v, g->mate(node, edge));
-                        if (e->isFullMarked(node, edge)) {
-                            action = OUTPUT_BACK_EDGES;
-                        } else {
-                        action = OUTPUT_VERTEX;
+    switch (status) {
+        case HAVE_NEXT:
+            return true;
+        case END:
+            return false;
+        case WAITING:
+            while (true) {
+                if (edge < g->deg(node)) {
+                    if (e->isTreeEdge(node, edge) &&
+                        (e->isFullMarked(node, edge) ||
+                         !e->isParent(node, edge))) {
+                        if (!e->isFullMarked(node, edge)) {
+                            status = END;
                         }
-                        node = v;
-                        edge = 0;
-                        return true;
+                        uint v = g->head(node, edge);
+                        if (color.get(v) == DFS_WHITE) {
+                            color.insert(v, DFS_GRAY);
+                            parent.insert(v, g->mate(node, edge));
+                            if (e->isFullMarked(node, edge)) {
+                                action = OUTPUT_BACK_EDGES;
+                            } else {
+                                action = OUTPUT_VERTEX;
+                            }
+                            node = v;
+                            edge = 0;
+                            return true;
+                        }
                     }
-                }
-                edge++;
-            } else {
-                color.insert(node, DFS_BLACK);
-                if (node != startEdge.second) {
-                    uint pk =
-                             g->mate(node, static_cast<uint>(parent.get(node))),
-                         pu = g->head(node, pk);
-                    node = pu;
-                    edge = pk + 1;
+                    edge++;
                 } else {
-                    return false;
+                    color.insert(node, DFS_BLACK);
+                    if (node != startEdge.second) {
+                        uint bk = static_cast<uint>(parent.get(node)),
+                             pu = g->head(node, bk), pk = g->mate(node, bk);
+                        node = pu;
+                        latestNode = node;
+                        edge = pk + 1;
+                    } else {
+                        return false;
+                    }
                 }
             }
-        }
+            break;
     }
 }
 
@@ -99,9 +102,6 @@ std::pair<uint, uint> BCCIterator::next() {
             case OUTPUT_VERTEX:
                 r = std::pair<uint, uint>(node, INVALID);
                 status = gotEnd ? END : WAITING;
-                break;
-            default:
-                assert(false && "no action specified!");
                 break;
         }
     }
