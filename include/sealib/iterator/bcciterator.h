@@ -67,10 +67,10 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
     uint node, edge;
     uint latestNode;
 
-    enum Action { NO_ACTION, OUTPUT_VERTEX, OUTPUT_BACK_EDGES };
-    enum Status { NO_STATUS, HAVE_NEXT, WAITING, END };
-    Action action = NO_ACTION;
-    Status status = NO_STATUS;
+    enum Action { OUTPUT_VERTEX, OUTPUT_BACK_EDGES };
+    enum Status { HAVE_NEXT, WAITING, END };
+    Action action;
+    Status status;
 };
 }  // namespace Sealib
 

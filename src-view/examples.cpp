@@ -231,7 +231,7 @@ void VisualBCC::emit() {
 
 std::pair<uint, uint> VisualBCC::next() {
     std::pair<uint, uint> r = BCCIterator::next();
-    std::cout << "got " << r.first << "," << r.second << "\n";
+    //std::cout << "got " << r.first << "," << r.second << "\n";
     if (r.second == INVALID) {
         e->tg->getNodes()[r.first].setOptions("circle,draw=red");
     } else {

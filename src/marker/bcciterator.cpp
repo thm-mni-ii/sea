@@ -21,7 +21,6 @@ void BCCIterator::start(uint u, uint v) {
     edge = 0;
     status = HAVE_NEXT;
     action = OUTPUT_VERTEX;
-    parent.insert(node, INVALID);
     color.insert(node, DFS_GRAY);
 }
 
@@ -45,7 +44,7 @@ bool BCCIterator::more() {
                         if (e->isFullMarked(node, edge)) {
                             action = OUTPUT_BACK_EDGES;
                         } else {
-                            action = OUTPUT_VERTEX;
+                        action = OUTPUT_VERTEX;
                         }
                         node = v;
                         edge = 0;
@@ -71,11 +70,13 @@ bool BCCIterator::more() {
 
 std::pair<uint, uint> BCCIterator::next() {
     static uint k = 0;
+    static bool gotEnd = false;
     std::pair<uint, uint> r(INVALID, INVALID);
 
     if (latestNode != node) {
         r = std::pair<uint, uint>(latestNode, node);
         latestNode = node;
+        if (status == END) gotEnd = true;
         status = HAVE_NEXT;
     } else {
         switch (action) {
@@ -97,9 +98,9 @@ std::pair<uint, uint> BCCIterator::next() {
                 }
             case OUTPUT_VERTEX:
                 r = std::pair<uint, uint>(node, INVALID);
-                status = WAITING;
+                status = gotEnd ? END : WAITING;
                 break;
-            case NO_ACTION:
+            default:
                 assert(false && "no action specified!");
                 break;
         }
