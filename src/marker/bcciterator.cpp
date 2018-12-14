@@ -72,8 +72,6 @@ bool BCCIterator::more() {
 }
 
 std::pair<uint, uint> BCCIterator::next() {
-    static uint k = 0;
-    static bool gotEnd = false;
     std::pair<uint, uint> r(INVALID, INVALID);
 
     if (latestNode != node) {
@@ -84,19 +82,19 @@ std::pair<uint, uint> BCCIterator::next() {
     } else {
         switch (action) {
             case OUTPUT_BACK_EDGES:
-                while (k < g->deg(node)) {
-                    if (e->isBackEdge(node, k) && !e->isParent(node, k)) {
-                        r = std::pair<uint, uint>(g->head(node, k), node);
+                while (tmp < g->deg(node)) {
+                    if (e->isBackEdge(node, tmp) && !e->isParent(node, tmp)) {
+                        r = std::pair<uint, uint>(g->head(node, tmp), node);
                         break;
                     }
-                    k++;
+                    tmp++;
                 }
                 if (r.first != INVALID) {
                     status = HAVE_NEXT;
-                    k++;
+                    tmp++;
                     break;
                 } else {
-                    k = 0;
+                    tmp = 0;
                     // fall through to OUTPUT_VERTEX
                 }
             case OUTPUT_VERTEX:

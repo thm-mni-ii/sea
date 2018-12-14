@@ -65,12 +65,15 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
 
     std::pair<uint, uint> startEdge;
     uint node, edge;
-    uint latestNode;
 
     enum Action { OUTPUT_VERTEX, OUTPUT_BACK_EDGES };
     enum Status { HAVE_NEXT, WAITING, END };
     Action action;
     Status status;
+
+    uint latestNode;
+    bool gotEnd = false;
+    uint tmp = 0;
 };
 }  // namespace Sealib
 

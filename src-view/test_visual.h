@@ -2,10 +2,10 @@
 #define SRC_VIEW_TEST_VISUAL_H_
 #include <vector>
 #include "sealib/graph/graphcreator.h"
+#include "sealib/graph/graphio.h"
 #include "sealib/iterator/edgemarker.h"
 #include "sealibvisual/examples.h"
 #include "sealibvisual/tikzgenerator.h"
-#include "sealib/graph/graphio.h"
 
 namespace SealibVisual {
 
@@ -23,8 +23,9 @@ class VisualTest {
         uint n = 50;
         Sealib::DirectedGraph g =
             Sealib::GraphCreator::createRandomKRegularGraph(n, 1);
-        //Sealib::GraphExporter::exportGML(&g,true,"dfs.gml");
-        //Sealib::DirectedGraph g=Sealib::GraphImporter::importGML<Sealib::DirectedGraph>("dfs.gml");
+        // Sealib::GraphExporter::exportGML(&g,true,"dfs.gml");
+        // Sealib::DirectedGraph
+        // g=Sealib::GraphImporter::importGML<Sealib::DirectedGraph>("dfs.gml");
         Sealib::CompactArray c(n, 3);
         VisualDFS d(&g, &c, "out-dfs.tex", "beamer");
         d.run();
@@ -32,9 +33,9 @@ class VisualTest {
 
     static void testCutVertex() {
         uint n = 20;
-        Sealib::UndirectedGraph g =
-            Sealib::GraphCreator::createWindmill(3,4);
-        std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g,"out-cutvertex.tex","beamer"));
+        Sealib::UndirectedGraph g = Sealib::GraphCreator::createWindmill(3, 4);
+        std::shared_ptr<VisualEdgeMarker> e(
+            new VisualEdgeMarker(&g, "out-cutvertex.tex", "beamer"));
         e->init();
         VisualCutVertex c(e);
         c.init();
@@ -42,20 +43,22 @@ class VisualTest {
     }
 
     static void testBCC() {
-        Sealib::UndirectedGraph g=Sealib::GraphCreator::createRandomKRegularUndirectedGraph(20,2);
-        //Sealib::UndirectedGraph g=Sealib::GraphCreator::createWindmill(3,4);
-        /*uint size = 10;
+        //Sealib::UndirectedGraph g =
+        //    Sealib::GraphCreator::createRandomKRegularUndirectedGraph(20, 2);
+        // Sealib::UndirectedGraph g=Sealib::GraphCreator::createWindmill(3,4);
+        uint size = 10;
         Sealib::UndirectedGraph g(size);
         for (uint a = 0; a < size - 1; a++) {
             uint i1 = g.deg(a), i2 = g.deg(a + 1);
             g.getNode(a).addAdjacency({a + 1, i2});
             g.getNode(a + 1).addAdjacency({a, i1});
-        }*/
-        std::shared_ptr<VisualEdgeMarker> e(new VisualEdgeMarker(&g,"out-bcc.tex","standalone",true));
+        }
+        std::shared_ptr<VisualEdgeMarker> e(
+            new VisualEdgeMarker(&g, "out-bcc.tex", "standalone", true));
         e->init();
         VisualBCC b(e);
         b.init();
-        b.start(42,4);
+        b.start(42, 4);
         while (b.more()) b.next();
     }
 

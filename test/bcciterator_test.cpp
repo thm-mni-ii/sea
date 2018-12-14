@@ -56,21 +56,13 @@ TEST(BCCIteratorTest, lineGraph) {
     b.init();
     b.start(4, 5);
 
-    std::set<uint> nodes;
-    std::set<std::set<uint>> edges;
-    while (b.more()) {
-        std::pair<uint, uint> n = b.next();
-        if (n.second == INVALID) {
-            nodes.insert(n.first);
-        } else {
-            edges.insert({n.first, n.second});
-        }
-    }
-    EXPECT_EQ(nodes.size(), 2);
-    EXPECT_EQ(edges.size(), 1);
-    EXPECT_NE(nodes.find(4), nodes.end());
-    EXPECT_NE(nodes.find(5), nodes.end());
-    EXPECT_NE(edges.find({4, 5}), edges.end());
+    ASSERT_TRUE(b.more());
+    EXPECT_EQ(b.next(), (std::pair<uint, uint>{5, INVALID}));
+    ASSERT_TRUE(b.more());
+    EXPECT_EQ(b.next(), (std::pair<uint, uint>{5, 4}));
+    ASSERT_TRUE(b.more());
+    EXPECT_EQ(b.next(), (std::pair<uint, uint>{4, INVALID}));
+    ASSERT_FALSE(b.more());
 }
 
 TEST(BCCIteratorTest, stability) {
