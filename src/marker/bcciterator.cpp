@@ -28,8 +28,8 @@ bool BCCIterator::more() {
     switch (status) {
         case HAVE_NEXT:
             return true;
-        case END:
-            return false;
+        case RETREAT:
+            edge = g->deg(node);  // fall through to WAITING
         case WAITING:
             while (true) {
                 if (edge < g->deg(node)) {
@@ -37,7 +37,7 @@ bool BCCIterator::more() {
                         (e->isFullMarked(node, edge) ||
                          !e->isParent(node, edge))) {
                         if (!e->isFullMarked(node, edge)) {
-                            status = END;
+                            status = RETREAT;
                         }
                         uint v = g->head(node, edge);
                         if (color.get(v) == DFS_WHITE) {
@@ -77,7 +77,7 @@ std::pair<uint, uint> BCCIterator::next() {
     if (latestNode != node) {
         r = std::pair<uint, uint>(latestNode, node);
         latestNode = node;
-        if (status == END) gotEnd = true;
+        if (status == RETREAT) gotRetreat = true;
         status = HAVE_NEXT;
     } else {
         switch (action) {
@@ -99,7 +99,7 @@ std::pair<uint, uint> BCCIterator::next() {
                 }
             case OUTPUT_VERTEX:
                 r = std::pair<uint, uint>(node, INVALID);
-                status = gotEnd ? END : WAITING;
+                status = gotRetreat ? RETREAT : WAITING;
                 break;
         }
     }
