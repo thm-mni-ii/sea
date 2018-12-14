@@ -122,7 +122,7 @@ VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, std::string filename,
           true, mode),
       pic(new TikzPicture(
           "spring electrical layout, sibling distance=15mm, node "
-          "distance=20mm, node sep=1cm, arrows={->}, line "
+          "distance=17mm, node sep=1cm, arrows={->}, line "
           "width=1pt, color=black")),
       tg(TikzGenerator::generateTikzElement(g)),
       silent(flagSilent) {
@@ -182,8 +182,6 @@ void VisualEdgeMarker::updateEdge(uint u, uint k) {
 
 void VisualEdgeMarker::initEdge(uint u, uint k, uint8_t type) {
     EdgeMarker::initEdge(u, k, type);
-    // std::cout << "initializing " << u << ","
-    //            << g->head(u,k) << "\n";
     updateEdge(u, k);
     if (!silent) emit();
 }

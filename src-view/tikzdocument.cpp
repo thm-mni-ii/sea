@@ -69,7 +69,6 @@ void SealibVisual::TikzDocument::add(const SealibVisual::TikzElement &element) {
 }
 
 void SealibVisual::TikzDocument::beginBlock() {
-    static unsigned slide = 1;
     if (mode == "beamer") {
         file << "\n\\only<" << slide << ">{\n";
         slide++;

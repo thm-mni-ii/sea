@@ -29,6 +29,7 @@ bool BCCIterator::more() {
         case HAVE_NEXT:
             return true;
         case RETREAT:
+            status=WAITING;
             edge = g->deg(node);  // fall through to WAITING
         case WAITING:
             while (true) {
@@ -99,7 +100,12 @@ std::pair<uint, uint> BCCIterator::next() {
                 }
             case OUTPUT_VERTEX:
                 r = std::pair<uint, uint>(node, INVALID);
-                status = gotRetreat ? RETREAT : WAITING;
+                if(gotRetreat) {
+                    gotRetreat=false;
+                    status=RETREAT;
+                } else {
+                    status = WAITING;
+                }
                 break;
         }
     }

@@ -72,6 +72,7 @@ class TikzDocument {
     bool lualatex;
     std::string mode;
     const std::string blockName = "tikzpicture";
+    unsigned int slide = 1;
 
     void initialize();
 };

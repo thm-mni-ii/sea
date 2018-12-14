@@ -81,8 +81,9 @@ void addAdj<DirectedGraph>(DirectedGraph *g, uint u, uint v) {
 }
 template<>
 void addAdj<UndirectedGraph>(UndirectedGraph *g, uint u, uint v) {
-    g->getNode(u).addAdjacency({v, g->deg(v)-1});
-    g->getNode(v).addAdjacency({u, g->deg(u)-1});
+    uint i1=g->deg(u),i2=g->deg(v);
+    g->getNode(u).addAdjacency({v, i2});
+    g->getNode(v).addAdjacency({u, i1});
 }
 
 template<class G, class N>
