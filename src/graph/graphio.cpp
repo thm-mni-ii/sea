@@ -34,7 +34,8 @@
 
 namespace Sealib {
 
-void GraphExporter::exportGML(Graph const *g, bool directed, std::string filename) {
+void GraphExporter::exportGML(Graph const *g, bool directed,
+                              std::string filename) {
     std::ofstream out(filename);
     out << "graph [\ndirected " << directed << "\n";
     for (uint32_t u = 0; u < g->getOrder(); u++) {
@@ -54,8 +55,8 @@ void GraphExporter::exportGML(Graph const *g, bool directed, std::string filenam
     out.close();
 }
 
-static void tokenize(const std::string& str, std::vector<std::string>* tokens,
-                     const std::string& delimiters = " ",
+static void tokenize(const std::string &str, std::vector<std::string> *tokens,
+                     const std::string &delimiters = " ",
                      bool trimEmpty = false) {
     std::string::size_type pos, lastPos = 0, length = str.length();
 
@@ -72,21 +73,21 @@ static void tokenize(const std::string& str, std::vector<std::string>* tokens,
     }
 }
 
-template<class G>
+template <class G>
 static void addAdj(G *g, uint u, uint v);
 
-template<>
+template <>
 void addAdj<DirectedGraph>(DirectedGraph *g, uint u, uint v) {
     g->getNode(u).addAdjacency(v);
 }
-template<>
+template <>
 void addAdj<UndirectedGraph>(UndirectedGraph *g, uint u, uint v) {
-    uint i1=g->deg(u),i2=g->deg(v);
+    uint i1 = g->deg(u), i2 = g->deg(v);
     g->getNode(u).addAdjacency({v, i2});
     g->getNode(v).addAdjacency({u, i1});
 }
 
-template<class G, class N>
+template <class G, class N>
 static G importGMLBase(std::string filename) {
     G g(0);
     bool directed;
@@ -145,13 +146,14 @@ static G importGMLBase(std::string filename) {
     return g;
 }
 
-template<>
-UndirectedGraph GraphImporter::importGML<UndirectedGraph>(std::string filename) {
+template <>
+UndirectedGraph GraphImporter::importGML<UndirectedGraph>(
+    std::string filename) {
     return importGMLBase<UndirectedGraph, NodeU>(filename);
 }
-template<>
+template <>
 DirectedGraph GraphImporter::importGML<DirectedGraph>(std::string filename) {
     return importGMLBase<DirectedGraph, NodeD>(filename);
 }
 
-}   // namespace Sealib
+}  // namespace Sealib

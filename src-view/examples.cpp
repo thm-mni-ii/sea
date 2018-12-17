@@ -29,18 +29,17 @@ VisualBFS::VisualBFS(Graph *graph, CompactArray color, std::string filename,
           "distance=20mm, node sep=1cm, arrows={->}, line "
           "width=1pt, color=black")) {
     pic->add(tg);
+    emit();
 }
 
 void VisualBFS::emit() {
     doc.beginBlock();
     doc.add(pic);
-    doc.add(TikzGenerator::generateTikzElement(&c, g->getOrder(), "color",
-                                               "yshift=-8cm"));
     doc.endBlock();
 }
 
 void VisualBFS::run() {
-    BFS b(reinterpret_cast<Graph *>(g), c,
+    BFS b(g, c,
           [this](uint u) {
               tg->getNodes().at(u).setOptions(Examples::style_lightgray);
               emit();
@@ -57,6 +56,23 @@ void VisualBFS::run() {
             std::pair<uint, uint> p = b.next();
             tg->getNodes().at(p.first).setOptions(Examples::style_black);
             emit();
+            bool haveGray = false;
+            for (TikzNode &node : tg->getNodes()) {
+                if (node.getOptions() == Examples::style_gray) {
+                    haveGray = true;
+                    break;
+                }
+            }
+            if (!haveGray) {
+                bool doEmit = false;
+                for (TikzNode &node : tg->getNodes()) {
+                    if (node.getOptions() == Examples::style_lightgray) {
+                        node.setOptions(Examples::style_gray);
+                        doEmit = true;
+                    }
+                }
+                if (doEmit) emit();
+            }
         }
     } while (b.nextComponent());
     doc.close();

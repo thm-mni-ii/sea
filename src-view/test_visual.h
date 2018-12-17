@@ -14,8 +14,9 @@ class VisualTest {
     static void testBFS() {
         uint n = 20;
         Sealib::DirectedGraph g =
-            Sealib::GraphCreator::createRandomKRegularGraph(n, 3);
-        VisualBFS b(&g, Sealib::CompactArray(n, 4), "out-bfs.tex");
+            Sealib::GraphImporter::importGML<Sealib::DirectedGraph>(
+                "graph-bfs-v1.gml");
+        VisualBFS b(&g, Sealib::CompactArray(n, 4), "demo-bfs.tex", "beamer");
         b.run();
     }
 
@@ -23,9 +24,6 @@ class VisualTest {
         uint n = 50;
         Sealib::DirectedGraph g =
             Sealib::GraphCreator::createRandomKRegularGraph(n, 1);
-        // Sealib::GraphExporter::exportGML(&g,true,"dfs.gml");
-        // Sealib::DirectedGraph
-        // g=Sealib::GraphImporter::importGML<Sealib::DirectedGraph>("dfs.gml");
         Sealib::CompactArray c(n, 3);
         VisualDFS d(&g, &c, "out-dfs.tex", "beamer");
         d.run();
@@ -45,11 +43,11 @@ class VisualTest {
         Sealib::UndirectedGraph g =
             Sealib::GraphCreator::createRandomKRegularUndirectedGraph(20, 2);
         std::shared_ptr<VisualEdgeMarker> e(
-            new VisualEdgeMarker(&g, "out-bcc.tex", "standalone", true));
+            new VisualEdgeMarker(&g, "out-bcc.tex", "beamer", true));
         e->init();
         VisualBCC b(e);
         b.init();
-        b.start(42, 4);
+        b.start(42, 14);
         while (b.more()) b.next();
     }
 
