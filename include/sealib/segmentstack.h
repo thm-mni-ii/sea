@@ -10,6 +10,12 @@
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
 
+#ifdef SEALIBVISUAL_EXAMPLES_H_
+namespace SealibVisual {
+class VisualDFS;
+}
+#endif  // SEALIBVISUAL_EXAMPLES_H
+
 namespace Sealib {
 /*
   Segment Stack:
@@ -177,6 +183,10 @@ class ExtendedSegmentStack : public SegmentStack {
 
     static constexpr unsigned INVALID = static_cast<unsigned>(-1);
     void storeEdges();
+
+#ifdef SEALIBVISUAL_EXAMPLES_H_
+    friend class SealibVisual::VisualDFS;
+#endif  // SEALIBVISUAL_EXAMPLES_H
 };
 }  // namespace Sealib
 #endif  // SEALIB_SEGMENTSTACK_H_

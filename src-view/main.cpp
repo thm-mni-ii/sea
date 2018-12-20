@@ -1,151 +1,62 @@
-#include <chrono>
-#include <cmath>
-#include <ctime>
-#include <iostream>
-#include <memory>
-#include <random>
-#include <sstream>
-#include <stack>
-#include <string>
-#include "sealib/_types.h"
-#include "sealib/graph/compactgraph.h"
-#include "sealib/iterator/dfs.h"
-#include "sealib/graph/graphcreator.h"
-#include "sealib/graph/graphrepresentations.h"
-#include "sealib/runtimetest.h"
+#include <sealib/_types.h>
+#include <sealib/graph/graphcreator.h>
+#include "./test_visual.h"
+#include "sealibvisual/examples.h"
+#include "sealibvisual/tikzarray.h"
+#include "sealibvisual/tikzdocument.h"
+#include "sealibvisual/tikzfigure.h"
+#include "sealibvisual/tikzgenerator.h"
+#include "sealibvisual/tikzgraph.h"
+#include "sealibvisual/tikznode.h"
+#include "sealibvisual/tikzpicture.h"
+#include "sealibvisual/tikzstyle.h"
 
-using std::cout;
-using std::stack;
-using namespace Sealib;  // NOLINT
+void tikz_example() {
+    unsigned int order = 4;
+    auto **adj_mtrx = (unsigned int **)malloc(sizeof(unsigned int) * 4 * 4);
+    adj_mtrx[0] = new unsigned int[order]{0, 1, 0, 1};
+    adj_mtrx[1] = new unsigned int[order]{1, 0, 1, 0};
+    adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
+    adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
 
-#define VERY_SPARSE ([](double n) { return (5. * n) / (n * (n - 1.)); })
-#define SPARSE ([](double n) { return (n * std::log2(n)) / (n * (n - 1.)); })
-#define MODERATE ([](double n) { return (n * std::sqrt(n)) / (n * (n - 1.)); })
-#define DENSE \
-  ([](double n) { return (std::pow(n, 2.) / std::log2(n)) / (n * (n - 1.)); })
+    Sealib::UndirectedGraph bg =
+        Sealib::GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
+    std::shared_ptr<SealibVisual::TikzGraph> vg =
+        SealibVisual::TikzGenerator::generateTikzElement(&bg);
 
-uint32_t controllSum = (2 * (1 + 2 + 3 + 4 + 5));
-stack<uint32_t> controllStack;
+    std::shared_ptr<SealibVisual::TikzPicture> pic(
+        new SealibVisual::TikzPicture(
+            "spring layout, node distance=100pt, scale=1"));
 
-void preTwo(uint32_t a) {
-  std::cout << "PRE-PROCESS(" << a << ")" << std::endl;
-  controllSum = controllSum - a;
-  controllStack.push(a);
-  std::cout << "newSum: " << controllSum << std::endl;
-}
+    pic->add(vg);
 
-void postTwo(uint32_t a) {
-  std::cout << "POST-PROCESS(" << a << ")" << std::endl;
-  controllSum = controllSum - a;
-  uint32_t ex = controllStack.top();
-  controllStack.pop();
-  if (ex != a) {
-    std::cout << "panic expected " << a << " on stack, got " << ex << std::endl;
-    exit(100);
-  }
-  std::cout << "newSum: " << controllSum << std::endl;
-}
+    std::shared_ptr<SealibVisual::TikzFigure> fig(
+        new SealibVisual::TikzFigure("A caption.", pic));
 
-uint32_t controllSumZero = (2 * (1 + 2 + 3 + 4));
-stack<uint32_t> controllStack2;
+    SealibVisual::TikzDocument doc(
+        "out.tex", "matrix, backgrounds, graphdrawing", "force", true);
+    doc.add(fig);
 
-void preZero(uint32_t a) {
-  std::cout << "PRE-PROCESS(" << a << ")" << std::endl;
-  controllStack2.push(a);
-  controllSumZero = controllSumZero - a;
-  std::cout << "newSum: " << controllSum << std::endl;
-}
-
-void postZero(uint32_t a) {
-  std::cout << "POST-PROCESS(" << a << ")" << std::endl;
-  uint32_t ex = controllStack2.top();
-  controllSumZero = controllSumZero - a;
-  controllStack2.pop();
-  if (ex != a) {
-    std::cout << "panic expected " << a << " on stack, got " << ex << std::endl;
-    exit(100);
-  }
-  std::cout << "newSum: " << controllSum << std::endl;
-}
-
-std::mt19937_64 gen;
-
-void dummy(uint) {}
-void dummy2(uint, uint) {}
-
-void runTests(double (*p)(double), std::string) {
-  RuntimeTest test1, test2;
-  for (uint32_t i = 1; i <= 2; ++i) {
-    double n = 20000 * i;
-    for (uint32_t j = 0; j < 2; ++j) {
-      double pN = p(n);
-      double m = n * (n - 1) * pN;
-      CompactGraph g = GraphCreator::generateGilbertGraph(n, pN, &gen);
-      test1.runTest(
-          [&g]() { DFS::standardDFS(&g, dummy, dummy2, dummy2, dummy); },
-          n, m);
-      test2.runTest(
-          [&g]() {
-            Graphrepresentations::standardToBeginpointer(g.getData());
-            Graphrepresentations::swapRepresentation(g.getData());
-            DFS::runLinearTimeInplaceDFS(g.getData(), dummy, dummy, 1);
-          },
-          n, m);
+    for (auto &e : vg->getEdges()) {
+        e.second.setOptions("--, color=green, line width=8");
     }
-  }
+    doc.add(fig);
 
-  test1.printResults();
-  test2.printResults();
-}
-
-void runTest(uint n, uint (*fm)(uint)) {
-  RuntimeTest test1, test2;
-  auto _n = n;
-  for (uint i = 1; i <= 1; i++) {
-    for (uint32_t j = 0; j < 1; ++j) {
-      auto A = GraphCreator::fastGraphGeneration(_n, fm(_n));
-      std::unique_ptr<CompactGraph> g(new CompactGraph(A));
-      test1.runTest(
-          [&g]() { DFS::standardDFS(g.get(), dummy, dummy2, dummy2, dummy); },
-          _n, fm(_n));
-      //            test2.runTest([&A]() {
-      //                Graphrepresentations::standardToBeginpointer(A);
-      //                Graphrepresentations::swapRepresentation(A);
-      //                DFS::runLinearTimeInplaceDFS(A, dummy, dummy, 1);
-      //            }, _n, fm(_n));
+    std::vector<std::string> numbers1(10);
+    for (unsigned int i = 0; i < 10; i++) {
+        numbers1[i] = std::to_string(i * 45);
     }
-    _n = n * 2 * i;
-  }
-  test1.printResults();
-  test2.printResults();
+
+    Sealib::Bitset<unsigned char> bits(10);
+    bits[4] = 1;
+
+    std::shared_ptr<SealibVisual::TikzElement> tikzNode =
+        SealibVisual::TikzGenerator::generateTikzElement(bits);
+    pic->add(tikzNode);
+
+    doc.add(fig);
+
+    doc.close();
 }
 
-void runtime_dfs() {
-  RuntimeTest t1, t2, t3;
-  for (uint n = 1e5; n <= 1e6; n += 10000) {
-    DirectedGraph g = GraphCreator::createRandomKRegularGraph(n, 5);
-    t1.runTest(
-        [&g]() {
-          DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
-        },
-        n, 0);
-        t2.runTest(
-        [&g]() {
-          DFS::nBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
-        },
-        n, 0);
-        t3.runTest(
-        [&g]() {
-          DFS::standardDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE,
-                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
-        },
-        n, 0);
-  }
-  t1.saveCSV("nloglogn-dfs.csv");
-  t2.saveCSV("n-dfs.csv");
-  t3.saveCSV("standard-dfs.csv");
-}
-
-int main() { runtime_dfs(); }
+int main() { SealibVisual::VisualTest::testBFS(); }

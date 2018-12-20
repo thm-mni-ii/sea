@@ -178,7 +178,6 @@ void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
                          S *back, Consumer preprocess, BiConsumer preexplore,
                          BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
-    back->insert(u0, std::numeric_limits<uint>::max());
     preprocess(u0);
     uint u = u0, k = 0;
     while (true) {

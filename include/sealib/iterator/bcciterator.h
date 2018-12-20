@@ -1,6 +1,7 @@
 #ifndef SEALIB_ITERATOR_BCCITERATOR_H_
 #define SEALIB_ITERATOR_BCCITERATOR_H_
 
+#include <memory>
 #include <utility>
 #include "sealib/graph/undirectedgraph.h"
 #include "sealib/iterator/edgemarker.h"
@@ -22,13 +23,10 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
     explicit BCCIterator(UndirectedGraph const *g);
 
     /**
-     * Create a new BCC iterator from an existing EdgeMarker object.
-     * @param e EdgeMarker that holds the markings and edge types for a graph G
-     * (e.g. created by CutVertexIterator)
+     * Create a new BCC iterator from a given edge marker (allows recycling).
+     * @param e shared pointer to an EdgeMarker
      */
-    explicit BCCIterator(EdgeMarker *e);
-
-    ~BCCIterator();
+    explicit BCCIterator(std::shared_ptr<EdgeMarker> e);
 
     /**
      * Initialize the iterator. If no external EdgeMarker was given, identifies
@@ -58,29 +56,24 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
      */
     std::pair<uint, uint> next() override;
 
-    /**
-     * Moves the EdgeMarker object out of this instance to reuse it somewhere
-     * else.
-     * @return the used EdgeMarker
-     */
-    inline EdgeMarker getEdgeMarker() { return std::move(*e); }
-
  private:
+    std::shared_ptr<EdgeMarker> e;
     UndirectedGraph const *g;
     uint n;
-    EdgeMarker *e;
     CompactArray color;
     StaticSpaceStorage parent;
 
     std::pair<uint, uint> startEdge;
     uint node, edge;
-    uint latestNode;
-    bool endOnNextNode = false;
-    bool oneMoreOutput = false;
-    bool outputtingBackEdges = false;
-    bool firstNode;
 
-    bool externalEdgeMarker;
+    enum Action { OUTPUT_VERTEX, OUTPUT_BACK_EDGES };
+    enum Status { HAVE_NEXT, WAITING, RETREAT };
+    Action action;
+    Status status;
+
+    uint latestNode;
+    bool gotRetreat = false;
+    uint tmp = 0;
 };
 }  // namespace Sealib
 

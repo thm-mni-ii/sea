@@ -157,6 +157,21 @@ Sealib::DirectedGraph Sealib::GraphCreator::createRandomGenerated(uint order) {
     return DirectedGraph(n);
 }
 
+UndirectedGraph GraphCreator::createRandomGeneratedUndirected(uint order) {
+    UndirectedGraph g(order);
+    std::uniform_int_distribution<uint> rnd(0, order - 1);
+    for (uint a = 0; a < order; a++) {
+        for (uint c = 0; c < 5; c++) {
+            uint b = rnd(rng);
+            NodeU &n1 = g.getNode(a), &n2 = g.getNode(b);
+            uint i1 = g.deg(a), i2 = g.deg(b);
+            n1.addAdjacency({b, i2});
+            n2.addAdjacency({a, i1});
+        }
+    }
+    return g;
+}
+
 UndirectedGraph GraphCreator::createRandomKRegularUndirectedGraph(
     uint order, uint degreePerNode) {
     UndirectedGraph g(order);

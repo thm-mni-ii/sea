@@ -6,6 +6,12 @@
 #include "sealib/graph/undirectedgraph.h"
 #include "sealib/iterator/dfs.h"
 
+#ifdef SEALIBVISUAL_EXAMPLES_H_
+namespace SealibVisual {
+class VisualEdgeMarker;
+}
+#endif
+
 namespace Sealib {
 /**
  * The EdgeMarker class holds edge markings for a given graph. An edge has
@@ -14,54 +20,25 @@ namespace Sealib {
  * can run algorithms like cut-vertex finding and biconnected-component
  * outputting.
  */
-class EdgeMarker {
+class EdgeMarker : DFS {
  public:
     /**
-     * Create a new edge marker from a given undirected graph.
+     * Create a new edge marker from a given undirected graph. On construction,
+     * it automatically identifies edge types and marks tree edges.
      * @param g undirected graph
      */
     explicit EdgeMarker(UndirectedGraph const *g);
 
-    /**
-     * Run a DFS to classify edges of G. When an outging edge (u,k) points to a
-     * white node: tree edge; to a gray node: back edge; to a black node:
-     * cross/forward edge.
-     */
-    void identifyEdges();
-
-    /**
-     * Run a DFS to mark descendant back edges of each node. For each back edge
-     * {u,w}, we chain upwards from w until we reach a full-marked node or u
-     * itself.
-     */
-    void markTreeEdges();
-
-    /**
-     * Set the marking on the kth edge of u (and on the jth edge of the mate v).
-     * @param u node to modify an edge for
-     * @param k outgoing edge index
-     * @param mark marking (can be FULL, HALF or UNMARKED)
-     */
-    void setMark(uint u, uint k, uint8_t mark);
+    void init() {
+        identifyEdges();
+        markTreeEdges();
+    }
 
     /**
      * Get the graph that this edge marker is using.
      * @return pointer to the undirected graph used
      */
     CONSTEXPR_IF_CLANG UndirectedGraph const *getGraph() const { return g; }
-
-    /** Edge data: (4 bits)
-     *      TTTP
-     *  T: edge type (0: uninitialized, 1: cross/forward edge, 2: back edge, 3:
-     * unmarked tree
-     * edge, 4: half-marked tree edge, 5: full-marked tree edge)
-     *  P: parent (0: further away from root, 1: closer to root)
-     */
-    const uint8_t TYPE_MASK = 0xe,  // 0b1110
-        PARENT_MASK = 0x1;          // 0b0001
-    const uint8_t FULL = 0xa, HALF = 0x8, UNMARKED = 0x6, BACK = 0x4,
-                  CROSS = 0x2, NONE = 0x0;
-    const uint8_t PARENT = 0x1;
 
     CONSTEXPR_IF_CLANG bool isInitialized(uint u, uint k) const {
         return (getEdgeData(u, k) & TYPE_MASK) != NONE;
@@ -82,17 +59,58 @@ class EdgeMarker {
         return (getEdgeData(u, k) & TYPE_MASK) == FULL;
     }
 
+    virtual ~EdgeMarker() = default;
+
+ protected:
+    /**
+     * Set the marking on the kth edge of u (and on the jth edge of the mate v).
+     * @param u node to modify an edge for
+     * @param k outgoing edge index
+     * @param mark marking (can be FULL, HALF or UNMARKED)
+     */
+    virtual void setMark(uint u, uint k, uint8_t mark);
+
+    /**
+     * Initializes the kth edge of u to the given type. u will be set as parent.
+     * @param u node to modify type for
+     * @param k outgoing edge index
+     * @param type FULL, HALF, UNMARKED, BACK or CROSS
+     */
+    virtual void initEdge(uint u, uint k, uint8_t type);
+
  private:
+    /**
+     * Runs a DFS to classify edges of G. When an outging edge (u,k) points to a
+     * white node: tree edge; to a gray node: back edge; to a black node:
+     * cross/forward edge.
+     */
+    void identifyEdges();
+
+    /**
+     * Runs a DFS to mark descendant back edges of each node. For each back edge
+     * {u,w}, we chain upwards from w until we reach a full-marked edge or u
+     * itself.
+     */
+    void markTreeEdges();
+
+    /** Edge data: (4 bits)
+     *      TTTP
+     *  T: edge type (0: uninitialized, 1: cross/forward edge, 2: back edge, 3:
+     * unmarked tree
+     * edge, 4: half-marked tree edge, 5: full-marked tree edge)
+     *  P: parent (0: further away from root, 1: closer to root)
+     */
+    static const uint8_t TYPE_MASK = 0xe,  // 0b1110
+        PARENT_MASK = 0x1;                 // 0b0001
+    static const uint8_t FULL = 0xa, HALF = 0x8, UNMARKED = 0x6, BACK = 0x4,
+                         CROSS = 0x2, NONE = 0x0;
+    static const uint8_t PARENT = 0x1;
+
     UndirectedGraph const *g;
     uint n;
     StaticSpaceStorage parent;
     StaticSpaceStorage edges;
     RankSelect offset;
-
-    /**
-     * Initializes the kth edge of u to the given type. u will be set as parent.
-     */
-    void initEdge(uint u, uint k, uint8_t type);
 
     void markParents(uint w, uint u);
 
@@ -102,6 +120,10 @@ class EdgeMarker {
     CONSTEXPR_IF_CLANG uint64_t getEdgeData(uint u, uint k) const {
         return edges.get(edgeIndex(u) + k);
     }
+
+#ifdef SEALIBVISUAL_EXAMPLES_H_
+    friend class SealibVisual::VisualEdgeMarker;
+#endif
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_EDGEMARKER_H_
