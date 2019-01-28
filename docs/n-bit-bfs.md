@@ -1,4 +1,4 @@
-n-Bit Breadth-First Search
+O(n)-Bit Breadth-First Search
 ===
 The breadth-first search over a graph G=(V,E) will find all *connected components* of G and output the tuple (u,dist) for each node, which is shows the distance of u to the starting node of the current component. Two *user-defined procedures* are available: `preprocess` and `preexplore`.
 
@@ -8,22 +8,22 @@ This space-efficient variant
 	- *init()*: initializes the BFS
 	- *more()*: returns true if there is more to do in this connected component
 	- *next()*: gets the next node and distance from the component
-	- *nextComponent()*: advance to the next component, or return false if the graph is completely explored
+	- *nextComponent()*: advances to the next component, or returns false if the graph is completely explored
 
 ## Efficiency
 * Time: O(n+m)
-* Space: O(2n) bits
+* Space: O(n) bits
 
 ## Example
 ```cpp
-Graph *g=GraphCreator::createRandomFixed(500,2);
+DirectedGraph g=GraphCreator::createRandomFixed(500,2);
 
-BFS bfs(g,p0,e0);
+BFS bfs(&g, p0, e0);
 bfs.init();		// don't forget initialization of the iterator
 do {
 	while(bfs.more()) {
-		Pair s=bfs.next();
-		uint u=s.head(), dist=s.tail();
+		std::pair&lt;uint,uint&gt; s=bfs.next();
+		uint u=s.first, dist=s.second;
 		// ...
 	}
 } while(bfs.nextComponent());

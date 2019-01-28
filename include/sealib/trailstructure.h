@@ -2,8 +2,8 @@
 #define SEALIB_TRAILSTRUCTURE_H_
 
 #include <sealib/localdycktable.h>
-#include <sealib/rankselect.h>
-#include <sealib/simplerankselect.h>
+#include <sealib/dictionary/rankselect.h>
+#include <sealib/dictionary/simplerankselect.h>
 #include <sealib/dyckmatchingstructure.h>
 #include <sealib/largedoublelinkedlist.h>
 #include <vector>
@@ -15,15 +15,15 @@
 namespace Sealib {
 class TrailStructure {
  private:
-    unsigned int lastClosed;
-    unsigned int dyckStart;
+    uint32_t lastClosed;
+    uint32_t dyckStart;
 
-    Sealib::Bitset<unsigned char> inAndOut;
-    Sealib::Bitset<unsigned char> matched;
-    Sealib::Bitset<unsigned char> flags;
+    Sealib::Bitset<uint8_t> inAndOut;
+    Sealib::Bitset<uint8_t> matched;
+    Sealib::Bitset<uint8_t> flags;
 
     std::unique_ptr<DyckMatchingStructure> dyckMatchingStructure;
-    std::unique_ptr<std::vector<unsigned int>> married;
+    std::unique_ptr<std::vector<uint32_t>> married;
     std::unique_ptr<DoubleLinkedList> unused;
 
     /**
@@ -31,7 +31,7 @@ class TrailStructure {
      * Updates links and returns nextUnused.
      * @return nextUnused.
      */
-    inline unsigned int getNextUnused();
+    inline uint32_t getNextUnused();
 
     /**
      * initializes the DyckMatchingStructure used by getMatched
@@ -42,28 +42,28 @@ class TrailStructure {
     /**
      * @return value of degree
      */
-    unsigned int getDegree() const;
+    uint32_t getDegree() const;
 
     /**
      * @return ref to inAndOut bitset
      */
-    const Sealib::Bitset<unsigned char> &getInAndOut() const;
+    const Sealib::Bitset<uint8_t> &getInAndOut() const;
 
     /**
      * @return ref to matched bitset
      */
-    const Sealib::Bitset<unsigned char> &getMatchedBitset() const;
+    const Sealib::Bitset<uint8_t> &getMatchedBitset() const;
 
     /**
      * @return ref to dyckWord
      */
-    const Sealib::Bitset<unsigned char> &getDyckWord() const;
+    const Sealib::Bitset<uint8_t> &getDyckWord() const;
 
     /**
      * Constructor for the TrailStructure object.
      * @param _degree Degree of the node, equals the number of outgoing arcs.
      */
-    explicit TrailStructure(unsigned int _degree);
+    explicit TrailStructure(uint32_t _degree);
 
     /**
      * check if the TrailStructure is currently grey.
@@ -89,10 +89,10 @@ class TrailStructure {
     /**
      * Leaves the node, gets arbitrary element from unused,
      * moves it to InAndOut and returns it.
-     * If the TrailStructure is black, it returns unsigned int max value.
+     * If the TrailStructure is black, it returns uint32_t max value.
      * @return
      */
-    unsigned int leave();
+    uint32_t leave();
 
     /**
      * Enters the node at the specified edge/arc, and if there is an unused arc left,
@@ -101,7 +101,7 @@ class TrailStructure {
      * @param i arc to enter
      * @return arc that was left, or unsiged int max value if no arc.
      */
-    unsigned int enter(unsigned int i);
+    uint32_t enter(uint32_t i);
 
     /**
      * Matches the elements i and o.
@@ -110,17 +110,17 @@ class TrailStructure {
      * @param i first element to be matched
      * @param o second element to be matched
      */
-    void marry(unsigned int i, unsigned int o);
+    void marry(uint32_t i, uint32_t o);
 
     /**
      * @return value of lastClosed variable.
      */
-    unsigned int getLastClosed() const;
+    uint32_t getLastClosed() const;
 
     /**
-     * @return Starting index of a Trail, or (unsigned int) - 1
+     * @return Starting index of a Trail, or (uint32_t) - 1
      */
-    unsigned int getStartingArc() const;
+    uint32_t getStartingArc() const;
 
     /**
      * @return true if there is a starting arc (unmatched, outgoing edge)
@@ -133,12 +133,12 @@ class TrailStructure {
      * @param i index to check
      * @return true if ending, false otherwise
      */
-    bool isEndingArc(unsigned int i) const;
+    bool isEndingArc(uint32_t i) const;
 
     /**
      * @return value of dyckStart
      */
-    unsigned int getDyckStart() const;
+    uint32_t getDyckStart() const;
 
     /**
      * Gets the match for a given matched arc.
@@ -146,14 +146,14 @@ class TrailStructure {
      * @param idx
      * @return
      */
-    unsigned int getMatched(unsigned int idx) const;
+    uint32_t getMatched(uint32_t idx) const;
 
     /**
      * Used for debugging
      * @param idx
      * @return
      */
-    unsigned int getMatchedNaive(unsigned int idx);
+    uint32_t getMatchedNaive(uint32_t idx);
 };
 }  // namespace Sealib
 #endif  // SEALIB_TRAILSTRUCTURE_H_

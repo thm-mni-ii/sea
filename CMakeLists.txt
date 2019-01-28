@@ -1,15 +1,23 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.6)
 project(sea)
 set(PROJECT_SOURCE_DIR .)
 
-SET(COVERAGE OFF CACHE BOOL "Coverage")
+set(COVERAGE OFF CACHE BOOL "Coverage")
 
 # Project Structure
 set(LIBRARY_OUTPUT_PATH lib)                                    # generated library files
 set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated binary files
 set(CMAKE_INCLUDE_PATH include/)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_INCLUDE_CURRENT_DIR OFF)
+
+set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wswitch-default -Wswitch-enum \
+-Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef -Wcast-qual -Wctor-dtor-privacy \
+-Wdisabled-optimization -Winit-self -Wmissing-declarations -Wmissing-include-dirs \
+-Woverloaded-virtual -Wredundant-decls -Wsign-conversion -Wsign-promo \
+-Wstrict-overflow=5 -Wfloat-equal")
+set(BUILD_FLAGS "-std=c++11 -O3 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
+set(TEST_FLAGS "-std=c++11 -g -O0 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
 
 # --------------------------------------------------- #
 #                   Dependencies
@@ -46,10 +54,9 @@ set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemo
 #                   build library
 # --------------------------------------------------- #
 include_directories(${CMAKE_INCLUDE_PATH})
-file(GLOB LIB_SOURCES "src/*.cpp")
+file(GLOB LIB_SOURCES "src/*.cpp" "src/*/*.cpp")
 
 add_library(sealib SHARED ${LIB_SOURCES})
-target_compile_options(sealib PRIVATE -std=c++11 -g -O3 -Wall -Werror -Wextra -Wpedantic -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 # --------------------------------------------------- #
 #                   build tests
@@ -59,7 +66,6 @@ add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
 find_package(Threads)
 target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
-target_compile_options(tests PRIVATE -std=c++11 -g -O3 -Wall -Wextra -Wpedantic -Wconversion -Wswitch-default -Wswitch-enum -Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef)
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")
@@ -73,4 +79,6 @@ endif ()
 file(GLOB MAIN "src-view/*.cpp")                                   # all test files
 add_executable(main ${LIB_SOURCES} ${MAIN})
 find_package(Threads)
-target_compile_options(main PRIVATE -std=c++11 -O3)
+
+set_target_properties(sealib main PROPERTIES COMPILE_FLAGS ${BUILD_FLAGS})
+set_target_properties(tests PROPERTIES COMPILE_FLAGS ${TEST_FLAGS})

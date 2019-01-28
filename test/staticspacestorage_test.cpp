@@ -1,8 +1,8 @@
-#include "sealib/staticspacestorage.h"
+#include "sealib/collection/staticspacestorage.h"
 #include <gtest/gtest.h>
 #include <cstdio>
 #include <random>
-#include "src/simplesequence.h"
+#include "../src/collection/simplesequence.h"
 
 using Sealib::StaticSpaceStorage;
 using Sealib::SimpleSequence;

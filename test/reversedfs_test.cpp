@@ -1,17 +1,17 @@
 #include "sealib/reversedfs.h"
 #include <gtest/gtest.h>
-#include "sealib/graphcreator.h"
+#include "sealib/graph/graphcreator.h"
 
 using namespace Sealib;  // NOLINT
 
 TEST(ReverseDFSTest, postprocess) {
-    Graph *g = Sealib::GraphCreator::createRandomFixed(1024, 16);
+    DirectedGraph g = GraphCreator::createRandomKRegularGraph(1024, 16);
     std::vector<uint> ref;
-    DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+    DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                         [&ref](uint u) { ref.push_back(u); });
     std::reverse(ref.begin(), ref.end());
     std::vector<uint> seq;
-    ReverseDFS d(g);
+    ReverseDFS d(&g);
     d.init();
     while (d.more()) {
         UserCall a = d.next();

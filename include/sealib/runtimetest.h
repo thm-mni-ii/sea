@@ -2,6 +2,7 @@
 #define SEALIB_RUNTIMETEST_H_
 #include <sys/times.h>
 #include <unistd.h>
+#include <cstdint>
 #include <algorithm>
 #include <chrono>
 #include <iostream>
@@ -17,8 +18,8 @@
  */
 class RuntimeTest {
  private:
-    std::vector<std::tuple<unsigned int, unsigned int>> parameters;
-    std::vector<unsigned int> runtimes;  // Runtime in seconds
+    std::vector<std::tuple<uint32_t, uint32_t>> parameters;
+    std::vector<uint32_t> runtimes;  // Runtime in seconds
  public:
     /**
      * Runs a test with a given function and saves the results
@@ -28,7 +29,7 @@ class RuntimeTest {
      * @param size size of the tested graph used for running the test
      */
     template<typename Testfunction>
-    void runTest(Testfunction testfunction, unsigned int order, unsigned int size);
+    void runTest(Testfunction testfunction, uint32_t order, uint32_t size);
     /**
      * Prints the testresults to standard output
      */
@@ -42,10 +43,10 @@ class RuntimeTest {
 };
 
 template<typename Testfunction>
-void RuntimeTest::runTest(Testfunction testfunction, unsigned int order, unsigned int size) {
+void RuntimeTest::runTest(Testfunction testfunction, uint32_t order, uint32_t size) {
     using clk = std::chrono::high_resolution_clock;
 
-    std::tuple<unsigned int, unsigned int> funcParameters(order, size);
+    std::tuple<uint32_t, uint32_t> funcParameters(order, size);
     parameters.push_back(funcParameters);
     const clk::time_point runStart = clk::now();
     std::cout << "Running test: "<< parameters.size()
@@ -59,7 +60,7 @@ void RuntimeTest::runTest(Testfunction testfunction, unsigned int order, unsigne
 
 void RuntimeTest::printResults() {
     std::cout << "order,size,runtime" << std::endl;
-    for (unsigned int i = 0; i < parameters.size(); ++i) {
+    for (uint32_t i = 0; i < parameters.size(); ++i) {
         std::cout << std::get<0>(parameters[i]) << ",";
         std::cout << std::get<1>(parameters[i]) << ",";
         std::cout << runtimes[i] << std::endl;
@@ -71,7 +72,7 @@ void RuntimeTest::saveCSV(std::string filepath) {
     output.open(filepath, std::ofstream::in | std::ofstream::out | std::ofstream::trunc);
     if (output.is_open()) {
         output << "order,size,runtime" << std::endl;
-        for (unsigned int i = 0; i < parameters.size(); ++i) {
+        for (uint32_t i = 0; i < parameters.size(); ++i) {
             output << std::get<0>(parameters[i]) << ",";
             output << std::get<1>(parameters[i]) << ",";
             output << runtimes[i];

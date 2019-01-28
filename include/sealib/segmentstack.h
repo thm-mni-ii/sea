@@ -1,45 +1,51 @@
 #ifndef SEALIB_SEGMENTSTACK_H_
 #define SEALIB_SEGMENTSTACK_H_
 
-#include <set>
+#include <utility>
+#include <vector>
 #include "sealib/_types.h"
-#include "sealib/compactarray.h"
-#include "sealib/graph.h"
+#include "sealib/collection/compactarray.h"
+#include "sealib/graph/graph.h"
 
 #define DFS_NO_MORE_NODES (unsigned)11
 #define DFS_DO_RESTORE (unsigned)12
 
-using Sealib::Pair;
+#ifdef SEALIBVISUAL_EXAMPLES_H_
+namespace SealibVisual {
+class VisualDFS;
+}
+#endif  // SEALIBVISUAL_EXAMPLES_H
 
 namespace Sealib {
-/**
- * Segment Stack:
- * - the segment stack has a low and a high segment
- * - the trailer (the last slot) of each segment is kept
- * - on push, both segments are filled from low to high
- *   - if both segments are full, the low segment is dropped and a new segment
- * is placed above of the high segment
- * - on pop, values are taken from high and then low segment
- *   - if the segments are empty and there are trailers left, a restoration
- * request is issued
- *   - if the segments are empty and the trailers are empty, there is no more
- * data in the stack
- *
- * @author Simon Heuser
- */
+/*
+  Segment Stack:
+  - the segment stack has a low and a high segment
+  - the trailer (the last slot) of each segment is kept
+  - on push, both segments are filled from low to high
+    - if both segments are full, the low segment is dropped and a new segment is
+  placed above of the high segment
+  - on pop, values are taken from high and then low segment
+    - if the segments are empty and there are trailers left, a restoration
+  request is issued
+    - if the segments are empty and the trailers are empty, there is no more
+  data in the stack
+
+  @author Simon Heuser
+*/
 class SegmentStack {
  public:
-    virtual int push(Pair u) = 0;
-    virtual int pop(Pair *r);
+    virtual void push(std::pair<uint, uint> u) = 0;
+    int pop(std::pair<uint, uint> *r);
+    std::pair<uint,uint> top();
     bool isEmpty();
     virtual bool isAligned() = 0;
+    virtual ~SegmentStack() = default;
 
  protected:
     explicit SegmentStack(unsigned segmentSize);
-    virtual ~SegmentStack();
 
     unsigned q;
-    Pair *low, *high;
+    std::vector<std::pair<uint, uint>> low, high;
     unsigned lp, hp, tp;
 };
 
@@ -56,19 +62,30 @@ class BasicSegmentStack : public SegmentStack {
  public:
     explicit BasicSegmentStack(unsigned segmentSize);
 
-    int push(Pair u) override;
-    // is the restoration finished? (i.e. saved trailer and actual trailer are
-    // aligned)
+    /**
+     * Push a tuple on the stack.
+     * @param u Tuple to store on the stack
+     *
+     */
+    void push(std::pair<uint, uint> u) override;
+    /**
+     * @return true if the restoration is finished (i.e. saved trailer and
+     * actual trailer are aligned)
+     */
     bool isAligned() override;
 
-    // empty the entire stack - needed for a full restoration */
+    /**
+     * Empty the entire stack. (Needed for a full restoration)
+     */
     void dropAll();
-    // save a trailer to survive a full restoration */
+    /**
+     * Save a trailer to survive a full restoration.
+     */
     void saveTrailer();
 
  private:
-    Pair last;
-    Pair savedTrailer;
+    std::pair<uint, uint> last;
+    std::pair<uint, uint> savedTrailer;
     int alignTarget;
 };
 
@@ -78,36 +95,70 @@ class BasicSegmentStack : public SegmentStack {
  */
 class ExtendedSegmentStack : public SegmentStack {
  public:
-    // the extended stack needs access to the graph and the color array; the
-    // segment size is n/ld(n) by default
-    ExtendedSegmentStack(uint size, Graph *g, CompactArray *c);
-    ~ExtendedSegmentStack();
+    /**
+     * Create a new ExtendedSegmentStack. It needs access to the DFS's graph and
+     * the color array. The segment size is n/ld(n) by default.
+     * @param size Number of nodes in the graph
+     * @param g Directed graph G=(V,E)
+     * @param c Compact array holding color values
+     */
+    ExtendedSegmentStack(uint size, Graph const *g, CompactArray *c);
 
-    int push(Pair p) override;
+    void push(std::pair<uint, uint> u) override;
+
+    /**
+     * @return true if saved trailer and actual trailer are aligned
+     */
     bool isAligned() override;
 
-    // check if u is labeled with the top segment number (i.e. is table[u]=top?)
-    // @param restoring refer to the previous top segment (used when restoring
-    // and
-    // values are actively pushed)
+    /**
+     * Check if u is labeled with the top segment number (i.e. is table[u]=top?)
+     * @param u Node to check
+     * @param restoring Refer to the previous top segment? (used when restoring
+     * and
+     * values are actively pushed)
+     */
     bool isInTopSegment(uint u, bool restoring = false);
-    // get the outgoing edge: retrieve the approximation from the table if u is
-    // small, get the edge from the trailer stack if u is big
+    /**
+     * Get the outgoing edge for a given node. Retrieve the approximation from
+     * the table if u is small, get the edge from the trailer stack if u is big.
+     * @param u Node to get the edge for
+     */
     uint getOutgoingEdge(uint u);
-    // get the second-last trailer (the one that is needed to do a 1-segment
-    // restoration)
-    // @return 0 if a trailer is found, 1 otherwise
-    int getRestoreTrailer(Pair *r);
-    // get the last trailer (the one that a restoration will align to)
-    int getTopTrailer(Pair *r);
-    // recolor all vertices in the low segment to the given color (used after a
-    // restoration when the low segment is actually the top segment of S)
+    /**
+     * Get the second-last trailer (the one that is needed to do a 1-segment
+     * restoration).
+     * @param r Pointer to the tuple that will hold the trailer
+     * @return 0 if a trailer is found, 1 otherwise
+     */
+    int getRestoreTrailer(std::pair<uint, uint> *r);
+    /**
+     * Get the last trailer (the one that a restoration will align to).
+     * @param r Pointer to the tuple that will hold the trailer
+     * @return 0 if a trailer is found, 1 otherwise
+     */
+    int getTopTrailer(std::pair<uint, uint> *r);
+    /**
+     * Recolor all vertices in the low segment to the given color (used after a
+     * restoration when the low segment is actually the top segment of S).
+     * @param v Color to apply to the low segment
+     */
     void recolorLow(unsigned v);
 
+    /**
+     * Get the edge approximation for a tuple (u,k)
+     * @param u Node number
+     * @param k Outgoing edge index
+     * @return Approximation: f = floor((k-1)/ceil(deg(u)/ld(n)))
+     */
     unsigned approximateEdge(uint u, uint k);
+    /**
+     * Get the outgoing edge index from a given approximation.
+     * @param u Node number
+     * @param f Approximation
+     * @return Outgoing edge: k = ceil(deg(u)/ld(n))*floor((k-1)/gu)
+     */
     uint retrieveEdge(uint u, unsigned f);
-
-    Pair top() const;
 
  private:
     /**
@@ -116,23 +167,27 @@ class ExtendedSegmentStack : public SegmentStack {
      * first managed vertex can be accessed via big[trailers[tp-1].bi].
      * bc is freely available to increment during restoration.
      */
-    class Trailer {
-     public:
-        Pair x;
+    struct Trailer {
+        std::pair<uint, uint> x;
         unsigned bi, bc;
         Trailer() : bi(INVALID), bc(0) {}
     };
 
-    Trailer *trailers;
+    std::vector<Trailer> trailers;
     unsigned l;
-    CompactArray *table, *edges;
-    Pair *big;
+    CompactArray table, edges;
+    std::vector<std::pair<uint, uint>> big;
     unsigned bp;
-    Graph *graph;
+    Graph const *graph;
     unsigned m, n;
     CompactArray *color;
 
+    static constexpr unsigned INVALID = static_cast<unsigned>(-1);
     void storeEdges();
+
+#ifdef SEALIBVISUAL_EXAMPLES_H_
+    friend class SealibVisual::VisualDFS;
+#endif  // SEALIBVISUAL_EXAMPLES_H
 };
 }  // namespace Sealib
 #endif  // SEALIB_SEGMENTSTACK_H_

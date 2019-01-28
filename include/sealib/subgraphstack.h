@@ -1,9 +1,9 @@
 #ifndef SEALIB_SUBGRAPHSTACK_H_
 #define SEALIB_SUBGRAPHSTACK_H_
 
-#include <sealib/basicgraph.h>
-#include <sealib/bitset.h>
-#include <sealib/rankselect.h>
+#include <sealib/graph/undirectedgraph.h>
+#include <sealib/collection/bitset.h>
+#include <sealib/dictionary/rankselect.h>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -25,28 +25,28 @@ namespace Sealib {
  * for which we construct additional rank-select structures.
  */
 class SubGraphStack {
-    static unsigned long refs[6];
-
     friend class SubGraph;
     friend class RecursiveSubGraph;
     friend class BaseSubGraph;
  private:
+    static constexpr uint8_t rSize = 7;
+    static std::vector<uint64_t> refs;
     std::vector<SubGraph *> clientList;
-    unsigned long currentRef;
-    unsigned long tuned;
+    uint64_t currentRef;
+    uint64_t tuned;
 
     RankSelect *tunedPhi0;
     RankSelect *tunedPsi0;
     RankSelect *tunedPhi;
     RankSelect *tunedPsi;
 
-    void tunephi0(unsigned long i);
-    void tunepsi0(unsigned long i);
-    void tunephi(unsigned long i);
-    void tunepsi(unsigned long i);
+    void tunephi0(uint64_t i);
+    void tunepsi0(uint64_t i);
+    void tunephi(uint64_t i);
+    void tunepsi(uint64_t i);
 
  public:
-    explicit SubGraphStack(std::shared_ptr<BasicGraph> g_);
+    explicit SubGraphStack(std::shared_ptr<UndirectedGraph> g_);
     /**
      * Pushes a new subgraph G_l+1 on G_l.
      * i.e. replaces the client list (G_0,...,G_l) with (G_0,...,G_l,G_l+1)
@@ -54,8 +54,8 @@ class SubGraphStack {
      * @param v Bitsequence of length n_l
      * @param a Bitsequence of length 2m_l
      */
-    void push(const Sealib::Bitset<unsigned char> &v,
-              const Sealib::Bitset<unsigned char> &a);
+    void push(const Sealib::Bitset<uint8_t> &v,
+              const Sealib::Bitset<uint8_t> &a);
 
     /**
      * Pushes a new subgraph G_l+1 on G_l.
@@ -66,7 +66,7 @@ class SubGraphStack {
      * Each vertice that still has an outgoing arc will be set in the bitset v.
      * @param a Bitsequence of length 2m_l
      */
-    void push(const Sealib::Bitset<unsigned char> &a);
+    void push(const Sealib::Bitset<uint8_t> &a);
 
     /**
      * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).
@@ -77,134 +77,134 @@ class SubGraphStack {
     /**
      * Returns the order of G_i
      */
-    unsigned long order(unsigned long i) const;
+    uint64_t order(uint64_t i) const;
 
-    inline unsigned long order() const {
+    inline uint64_t order() const {
         return order(clientList.size() - 1);
     }
 
     /**
      * @return - the degree of vertex u in G_i
      */
-    unsigned long degree(unsigned long i,
-                         unsigned long u) const;
+    uint64_t degree(uint64_t i,
+                         uint64_t u) const;
 
     /**
      * @return - the degree of vertex u for G_l = the top graph on the stack
      */
-    inline unsigned long degree(unsigned long u) const {
+    inline uint64_t degree(uint64_t u) const {
         return degree(clientList.size() - 1, u);
     }
 
     /**
      * @return - the head of u's k-th outgoing arc in G_i. i.e. head_i(u, k)
      */
-    unsigned long head(unsigned long i,
-                       unsigned long u,
-                       unsigned long k) const;
+    uint64_t head(uint64_t i,
+                       uint64_t u,
+                       uint64_t k) const;
 
     /**
      * @return - the head of u's k-th outgoing arc in G_l = the top graph on the stack
      */
-    inline unsigned long head(unsigned long u,
-                              unsigned long k) const {
+    inline uint64_t head(uint64_t u,
+                              uint64_t k) const {
         return head(clientList.size() - 1, u, k);
     }
 
     /**
      * @return - the pair that represents the mate of u's kth outgoing arc in G_i, i.e. mate_i(u, k)
      */
-    std::tuple<unsigned long, unsigned long> mate(unsigned long i,
-                                                  unsigned long u,
-                                                  unsigned long k) const;
+    std::tuple<uint64_t, uint64_t> mate(uint64_t i,
+                                                  uint64_t u,
+                                                  uint64_t k) const;
 
     /**
      * @return - the pair that represents the mate of u's kth outgoing arc in G_l = the top graph on the stack
      */
-    inline std::tuple<unsigned long, unsigned long> mate(unsigned long u,
-                                                         unsigned long k) const {
+    inline std::tuple<uint64_t, uint64_t> mate(uint64_t u,
+                                                         uint64_t k) const {
         return mate(clientList.size() - 1, u, k);
     }
 
     /**
      * @return the arc number of the k'th outgoing arc in vertex u in G_i.
      */
-    unsigned long g(unsigned long i, unsigned long u, unsigned long k) const;
+    uint64_t g(uint64_t i, uint64_t u, uint64_t k) const;
 
-    inline unsigned long g(unsigned long u, unsigned long k) const {
+    inline uint64_t g(uint64_t u, uint64_t k) const {
         return g(clientList.size() - 1, u, k);
     }
 
     /**
      * @return the number of arcs the subgraph G_i has
      */
-    unsigned long gMax(unsigned long i) const;
+    uint64_t gMax(uint64_t i) const;
 
-    inline unsigned long gMax() const {
+    inline uint64_t gMax() const {
         return gMax(clientList.size() - 1);
     }
 
     /**
-     * @return the (node, arc) pair belonging to the r'th arc in G_i
+     * @return the (node, arc) pair beint32_ting to the r'th arc in G_i
      */
-    std::tuple<unsigned long, unsigned long> gInv(unsigned long i, unsigned long r) const;
+    std::tuple<uint64_t, uint64_t> gInv(uint64_t i, uint64_t r) const;
 
     /**
-     * @return the (node, arc) pair belonging to the r'th arc in G_l = the top graph on the stack
+     * @return the (node, arc) pair beint32_ting to the r'th arc in G_l = the top graph on the stack
      */
-    inline std::tuple<unsigned long, unsigned long> gInv(unsigned long r) const {
+    inline std::tuple<uint64_t, uint64_t> gInv(uint64_t r) const {
         return gInv(clientList.size() - 1, r);
     }
 
     /**
      * @return translation of the u'th node in G_i to the isomorph node in G_j
      */
-    unsigned long phi(unsigned long i, unsigned long j, unsigned long u) const;
+    uint64_t phi(uint64_t i, uint64_t j, uint64_t u) const;
 
     /**
      * @return translation of the a'th arc in G_i to the isomorph arc in G_j
      */
-    unsigned long psi(unsigned long i, unsigned long j, unsigned long a)const;
+    uint64_t psi(uint64_t i, uint64_t j, uint64_t a)const;
 
     /**
      * @return translation of the u'th node in G_l = the top graph to the isomorph node in G_j
      */
-    inline unsigned long phi(unsigned long j, unsigned long u) const {
+    inline uint64_t phi(uint64_t j, uint64_t u) const {
         return phi(clientList.size() - 1, j, u);
     }
 
     /**
      * @return translation of the a'th arc in G_l = the top graph of to the isomorph arc in G_j
      */
-    inline unsigned long psi(unsigned long j, unsigned long a) const {
+    inline uint64_t psi(uint64_t j, uint64_t a) const {
         return psi(clientList.size() - 1, j, a);
     }
 
     /**
      * @return translation of the u'th node in G_l = the top graph to the isomorph node in G_0
      */
-    inline unsigned long phi(unsigned long u) const {
+    inline uint64_t phi(uint64_t u) const {
         return phi(clientList.size() - 1, 0, u);
     }
 
     /**
      * @return translation of the a'th arc in G_l = the top graph of to the isomorph arc in G_0
      */
-    inline unsigned long psi(unsigned long a) const {
+    inline uint64_t psi(uint64_t a) const {
         return psi(clientList.size() - 1, 0, a);
     }
 
     /**
      * @return  translation of the u'th node in G_0 to G_l = the top graph
      */
-    inline unsigned long phiInv(unsigned long u) const {
+    inline uint64_t phiInv(uint64_t u) const {
         return phi(0, clientList.size() - 1, u);
     }
 
     /**
      * @return translation of the a'th arc in G_0 to G_l = the top graph
      */
-    inline unsigned long psiInv(unsigned long a) const {
+    inline uint64_t psiInv(uint64_t a) const {
         return psi(0, clientList.size() - 1, a);
     }
 
@@ -225,12 +225,12 @@ class SubGraphStack {
      * If there are previously initialized tuning structures, they are destroyed.
      * @param i - idx of the Graph to be tuned
      */
-    void tune(unsigned long i);
+    void tune(uint64_t i);
 
     /**
      * @return the number of graphs currently on the stack
      */
-    inline unsigned long size() const {
+    inline uint64_t size() const {
         return clientList.size();
     }
 

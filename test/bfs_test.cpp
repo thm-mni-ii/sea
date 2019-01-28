@@ -1,33 +1,29 @@
-#include "sealib/bfs.h"
+#include "sealib/iterator/bfs.h"
 #include <gtest/gtest.h>
 #include <stdio.h>
-#include "sealib/graph.h"
-#include "sealib/graphcreator.h"
+#include "sealib/_types.h"
+#include "sealib/graph/graph.h"
+#include "sealib/graph/graphcreator.h"
 
-using namespace Sealib;  // NOLINT
+using Sealib::uint;
+using Sealib::BFS;
+using Sealib::DirectedGraph;
+using Sealib::GraphCreator;
 
 static uint c1 = 0, c2 = 0;
-static uint tmp = 0;
-static void incr1(uint u) {
-    c1++;
-    tmp = u;
-}
-static void incr2(uint u, uint v) {
-    c2++;
-    tmp = u;
-    tmp = v;
-}
+static void incr1(uint) { c1++; }
+static void incr2(uint, uint) { c2++; }
 
 static uint GRAPHCOUNT = 4, order = 500, degree = 20;
-static std::vector<Graph *> makeGraphs() {
-    std::vector<Graph *> g = std::vector<Graph *>();
+static std::vector<DirectedGraph> makeGraphs() {
+    std::vector<DirectedGraph> g;
     for (uint c = 0; c < GRAPHCOUNT; c++) {
-        g.push_back(GraphCreator::createRandomFixed(order, degree));
+        g.emplace_back(GraphCreator::createRandomKRegularGraph(order, degree));
     }
     return g;
 }
 
-class BFSTest : public ::testing::TestWithParam<Graph *> {
+class BFSTest : public ::testing::TestWithParam<DirectedGraph> {
  protected:
     virtual void SetUp() { c1 = c2 = 0; }
 };
@@ -36,7 +32,8 @@ INSTANTIATE_TEST_CASE_P(ParamTests, BFSTest, ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
 TEST_P(BFSTest, userproc) {
-    BFS bfs(GetParam(), incr1, incr2);
+    DirectedGraph g = GetParam();
+    BFS bfs(&g, incr1, incr2);
     bfs.init();
     do {
         while (bfs.more()) bfs.next();
@@ -47,7 +44,8 @@ TEST_P(BFSTest, userproc) {
 
 TEST(BFSTest, nextComponent) {
     c1 = c2 = 0;
-    BFS bfs(GraphCreator::createRandomFixed(order, 0), incr1, incr2);
+    DirectedGraph g = GraphCreator::createRandomKRegularGraph(order, 0);
+    BFS bfs(&g, incr1, incr2);
     uint rc = 0;
     bfs.init();
     do {
