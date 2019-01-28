@@ -17,14 +17,24 @@ namespace Sealib {
 struct UserCall {
  public:
     enum Type { preprocess = 0, preexplore, postexplore, postprocess, nop };
-    unsigned type;
-    uint u, k;
-    UserCall(unsigned p1, uint p2, uint p3 = 0) : type(p1), u(p2), k(p3) {}
+
+    /**
+     * Create a UserCall object of the given type.
+     * @param t Type of the user call
+     * @param p1 first number
+     * @param p2 second number (optional, depending on user call type)
+     */
+    UserCall(unsigned t, uint p1, uint p2 = 0) : type(t), u(p1), k(p2) {}
+
     constexpr UserCall() : type(nop), u(0), k(0) {}
-    bool operator==(UserCall p) {
+
+    bool operator==(UserCall p) const {
         return type == p.type && u == p.u && k == p.k;
     }
-    bool operator!=(UserCall p) { return !(*this == p); }
+    bool operator!=(UserCall p) const { return !(*this == p); }
+
+    unsigned type;
+    uint u, k;
 };
 
 /**
@@ -97,6 +107,46 @@ class ReverseDFS : Iterator<UserCall>, DFS {
 
     std::vector<UserCall> simulate(std::stack<std::pair<uint, uint>> *const sj,
                                    std::pair<uint, uint> until, UserCall first);
+};
+
+/**
+ * Simple reverse DFS iterator. Returns representations of the user calls of a
+ * normal DFS in reverse order, with an optional filter to select only one type
+ * of user call.
+ */
+class SimpleReverseDFS : Iterator<UserCall> {
+ public:
+    /**
+     * Create a new reverse DFS iterator.
+     * @param g Input graph pointer
+     * @param filter Filter to select the desired user call type
+     */
+    explicit SimpleReverseDFS(Graph const *g,
+                              UserCall::Type filter = UserCall::nop);
+
+    /**
+     * Initialize the reverse DFS (runs a normal DFS and stores the desired user
+     * calls).
+     */
+    void init() override;
+
+    /**
+     * @return true if there are more user calls that can be retrieved
+     */
+    bool more() override { return resultI != result.rend(); }
+
+    /**
+     * Get the next user call object.
+     * If a filter is given, only the selected type can appear as output.
+     * @return representation of the reverse sequence's next user call
+     */
+    UserCall next() override { return *resultI++; }
+
+ private:
+    Graph const *g;
+    UserCall::Type filter;
+    std::vector<UserCall> result;
+    std::vector<UserCall>::reverse_iterator resultI;
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_REVERSEDFS_H_

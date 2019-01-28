@@ -263,4 +263,35 @@ ReverseDFS::ReverseDFS(Graph const *graph)
 
 ReverseDFS::~ReverseDFS() { delete[] i; }
 
+// --- SIMPLE RDFS ---
+
+SimpleReverseDFS::SimpleReverseDFS(Graph const *p1, UserCall::Type p2)
+    : g(p1), filter(p2) {}
+
+void SimpleReverseDFS::init() {
+    DFS::nloglognBitDFS(
+        g,
+        [this](uint u) {
+            if (filter == UserCall::preprocess || filter == UserCall::nop) {
+                result.push_back(UserCall(UserCall::preprocess, u));
+            }
+        },
+        [this](uint u, uint v) {
+            if (filter == UserCall::preexplore || filter == UserCall::nop) {
+                result.push_back(UserCall(UserCall::preexplore, u, v));
+            }
+        },
+        [this](uint u, uint v) {
+            if (filter == UserCall::postexplore || filter == UserCall::nop) {
+                result.push_back(UserCall(UserCall::postexplore, u, v));
+            }
+        },
+        [this](uint u) {
+            if (filter == UserCall::postprocess || filter == UserCall::nop) {
+                result.push_back(UserCall(UserCall::postprocess, u));
+            }
+        });
+    resultI = result.rbegin();
+}
+
 }  // namespace Sealib
