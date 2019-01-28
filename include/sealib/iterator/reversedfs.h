@@ -1,12 +1,12 @@
-#ifndef SEALIB_REVERSEDFS_H_
-#define SEALIB_REVERSEDFS_H_
+#ifndef SEALIB_ITERATOR_REVERSEDFS_H_
+#define SEALIB_ITERATOR_REVERSEDFS_H_
 #include <limits>
 #include <stack>
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
-#include "sealib/iterator/dfs.h"
 #include "sealib/graph/graph.h"
+#include "sealib/iterator/dfs.h"
 #include "sealib/iterator/iterator.h"
 
 namespace Sealib {
@@ -64,8 +64,9 @@ class ReverseDFS : Iterator<UserCall>, DFS {
  private:
     struct IntervalData {
      public:
-        std::pair<uint,uint> h1, h2;  // top entries at start and end of the interval
-        std::pair<uint,uint> hd;      // value of deepest entry
+        std::pair<uint, uint> h1,
+            h2;  // top entries at start and end of the interval
+        std::pair<uint, uint> hd;                     // value of deepest entry
         uint hdc = std::numeric_limits<uint>::max();  // index of deepest entry
         UserCall c1 = UserCall();
         uint size = 0;  // call counter for the interval
@@ -91,10 +92,11 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     void updateInterval(uint actions, bool end = false);
     void setCall(UserCall call);
 
-    std::stack<std::pair<uint,uint>> reconstructPart(std::pair<uint,uint> from, std::pair<uint,uint> to);
+    std::stack<std::pair<uint, uint>> reconstructPart(
+        std::pair<uint, uint> from, std::pair<uint, uint> to);
 
-    std::vector<UserCall> simulate(std::stack<std::pair<uint,uint>> *const sj, std::pair<uint,uint> until,
-                                   UserCall first);
+    std::vector<UserCall> simulate(std::stack<std::pair<uint, uint>> *const sj,
+                                   std::pair<uint, uint> until, UserCall first);
 };
 }  // namespace Sealib
-#endif  // SEALIB_REVERSEDFS_H_
+#endif  // SEALIB_ITERATOR_REVERSEDFS_H_

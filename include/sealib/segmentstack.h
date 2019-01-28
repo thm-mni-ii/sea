@@ -36,7 +36,7 @@ class SegmentStack {
  public:
     virtual void push(std::pair<uint, uint> u) = 0;
     int pop(std::pair<uint, uint> *r);
-    std::pair<uint,uint> top();
+    std::pair<uint, uint> top();
     bool isEmpty();
     virtual bool isAligned() = 0;
     virtual ~SegmentStack() = default;

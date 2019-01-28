@@ -1,8 +1,8 @@
-#include "sealib/reversedfs.h"
+#include "sealib/iterator/reversedfs.h"
 #include <cmath>
 #include <set>
 
-using namespace Sealib;  // NOLINT
+namespace Sealib {
 
 void ReverseDFS::storeTime(unsigned df, uint u) {
     if (df == 0) {
@@ -18,7 +18,7 @@ void ReverseDFS::storeTime(unsigned df, uint u) {
 
 void ReverseDFS::updateInterval(uint actions, bool end) {
     IntervalData &ci = i[j];
-    std::pair<uint,uint> top = s.top();
+    std::pair<uint, uint> top = s.top();
     if (ci.size == 0 && ci.inUse == false) {
         ci.h1 = top;
         ci.inUse = true;
@@ -45,9 +45,9 @@ void ReverseDFS::setCall(UserCall call) {
 
 void ReverseDFS::process_recording(uint u0) {
     updateInterval(0);
-    s.push(std::pair<uint,uint>(u0, 0));
+    s.push(std::pair<uint, uint>(u0, 0));
     ns = 1;
-    std::pair<uint,uint> x;
+    std::pair<uint, uint> x;
     while (!s.isEmpty()) {
         uint actions = 0;
         int sr = s.pop(&x);
@@ -65,11 +65,11 @@ void ReverseDFS::process_recording(uint u0) {
             actions++;
         }
         if (k < g->deg(u)) {
-            s.push(std::pair<uint,uint>(u, k + 1));
+            s.push(std::pair<uint, uint>(u, k + 1));
             uint v = g->head(u, k);
             setCall({UserCall::preexplore, u, k});
             if (c.get(v) == DFS_WHITE) {
-                s.push(std::pair<uint,uint>(v, 0));
+                s.push(std::pair<uint, uint>(v, 0));
                 actions++;
                 ns++;
             }
@@ -93,14 +93,15 @@ void ReverseDFS::init() {
     while (i[j].size == 0) j--;  // discard empty intervals
 }
 
-std::stack<std::pair<uint,uint>> ReverseDFS::reconstructPart(std::pair<uint,uint> from, std::pair<uint,uint> to) {
-    std::stack<std::pair<uint,uint>> sj;
+std::stack<std::pair<uint, uint>> ReverseDFS::reconstructPart(
+    std::pair<uint, uint> from, std::pair<uint, uint> to) {
+    std::stack<std::pair<uint, uint>> sj;
     std::set<uint> tmp;
     if (to.first != INVALID) {
         if (from.first == INVALID) {
             sj.push(to);
         } else {
-            std::pair<uint,uint> a = std::pair<uint,uint>(from.first, 0);
+            std::pair<uint, uint> a = std::pair<uint, uint>(from.first, 0);
             tmp.insert(a.first);
             do {
                 uint u = a.first;
@@ -112,8 +113,8 @@ std::stack<std::pair<uint,uint>> ReverseDFS::reconstructPart(std::pair<uint,uint
                         uint v = g->head(u, k);
                         if (f.get(v) == j && tmp.find(v) == tmp.end()) {
                             // using a temp. set to avoid cycles
-                            a = std::pair<uint,uint>(v, 0);
-                            sj.push(std::pair<uint,uint>(u, k + 1));
+                            a = std::pair<uint, uint>(v, 0);
+                            sj.push(std::pair<uint, uint>(u, k + 1));
                             tmp.insert(v);
                             found = true;
                             break;
@@ -130,22 +131,23 @@ std::stack<std::pair<uint,uint>> ReverseDFS::reconstructPart(std::pair<uint,uint
     return sj;
 }
 
-std::vector<UserCall> ReverseDFS::simulate(std::stack<std::pair<uint,uint>> *const sj,
-                                           std::pair<uint,uint> until, UserCall first) {
+std::vector<UserCall> ReverseDFS::simulate(
+    std::stack<std::pair<uint, uint>> *const sj, std::pair<uint, uint> until,
+    UserCall first) {
     std::vector<UserCall> ret;
 
     if (sj->empty()) {
         if (first.type == UserCall::preprocess) {
-            sj->push(std::pair<uint,uint>(first.u, 0));
+            sj->push(std::pair<uint, uint>(first.u, 0));
         } else if (first.type == UserCall::preexplore) {
-            sj->push(std::pair<uint,uint>(first.u, first.k));
+            sj->push(std::pair<uint, uint>(first.u, first.k));
         } else {
             throw std::logic_error("stack empty");
         }
     }
 
     while (sj->top() != until) {
-        std::pair<uint,uint> x = sj->top();
+        std::pair<uint, uint> x = sj->top();
         sj->pop();
         uint u = x.first, k = x.second;
         if (k == 0 && c.get(u) == DFS_WHITE) {
@@ -153,11 +155,11 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<std::pair<uint,uint>> *con
             c.insert(u, DFS_GRAY);
         }
         if (k < g->deg(u)) {
-            sj->push(std::pair<uint,uint>(u, k + 1));
+            sj->push(std::pair<uint, uint>(u, k + 1));
             uint v = g->head(u, k);
             if (c.get(v) == DFS_WHITE) {
                 ret.emplace_back(UserCall(UserCall::Type::preexplore, u, k));
-                sj->push(std::pair<uint,uint>(v, 0));
+                sj->push(std::pair<uint, uint>(v, 0));
             } else {
                 // no postexplore: will be simulated later
             }
@@ -175,11 +177,11 @@ std::vector<UserCall> ReverseDFS::simulate(std::stack<std::pair<uint,uint>> *con
             bool a = false;
             for (uint b = 0; b < n; b++) {
                 if (c.get(b) == DFS_WHITE && d.get(b) == j) {
-                    sj->push(std::pair<uint,uint>(b, 0));
+                    sj->push(std::pair<uint, uint>(b, 0));
                     a = true;
                     break;
                 } else if (c.get(b) == DFS_GRAY && f.get(b) == j) {
-                    sj->push(std::pair<uint,uint>(b, g->deg(b)));
+                    sj->push(std::pair<uint, uint>(b, g->deg(b)));
                     a = true;
                     break;
                 }
@@ -231,7 +233,8 @@ UserCall ReverseDFS::next() {
                 c.insert(a, DFS_WHITE);
             }
         }
-        std::stack<std::pair<uint,uint>> sj = reconstructPart(i[j].hd, i[j].h1);
+        std::stack<std::pair<uint, uint>> sj =
+            reconstructPart(i[j].hd, i[j].h1);
         major = simulate(&sj, i[j].h2, i[j].c1);
         majorI = major.rbegin();
         j--;
@@ -259,3 +262,5 @@ ReverseDFS::ReverseDFS(Graph const *graph)
 }
 
 ReverseDFS::~ReverseDFS() { delete[] i; }
+
+}  // namespace Sealib

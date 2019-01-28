@@ -1,4 +1,4 @@
-#include "sealib/reversedfs.h"
+#include "sealib/iterator/reversedfs.h"
 #include <gtest/gtest.h>
 #include "sealib/graph/graphcreator.h"
 

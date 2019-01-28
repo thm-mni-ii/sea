@@ -28,13 +28,13 @@ int SegmentStack::pop(std::pair<uint, uint> *r) {
     return 0;
 }
 
-std::pair<uint,uint> SegmentStack::top() {
-    if(hp>0) {
-        return high[hp-1];
-    } else if(lp>0) {
-        return low[lp-1];
+std::pair<uint, uint> SegmentStack::top() {
+    if (hp > 0) {
+        return high[hp - 1];
+    } else if (lp > 0) {
+        return low[lp - 1];
     } else {
-        return std::pair<uint,uint>(INVALID,INVALID);
+        return std::pair<uint, uint>(INVALID, INVALID);
     }
 }
 
