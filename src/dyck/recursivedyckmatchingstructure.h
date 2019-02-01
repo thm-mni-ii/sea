@@ -1,5 +1,5 @@
-#ifndef SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
-#define SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
+#ifndef SRC_DYCK_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
+#define SRC_DYCK_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
 
 #include "localdycktable.h"
 #include "dyckmatchingstructure.h"
@@ -49,4 +49,4 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
     const Sealib::Bitset<uint8_t> initializePioneerRankSelectBitset();
 };
 }  // namespace Sealib
-#endif  // SEALIB_RECURSIVEDYCKMATCHINGSTRUCTURE_H_
+#endif  // SRC_DYCK_RECURSIVEDYCKMATCHINGSTRUCTURE_H_

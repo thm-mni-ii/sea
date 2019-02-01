@@ -1,5 +1,5 @@
-#ifndef SEALIB_LOCALSELECTTABLE_H_
-#define SEALIB_LOCALSELECTTABLE_H_
+#ifndef SRC_RANKSELECT_LOCALSELECTTABLE_H_
+#define SRC_RANKSELECT_LOCALSELECTTABLE_H_
 #include <cstdint>
 #include <vector>
 
@@ -33,4 +33,4 @@ class LocalSelectTable {
     void operator=(LocalSelectTable const &) = delete;
 };
 }  // namespace Sealib
-#endif  // SEALIB_LOCALSELECTTABLE_H_
+#endif  // SRC_RANKSELECT_LOCALSELECTTABLE_H_

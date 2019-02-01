@@ -1,5 +1,5 @@
-#ifndef SEALIB_DYCKWORDLEXICON_H_
-#define SEALIB_DYCKWORDLEXICON_H_
+#ifndef SRC_DYCK_DYCKWORDLEXICON_H_
+#define SRC_DYCK_DYCKWORDLEXICON_H_
 
 #include <sealib/collection/bitset.h>
 #include <vector>
@@ -44,4 +44,4 @@ class DyckWordLexicon {
     uint32_t getWordLength();
 };
 }  // namespace Sealib
-#endif  // SEALIB_DYCKWORDLEXICON_H_
+#endif  // SRC_DYCK_DYCKWORDLEXICON_H_
