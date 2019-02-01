@@ -3,8 +3,6 @@
 
 #include <sealib/dictionary/rankselect.h>
 #include <sealib/graph/undirectedgraph.h>
-#include <sealib/simpletrailstructure.h>
-#include <sealib/trailstructure.h>
 #include <ostream>
 #include <vector>
 #include <tuple>

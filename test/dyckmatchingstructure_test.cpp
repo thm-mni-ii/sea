@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <sealib/dyckmatchingstructure.h>
-#include <sealib/dyckwordlexicon.h>
+#include "../src/dyck/dyckmatchingstructure.h"
+#include "../src/dyck/dyckwordlexicon.h"
 
 TEST(DyckMatchingStructureTest, testAllWordsLength10) {
     Sealib::DyckWordLexicon lex(10);

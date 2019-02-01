@@ -1,7 +1,7 @@
 #ifndef SEALIB_SHAREDRANKSELECT_H_
 #define SEALIB_SHAREDRANKSELECT_H_
 
-#include <sealib/sharedrankstructure.h>
+#include <sealib/dictionary/sharedrankstructure.h>
 #include <sealib/collection/bitset.h>
 
 namespace Sealib {

@@ -1,4 +1,4 @@
-#include <sealib/subgraphstack.h>
+#include <sealib/collection/subgraphstack.h>
 #include <iostream>
 #include <utility>
 #include "./subgraph.h"

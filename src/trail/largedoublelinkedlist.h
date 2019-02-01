@@ -1,7 +1,7 @@
 #ifndef SEALIB_LARGEDOUBLELINKEDLIST_H_
 #define SEALIB_LARGEDOUBLELINKEDLIST_H_
 
-#include <sealib/doublelinkedlist.h>
+#include "doublelinkedlist.h"
 #include <vector>
 #include <ostream>
 

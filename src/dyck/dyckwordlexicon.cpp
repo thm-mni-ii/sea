@@ -1,4 +1,4 @@
-#include <sealib/dyckwordlexicon.h>
+#include "dyckwordlexicon.h"
 #include <iostream>
 
 Sealib::DyckWordLexicon::DyckWordLexicon(uint32_t wordLength_) : wordLength(wordLength_) {
