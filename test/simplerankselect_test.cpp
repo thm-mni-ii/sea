@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <sealib/dictionary/simplerankselect.h>
-#include <sealib/sharedrankselect.h>
+#include <sealib/dictionary/sharedrankselect.h>
 
 TEST(SimpleRankSelectTest, simpleRankSelect) {
     std::shared_ptr<Sealib::Bitset<uint8_t>> bits(new Sealib::Bitset<uint8_t>(1));

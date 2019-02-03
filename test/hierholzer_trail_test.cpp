@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 #include <sealib/graph/graphcreator.h>
 #include "../src/trail/naiveeulertrail.h"
-#include <sealib/simpletrailstructure.h>
-#include <sealib/eulertrail.h>
+#include "../src/trail/simpletrailstructure.h"
+#include <sealib/iterator/eulertrail.h>
 #include <stdlib.h>
+#include "../src/trail/trailstructure.h"
 
 TEST(EulerTrailTest, hierholzerTrail) {
     uint32_t order = 6;

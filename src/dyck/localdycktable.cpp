@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
-#include "sealib/localdycktable.h"
+#include "localdycktable.h"
 
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 

@@ -1,12 +1,15 @@
-#ifndef SEALIB_TRAILSTRUCTURE_H_
-#define SEALIB_TRAILSTRUCTURE_H_
+#ifndef SRC_TRAIL_TRAILSTRUCTURE_H_
+#define SRC_TRAIL_TRAILSTRUCTURE_H_
 
-#include <sealib/localdycktable.h>
 #include <sealib/dictionary/rankselect.h>
 #include <sealib/dictionary/simplerankselect.h>
-#include <sealib/dyckmatchingstructure.h>
-#include <sealib/largedoublelinkedlist.h>
+#include "../dyck/dyckmatchingstructure.h"
+#include "doublelinkedlist.h"
 #include <vector>
+
+namespace Sealib {
+class DoubleLinkedList;
+}
 
 /**
  * Space efficient TrailStructure.
@@ -156,4 +159,4 @@ class TrailStructure {
     uint32_t getMatchedNaive(uint32_t idx);
 };
 }  // namespace Sealib
-#endif  // SEALIB_TRAILSTRUCTURE_H_
+#endif  // SRC_TRAIL_TRAILSTRUCTURE_H_

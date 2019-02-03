@@ -1,5 +1,5 @@
-#ifndef SEALIB_RANKSTRUCTURE_H_
-#define SEALIB_RANKSTRUCTURE_H_
+#ifndef SEALIB_DICTIONARY_SHAREDRANKSTRUCTURE_H_
+#define SEALIB_DICTIONARY_SHAREDRANKSTRUCTURE_H_
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 
 #include <sealib/collection/bitset.h>
@@ -8,13 +8,14 @@
 
 /**
  * Space efficient RankStructure implementation.
+ * Uses a shared_ptr for the bitset, saves space if the bitset can be reused.
  * @author Johannes Meintrup
  */
 namespace Sealib {
-class RankStructure {
+class SharedRankStructure {
  protected:
-    static constexpr const uint8_t segmentLength = 8;
-    const Sealib::Bitset<uint8_t> bitset;
+    static const uint8_t segmentLength = 8;
+    std::shared_ptr<const Sealib::Bitset<uint8_t>> bitset;
     uint32_t segmentCount;
     uint32_t maxRank;
 
@@ -22,7 +23,6 @@ class RankStructure {
     std::vector<uint32_t> nonEmptySegments;
 
  public:
-    uint64_t size() const;
     uint32_t getMaxRank() const;
     const std::vector<uint32_t> &getSetCountTable() const;
     const std::vector<uint32_t> &getNonEmptySegments() const;
@@ -35,14 +35,14 @@ class RankStructure {
     uint64_t rank(uint64_t k) const;
 
     /**
-     * @param bitset used for Rank
+     * @param shared_ptr managing the Sealib::Bitset used for Rank
      */
-    explicit RankStructure(const Sealib::Bitset<uint8_t> &bitset);
+    explicit SharedRankStructure(std::shared_ptr<const Sealib::Bitset<uint8_t> > bitset);
 
     /**
      * default empty constructor
      */
-    RankStructure();
+    SharedRankStructure();
 
     /**
      * @return segment length
@@ -55,12 +55,17 @@ class RankStructure {
     uint32_t getSegmentCount() const;
 
     /**
+     * @return size of bitset
+     */
+    uint64_t size() const;
+
+    /**
      * @return segment of the bitset
      */
     const Sealib::Bitset<uint8_t>& getBitset() const;
 
-    ~RankStructure();
+    ~SharedRankStructure();
     uint32_t setBefore(uint64_t segment) const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_RANKSTRUCTURE_H_
+#endif  // SEALIB_DICTIONARY_SHAREDRANKSTRUCTURE_H_

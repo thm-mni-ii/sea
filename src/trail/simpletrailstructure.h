@@ -1,5 +1,5 @@
-#ifndef SEALIB_SIMPLETRAILSTRUCTURE_H_
-#define SEALIB_SIMPLETRAILSTRUCTURE_H_
+#ifndef SRC_TRAIL_SIMPLETRAILSTRUCTURE_H_
+#define SRC_TRAIL_SIMPLETRAILSTRUCTURE_H_
 
 #include <sealib/collection/bitset.h>
 #include <vector>
@@ -110,4 +110,4 @@ class SimpleTrailStructure {
     void marry(uint32_t i, uint32_t o);
 };
 }  // namespace Sealib
-#endif  // SEALIB_SIMPLETRAILSTRUCTURE_H_
+#endif  // SRC_TRAIL_SIMPLETRAILSTRUCTURE_H_

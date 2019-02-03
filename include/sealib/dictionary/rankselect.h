@@ -1,7 +1,7 @@
 #ifndef SEALIB_DICTIONARY_RANKSELECT_H_
 #define SEALIB_DICTIONARY_RANKSELECT_H_
 
-#include <sealib/rankstructure.h>
+#include <sealib/dictionary/rankstructure.h>
 #include <sealib/collection/bitset.h>
 
 namespace Sealib {

@@ -1,5 +1,5 @@
-#ifndef SEALIB_SHAREDRANKSTRUCTURE_H_
-#define SEALIB_SHAREDRANKSTRUCTURE_H_
+#ifndef SEALIB_DICTIONARY_RANKSTRUCTURE_H_
+#define SEALIB_DICTIONARY_RANKSTRUCTURE_H_
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 
 #include <sealib/collection/bitset.h>
@@ -8,14 +8,13 @@
 
 /**
  * Space efficient RankStructure implementation.
- * Uses a shared_ptr for the bitset, saves space if the bitset can be reused.
  * @author Johannes Meintrup
  */
 namespace Sealib {
-class SharedRankStructure {
+class RankStructure {
  protected:
-    static const uint8_t segmentLength = 8;
-    std::shared_ptr<const Sealib::Bitset<uint8_t>> bitset;
+    static constexpr const uint8_t segmentLength = 8;
+    const Sealib::Bitset<uint8_t> bitset;
     uint32_t segmentCount;
     uint32_t maxRank;
 
@@ -23,6 +22,7 @@ class SharedRankStructure {
     std::vector<uint32_t> nonEmptySegments;
 
  public:
+    uint64_t size() const;
     uint32_t getMaxRank() const;
     const std::vector<uint32_t> &getSetCountTable() const;
     const std::vector<uint32_t> &getNonEmptySegments() const;
@@ -35,14 +35,14 @@ class SharedRankStructure {
     uint64_t rank(uint64_t k) const;
 
     /**
-     * @param shared_ptr managing the Sealib::Bitset used for Rank
+     * @param bitset used for Rank
      */
-    explicit SharedRankStructure(std::shared_ptr<const Sealib::Bitset<uint8_t> > bitset);
+    explicit RankStructure(const Sealib::Bitset<uint8_t> &bitset);
 
     /**
      * default empty constructor
      */
-    SharedRankStructure();
+    RankStructure();
 
     /**
      * @return segment length
@@ -55,17 +55,12 @@ class SharedRankStructure {
     uint32_t getSegmentCount() const;
 
     /**
-     * @return size of bitset
-     */
-    uint64_t size() const;
-
-    /**
      * @return segment of the bitset
      */
     const Sealib::Bitset<uint8_t>& getBitset() const;
 
-    ~SharedRankStructure();
+    ~RankStructure();
     uint32_t setBefore(uint64_t segment) const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_SHAREDRANKSTRUCTURE_H_
+#endif  // SEALIB_DICTIONARY_RANKSTRUCTURE_H_

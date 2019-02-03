@@ -1,7 +1,7 @@
-#ifndef SEALIB_SMALLDOUBLELINKEDLIST_H_
-#define SEALIB_SMALLDOUBLELINKEDLIST_H_
+#ifndef SRC_TRAIL_SMALLDOUBLELINKEDLIST_H_
+#define SRC_TRAIL_SMALLDOUBLELINKEDLIST_H_
 
-#include <sealib/doublelinkedlist.h>
+#include "doublelinkedlist.h"
 #include <vector>
 #include <ostream>
 
@@ -33,4 +33,4 @@ class SmallDoubleLinkedList : public DoubleLinkedList {
     bool isEmpty() override;
 };
 }  // namespace Sealib
-#endif  // SEALIB_SMALLDOUBLELINKEDLIST_H_
+#endif  // SRC_TRAIL_SMALLDOUBLELINKEDLIST_H_
