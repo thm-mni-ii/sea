@@ -14,7 +14,7 @@ namespace Sealib {
  * order. There is also the possibility to check if a specific vertex is a cut
  * vertex.
  */
-class CutVertexIterator : Iterator<uint>, DFS {
+class CutVertexIterator : Iterator<uint> {
  public:
     /**
      * Create a new cut-vertex iterator for an undirected graph G.

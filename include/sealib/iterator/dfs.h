@@ -110,20 +110,24 @@ class DFS {
                                         Consumer postProcess,
                                         uint32_t startVertex);
 
- protected:
-    static void process_standard(uint u0, Graph const *g, uint *color,
+    /**
+     * The following helper procedures are only for internal or experimental
+     * usage.
+     */
+
+    static void visit_standard(uint u0, Graph const *g, uint *color,
                                  Consumer preprocess, BiConsumer preexplore,
                                  BiConsumer postexplore, Consumer postprocess);
 
     template <class SS>
-    static void process_small(uint u0, Graph const *g, CompactArray *color,
+    static void visit_nloglogn(uint u0, Graph const *g, CompactArray *color,
                               SS *s, void (*restoration)(uint, Graph const *,
                                                          CompactArray *, SS *),
                               Consumer preprocess, BiConsumer preexplore,
                               BiConsumer postexplore, Consumer postprocess);
 
     template <class S>
-    static void process_static(uint u0, UndirectedGraph const *g,
+    static void visit_nplusm(uint u0, UndirectedGraph const *g,
                                CompactArray *color, S *back,
                                Consumer preprocess, BiConsumer preexplore,
                                BiConsumer postexplore, Consumer postprocess);

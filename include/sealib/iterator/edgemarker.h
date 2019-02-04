@@ -20,7 +20,7 @@ namespace Sealib {
  * can run algorithms like cut-vertex finding and biconnected-component
  * outputting.
  */
-class EdgeMarker : DFS {
+class EdgeMarker {
  public:
     /**
      * Create a new edge marker from a given undirected graph. On construction,

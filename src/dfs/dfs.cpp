@@ -7,7 +7,7 @@
 
 namespace Sealib {
 
-void DFS::process_standard(uint u0, Graph const *g, uint *color,
+void DFS::visit_standard(uint u0, Graph const *g, uint *color,
                            Consumer preProcess, BiConsumer preExplore,
                            BiConsumer postExplore, Consumer postProcess) {
     std::unique_ptr<std::pair<uint, uint>[]> s(
@@ -43,7 +43,7 @@ void DFS::process_standard(uint u0, Graph const *g, uint *color,
 }
 
 template <class SS>
-void DFS::process_small(uint u0, Graph const *g, CompactArray *color, SS *s,
+void DFS::visit_nloglogn(uint u0, Graph const *g, CompactArray *color, SS *s,
                         void (*restoration)(uint, Graph const *, CompactArray *,
                                             SS *),
                         Consumer preProcess, BiConsumer preExplore,
@@ -174,7 +174,7 @@ void DFS::restore_top(uint u0, Graph const *g, CompactArray *color,
 }
 
 template <class S>
-void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
+void DFS::visit_nplusm(uint u0, UndirectedGraph const *g, CompactArray *color,
                          S *back, Consumer preprocess, BiConsumer preexplore,
                          BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
@@ -218,7 +218,7 @@ void DFS::standardDFS(Graph const *g, Consumer preProcess,
     for (uint a = 0; a < g->getOrder(); a++) color[a] = DFS_WHITE;
     for (uint u = 0; u < g->getOrder(); u++) {
         if (color[u] == DFS_WHITE) {
-            process_standard(u, g, color, preProcess, preExplore, postExplore,
+            visit_standard(u, g, color, preProcess, preExplore, postExplore,
                              postProcess);
         }
     }
@@ -244,7 +244,7 @@ void DFS::nBitDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            process_small(a, g, &color, &s, restore_full, preProcess,
+            visit_nloglogn(a, g, &color, &s, restore_full, preProcess,
                           preExplore, postExplore, postProcess);
     }
 }
@@ -258,7 +258,7 @@ void DFS::nloglognBitDFS(Graph const *g, Consumer preProcess,
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            process_small(a, g, &color, &s, restore_top, preProcess, preExplore,
+            visit_nloglogn(a, g, &color, &s, restore_top, preProcess, preExplore,
                           postExplore, postProcess);
     }
 }
@@ -279,7 +279,7 @@ void DFS::nplusmBitDFS(UndirectedGraph const *g, Consumer preprocess,
     StaticSpaceStorage back(bits);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            process_static(a, g, &color, &back, preprocess, preexplore,
+            visit_nplusm(a, g, &color, &back, preprocess, preexplore,
                            postexplore, postprocess);
     }
 }
