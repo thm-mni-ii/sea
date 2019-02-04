@@ -9,11 +9,11 @@ data sets or executing them on tiny devices where memory is heavily limited. The
 * [Algorithms and Data Structures](#algorithms-and-data-structures)
     * [Algorithms](#algorithms)
     * [Data Structures](#data-structures)
+* [Build](#build)
 * [Using the Library](#using-the-library)
 * [Project Structure](#project-structure)
-* [Build](#build)
 * [Research](#research)
-* [Licence](#licence)
+* [License](#license)
 * [Acknowledgments](#acknowledgments)
 
 ## Algorithms and Data Structures
@@ -108,7 +108,9 @@ We publish most of our research on arXiv.org.
 
 * Extra Space during Initialization of Succinct Data Structures and Dynamical Initializable Arrays. [MFCS 2018](https://dblp.uni-trier.de/db/conf/mfcs/mfcs2018.html): 65:1-65:16 | [Full Version](https://arxiv.org/abs/1803.09675)
 * Linear-Time In-Place DFS and BFS in the Restore Model [Full Version](https://arxiv.org/abs/1803.04282)
-* A Space-Optimal c-Color Choice Dictionary [ISAAC 2018](http://isaac2018.ie.nthu.edu.tw/wp-content/uploads/2018/09/isaac2018_accepted.html)
+* A Space-Optimal c-Color Choice Dictionary [ISAAC 2018](http://isaac2018.ie.nthu.edu.tw/wp-content/uploads/2018/09/isaac2018_accepted.html): 66:1-66:12 | [Full Version]
+* Space-Efficient Biconnected Components and Recognition of Outerplanar Graphs [MFCS 2016](http://mfcs.ki.agh.edu.pl/accepted.shtml): 56:1-56:14 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2016/6468/)
+* Space-Efficient Basic Graph Algorithms [STACS 2015](http://wwwmayr.in.tum.de/konferenzen/STACS2015/): 288-301 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2015/4921/)
 
 ## License
 Licensed under the GNU General Public License version 3. For detailed license information look inside the [LICENSE](LICENSE) file.
