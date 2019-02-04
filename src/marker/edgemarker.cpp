@@ -46,7 +46,7 @@ void EdgeMarker::identifyEdges() {
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
-            DFS::process_static(a, g, &color, &parent, DFS_NOP_PROCESS,
+            DFS::visit_nplusm(a, g, &color, &parent, DFS_NOP_PROCESS,
                                 [this, &color](uint u, uint k) {
                                     if (!isInitialized(u, k)) {
                                         uint v = g->head(u, k);
@@ -75,7 +75,7 @@ void EdgeMarker::markTreeEdges() {
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
-            DFS::process_static(
+            DFS::visit_nplusm(
                 a, g, &color, &parent,
                 [this, &a](uint u) {
                     if (u == a /*?*/ ||

@@ -20,7 +20,7 @@ class UndirectedGraph : public Graph {
      * Created a new graph object with the nodes provided by the nodes_ vector
      * @param nodes_ vector of nodes (const ref)
      */
-    explicit UndirectedGraph(std::vector<NodeU> const &nodes_) : nodes(nodes_) {}
+    explicit UndirectedGraph(std::vector<ExtendedNode> const &nodes_) : nodes(nodes_) {}
 
     /**
      * Created a graph with the specified order and without any edges.
@@ -32,15 +32,15 @@ class UndirectedGraph : public Graph {
      * Adds a new node to the graph
      * @param const ref of node to be added
      */
-    void addNode(NodeU const &node) { nodes.emplace_back(node); }
+    void addNode(ExtendedNode const &node) { nodes.emplace_back(node); }
 
     /**
      * Getter for a specific node in the nodes array.
      * @param u index in the nodes array.
      * @return Reference to Node in the nodes array.
      */
-    const NodeU &getNode(uint u) const { return nodes[u]; }
-    NodeU &getNode(uint u) { return nodes[u]; }
+    const ExtendedNode &getNode(uint u) const { return nodes[u]; }
+    ExtendedNode &getNode(uint u) { return nodes[u]; }
 
     /**
     * Returns the degree of the node that u points at.
@@ -71,7 +71,7 @@ class UndirectedGraph : public Graph {
     uint mate(uint u, uint k) const { return nodes[u].getAdj()[k].second; }
 
  private:
-    std::vector<NodeU> nodes;
+    std::vector<ExtendedNode> nodes;
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_UNDIRECTEDGRAPH_H_

@@ -22,7 +22,13 @@ class Node {
     std::vector<T> adj;
 };
 
-typedef Node<uint> NodeD;
-typedef Node<std::pair<uint, uint>> NodeU;
+/**
+ * Simple node that only stores numbers.
+ */
+typedef Node<uint> SimpleNode;
+/**
+ * Extended node that also stores cross indices.
+ */
+typedef Node<std::pair<uint, uint>> ExtendedNode;
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_NODE_H_

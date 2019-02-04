@@ -1,6 +1,6 @@
 #ifndef SEALIB_ITERATOR_DFS_H_
 #define SEALIB_ITERATOR_DFS_H_
-
+#include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
 #include "sealib/collection/staticspacestorage.h"
@@ -110,23 +110,29 @@ class DFS {
                                         Consumer postProcess,
                                         uint32_t startVertex);
 
- protected:
-    static void process_standard(uint u0, Graph const *g, uint *color,
-                                 Consumer preprocess, BiConsumer preexplore,
-                                 BiConsumer postexplore, Consumer postprocess);
+    /**
+     * The following helper procedures are only for internal or experimental
+     * usage.
+     */
+
+    static void visit_standard(uint u0, Graph const *g,
+                               std::vector<uint> *color,
+                               std::vector<std::pair<uint, uint>> *s,
+                               Consumer preProcess, BiConsumer preExplore,
+                               BiConsumer postExplore, Consumer postProcess);
 
     template <class SS>
-    static void process_small(uint u0, Graph const *g, CompactArray *color,
-                              SS *s, void (*restoration)(uint, Graph const *,
-                                                         CompactArray *, SS *),
-                              Consumer preprocess, BiConsumer preexplore,
-                              BiConsumer postexplore, Consumer postprocess);
-
-    template <class S>
-    static void process_static(uint u0, UndirectedGraph const *g,
-                               CompactArray *color, S *back,
+    static void visit_nloglogn(uint u0, Graph const *g, CompactArray *color,
+                               SS *s, void (*restoration)(uint, Graph const *,
+                                                          CompactArray *, SS *),
                                Consumer preprocess, BiConsumer preexplore,
                                BiConsumer postexplore, Consumer postprocess);
+
+    template <class S>
+    static void visit_nplusm(uint u0, UndirectedGraph const *g,
+                             CompactArray *color, S *back, Consumer preprocess,
+                             BiConsumer preexplore, BiConsumer postexplore,
+                             Consumer postprocess);
 
     static void restore_full(uint u0, Graph const *g, CompactArray *color,
                              BasicSegmentStack *s);

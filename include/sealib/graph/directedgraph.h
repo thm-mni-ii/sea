@@ -18,7 +18,8 @@ class DirectedGraph : public Graph {
      * Created a new graph object with the nodes provided by the nodes_ vector
      * @param nodes_ vector of nodes (ref)
      */
-    explicit DirectedGraph(std::vector<NodeD> const &_nodes) : nodes(_nodes) {}
+    explicit DirectedGraph(std::vector<SimpleNode> const &_nodes)
+        : nodes(_nodes) {}
 
     /**
      * Created a graph with the specified order and without any edges.
@@ -30,7 +31,7 @@ class DirectedGraph : public Graph {
      * Adds a new node to the graph
      * @param const ref of node to be added
      */
-    void addNode(NodeD const &node) { nodes.emplace_back(node); }
+    void addNode(SimpleNode const &node) { nodes.emplace_back(node); }
 
     /**
      * Getter for a specific node in the nodes array.
@@ -38,8 +39,8 @@ class DirectedGraph : public Graph {
      * @return Reference to the Node in the nodes array (const or non-const
      * version)
      */
-    NodeD const &getNode(uint u) const { return nodes[u]; }
-    NodeD &getNode(uint u) { return nodes[u]; }
+    SimpleNode const &getNode(uint u) const { return nodes[u]; }
+    SimpleNode &getNode(uint u) { return nodes[u]; }
 
     /**
      * Returns the degree of the node that u points at.
@@ -63,7 +64,7 @@ class DirectedGraph : public Graph {
     uint getOrder() const override { return nodes.size(); }
 
  private:
-    std::vector<NodeD> nodes;
+    std::vector<SimpleNode> nodes;
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_DIRECTEDGRAPH_H_

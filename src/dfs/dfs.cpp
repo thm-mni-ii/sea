@@ -2,40 +2,38 @@
 #include <math.h>
 #include <memory>
 #include <sstream>
-#include <vector>
 #include "./inplacerunner.h"
 
 namespace Sealib {
 
-void DFS::process_standard(uint u0, Graph const *g, uint *color,
-                           Consumer preProcess, BiConsumer preExplore,
-                           BiConsumer postExplore, Consumer postProcess) {
-    std::unique_ptr<std::pair<uint, uint>[]> s(
-        new std::pair<uint, uint>[g->getOrder()]);
-    uint sp = 0;
-    s[sp++] = std::pair<uint, uint>(u0, 0);
-    while (sp > 0) {
-        std::pair<uint, uint> x = s[--sp];
+void DFS::visit_standard(uint u0, Graph const *g, std::vector<uint> *color,
+                         std::vector<std::pair<uint, uint>> *s,
+                         Consumer preProcess, BiConsumer preExplore,
+                         BiConsumer postExplore, Consumer postProcess) {
+    s->push_back({u0, 0});
+    while (!s->empty()) {
+        std::pair<uint, uint> x = s->back();
+        s->pop_back();
         uint u = x.first;
         uint k = x.second;
-        if (color[u] == DFS_WHITE) {
+        if (color->operator[](u) == DFS_WHITE) {
             preProcess(u);
-            color[u] = DFS_GRAY;
+            color->operator[](u) = DFS_GRAY;
         }
         if (k < g->deg(u)) {
-            s[sp++] = std::pair<uint, uint>(u, k + 1);
+            s->push_back({u, k + 1});
             uint v = g->head(u, k);
             preExplore(u, v);
-            if (color[v] == DFS_WHITE) {
-                s[sp++] = std::pair<uint, uint>(v, 0);
+            if (color->operator[](v) == DFS_WHITE) {
+                s->push_back({v, 0});
             } else {
                 postExplore(u, v);
             }
         } else {
-            color[u] = DFS_BLACK;
+            color->operator[](u) = DFS_BLACK;
             postProcess(u);
             if (u != u0) {
-                uint pu = s[sp - 1].first;
+                uint pu = s->back().first;
                 postExplore(pu, u);
             }
         }
@@ -43,11 +41,11 @@ void DFS::process_standard(uint u0, Graph const *g, uint *color,
 }
 
 template <class SS>
-void DFS::process_small(uint u0, Graph const *g, CompactArray *color, SS *s,
-                        void (*restoration)(uint, Graph const *, CompactArray *,
-                                            SS *),
-                        Consumer preProcess, BiConsumer preExplore,
-                        BiConsumer postExplore, Consumer postProcess) {
+void DFS::visit_nloglogn(uint u0, Graph const *g, CompactArray *color, SS *s,
+                         void (*restoration)(uint, Graph const *,
+                                             CompactArray *, SS *),
+                         Consumer preProcess, BiConsumer preExplore,
+                         BiConsumer postExplore, Consumer postProcess) {
     s->push(std::pair<uint, uint>(u0, 0));
     std::pair<uint, uint> x;
     while (!s->isEmpty()) {
@@ -174,9 +172,9 @@ void DFS::restore_top(uint u0, Graph const *g, CompactArray *color,
 }
 
 template <class S>
-void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
-                         S *back, Consumer preprocess, BiConsumer preexplore,
-                         BiConsumer postexplore, Consumer postprocess) {
+void DFS::visit_nplusm(uint u0, UndirectedGraph const *g, CompactArray *color,
+                       S *back, Consumer preprocess, BiConsumer preexplore,
+                       BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
     preprocess(u0);
     uint u = u0, k = 0;
@@ -214,20 +212,19 @@ void DFS::process_static(uint u0, UndirectedGraph const *g, CompactArray *color,
 void DFS::standardDFS(Graph const *g, Consumer preProcess,
                       BiConsumer preExplore, BiConsumer postExplore,
                       Consumer postProcess) {
-    uint *color = new uint[g->getOrder()];
-    for (uint a = 0; a < g->getOrder(); a++) color[a] = DFS_WHITE;
+    std::vector<uint> color(g->getOrder());
+    std::vector<std::pair<uint, uint>> s;
     for (uint u = 0; u < g->getOrder(); u++) {
         if (color[u] == DFS_WHITE) {
-            process_standard(u, g, color, preProcess, preExplore, postExplore,
-                             postProcess);
+            visit_standard(u, g, &color, &s, preProcess, preExplore,
+                           postExplore, postProcess);
         }
     }
-    delete[] color;
 }
 
 void DFS::nBitDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
                   BiConsumer postExplore, Consumer postProcess) {
-    uint32_t n = g->getOrder();
+    uint n = g->getOrder();
     double e = 0.2;
     unsigned q = static_cast<unsigned>(ceil(
         ceil(e / 6 * n) / (8 * sizeof(std::pair<uint, uint>))));  // 2q entries
@@ -244,29 +241,29 @@ void DFS::nBitDFS(Graph const *g, Consumer preProcess, BiConsumer preExplore,
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            process_small(a, g, &color, &s, restore_full, preProcess,
-                          preExplore, postExplore, postProcess);
+            visit_nloglogn(a, g, &color, &s, restore_full, preProcess,
+                           preExplore, postExplore, postProcess);
     }
 }
 
 void DFS::nloglognBitDFS(Graph const *g, Consumer preProcess,
                          BiConsumer preExplore, BiConsumer postExplore,
                          Consumer postProcess) {
-    uint32_t n = g->getOrder();
+    uint n = g->getOrder();
     CompactArray color(n, 3);
     ExtendedSegmentStack s(n, g, &color);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            process_small(a, g, &color, &s, restore_top, preProcess, preExplore,
-                          postExplore, postProcess);
+            visit_nloglogn(a, g, &color, &s, restore_top, preProcess,
+                           preExplore, postExplore, postProcess);
     }
 }
 
 void DFS::nplusmBitDFS(UndirectedGraph const *g, Consumer preprocess,
                        BiConsumer preexplore, BiConsumer postexplore,
                        Consumer postprocess) {
-    uint32_t n = g->getOrder();
+    uint n = g->getOrder();
     CompactArray color(n, 3);
     for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     std::vector<bool> bits;
@@ -279,8 +276,8 @@ void DFS::nplusmBitDFS(UndirectedGraph const *g, Consumer preprocess,
     StaticSpaceStorage back(bits);
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            process_static(a, g, &color, &back, preprocess, preexplore,
-                           postexplore, postprocess);
+            visit_nplusm(a, g, &color, &back, preprocess, preexplore,
+                         postexplore, postprocess);
     }
 }
 
