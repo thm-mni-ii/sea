@@ -149,11 +149,11 @@ static G importGMLBase(std::string filename) {
 template <>
 UndirectedGraph GraphImporter::importGML<UndirectedGraph>(
     std::string filename) {
-    return importGMLBase<UndirectedGraph, NodeU>(filename);
+    return importGMLBase<UndirectedGraph, ExtendedNode>(filename);
 }
 template <>
 DirectedGraph GraphImporter::importGML<DirectedGraph>(std::string filename) {
-    return importGMLBase<DirectedGraph, NodeD>(filename);
+    return importGMLBase<DirectedGraph, SimpleNode>(filename);
 }
 
 }  // namespace Sealib
