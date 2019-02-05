@@ -113,7 +113,8 @@ class GraphCreator {
      * together at a common vertex).
      * @param order order of each windmill part (n > 1)
      * @param count number of windmill parts (m)
-     * @return the generated windmill graph W_n^m
+     * @return the generated windmill graph W_n^m (|V| = n*m-m+1, |E| =
+     * n*m*(n-1))
      * @author Simon Heuser
      */
     static UndirectedGraph windmill(uint32_t order, uint32_t count);

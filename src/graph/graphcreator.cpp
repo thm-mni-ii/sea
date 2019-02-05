@@ -15,42 +15,32 @@ using Sealib::GraphCreator;
 
 UndirectedGraph *Sealib::GraphCreator::createPointerFromAdjacencyMatrix(
     uint **adjMatrix, uint order) {
-    std::vector<ExtendedNode> nodes(order);
+    std::vector<ExtendedNode> nodes;
 
     for (uint i = 0; i < order; i++) {
-        uint deg = 0;
+        std::vector<std::pair<uint, uint>> adj;
 
         for (uint j = 0; j < order; j++) {
-            deg += adjMatrix[i][j];
+            for (uint k = 0; k < adjMatrix[i][j]; k++)
+                adj.push_back({j, INVALID});
         }
 
-        std::vector<std::pair<uint, uint>> adj(deg);
-
-        uint idx = 0;
-        for (uint j = 0; j < order; j++) {
-            for (uint k = 0; k < adjMatrix[i][j]; k++) {
-                adj[idx] = {j, INVALID};
-                idx++;
-            }
-        }
-        nodes[i] = ExtendedNode(adj);
+        nodes.push_back(ExtendedNode(adj));
     }
     for (uint i = 0; i < order; i++) {
-        const uint deg = nodes[i].getDegree();
-        const std::vector<std::pair<uint, uint>> &adj_arr = nodes[i].getAdj();
+        const uint deg1 = nodes[i].getDegree();
+        std::vector<std::pair<uint, uint>> &n1 = nodes[i].getAdj();
 
-        for (uint j = 0; j < deg; j++) {
-            if (adj_arr[j].second == INVALID) {
-                uint v = adj_arr[j].first;
-                const std::vector<std::pair<uint, uint>> &_adj_arr =
-                    nodes[v].getAdj();
-                const uint _deg = nodes[v].getDegree();
+        for (uint k1 = 0; k1 < deg1; k1++) {
+            if (n1[k1].second == INVALID) {
+                uint v = n1[k1].first;
+                std::vector<std::pair<uint, uint>> &n2 = nodes[v].getAdj();
+                const uint deg2 = nodes[v].getDegree();
 
-                for (uint _j = 0; _j < _deg; _j++) {
-                    if (_adj_arr[_j].second == INVALID &&
-                        _adj_arr[_j].first == i) {
-                        nodes[v].getAdj()[_j].second = j;
-                        nodes[i].getAdj()[j].second = _j;
+                for (uint k2 = 0; k2 < deg2; k2++) {
+                    if (n2[k2].second == INVALID && n2[k2].first == i) {
+                        n2[k2].second = k1;
+                        n1[k1].second = k2;
                         break;
                     }
                 }
