@@ -9,27 +9,16 @@
 
 namespace Sealib {
 /**
- * Static class that serves as a collection of functions to create graph objects
- * from different inputs.
- * @author Johannes Meintrup
+ * Collection of functions to create directed and undirected graphs.
  */
 class GraphCreator {
  public:
     /**
-     * Static function to create a a graph object from an adjacency matrix.
-     *
-     * example matrix with order 3:
-     *
-     * n         0       1       2
-     *      **************************
-     *  0   *    0   *   1   *   1   *
-     *      **************************
-     *  1   *    1   *   0   *   2   *
-     *      **************************
-     *  2   *    0   *   2   *   1   *
-     *      **************************
-     * @param adj_matrix NxN adjacency matrix representation of the graph.
-     * @param _order Order of the graph, order equals the number of nodes.
+     * Create a graph from an adjacency matrix.
+     * @param adjMatrix NxN adjacency matrix of the graph: M[i,j] = number of edges from i to j
+     * @param order Order of the graph (number of nodes)
+     * @return the generated graph
+     * @author Johannes Meintrup
      */
     static UndirectedGraph createGraphFromAdjacencyMatrix(uint32_t **adjMatrix,
                                                           uint32_t order);
@@ -57,6 +46,7 @@ class GraphCreator {
      * @param order number of nodes to generate
      * @param k outgoing edges per node
      * @return the resulting undirected graph
+     * @author Simon Heuser
      */
     static UndirectedGraph createRandomKRegularUndirectedGraph(
         uint32_t order, uint32_t outdegreePerNode);
@@ -75,6 +65,7 @@ class GraphCreator {
      * connections to other nodes.
      * @param order number of nodes
      * @return the resulting undirected graph: n = order, m = O(n)
+     * @author Simon Heuser
      */
     static UndirectedGraph createRandomGeneratedUndirected(uint32_t order);
 
@@ -88,20 +79,27 @@ class GraphCreator {
     static DirectedGraph createRandomImbalanced(uint32_t order);
 
     /**
-     *  Generates a Gilbert graph G(n,p) in standard representation with n nodes
-     *  and an occurence of every possible edge with a probability of
-     *  0 < p < 1
-     *  Complexity = O(n^2)
-     *
-     *	@param numNodes order of the graph
+     *  Generate a Gilbert graph G(n,p) in standard representation with n nodes
+     *  and an occurence of every possible edge with a probability of p (0 < p < 1)
+     *  Complexity: O(n^2)
+     *	@param n order of the graph
      *	@param p probability of an edge
      *	@param gen engine to generate a pseudo random sequence of numbers
+     *  @author Simon Schniedenharn
      */
     static CompactGraph generateGilbertGraph(uint32_t n, double p,
                                              std::mt19937_64 *gen);
 
     static uint *fastGraphGeneration(uint n, uint mPern);
 
+    /**
+     * Create a random bipartite graph with the vertex sets V1 and V2 and the probability p for each possible edge to occur.
+     * @param order1 Number of vertices in V1
+     * @param order2 Number of vertices in V2
+     * @param p Edge probability
+     * @param seed Seed for the random number generator
+     * @author Johannes Meintrup
+     */
     static std::unique_ptr<UndirectedGraph>
     generateRandomBipartiteUndirectedGraph(uint32_t order1, uint32_t order2,
                                            double p, uint32_t seed);
@@ -112,6 +110,7 @@ class GraphCreator {
      * @param order order of each windmill part (n > 1)
      * @param count number of windmill parts (m)
      * @return the generated windmill graph W_n^m
+     * @author Simon Heuser
      */
     static UndirectedGraph createWindmill(uint32_t order, uint32_t count);
 };
