@@ -35,9 +35,7 @@ TEST_P(BFSTest, userproc) {
     DirectedGraph g = GetParam();
     BFS bfs(&g, incr1, incr2);
     bfs.init();
-    do {
-        while (bfs.more()) bfs.next();
-    } while (bfs.nextComponent());
+    bfs.forEach([](std::pair<uint, uint>) {});
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, order * degree);
 }
@@ -48,10 +46,7 @@ TEST(BFSTest, nextComponent) {
     BFS bfs(&g, incr1, incr2);
     uint rc = 0;
     bfs.init();
-    do {
-        rc++;
-        while (bfs.more()) bfs.next();
-    } while (bfs.nextComponent());
+    bfs.forEach([&](std::pair<uint, uint>) { rc++; });
     EXPECT_EQ(rc, order);
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, 0);

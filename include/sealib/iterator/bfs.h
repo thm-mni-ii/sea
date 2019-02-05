@@ -28,6 +28,16 @@ const BiConsumer BFS_NOP_EXPLORE = [](uint, uint) {};
 class BFS : Iterator<std::pair<uint, uint>> {
  public:
     /**
+    * Create a new BFS iterator.
+    * @param g the graph to run the BFS over
+    * @param preprocess to be executed before processing a node u
+    * @param preexplore to be executed before exploring an edge (u,v)
+    */
+    BFS(Graph const *g, Consumer pp, BiConsumer pe);
+
+    BFS(Graph const *g, CompactArray color, Consumer pp, BiConsumer pe);
+
+    /**
      * Initialize or reset the BFS to the beginning.
      */
     void init() override;
@@ -55,14 +65,11 @@ class BFS : Iterator<std::pair<uint, uint>> {
     std::pair<uint, uint> next() override;
 
     /**
-     * Create a new BFS iterator.
-    * @param g the graph to run the BFS over
-    * @param preprocess to be executed before processing a node u
-    * @param preexplore to be executed before exploring an edge (u,v)
-    */
-    BFS(Graph const *g, Consumer pp, BiConsumer pe);
-
-    BFS(Graph const *g, CompactArray color, Consumer pp, BiConsumer pe);
+     * Execute a given operation for each found pair (u,dist).
+     * (init() before calling this method!)
+     * @param f function to execute for each element
+     */
+    void forEach(std::function<void(std::pair<uint, uint>)> f) override;
 
  private:
     Graph const *g;

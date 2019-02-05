@@ -56,6 +56,15 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
      */
     std::pair<uint, uint> next() override;
 
+    /**
+     * Execute a given operation for each found pair (u,?).
+     * (init() and start() before calling this method!)
+     * @param f function to execute for each element
+     */
+    void forEach(std::function<void(std::pair<uint, uint>)> f) override {
+        Iterator::forEach(f);
+    }
+
  private:
     std::shared_ptr<EdgeMarker> e;
     UndirectedGraph const *g;

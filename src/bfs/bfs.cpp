@@ -89,6 +89,12 @@ std::pair<uint, uint> BFS::next() {
     return std::pair<uint, uint>(u, dist);
 }
 
+void BFS::forEach(std::function<void(std::pair<uint, uint>)> f) {
+    do {
+        while (more()) f(next());
+    } while (nextComponent());
+}
+
 BFS::BFS(Graph const *graph, Consumer pp, BiConsumer pe)
     : g(graph),
       n(g->getOrder()),

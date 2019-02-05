@@ -11,14 +11,13 @@ TEST(BCCIteratorTest, windmillGraph) {
     b.start(1, 16);
     std::set<uint> nodes;
     std::set<std::set<uint>> edges;
-    while (b.more()) {
-        std::pair<uint, uint> n = b.next();
+    b.forEach([&](std::pair<uint, uint> n) {
         if (n.second == INVALID) {
             nodes.insert(n.first);
         } else {
             edges.insert({n.first, n.second});
         }
-    }
+    });
 
     EXPECT_EQ(nodes.size(), 5);
     EXPECT_EQ(edges.size(), 7);
