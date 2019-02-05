@@ -5,7 +5,7 @@
 namespace Sealib {
 
 TEST(BCCIteratorTest, windmillGraph) {
-    UndirectedGraph g = GraphCreator::createWindmill(5, 4);
+    UndirectedGraph g = GraphCreator::windmill(5, 4);
     BCCIterator b(&g);
     b.init();
     b.start(1, 16);
@@ -66,7 +66,7 @@ TEST(BCCIteratorTest, lineGraph) {
 }
 
 TEST(BCCIteratorTest, stability) {
-    UndirectedGraph g = GraphCreator::createRandomGeneratedUndirected(2000);
+    UndirectedGraph g = GraphCreator::sparseUndirected(2000);
     BCCIterator b(&g);
     b.init();
     b.start(10, g.head(10, 2));  // select an arbitrary edge

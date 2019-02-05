@@ -79,7 +79,7 @@ bool reachable(DirectedGraph *g, uint a, uint b) {
 }
 
 int main(void) {
-    DirectedGraph g = GraphCreator::createRandomKRegularGraph(100, 30);
+    DirectedGraph g = GraphCreator::kOutdegree(100, 30);
     return reachable(&g, 10, 25);
 }
 ```

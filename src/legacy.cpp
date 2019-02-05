@@ -9,7 +9,7 @@
 namespace Sealib {
 
 void *Sealib_Graph_new(uint32_t **m, uint32_t order) {
-    return GraphCreator::createGraphPointerFromAdjacencyMatrix(m, order);
+    return GraphCreator::createPointerFromAdjacencyMatrix(m, order);
 }
 void Sealib_Graph_delete(void *self) {
     delete static_cast<Graph const *>(self);

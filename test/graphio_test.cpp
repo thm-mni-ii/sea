@@ -5,7 +5,7 @@
 namespace Sealib {
 
 TEST(GraphIOTest, exportGML) {
-    UndirectedGraph g = GraphCreator::createWindmill(3, 4);
+    UndirectedGraph g = GraphCreator::windmill(3, 4);
     GraphExporter::exportGML(&g, false, "graphio1.gml");
 }
 

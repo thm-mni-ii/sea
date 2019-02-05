@@ -47,25 +47,25 @@ void EdgeMarker::identifyEdges() {
     for (uint a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             DFS::visit_nplusm(a, g, &color, &parent, DFS_NOP_PROCESS,
-                                [this, &color](uint u, uint k) {
-                                    if (!isInitialized(u, k)) {
-                                        uint v = g->head(u, k);
-                                        if (u == v) {
-                                            initEdge(u, k, NONE);
-                                        } else if (color.get(v) == DFS_WHITE) {
-                                            initEdge(u, k, UNMARKED);
-                                        } else if (color.get(v) == DFS_GRAY) {
-                                            // initializing {u,v} as a back edge
-                                            // with v parent of u
-                                            // (closer to root)
-                                            uint pk = g->mate(u, k);
-                                            initEdge(g->head(u, k), pk, BACK);
-                                        } else {
-                                            initEdge(u, k, CROSS);
-                                        }
-                                    }
-                                },
-                                DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+                              [this, &color](uint u, uint k) {
+                                  if (!isInitialized(u, k)) {
+                                      uint v = g->head(u, k);
+                                      if (u == v) {
+                                          initEdge(u, k, NONE);
+                                      } else if (color.get(v) == DFS_WHITE) {
+                                          initEdge(u, k, UNMARKED);
+                                      } else if (color.get(v) == DFS_GRAY) {
+                                          // initializing {u,v} as a back edge
+                                          // with v parent of u
+                                          // (closer to root)
+                                          uint pk = g->mate(u, k);
+                                          initEdge(g->head(u, k), pk, BACK);
+                                      } else {
+                                          initEdge(u, k, CROSS);
+                                      }
+                                  }
+                              },
+                              DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
         }
     }
 }

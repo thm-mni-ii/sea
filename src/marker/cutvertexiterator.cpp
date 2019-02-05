@@ -20,7 +20,8 @@ void CutVertexIterator::findCCs() {
         if (color.get(a) == DFS_WHITE) {
             cc.insert(a);
             DFS::visit_nplusm(a, g, &color, &parent, DFS_NOP_PROCESS,
-                           DFS_NOP_EXPLORE, DFS_NOP_EXPLORE, DFS_NOP_PROCESS);
+                              DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+                              DFS_NOP_PROCESS);
         }
     }
 }

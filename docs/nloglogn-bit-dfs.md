@@ -17,7 +17,7 @@ This space-efficient variant
 
 ## Example
 ```cpp
-DirectedGraph g=GraphCreator::createRandomImbalanced(500);
+DirectedGraph g=GraphCreator::imbalanced(500);
 
 DFS::nloglognBitDFS(&g);  // quiet run
 
