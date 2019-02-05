@@ -1,8 +1,10 @@
 #ifndef SEALIB_ITERATOR_DFS_H_
 #define SEALIB_ITERATOR_DFS_H_
+#include <functional>
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
+#include "sealib/collection/sequence.h"
 #include "sealib/collection/staticspacestorage.h"
 #include "sealib/graph/graph.h"
 #include "sealib/graph/node.h"
@@ -121,18 +123,16 @@ class DFS {
                                Consumer preProcess, BiConsumer preExplore,
                                BiConsumer postExplore, Consumer postProcess);
 
-    template <class SS>
     static void visit_nloglogn(uint u0, Graph const *g, CompactArray *color,
-                               SS *s, void (*restoration)(uint, Graph const *,
-                                                          CompactArray *, SS *),
+                               SegmentStack *s,
+                               std::function<void(uint u0)> restoration,
                                Consumer preprocess, BiConsumer preexplore,
                                BiConsumer postexplore, Consumer postprocess);
 
-    template <class S>
     static void visit_nplusm(uint u0, UndirectedGraph const *g,
-                             CompactArray *color, S *back, Consumer preprocess,
-                             BiConsumer preexplore, BiConsumer postexplore,
-                             Consumer postprocess);
+                             CompactArray *color, Sequence<uint64_t> *back,
+                             Consumer preprocess, BiConsumer preexplore,
+                             BiConsumer postexplore, Consumer postprocess);
 
     static void restore_full(uint u0, Graph const *g, CompactArray *color,
                              BasicSegmentStack *s);

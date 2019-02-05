@@ -13,7 +13,7 @@ using Sealib::ExtendedSegmentStack;
 SegmentStack::SegmentStack(uint32_t segmentSize)
     : q(segmentSize), low(q), high(q), lp(0), hp(0), tp(0) {}
 
-int SegmentStack::pop(std::pair<uint, uint> *r) {
+uint8_t SegmentStack::pop(std::pair<uint, uint> *r) {
     if (hp > 0) {
         *r = high[--hp];
     } else if (lp > 0) {

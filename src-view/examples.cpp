@@ -113,8 +113,9 @@ void VisualDFS::emit() {
 void VisualDFS::run() {
     for (uint u = 0; u < g->getOrder(); u++) {
         if (c->get(u) == DFS_WHITE) {
-            visit_nloglogn<ExtendedSegmentStack>(
-                u, reinterpret_cast<Graph *>(g), c, this, restore_top,
+            DFS::visit_nloglogn(
+                u, reinterpret_cast<Graph *>(g), c, this,
+                [&](uint u0) { restore_top(u0, g, c, this); },
                 [this](uint ui) {
                     tg->getNodes().at(ui).setOptions(Examples::style_gray);
                     emit();
