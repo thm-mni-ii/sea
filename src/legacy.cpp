@@ -12,7 +12,7 @@ void *Sealib_Graph_new(uint32_t **m, uint32_t order) {
     return GraphCreator::createPointerFromAdjacencyMatrix(m, order);
 }
 void Sealib_Graph_delete(void *self) {
-    delete static_cast<Graph const *>(self);
+    delete static_cast<UndirectedGraph const *>(self);
 }
 void *Sealib_Graph_generateRandom(uint32_t order) {
     std::vector<SimpleNode> n(order);

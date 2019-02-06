@@ -14,7 +14,7 @@ namespace Sealib {
  * @complexity (O((n + m) log n)) bits Stores a undirected graph with n vertices and m edges using (n + 4m) log n bits.
  * @author Johannes Meintrup
  */
-class UndirectedGraph : public Graph {
+class UndirectedGraph final : public Graph {
  public:
     /**
      * Created a new graph object with the nodes provided by the nodes_ vector
@@ -60,7 +60,7 @@ class UndirectedGraph : public Graph {
     /**
     * @return order of the graph, i.e, the total number of vertices.
     */
-    uint getOrder() const override { return nodes.size(); }
+    uint getOrder() const override { return static_cast<uint>(nodes.size()); }
 
     /**
      * Get the cross index of the given edge.

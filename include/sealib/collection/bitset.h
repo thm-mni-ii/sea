@@ -24,7 +24,7 @@ namespace Sealib {
  * @author Johannes Meintrup
  */
 template<typename BlockType, typename AllocatorType>
-class Bitset : Sequence<bool, uint64_t> {
+class Bitset final : Sequence<bool, uint64_t> {
     typedef uint64_t sizeType;
     typedef bool bitType;
 
@@ -47,8 +47,6 @@ class Bitset : Sequence<bool, uint64_t> {
     explicit Bitset(const std::vector<bool> &bitvector);
 
     Bitset();
-
-    ~Bitset() override = default;
 
     /**
      * @param bit idx of the bit

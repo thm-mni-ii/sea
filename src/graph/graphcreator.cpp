@@ -133,7 +133,7 @@ Sealib::DirectedGraph Sealib::GraphCreator::kOutdegree(uint order,
 Sealib::DirectedGraph Sealib::GraphCreator::sparseDirected(uint order) {
     std::vector<SimpleNode> n(order);
     std::uniform_int_distribution<uint> nR(0, order - 1);
-    std::uniform_int_distribution<uint> degR(0, log2(order));
+    std::uniform_int_distribution<uint> degR(0, static_cast<uint>(log2(order)));
     for (uint a = 0; a < order; a++) {
         uint deg = degR(rng);
         std::vector<uint> ad(deg);
@@ -148,7 +148,7 @@ Sealib::DirectedGraph Sealib::GraphCreator::sparseDirected(uint order) {
 UndirectedGraph GraphCreator::sparseUndirected(uint order) {
     UndirectedGraph g(order);
     std::uniform_int_distribution<uint> nR(0, order - 1);
-    std::uniform_int_distribution<uint> degR(0, log2(order));
+    std::uniform_int_distribution<uint> degR(0, static_cast<uint>(log2(order)));
     for (uint a = 0; a < order; a++) {
         for (uint c = 0; c < degR(rng); c++) {
             uint b = nR(rng);
