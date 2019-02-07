@@ -72,6 +72,8 @@ class Bitset final : Sequence<bool, uint64_t> {
                  mmask(static_cast<BlockType>(BlockType(1) << pos))
          {}
 
+         BitReference(BitReference const &) = default;
+
       private:
          BlockType *mblock;
          const BlockType mmask;
