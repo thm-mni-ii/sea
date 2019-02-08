@@ -90,7 +90,6 @@ void addAdj<UndirectedGraph>(UndirectedGraph *g, uint u, uint v) {
 template <class G, class N>
 static G importGMLBase(std::string filename) {
     G g(0);
-    bool directed;
     bool ok = true;
 
     std::ifstream in(filename);
@@ -105,9 +104,6 @@ static G importGMLBase(std::string filename) {
         READL("directed");
         index++;
     } while (!ok);
-    index--;
-    directed = std::stoi(tok[index]);
-    index++;
     while (true) {
         READL("node");
         if (ok) {
