@@ -1,7 +1,9 @@
 #ifndef SEALIB_RUNTIMETEST_H_
 #define SEALIB_RUNTIMETEST_H_
-#include <chrono>
+#include <sys/times.h>
+#include <unistd.h>
 #include <cstdint>
+#include <ctime>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -17,11 +19,11 @@
 class RuntimeTest {
  private:
     std::vector<std::tuple<uint32_t, uint32_t>> parameters;
-    std::vector<uint32_t> runtimes;
+    std::vector<double> runtimes;
 
  public:
     /**
-     * Measures the runtime of the given function (in milliseconds) and saves
+     * Measures the runtime of the given function (in seconds) and saves
      * the results.
      * @param testfunction The function that should be tested
      * @param order Order of the input graph
@@ -42,37 +44,41 @@ class RuntimeTest {
      * Prints the test results to standard output.
      */
     void printResults();
+
     /**
      * Saves the test results to a CSV file.
      * @params filepath path to the output file (will be truncated)
      */
-    void saveCSV(std::string filepath);
+    void saveCSV(std::string filepath,
+                 std::string title = "order,size,runtime");
 };
 
 void RuntimeTest::runTest(std::function<void(void)> testfunction,
                           uint32_t order, uint32_t size) {
-    using clk = std::chrono::high_resolution_clock;
-
-    std::tuple<uint32_t, uint32_t> funcParameters(order, size);
-    parameters.push_back(funcParameters);
-    const clk::time_point runStart = clk::now();
+    struct tms t1, t2;
+    parameters.push_back({order, size});
     std::cout << "Running test: " << parameters.size() << " n: " << order
-              << " w: " << size << std::endl;
-    testfunction();
-    const auto runTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-                             clk::now() - runStart)
-                             .count();
+              << " m: " << size << std::endl;
 
+    times(&t1);
+    testfunction();
+    times(&t2);
+
+    clock_t start = t1.tms_utime + t1.tms_stime,
+            end = t2.tms_utime + t2.tms_stime;
+    double runTime = (end - start) / (0. + sysconf(_SC_CLK_TCK));
     runtimes.push_back(runTime);
 }
 
 void RuntimeTest::addLine(uint32_t order, uint32_t size, uint64_t result) {
+    std::cout << "Adding result: " << parameters.size() << " n: " << order
+              << " m: " << size << std::endl;
     parameters.push_back({order, size});
     runtimes.push_back(result);
 }
 
 void RuntimeTest::printResults() {
-    std::cout << "order,size,runtime" << std::endl;
+    std::cout << "order,size,result" << std::endl;
     for (uint32_t i = 0; i < parameters.size(); ++i) {
         std::cout << std::get<0>(parameters[i]) << ",";
         std::cout << std::get<1>(parameters[i]) << ",";
@@ -80,12 +86,12 @@ void RuntimeTest::printResults() {
     }
 }
 
-void RuntimeTest::saveCSV(std::string filepath) {
+void RuntimeTest::saveCSV(std::string filepath, std::string title) {
     std::ofstream output;
     output.open(filepath,
                 std::ofstream::in | std::ofstream::out | std::ofstream::trunc);
     if (output.is_open()) {
-        output << "order,size,runtime" << std::endl;
+        output << title << std::endl;
         for (uint32_t i = 0; i < parameters.size(); ++i) {
             output << std::get<0>(parameters[i]) << ",";
             output << std::get<1>(parameters[i]) << ",";
