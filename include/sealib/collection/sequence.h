@@ -24,8 +24,6 @@ class Sequence {
      * @param v element to insert
      */
     virtual void insert(I i, T v) = 0;
-
-    virtual ~Sequence() = default;
 };
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_SEQUENCE_H_

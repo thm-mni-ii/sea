@@ -58,7 +58,7 @@ class ExtendedSegmentStackTest : public ::testing::Test {
     DirectedGraph g{0};
     virtual void SetUp() {
         uint32_t n = 256;
-        g = Sealib::GraphCreator::createRandomKRegularGraph(n, 10);
+        g = Sealib::GraphCreator::kOutdegree(n, 10);
         c = new CompactArray(n, 3);
         for (uint a = 0; a < n; a++) c->insert(a, 0);
         s = new ExtendedSegmentStack(n, &g, c);
@@ -75,7 +75,7 @@ class ExtendedSegmentStackTest2 : public ::testing::Test {
     DirectedGraph g{0};
     virtual void SetUp() {
         uint32_t n = 128;
-        g = Sealib::GraphCreator::createRandomImbalanced(n);
+        g = Sealib::GraphCreator::imbalanced(n);
         c = new CompactArray(n, 3);
         s = new ExtendedSegmentStack(n, &g, c);
         q = static_cast<uint32_t>(ceil(n / log2(n)));

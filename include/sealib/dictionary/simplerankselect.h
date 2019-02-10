@@ -32,8 +32,6 @@ class SimpleRankSelect {
     uint64_t rank(uint64_t k) const;
 
     explicit SimpleRankSelect(std::shared_ptr<const Bitset<uint8_t>> bitset);
-    SimpleRankSelect();
-    ~SimpleRankSelect();
 };
 }  // namespace Sealib
 #endif  // SEALIB_DICTIONARY_SIMPLERANKSELECT_H_

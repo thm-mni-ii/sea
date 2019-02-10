@@ -27,7 +27,7 @@ TEST(GraphTest, graph_integrity) {
     adj_mtrx[3] = new uint32_t[order]{1, 0, 1, 0};
 
     UndirectedGraph g =
-        GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
+        GraphCreator::createFromAdjacencyMatrix(adj_mtrx, order);
 
     // verify correct order and degree of nodes
     ASSERT_EQ(g.getOrder(), order);

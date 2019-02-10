@@ -7,8 +7,8 @@
 #include "sealib/collection/compactarray.h"
 #include "sealib/graph/graph.h"
 
-#define DFS_NO_MORE_NODES (unsigned)11
-#define DFS_DO_RESTORE (unsigned)12
+#define DFS_NO_MORE_NODES 11U
+#define DFS_DO_RESTORE 12U
 
 #ifdef SEALIBVISUAL_EXAMPLES_H_
 namespace SealibVisual {
@@ -35,7 +35,7 @@ namespace Sealib {
 class SegmentStack {
  public:
     virtual void push(std::pair<uint, uint> u) = 0;
-    int pop(std::pair<uint, uint> *r);
+    uint8_t pop(std::pair<uint, uint> *r);
     bool isEmpty();
     virtual bool isAligned() = 0;
     virtual ~SegmentStack() = default;

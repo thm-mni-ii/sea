@@ -18,7 +18,7 @@ static uint GRAPHCOUNT = 4, order = 500, degree = 20;
 static std::vector<DirectedGraph> makeGraphs() {
     std::vector<DirectedGraph> g;
     for (uint c = 0; c < GRAPHCOUNT; c++) {
-        g.emplace_back(GraphCreator::createRandomKRegularGraph(order, degree));
+        g.emplace_back(GraphCreator::kOutdegree(order, degree));
     }
     return g;
 }
@@ -35,23 +35,18 @@ TEST_P(BFSTest, userproc) {
     DirectedGraph g = GetParam();
     BFS bfs(&g, incr1, incr2);
     bfs.init();
-    do {
-        while (bfs.more()) bfs.next();
-    } while (bfs.nextComponent());
+    bfs.forEach([](std::pair<uint, uint>) {});
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, order * degree);
 }
 
 TEST(BFSTest, nextComponent) {
     c1 = c2 = 0;
-    DirectedGraph g = GraphCreator::createRandomKRegularGraph(order, 0);
+    DirectedGraph g = GraphCreator::kOutdegree(order, 0);
     BFS bfs(&g, incr1, incr2);
     uint rc = 0;
     bfs.init();
-    do {
-        rc++;
-        while (bfs.more()) bfs.next();
-    } while (bfs.nextComponent());
+    bfs.forEach([&](std::pair<uint, uint>) { rc++; });
     EXPECT_EQ(rc, order);
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, 0);

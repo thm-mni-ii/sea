@@ -61,7 +61,7 @@ class DirectedGraph : public Graph {
      * @return the order of the graph, i.e, the total number of
      * vertices.
      */
-    uint getOrder() const override { return nodes.size(); }
+    uint getOrder() const override { return static_cast<uint>(nodes.size()); }
 
  private:
     std::vector<SimpleNode> nodes;

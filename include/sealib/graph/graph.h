@@ -30,8 +30,6 @@ class Graph {
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
     virtual uint getOrder() const = 0;
-
-    virtual ~Graph() = default;
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPH_H_

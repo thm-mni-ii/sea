@@ -20,13 +20,10 @@ DirectedGraph g=GraphCreator::createRandomFixed(500,2);
 
 BFS bfs(&g, p0, e0);
 bfs.init();		// don't forget initialization of the iterator
-do {
-	while(bfs.more()) {
-		std::pair&lt;uint,uint&gt; s=bfs.next();
-		uint u=s.first, dist=s.second;
-		// ...
-	}
-} while(bfs.nextComponent());
+bfs.forEach([&](std::pair<uint, uint>) { 
+    uint u=s.first, dist=s.second;
+    std::cout << "found vertex " << u << " with distance " << dist << "\n";
+});
 
 
 // example procedures:

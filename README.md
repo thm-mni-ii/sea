@@ -50,42 +50,47 @@ If you encounter any bugs, missing or misleading documentation, do not hesitate 
 ## Using the Library
 - Copy the `include/sealib` folder into your own project's include path.
 - Copy the `lib/libsealib.so` file into your own project's library path. Make sure that the environment variable `LD_LIBRARY_PATH` also points there, or else the shared library won't be found.
+- Include the header files you want to use in your code.
+- Compile with correct `-I` and `-L` flags, and use `-std=c++11`.
 
-### Simple Example
-This example shows how to use the contents of the library.
-
+### Usage example
 ```cpp
+#include <vector>
 #include <sealib/_types.h>
-#include <sealib/dictionary/choicedictionary.h>
 #include <sealib/iterator/dfs.h>
 #include <sealib/graph/graphcreator.h>
 
+using namespace Sealib;
+
 bool reachable(DirectedGraph *g, uint a, uint b) {
     bool ret = false;
-    ChoiceDictionary started(100);
-    ChoiceDictionary done(100);
+    std::vector<bool> started(100);
+    std::vector<bool> done(100);
     DFS::nloglognBitDFS(g,
                         [&](uint u) {
-                            started.insert(u);
-                            if (u == b && started.get(a) && !done.get(a)) {
+                            started[u]=1;
+                            if (u == b && started[a] && !done[a]) {
                                 ret = true;
                             }
                         },
                         DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                        [&](uint u) { done.insert(u); });
+                        [&](uint u) { done[u]=1; });
     return ret;
 }
 
 int main(void) {
-    DirectedGraph g = GraphCreator::createRandomKRegularGraph(100, 30);
-    bool result = reachable(&g, 10, 25);
+    DirectedGraph g = GraphCreator::kOutdegree(100, 30);
+    return reachable(&g, 10, 25);
 }
 ```
-
 Compile with:
 ```sh
+clang++ -I<include-path> -L<libary-path> -std=c++11 -o reachable reachable.cpp -lsealib
+```
+Run the executable: 
+```sh
 export LD_LIBRARY_PATH=<library-path>
-clang++ -I<include-path> -L<libary-path> -o reachable reachable.cpp -lsealib
+./reachable
 ```
 
 ## Project Structure
@@ -104,11 +109,11 @@ clang++ -I<include-path> -L<libary-path> -o reachable reachable.cpp -lsealib
 ```
 
 ## Research
-We publish most of our research on arXiv.org.
+We publish most of our research on [arXiv.org](https://tinyurl.com/ybxbb77z).
 
 * Extra Space during Initialization of Succinct Data Structures and Dynamical Initializable Arrays. [MFCS 2018](https://dblp.uni-trier.de/db/conf/mfcs/mfcs2018.html): 65:1-65:16 | [Full Version](https://arxiv.org/abs/1803.09675)
 * Linear-Time In-Place DFS and BFS in the Restore Model [Full Version](https://arxiv.org/abs/1803.04282)
-* A Space-Optimal c-Color Choice Dictionary [ISAAC 2018](http://isaac2018.ie.nthu.edu.tw/wp-content/uploads/2018/09/isaac2018_accepted.html): 66:1-66:12 | [Full Version]
+* A Space-Optimal c-Color Choice Dictionary [ISAAC 2018](http://isaac2018.ie.nthu.edu.tw/wp-content/uploads/2018/09/isaac2018_accepted.html): 66:1-66:12 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2018/10014/)
 * Space-Efficient Biconnected Components and Recognition of Outerplanar Graphs [MFCS 2016](http://mfcs.ki.agh.edu.pl/accepted.shtml): 56:1-56:14 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2016/6468/)
 * Space-Efficient Basic Graph Algorithms [STACS 2015](http://wwwmayr.in.tum.de/konferenzen/STACS2015/): 288-301 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2015/4921/)
 

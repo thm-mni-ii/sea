@@ -51,7 +51,7 @@ bool BFS::hasGrayNode() {
     return true;
 }
 uint BFS::getGrayNode() {
-    uint r = INVALID;
+    uint64_t r = INVALID;
     try {
         r = isInner.choice();
     } catch (std::exception e) {
@@ -61,7 +61,7 @@ uint BFS::getGrayNode() {
             throw NoMoreGrayNodes();
         }
     }
-    return r;
+    return static_cast<uint>(r);
 }
 
 bool BFS::more() { return hasGrayNode(); }
@@ -87,6 +87,12 @@ std::pair<uint, uint> BFS::next() {
     isInner.remove(u);
     color.insert(u, BFS_BLACK);
     return std::pair<uint, uint>(u, dist);
+}
+
+void BFS::forEach(std::function<void(std::pair<uint, uint>)> f) {
+    do {
+        while (more()) f(next());
+    } while (nextComponent());
 }
 
 BFS::BFS(Graph const *graph, Consumer pp, BiConsumer pe)

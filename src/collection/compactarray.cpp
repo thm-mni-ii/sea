@@ -19,8 +19,7 @@
 #define END }
 
 namespace Sealib {
-
-static const size_t BITSIZE = 8 * sizeof(uint);
+static const uint BITSIZE = 8 * sizeof(uint);
 static const uint ONE = 1;
 
 void CompactArray::insert(uint i, uint v) {

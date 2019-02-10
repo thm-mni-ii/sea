@@ -14,7 +14,7 @@ This space-efficient variant
 
 ## Example
 ```cpp
-DirectedGraph g=GraphCreator::createRandomGenerated(50);
+DirectedGraph g=GraphCreator::sparseDirected(50);
 
 DFS::nBitDFS(&g);  // quiet run
 

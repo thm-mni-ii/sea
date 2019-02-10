@@ -13,44 +13,34 @@ using Sealib::UndirectedGraph;
 using Sealib::CompactGraph;
 using Sealib::GraphCreator;
 
-UndirectedGraph *Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(
+UndirectedGraph *Sealib::GraphCreator::createPointerFromAdjacencyMatrix(
     uint **adjMatrix, uint order) {
-    std::vector<ExtendedNode> nodes(order);
+    std::vector<ExtendedNode> nodes;
 
     for (uint i = 0; i < order; i++) {
-        uint deg = 0;
+        std::vector<std::pair<uint, uint>> adj;
 
         for (uint j = 0; j < order; j++) {
-            deg += adjMatrix[i][j];
+            for (uint k = 0; k < adjMatrix[i][j]; k++)
+                adj.push_back({j, INVALID});
         }
 
-        std::vector<std::pair<uint, uint>> adj(deg);
-
-        uint idx = 0;
-        for (uint j = 0; j < order; j++) {
-            for (uint k = 0; k < adjMatrix[i][j]; k++) {
-                adj[idx] = {j, INVALID};
-                idx++;
-            }
-        }
-        nodes[i] = ExtendedNode(adj);
+        nodes.push_back(ExtendedNode(adj));
     }
     for (uint i = 0; i < order; i++) {
-        const uint deg = nodes[i].getDegree();
-        const std::vector<std::pair<uint, uint>> &adj_arr = nodes[i].getAdj();
+        const uint deg1 = nodes[i].getDegree();
+        std::vector<std::pair<uint, uint>> &n1 = nodes[i].getAdj();
 
-        for (uint j = 0; j < deg; j++) {
-            if (adj_arr[j].second == INVALID) {
-                uint v = adj_arr[j].first;
-                const std::vector<std::pair<uint, uint>> &_adj_arr =
-                    nodes[v].getAdj();
-                const uint _deg = nodes[v].getDegree();
+        for (uint k1 = 0; k1 < deg1; k1++) {
+            if (n1[k1].second == INVALID) {
+                uint v = n1[k1].first;
+                std::vector<std::pair<uint, uint>> &n2 = nodes[v].getAdj();
+                const uint deg2 = nodes[v].getDegree();
 
-                for (uint _j = 0; _j < _deg; _j++) {
-                    if (_adj_arr[_j].second == INVALID &&
-                        _adj_arr[_j].first == i) {
-                        nodes[v].getAdj()[_j].second = j;
-                        nodes[i].getAdj()[j].second = _j;
+                for (uint k2 = 0; k2 < deg2; k2++) {
+                    if (n2[k2].second == INVALID && n2[k2].first == i) {
+                        n2[k2].second = k1;
+                        n1[k1].second = k2;
                         break;
                     }
                 }
@@ -60,23 +50,20 @@ UndirectedGraph *Sealib::GraphCreator::createGraphPointerFromAdjacencyMatrix(
     return new UndirectedGraph(nodes);
 }
 
-UndirectedGraph GraphCreator::createGraphFromAdjacencyMatrix(uint **adjMatrix,
-                                                             uint order) {
-    return *createGraphPointerFromAdjacencyMatrix(adjMatrix, order);
+UndirectedGraph GraphCreator::createFromAdjacencyMatrix(uint **adjMatrix,
+                                                        uint order) {
+    return *createPointerFromAdjacencyMatrix(adjMatrix, order);
 }
 
 std::shared_ptr<UndirectedGraph>
-GraphCreator::createSharedGraphFromAdjacencyMatrix(uint **adjMatrix,
-                                                   uint order) {
+GraphCreator::createSharedPointerFromAdjacencyMatrix(uint **adjMatrix,
+                                                     uint order) {
     return std::shared_ptr<UndirectedGraph>(
-        createGraphPointerFromAdjacencyMatrix(adjMatrix, order));
+        createPointerFromAdjacencyMatrix(adjMatrix, order));
 }
 
-std::unique_ptr<Sealib::UndirectedGraph>
-Sealib::GraphCreator::generateRandomBipartiteUndirectedGraph(uint order1,
-                                                             uint order2,
-                                                             double p,
-                                                             uint seed) {
+std::unique_ptr<Sealib::UndirectedGraph> Sealib::GraphCreator::randomBipartite(
+    uint order1, uint order2, double p, uint seed) {
     std::unique_ptr<Sealib::UndirectedGraph> graph(
         new Sealib::UndirectedGraph(order1 + order2));
 
@@ -104,7 +91,7 @@ Sealib::GraphCreator::generateRandomBipartiteUndirectedGraph(uint order1,
 
 static std::random_device rng;
 
-Sealib::DirectedGraph GraphCreator::createRandomImbalanced(uint order) {
+Sealib::DirectedGraph GraphCreator::imbalanced(uint order) {
     std::vector<SimpleNode> n(order);
     std::uniform_int_distribution<uint> rnd(0, order - 1);
     std::uniform_int_distribution<uint> dist1(order * order, 2 * order * order);
@@ -129,8 +116,8 @@ Sealib::DirectedGraph GraphCreator::createRandomImbalanced(uint order) {
     return DirectedGraph(n);
 }
 
-Sealib::DirectedGraph Sealib::GraphCreator::createRandomKRegularGraph(
-    uint order, uint degreePerNode) {
+Sealib::DirectedGraph Sealib::GraphCreator::kOutdegree(uint order,
+                                                       uint degreePerNode) {
     std::uniform_int_distribution<uint> rnd(0, order - 1);
     std::vector<SimpleNode> n(order);
     for (uint a = 0; a < order; a++) {
@@ -143,26 +130,28 @@ Sealib::DirectedGraph Sealib::GraphCreator::createRandomKRegularGraph(
     return DirectedGraph(n);
 }
 
-Sealib::DirectedGraph Sealib::GraphCreator::createRandomGenerated(uint order) {
+Sealib::DirectedGraph Sealib::GraphCreator::sparseDirected(uint order) {
     std::vector<SimpleNode> n(order);
-    std::uniform_int_distribution<uint> rnd(0, order - 1);
+    std::uniform_int_distribution<uint> nR(0, order - 1);
+    std::uniform_int_distribution<uint> degR(0, static_cast<uint>(log2(order)));
     for (uint a = 0; a < order; a++) {
-        uint deg = rnd(rng);
+        uint deg = degR(rng);
         std::vector<uint> ad(deg);
         for (uint b = 0; b < deg; b++) {
-            ad[b] = rnd(rng);
+            ad[b] = nR(rng);
         }
         n[a] = SimpleNode(ad);
     }
     return DirectedGraph(n);
 }
 
-UndirectedGraph GraphCreator::createRandomGeneratedUndirected(uint order) {
+UndirectedGraph GraphCreator::sparseUndirected(uint order) {
     UndirectedGraph g(order);
-    std::uniform_int_distribution<uint> rnd(0, order - 1);
+    std::uniform_int_distribution<uint> nR(0, order - 1);
+    std::uniform_int_distribution<uint> degR(0, static_cast<uint>(log2(order)));
     for (uint a = 0; a < order; a++) {
-        for (uint c = 0; c < 5; c++) {
-            uint b = rnd(rng);
+        for (uint c = 0; c < degR(rng); c++) {
+            uint b = nR(rng);
             ExtendedNode &n1 = g.getNode(a), &n2 = g.getNode(b);
             uint i1 = g.deg(a), i2 = g.deg(b);
             n1.addAdjacency({b, i2});
@@ -172,8 +161,7 @@ UndirectedGraph GraphCreator::createRandomGeneratedUndirected(uint order) {
     return g;
 }
 
-UndirectedGraph GraphCreator::createRandomKRegularUndirectedGraph(
-    uint order, uint degreePerNode) {
+UndirectedGraph GraphCreator::kRegular(uint order, uint degreePerNode) {
     UndirectedGraph g(order);
     std::uniform_int_distribution<uint> dist(0, order - 1);
     std::unordered_set<uint> todo;
@@ -206,7 +194,7 @@ UndirectedGraph GraphCreator::createRandomKRegularUndirectedGraph(
     return g;
 }
 
-UndirectedGraph GraphCreator::createWindmill(uint order, uint count) {
+UndirectedGraph GraphCreator::windmill(uint order, uint count) {
     order--;
     uint n = order * count + 1;
     UndirectedGraph g(n);
