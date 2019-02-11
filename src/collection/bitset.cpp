@@ -4,15 +4,15 @@
 using Sealib::Bitset;
 
 template<typename BlockType, typename AllocatorType>
-Bitset<BlockType, AllocatorType>::Bitset(sizeType bits_) :
+Bitset<BlockType, AllocatorType>::Bitset(uint64_t bits_) :
     bits(bits_),
     mbits(bits % bitsPerBlock == 0 ? bits / bitsPerBlock : bits / bitsPerBlock + 1) {}
 
 template<typename BlockType, typename AllocatorType>
 Bitset<BlockType, AllocatorType>::Bitset(const std::vector<bool> &bitvector) :
-    bits(bitvector.size()),
+    bits(static_cast<uint64_t>(bitvector.size())),
     mbits(bits % bitsPerBlock == 0 ? bits / bitsPerBlock : bits / bitsPerBlock + 1) {
-    sizeType index = 0;
+    uint64_t index = 0;
         for (bool a : bitvector) {
             operator[](index) = a;
             index++;
@@ -24,13 +24,13 @@ Bitset<BlockType, AllocatorType>::Bitset() : Bitset(0) {}
 
 template<typename BlockType, typename AllocatorType>
 typename Bitset<BlockType, AllocatorType>::BitReference
-Bitset<BlockType, AllocatorType>::operator[](sizeType bit) {
+Bitset<BlockType, AllocatorType>::operator[](uint64_t bit) {
     assert(bit < bits);
     return BitReference(&mbits[bit / bitsPerBlock], bit % bitsPerBlock);
 }
 
 template<typename BlockType, typename AllocatorType>
-bool Bitset<BlockType, AllocatorType>::operator[](sizeType bit) const { return get(bit); }
+bool Bitset<BlockType, AllocatorType>::operator[](uint64_t bit) const { return get(bit); }
 
 template<typename BlockType, typename AllocatorType>
 void Bitset<BlockType, AllocatorType>::set() {
@@ -48,43 +48,30 @@ void Bitset<BlockType, AllocatorType>::clear() {
 
 template<typename BlockType, typename AllocatorType>
 void Bitset<BlockType, AllocatorType>::flip() {
-    for (sizeType i = 0; i < blocks(); ++i) {
+    for (uint64_t i = 0; i < blocks(); ++i) {
         mbits[i] = static_cast<BlockType>(~mbits[i]);
     }
 }
 
 template<typename BlockType, typename AllocatorType>
-typename Bitset<BlockType, AllocatorType>::bitType
-Bitset<BlockType, AllocatorType>::get(sizeType bit) const {
+bool Bitset<BlockType, AllocatorType>::get(uint64_t bit) const {
     assert(bit < bits);
     return get(mbits[bit / bitsPerBlock], bit % bitsPerBlock);
 }
 
 template<typename BlockType, typename AllocatorType>
-void Bitset<BlockType, AllocatorType>::insert(sizeType index, bitType value) {
+void Bitset<BlockType, AllocatorType>::insert(uint64_t index, bool value) {
     operator[](index) = value;
 }
 
 template<typename BlockType, typename AllocatorType>
-typename Bitset<BlockType, AllocatorType>::sizeType
-Bitset<BlockType, AllocatorType>::size() const {
-    return bits;
-}
-
-template<typename BlockType, typename AllocatorType>
-typename Bitset<BlockType, AllocatorType>::sizeType
-Bitset<BlockType, AllocatorType>::blocks() const {
-    return mbits.size();
-}
-
-template<typename BlockType, typename AllocatorType>
-const BlockType &Bitset<BlockType, AllocatorType>::getBlock(sizeType idx) const {
+const BlockType &Bitset<BlockType, AllocatorType>::getBlock(uint64_t idx) const {
     assert(mbits.size() > idx);
     return mbits[idx];
 }
 
 template<typename BlockType, typename AllocatorType>
-void Bitset<BlockType, AllocatorType>::setBlock(sizeType idx, BlockType block) {
+void Bitset<BlockType, AllocatorType>::setBlock(uint64_t idx, BlockType block) {
     assert(mbits.size() > idx);
     mbits[idx] = block;
 }
@@ -93,7 +80,7 @@ template<typename BlockType, typename AllocatorType>
 Bitset<BlockType, AllocatorType>
 &Bitset<BlockType, AllocatorType>::operator&=(const Bitset<BlockType, AllocatorType> &rhs) {
     assert(size() == rhs.size());
-    for (sizeType i = 0; i < blocks(); i++) {
+    for (uint64_t i = 0; i < blocks(); i++) {
         mbits[i] = mbits[i] & rhs.mbits[i];
     }
     return *this;
@@ -103,7 +90,7 @@ template<typename BlockType, typename AllocatorType>
 Bitset<BlockType, AllocatorType>&
 Bitset<BlockType, AllocatorType>::operator|=(const Bitset<BlockType, AllocatorType> &rhs) {
     assert(size() == rhs.size());
-    for (sizeType i = 0; i < blocks(); i++) {
+    for (uint64_t i = 0; i < blocks(); i++) {
         mbits[i] = mbits[i] | rhs.mbits[i];
     }
     return *this;
@@ -113,7 +100,7 @@ template<typename BlockType, typename AllocatorType>
 Bitset<BlockType, AllocatorType>&
 Bitset<BlockType, AllocatorType>::operator^=(const Bitset<BlockType, AllocatorType> &rhs) {
     assert(size() == rhs.size());
-    for (sizeType i = 0; i < blocks(); i++) {
+    for (uint64_t i = 0; i < blocks(); i++) {
         mbits[i] = mbits[i] ^ rhs.mbits[i];
     }
     return *this;
@@ -123,7 +110,7 @@ template<typename BlockType, typename AllocatorType>
 Bitset<BlockType, AllocatorType>&
 Bitset<BlockType, AllocatorType>::operator-=(const Bitset<BlockType, AllocatorType> &rhs) {
     assert(size() == rhs.size());
-    for (sizeType i = 0; i < blocks(); i++) {
+    for (uint64_t i = 0; i < blocks(); i++) {
         mbits[i] = mbits[i] & static_cast<BlockType>(~rhs.mbits[i]);
     }
     return *this;
@@ -137,8 +124,7 @@ Bitset<BlockType, AllocatorType> Bitset<BlockType, AllocatorType>::operator~() c
 }
 
 template<typename BlockType, typename AllocatorType>
-BlockType
-Sealib::Bitset<BlockType, AllocatorType>::getShiftedBlock(Bitset::sizeType idx) const {
+BlockType Sealib::Bitset<BlockType, AllocatorType>::getShiftedBlock(uint64_t idx) const {
     BlockType len = Sealib::Bitset<BlockType>::bitsPerBlock;
     BlockType b1 = mbits[idx/len];
     BlockType b2 = mbits[(idx+len-1)/len];
