@@ -1,35 +1,42 @@
 #include "sealib/graph/graphio.h"
 #include <cstring>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
 #include "sealib/graph/directedgraph.h"
 #include "sealib/graph/undirectedgraph.h"
 
+#define LOADSTR                                               \
+    if (ls.eof()) {                                           \
+        if (!in.eof()) {                                      \
+            std::getline(in, line);                           \
+            ls = std::istringstream(line);                    \
+        } else {                                              \
+            throw std::runtime_error("file ended too early"); \
+        }                                                     \
+    }                                                         \
+    ls >> std::ws;                                            \
+    std::getline(ls, tok, ' ');
 #define READ(s)                                                           \
-    if (tok[index] != s) {                                                \
+    LOADSTR                                                               \
+    if (tok != (s)) {                                                     \
         std::stringstream err;                                            \
         err << "Input file is malformed: expected '" << (s) << "', got '" \
-            << tok[index] << "'";                                         \
+            << tok << "'";                                                \
         throw std::runtime_error(err.str());                              \
-    }                                                                     \
-    index++;
-#define READL(s)           \
-    if (tok[index] != s) { \
-        ok = false;        \
-    } else {               \
-        ok = true;         \
-        index++;           \
     }
-#define GET_CLOSING_BRACKET         \
-    uint brackets = 1;              \
-    while (brackets > 0) {          \
-        if (tok[index] == "[")      \
-            brackets++;             \
-        else if (tok[index] == "]") \
-            brackets--;             \
-        index++;                    \
+#define READL(s) \
+    LOADSTR      \
+    ok = tok == (s);
+#define GET_CLOSING_BRACKET  \
+    while (brackets > 0) {   \
+        LOADSTR              \
+        if (tok == "[")      \
+            brackets++;      \
+        else if (tok == "]") \
+            brackets--;      \
     }
 
 namespace Sealib {
@@ -55,24 +62,6 @@ void GraphExporter::exportGML(Graph const *g, bool directed,
     out.close();
 }
 
-static void tokenize(const std::string &str, std::vector<std::string> *tokens,
-                     const std::string &delimiters = " ",
-                     bool trimEmpty = false) {
-    std::string::size_type pos, lastPos = 0, length = str.length();
-
-    while (lastPos < length + 1) {
-        pos = str.find_first_of(delimiters, lastPos);
-        if (pos == std::string::npos) {
-            pos = length;
-        }
-
-        if (pos != lastPos || !trimEmpty)
-            tokens->push_back(std::string(str.data() + lastPos, pos - lastPos));
-
-        lastPos = pos + 1;
-    }
-}
-
 template <class G>
 static void addAdj(G *g, uint u, uint v);
 
@@ -89,56 +78,59 @@ void addAdj<UndirectedGraph>(UndirectedGraph *g, uint u, uint v) {
 
 template <class G, class N>
 static G importGMLBase(std::string filename) {
-    G g(0);
-    bool ok = true;
+    bool directed;
+    uint trash = 0;
+    uint brackets = 0;
 
+    bool ok = true;
+    std::string line;
+    std::string tok;
     std::ifstream in(filename);
-    std::stringstream input;
-    input << in.rdbuf();
-    std::vector<std::string> tok;
-    tokenize(input.str(), &tok, " \n", true);
-    uint index = 0;
+    std::getline(in, line);
+    std::istringstream ls(line);
+
     READ("graph");
     READ("[");
     do {
         READL("directed");
-        index++;
     } while (!ok);
+    ls >> directed;
+    std::vector<N> nodes;
     while (true) {
         READL("node");
         if (ok) {
             READ("[");
+            brackets++;
             READ("id");
-            index++;
-            N u;
-            g.addNode(u);
+            ls >> trash;
+            nodes.emplace_back(N());
             GET_CLOSING_BRACKET
         } else {
+            ok = tok == "edge";
             break;
         }
     }
-    uint m = 0;
+    G g(nodes);
     while (true) {
-        READL("edge");
         if (ok) {
             READ("[");
+            brackets++;
             READ("id");
-            index++;
+            ls >> trash;
             uint u, v;
             READ("source");
-            u = uint(std::stoi(tok[index]));
-            index++;
+            ls >> u;
             READ("target");
-            v = uint(std::stoi(tok[index]));
-            index++;
+            ls >> v;
             addAdj(&g, u, v);
             GET_CLOSING_BRACKET
-            m++;
         } else {
+            ok = tok == "]";
             break;
         }
+        READL("edge");
     }
-    READ("]");
+    if (!ok) GET_CLOSING_BRACKET
     return g;
 }
 
