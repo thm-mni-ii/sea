@@ -9,16 +9,18 @@
 #include "sealib/graph/undirectedgraph.h"
 
 #define LOADSTR                                               \
-    if (ls.eof()) {                                           \
+    if (ls->eof()) {                                          \
         if (!in.eof()) {                                      \
             std::getline(in, line);                           \
-            ls = std::istringstream(line);                    \
+            delete ls;                                        \
+            ls = new std::istringstream(line);                \
         } else {                                              \
             throw std::runtime_error("file ended too early"); \
         }                                                     \
     }                                                         \
-    ls >> std::ws;                                            \
-    std::getline(ls, tok, ' ');
+    *ls >> (std::ws);                                         \
+    std::getline(*ls, tok, ' ');
+
 #define READ(s)                                                           \
     LOADSTR                                                               \
     if (tok != (s)) {                                                     \
@@ -87,14 +89,14 @@ static G importGMLBase(std::string filename) {
     std::string tok;
     std::ifstream in(filename);
     std::getline(in, line);
-    std::istringstream ls(line);
+    std::istringstream *ls = new std::istringstream(line);
 
     READ("graph");
     READ("[");
     do {
         READL("directed");
     } while (!ok);
-    ls >> directed;
+    *ls >> directed;
     std::vector<N> nodes;
     while (true) {
         READL("node");
@@ -102,7 +104,7 @@ static G importGMLBase(std::string filename) {
             READ("[");
             brackets++;
             READ("id");
-            ls >> trash;
+            *ls >> trash;
             nodes.emplace_back(N());
             GET_CLOSING_BRACKET
         } else {
@@ -116,12 +118,12 @@ static G importGMLBase(std::string filename) {
             READ("[");
             brackets++;
             READ("id");
-            ls >> trash;
+            *ls >> trash;
             uint u, v;
             READ("source");
-            ls >> u;
+            *ls >> u;
             READ("target");
-            ls >> v;
+            *ls >> v;
             addAdj(&g, u, v);
             GET_CLOSING_BRACKET
         } else {
@@ -131,6 +133,7 @@ static G importGMLBase(std::string filename) {
         READL("edge");
     }
     if (!ok) GET_CLOSING_BRACKET
+    delete ls;
     return g;
 }
 
