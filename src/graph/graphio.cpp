@@ -110,7 +110,7 @@ static G importGMLBase(std::string filename) {
             break;
         }
     }
-    G g(nodes);
+    G g(std::move(nodes));
     while (true) {
         if (ok) {
             READ("[");
