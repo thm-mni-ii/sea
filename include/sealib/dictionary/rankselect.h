@@ -21,6 +21,7 @@ class RankSelect {
      * @param Sealib::Bitset used for RankSelect
      */
     explicit RankSelect(const Bitset<uint8_t> &bitset);
+    explicit RankSelect(Bitset<uint8_t> &&bitset);
     RankSelect();
 
     /**

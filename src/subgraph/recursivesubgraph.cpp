@@ -38,8 +38,43 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
         }
         degRSum += degR;
     }
-    pSelect = new RankSelect(p);
-    qSelect = new RankSelect(q);
+    pSelect = new RankSelect(std::move(p));
+    qSelect = new RankSelect(std::move(q));
+}
+
+Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
+                                             uint64_t sidx_,
+                                             uint64_t ridx_,
+                                             bitset_t &&v,
+                                             bitset_t &&a) :
+    SubGraph(sidx_, ridx_, stack_),
+    vSelect(initializeVSelect(v)), aSelect(initializeASelect(a)) {
+    SubGraph *r = stack->clientList[stack_t::refs[ridx]];
+
+    bitset_t p(rank_a(aSelect.size()));
+    bitset_t q(rank_v(vSelect.size()));
+
+    uint64_t degRSum = 0;
+    uint64_t degSum = 0;
+    for (uint64_t uR = 1; uR <= vSelect.size(); uR++) {  // iterate all vertices of G_r
+        uint64_t u = phiInv(uR);
+        uint64_t degR = r->degree(uR);
+        if (u > 0) {  // if u exists in G_this
+            uint64_t deg = 0;
+            for (uint64_t i = degRSum; i < degRSum + degR; i++) {
+                uint64_t pinv = psiInv(i + 1);
+                deg += pinv == 0 ? 0 : 1;
+            }
+            degSum += deg;
+            if (deg > 0) {
+                q[u - 1] = 1;
+                p[degSum - 1] = 1;
+            }
+        }
+        degRSum += degR;
+    }
+    pSelect = new RankSelect(std::move(p));
+    qSelect = new RankSelect(std::move(q));
 }
 
 uint64_t Sealib::RecursiveSubGraph::head(uint64_t u, uint64_t k) const {
