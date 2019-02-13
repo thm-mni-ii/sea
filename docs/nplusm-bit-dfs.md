@@ -14,7 +14,7 @@ This space-efficient variant *only works with undirected graphs*:
 
 ## Example
 ```cpp
-UndirectedGraph g=GraphCreator::createRandomKRegularUndirectedGraph(100,5)
+UndirectedGraph g=GraphCreator::kRegular(100,5)
 
 DFS::nplusmBitDFS(&g);  // quiet run
 

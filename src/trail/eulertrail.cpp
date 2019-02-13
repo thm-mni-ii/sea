@@ -9,7 +9,7 @@ EulerTrail<TrailStructureType>::iterator::iterator(
     const EulerTrail<TrailStructureType> &eulerTrail_, uint32_t nIndex_) :
     eulerTrail(eulerTrail_),
     nIndex(nIndex_),
-    mIndex(eulerTrail.trailStarts.select(nIndex) - 1),
+    mIndex(static_cast<uint32_t>(eulerTrail.trailStarts.select(nIndex) - 1)),
     arc(mIndex > eulerTrail.trail.size() ?
         (uint32_t) -1 : eulerTrail.trail[mIndex].getStartingArc()),
     ending(false) {
@@ -35,7 +35,7 @@ typename EulerTrail<TrailStructureType>::iterator
         }
     } else {
         ending = false;
-        mIndex = eulerTrail.trailStarts.select(++nIndex) - 1;
+        mIndex = static_cast<uint32_t>(eulerTrail.trailStarts.select(++nIndex)) - 1;
         arc = mIndex > eulerTrail.trail.size() ?
               (uint32_t) -1 : eulerTrail.trail[mIndex].getStartingArc();
     }

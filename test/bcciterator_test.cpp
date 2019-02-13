@@ -5,20 +5,19 @@
 namespace Sealib {
 
 TEST(BCCIteratorTest, windmillGraph) {
-    UndirectedGraph g = GraphCreator::createWindmill(5, 4);
+    UndirectedGraph g = GraphCreator::windmill(5, 4);
     BCCIterator b(&g);
     b.init();
     b.start(1, 16);
     std::set<uint> nodes;
     std::set<std::set<uint>> edges;
-    while (b.more()) {
-        std::pair<uint, uint> n = b.next();
+    b.forEach([&](std::pair<uint, uint> n) {
         if (n.second == INVALID) {
             nodes.insert(n.first);
         } else {
             edges.insert({n.first, n.second});
         }
-    }
+    });
 
     EXPECT_EQ(nodes.size(), 5);
     EXPECT_EQ(edges.size(), 7);
@@ -66,7 +65,7 @@ TEST(BCCIteratorTest, lineGraph) {
 }
 
 TEST(BCCIteratorTest, stability) {
-    UndirectedGraph g = GraphCreator::createRandomGeneratedUndirected(2000);
+    UndirectedGraph g = GraphCreator::sparseUndirected(2000);
     BCCIterator b(&g);
     b.init();
     b.start(10, g.head(10, 2));  // select an arbitrary edge

@@ -27,7 +27,6 @@ class LocalDyckTable {
          */
         explicit Data(uint8_t segment);
         Data();
-        ~Data() = default;
     };
 
     /**

@@ -9,13 +9,13 @@
 namespace Sealib {
 
 void *Sealib_Graph_new(uint32_t **m, uint32_t order) {
-    return GraphCreator::createGraphPointerFromAdjacencyMatrix(m, order);
+    return GraphCreator::createPointerFromAdjacencyMatrix(m, order);
 }
 void Sealib_Graph_delete(void *self) {
-    delete static_cast<Graph const *>(self);
+    delete static_cast<UndirectedGraph const *>(self);
 }
 void *Sealib_Graph_generateRandom(uint32_t order) {
-    std::vector<NodeD> n(order);
+    std::vector<SimpleNode> n(order);
     static std::random_device rng;
     std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
     for (uint32_t a = 0; a < order; a++) {
@@ -24,7 +24,7 @@ void *Sealib_Graph_generateRandom(uint32_t order) {
         for (uint32_t b = 0; b < deg; b++) {
             ad.emplace_back(rnd(rng));
         }
-        n[a] = NodeD(ad);
+        n[a] = SimpleNode(ad);
     }
     return new DirectedGraph(n);
 }

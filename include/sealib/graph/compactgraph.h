@@ -15,7 +15,7 @@ namespace Sealib {
  * @complexity A graph with n nodes and m edges is stored in O(n + m + 2) words
  * @author Simon Schniedenharn 
  */
-class CompactGraph : public Graph {
+class CompactGraph final : public Graph {
 	private:
 		std::unique_ptr<uint32_t[]> A;
 

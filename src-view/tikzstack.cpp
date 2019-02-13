@@ -15,7 +15,7 @@ std::ostream &TikzStack::out(std::ostream &os) const {
 
         // array content
         os << "{\n\t";
-        for (int i = content.size() - 1; i >= 0; i--) {
+        for (ssize_t i = ssize_t(content.size()) - 1; i >= 0; i--) {
             if (showIndices) {
                 os << i;
                 os << " \\& ";

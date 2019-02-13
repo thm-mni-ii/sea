@@ -35,8 +35,7 @@ static const uint32_t order = 200;
 static std::vector<DirectedGraph> makeGraphs() {
     std::vector<DirectedGraph> g;
     for (uint c = 0; c < GRAPHCOUNT; c++) {
-        g.push_back(
-            Sealib::GraphCreator::createRandomKRegularGraph(order, DEGREE));
+        g.push_back(Sealib::GraphCreator::kOutdegree(order, DEGREE));
     }
     return g;
 }
@@ -80,8 +79,7 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 TEST(DFSTest, nplusmBitUserproc) {
     c1 = c2 = c3 = c4 = 0;
     uint n = 4000;
-    UndirectedGraph g =
-        GraphCreator::createRandomKRegularUndirectedGraph(n, 20);
+    UndirectedGraph g = GraphCreator::kRegular(n, 20);
     DFS::nplusmBitDFS(&g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, n);
     EXPECT_EQ(c2, n * 20);
@@ -90,7 +88,7 @@ TEST(DFSTest, nplusmBitUserproc) {
 }
 
 TEST(DFSTest, nloglognImbalanced) {
-    DirectedGraph g = Sealib::GraphCreator::createRandomImbalanced(order);
+    DirectedGraph g = Sealib::GraphCreator::imbalanced(order);
     DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                         DFS_NOP_PROCESS);
     SUCCEED();

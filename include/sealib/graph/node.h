@@ -14,7 +14,7 @@ class Node {
  public:
     Node() : adj(0) {}
     explicit Node(std::vector<T> const &p) : adj(p) {}
-    uint getDegree() const { return adj.size(); }
+    uint getDegree() const { return static_cast<uint>(adj.size()); }
     std::vector<T> const &getAdj() const { return adj; }
     std::vector<T> &getAdj() { return adj; }
     void addAdjacency(T const &v) { adj.emplace_back(v); }
@@ -22,7 +22,13 @@ class Node {
     std::vector<T> adj;
 };
 
-typedef Node<uint> NodeD;
-typedef Node<std::pair<uint, uint>> NodeU;
+/**
+ * Simple node that only stores numbers.
+ */
+typedef Node<uint> SimpleNode;
+/**
+ * Extended node that also stores cross indices.
+ */
+typedef Node<std::pair<uint, uint>> ExtendedNode;
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_NODE_H_

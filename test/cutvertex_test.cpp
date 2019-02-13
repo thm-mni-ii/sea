@@ -6,7 +6,7 @@
 namespace Sealib {
 
 TEST(CutVertexIteratorTest, windmillGraph) {
-    UndirectedGraph g = GraphCreator::createWindmill(3, 4);
+    UndirectedGraph g = GraphCreator::windmill(3, 4);
     CutVertexIterator c(&g);
     c.init();
 
@@ -42,7 +42,7 @@ TEST(CutVertexIteratorTest, lineGraph) {
 }
 
 TEST(CutVertexIteratorTest, stability) {
-    UndirectedGraph g = GraphCreator::createRandomGeneratedUndirected(2000);
+    UndirectedGraph g = GraphCreator::sparseUndirected(2000);
     CutVertexIterator c(&g);
     c.init();
     while (c.more()) c.next();

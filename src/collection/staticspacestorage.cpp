@@ -72,8 +72,8 @@ static inline uint countWhere(const std::vector<bool> *v, bool x) {
     return r;
 }
 
-static void checkSize(const std::vector<bool> *v, uint maxBitsize) {
-    uint bits = 0;
+static void checkSize(const std::vector<bool> *v, uint64_t maxBitsize) {
+    uint64_t bits = 0;
     for (bool b : *v) {
         if (b == 1)
             bits = 0;

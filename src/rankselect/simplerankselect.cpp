@@ -24,7 +24,3 @@ Sealib::SimpleRankSelect::SimpleRankSelect(
     }
     selects.resize(rank);
 }
-
-Sealib::SimpleRankSelect::SimpleRankSelect() = default;
-
-Sealib::SimpleRankSelect::~SimpleRankSelect() = default;

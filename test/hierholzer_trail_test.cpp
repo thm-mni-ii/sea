@@ -18,7 +18,7 @@ TEST(EulerTrailTest, hierholzerTrail) {
 
     std::shared_ptr<Sealib::UndirectedGraph>
         graph_ptr(
-            new Sealib::UndirectedGraph(Sealib::GraphCreator::createGraphFromAdjacencyMatrix(
+            new Sealib::UndirectedGraph(Sealib::GraphCreator::createFromAdjacencyMatrix(
                 adj_mtrx,
                 order)));
     Sealib::EulerTrail<Sealib::TrailStructure> et(graph_ptr);

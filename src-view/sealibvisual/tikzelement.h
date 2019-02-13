@@ -14,7 +14,6 @@ class TikzElement {
     virtual std::ostream &out(std::ostream &os) const = 0;
 
  public:
-    virtual ~TikzElement() = default;
     virtual std::string toString() const;
 
     friend std::ostream &operator<<(
