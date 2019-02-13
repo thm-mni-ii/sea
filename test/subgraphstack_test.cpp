@@ -14,15 +14,15 @@ using std::shared_ptr;
 TEST(SubGraphStackTest, pushPop) {
     typedef Sealib::Bitset<uint8_t> bitset_t;
 
-    uint32_t order = 7;
-    auto **adj_mtrx = reinterpret_cast<uint32_t **>(malloc(sizeof(uint32_t) * order * order));
-    adj_mtrx[0] = new uint32_t[order]{0, 1, 0, 1, 0, 1, 1};
-    adj_mtrx[1] = new uint32_t[order]{1, 0, 1, 0, 0, 1, 1};
-    adj_mtrx[2] = new uint32_t[order]{0, 1, 0, 0, 0, 0, 1};
-    adj_mtrx[3] = new uint32_t[order]{1, 0, 0, 0, 1, 1, 0};
-    adj_mtrx[4] = new uint32_t[order]{0, 0, 0, 1, 0, 1, 0};
-    adj_mtrx[5] = new uint32_t[order]{1, 1, 0, 1, 1, 0, 0};
-    adj_mtrx[6] = new uint32_t[order]{1, 1, 1, 0, 0, 0, 0};
+    uint64_t order = 7;
+    auto **adj_mtrx = reinterpret_cast<uint64_t **>(malloc(sizeof(uint64_t) * order * order));
+    adj_mtrx[0] = new uint64_t[order]{0, 1, 0, 1, 0, 1, 1};
+    adj_mtrx[1] = new uint64_t[order]{1, 0, 1, 0, 0, 1, 1};
+    adj_mtrx[2] = new uint64_t[order]{0, 1, 0, 0, 0, 0, 1};
+    adj_mtrx[3] = new uint64_t[order]{1, 0, 0, 0, 1, 1, 0};
+    adj_mtrx[4] = new uint64_t[order]{0, 0, 0, 1, 0, 1, 0};
+    adj_mtrx[5] = new uint64_t[order]{1, 1, 0, 1, 1, 0, 0};
+    adj_mtrx[6] = new uint64_t[order]{1, 1, 1, 0, 0, 0, 0};
 
     shared_ptr<UndirectedGraph> bg =
         GraphCreator::createSharedPointerFromAdjacencyMatrix(adj_mtrx, order);
@@ -57,17 +57,17 @@ TEST(SubGraphStackTest, pushPop) {
 TEST(SubGraphStackTest, orderDegree) {
     typedef Sealib::Bitset<uint8_t> bitset_t;
 
-    uint32_t order = 9;
-    auto **adj_mtrx = reinterpret_cast<uint32_t **>(malloc(sizeof(uint32_t) * order * order));
-    adj_mtrx[0] = new uint32_t[order]{0, 0, 0, 1, 1, 1, 0, 1, 0};
-    adj_mtrx[1] = new uint32_t[order]{0, 0, 0, 1, 0, 0, 0, 1, 1};
-    adj_mtrx[2] = new uint32_t[order]{0, 0, 0, 0, 1, 1, 1, 1, 0};
-    adj_mtrx[3] = new uint32_t[order]{1, 1, 0, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[4] = new uint32_t[order]{1, 0, 1, 0, 0, 1, 0, 0, 0};
-    adj_mtrx[5] = new uint32_t[order]{1, 0, 1, 0, 1, 0, 0, 0, 1};
-    adj_mtrx[6] = new uint32_t[order]{0, 0, 1, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[7] = new uint32_t[order]{1, 1, 1, 0, 0, 0, 0, 0, 0};
-    adj_mtrx[8] = new uint32_t[order]{0, 1, 0, 0, 0, 1, 0, 0, 0};
+    uint64_t order = 9;
+    auto **adj_mtrx = reinterpret_cast<uint64_t **>(malloc(sizeof(uint64_t) * order * order));
+    adj_mtrx[0] = new uint64_t[order]{0, 0, 0, 1, 1, 1, 0, 1, 0};
+    adj_mtrx[1] = new uint64_t[order]{0, 0, 0, 1, 0, 0, 0, 1, 1};
+    adj_mtrx[2] = new uint64_t[order]{0, 0, 0, 0, 1, 1, 1, 1, 0};
+    adj_mtrx[3] = new uint64_t[order]{1, 1, 0, 0, 0, 0, 0, 0, 0};
+    adj_mtrx[4] = new uint64_t[order]{1, 0, 1, 0, 0, 1, 0, 0, 0};
+    adj_mtrx[5] = new uint64_t[order]{1, 0, 1, 0, 1, 0, 0, 0, 1};
+    adj_mtrx[6] = new uint64_t[order]{0, 0, 1, 0, 0, 0, 0, 0, 0};
+    adj_mtrx[7] = new uint64_t[order]{1, 1, 1, 0, 0, 0, 0, 0, 0};
+    adj_mtrx[8] = new uint64_t[order]{0, 1, 0, 0, 0, 1, 0, 0, 0};
 
     shared_ptr<UndirectedGraph> bg =
         GraphCreator::createSharedPointerFromAdjacencyMatrix(adj_mtrx, order);

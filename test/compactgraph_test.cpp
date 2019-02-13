@@ -7,7 +7,7 @@ using Sealib::GraphCreator;
 using Sealib::CompactGraph;
 
 TEST(CompactGraphTest, compactgraph_integrity) {
-    uint *A = new uint[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
+    uint64_t *A = new uint64_t[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
     CompactGraph *g = new CompactGraph(A);
 
     ASSERT_EQ(g->getOrder(), 5);
@@ -27,7 +27,7 @@ TEST(CompactGraphTest, compactgraph_integrity) {
 }
 
 TEST(CompactGraphTest, fastGraphGeneration) {
-    uint *A = GraphCreator::fastGraphGeneration(5, 2);
+    uint64_t *A = GraphCreator::fastGraphGeneration(5, 2);
     CompactGraph *g = new CompactGraph(A);
 
     ASSERT_EQ(g->getOrder(), 5);

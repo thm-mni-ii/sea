@@ -1,23 +1,23 @@
 #include "../trail/largedoublelinkedlist.h"
 #include <iostream>
 
-Sealib::LargeDoubleLinkedList::LargeDoubleLinkedList(uint32_t size) :
+Sealib::LargeDoubleLinkedList::LargeDoubleLinkedList(uint64_t size) :
     links(size * 2, 1),
-    current(size == 0 ? (uint32_t) -1 : 0) {
+    current(size == 0 ? (uint64_t) -1 : 0) {
 }
 
-uint32_t Sealib::LargeDoubleLinkedList::get() {
-    if (current != (uint32_t) -1) {
-        uint32_t retVal = current;
+uint64_t Sealib::LargeDoubleLinkedList::get() {
+    if (current != (uint64_t) -1) {
+        uint64_t retVal = current;
         remove(current);
         return retVal;
     } else {
-        return (uint32_t) -1;
+        return (uint64_t) -1;
     }
 }
 
-uint32_t Sealib::LargeDoubleLinkedList::remove(uint32_t idx) {
-    if (current == (uint32_t) -1) {  // empty list
+uint64_t Sealib::LargeDoubleLinkedList::remove(uint64_t idx) {
+    if (current == (uint64_t) -1) {  // empty list
         return current;
     }
 
@@ -38,7 +38,7 @@ uint32_t Sealib::LargeDoubleLinkedList::remove(uint32_t idx) {
         prevIdx = 0;
     }
     if (prevIdx == actualIdx) {  // last element
-        current = (uint32_t) -1;
+        current = (uint64_t) -1;
         return idx;
     }
     links[static_cast<uint64_t >(prevIdx) + 1] += links[static_cast<uint64_t >(actualIdx) + 1];
@@ -48,10 +48,10 @@ uint32_t Sealib::LargeDoubleLinkedList::remove(uint32_t idx) {
     nextIdx = nextIdx % n;
     links[static_cast<uint64_t >(nextIdx)] += links[static_cast<uint64_t >(actualIdx)];
 
-    current = static_cast<uint32_t>(nextIdx / 2);
+    current = static_cast<uint64_t>(nextIdx / 2);
     return current;
 }
 
 bool Sealib::LargeDoubleLinkedList::isEmpty() {
-    return current == (uint32_t) -1;
+    return current == (uint64_t) -1;
 }

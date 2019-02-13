@@ -20,13 +20,13 @@ class SmallDoubleLinkedList : public DoubleLinkedList {
     /**
      * @return the currently pointed to value and removes it, or (uint8_t)-1 if empty.
      */
-    uint32_t get() override;
+    uint64_t get() override;
 
      /**
      * @param element to be removed
      * @return the removed element, or (uint8_t)-1 if the element was not present.
      */
-    uint32_t remove(uint32_t idx) override;
+    uint64_t remove(uint64_t idx) override;
     /**
      * @return - true if empty, false otherwise
      */

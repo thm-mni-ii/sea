@@ -12,7 +12,7 @@ namespace SealibVisual {
 class VisualTest {
  public:
     static void testBFS() {
-        uint n = 20;
+        uint64_t n = 20;
         Sealib::DirectedGraph g =
             Sealib::GraphImporter::importGML<Sealib::DirectedGraph>(
                 "graph-bfs-v1.gml");
@@ -21,7 +21,7 @@ class VisualTest {
     }
 
     static void testDFS() {
-        uint n = 50;
+        uint64_t n = 50;
         Sealib::DirectedGraph g =
             Sealib::GraphCreator::kOutdegree(n, 1);
         Sealib::CompactArray c(n, 3);

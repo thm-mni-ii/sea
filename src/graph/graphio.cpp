@@ -23,7 +23,7 @@
         index++;           \
     }
 #define GET_CLOSING_BRACKET         \
-    uint brackets = 1;              \
+    uint64_t brackets = 1;              \
     while (brackets > 0) {          \
         if (tok[index] == "[")      \
             brackets++;             \
@@ -38,13 +38,13 @@ void GraphExporter::exportGML(Graph const *g, bool directed,
                               std::string filename) {
     std::ofstream out(filename);
     out << "graph [\ndirected " << directed << "\n";
-    for (uint32_t u = 0; u < g->getOrder(); u++) {
+    for (uint64_t u = 0; u < g->getOrder(); u++) {
         out << "node [\nid " << u << "\n";
         out << "]\n";
     }
-    uint32_t edgeId = g->getOrder();
-    for (uint32_t u = 0; u < g->getOrder(); u++) {
-        for (uint32_t k = 0; k < g->deg(u); k++) {
+    uint64_t edgeId = g->getOrder();
+    for (uint64_t u = 0; u < g->getOrder(); u++) {
+        for (uint64_t k = 0; k < g->deg(u); k++) {
             out << "edge [\nid " << edgeId++ << "\n";
             out << "source " << u << "\n";
             out << "target " << g->head(u, k) << "\n";
@@ -74,15 +74,15 @@ static void tokenize(const std::string &str, std::vector<std::string> *tokens,
 }
 
 template <class G>
-static void addAdj(G *g, uint u, uint v);
+static void addAdj(G *g, uint64_t u, uint64_t v);
 
 template <>
-void addAdj<DirectedGraph>(DirectedGraph *g, uint u, uint v) {
+void addAdj<DirectedGraph>(DirectedGraph *g, uint64_t u, uint64_t v) {
     g->getNode(u).addAdjacency(v);
 }
 template <>
-void addAdj<UndirectedGraph>(UndirectedGraph *g, uint u, uint v) {
-    uint i1 = g->deg(u), i2 = g->deg(v);
+void addAdj<UndirectedGraph>(UndirectedGraph *g, uint64_t u, uint64_t v) {
+    uint64_t i1 = g->deg(u), i2 = g->deg(v);
     g->getNode(u).addAdjacency({v, i2});
     g->getNode(v).addAdjacency({u, i1});
 }
@@ -97,7 +97,7 @@ static G importGMLBase(std::string filename) {
     input << in.rdbuf();
     std::vector<std::string> tok;
     tokenize(input.str(), &tok, " \n", true);
-    uint index = 0;
+    uint64_t index = 0;
     READ("graph");
     READ("[");
     do {
@@ -117,19 +117,19 @@ static G importGMLBase(std::string filename) {
             break;
         }
     }
-    uint m = 0;
+    uint64_t m = 0;
     while (true) {
         READL("edge");
         if (ok) {
             READ("[");
             READ("id");
             index++;
-            uint u, v;
+            uint64_t u, v;
             READ("source");
-            u = uint(std::stoi(tok[index]));
+            u = uint64_t(std::stoi(tok[index]));
             index++;
             READ("target");
-            v = uint(std::stoi(tok[index]));
+            v = uint64_t(std::stoi(tok[index]));
             index++;
             addAdj(&g, u, v);
             GET_CLOSING_BRACKET

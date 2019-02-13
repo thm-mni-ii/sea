@@ -21,7 +21,7 @@ class EulerTrail {
     std::vector<TrailStructureType>  trail;
     Sealib::RankSelect trailStarts;
 
-    uint32_t findStartingNode();
+    uint64_t findStartingNode();
     std::vector<TrailStructureType> initializeTrail();
     Sealib::Bitset<uint8_t> findTrailStarts();
 
@@ -32,16 +32,16 @@ class EulerTrail {
      */
     class iterator {
      public:
-        explicit iterator(const EulerTrail<TrailStructureType> &Container, uint32_t index = 1);
+        explicit iterator(const EulerTrail<TrailStructureType> &Container, uint64_t index = 1);
         std::tuple<uint64_t, bool> operator*() const;
         iterator &operator++();
         iterator &operator++(int);
         bool operator!=(const iterator &) const;
      private:
         const EulerTrail<TrailStructureType> &eulerTrail;
-        uint32_t nIndex;
-        uint32_t mIndex;
-        uint32_t arc;
+        uint64_t nIndex;
+        uint64_t mIndex;
+        uint64_t arc;
         bool ending;
     };
 
@@ -57,7 +57,7 @@ class EulerTrail {
      */
     friend std::ostream &operator<<(std::ostream &os,
                                     const EulerTrail<TrailStructureType> &eulerTrail) {
-        uint32_t tourNum = 1;
+        uint64_t tourNum = 1;
         bool newTour = true;
         for (auto v0 : eulerTrail) {
             bool ending = std::get<1>(v0);

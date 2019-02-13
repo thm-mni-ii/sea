@@ -10,11 +10,11 @@ namespace Sealib {
 template <class T>
 class SimpleSequence : public Sequence<T> {
  public:
-    T get(uint i) const override { return data[i]; }
+    T get(uint64_t i) const override { return data[i]; }
 
-    void insert(uint i, T v) override { data[i] = v; }
+    void insert(uint64_t i, T v) override { data[i] = v; }
 
-    explicit SimpleSequence(uint size) : data(size) {}
+    explicit SimpleSequence(uint64_t size) : data(size) {}
 
  private:
     std::vector<T> data;

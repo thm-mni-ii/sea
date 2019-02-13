@@ -9,9 +9,9 @@ TEST(BCCIteratorTest, windmillGraph) {
     BCCIterator b(&g);
     b.init();
     b.start(1, 16);
-    std::set<uint> nodes;
-    std::set<std::set<uint>> edges;
-    b.forEach([&](std::pair<uint, uint> n) {
+    std::set<uint64_t> nodes;
+    std::set<std::set<uint64_t>> edges;
+    b.forEach([&](std::pair<uint64_t, uint64_t> n) {
         if (n.second == INVALID) {
             nodes.insert(n.first);
         } else {
@@ -43,10 +43,10 @@ TEST(BCCIteratorTest, windmillGraph) {
 }
 
 TEST(BCCIteratorTest, lineGraph) {
-    uint size = 10;
+    uint64_t size = 10;
     UndirectedGraph g(size);
-    for (uint a = 0; a < size - 1; a++) {
-        uint i1 = g.deg(a), i2 = g.deg(a + 1);
+    for (uint64_t a = 0; a < size - 1; a++) {
+        uint64_t i1 = g.deg(a), i2 = g.deg(a + 1);
         g.getNode(a).addAdjacency({a + 1, i2});
         g.getNode(a + 1).addAdjacency({a, i1});
     }
@@ -56,11 +56,11 @@ TEST(BCCIteratorTest, lineGraph) {
     b.start(4, 5);
 
     ASSERT_TRUE(b.more());
-    EXPECT_EQ(b.next(), (std::pair<uint, uint>{5, INVALID}));
+    EXPECT_EQ(b.next(), (std::pair<uint64_t, uint64_t>{5, INVALID}));
     ASSERT_TRUE(b.more());
-    EXPECT_EQ(b.next(), (std::pair<uint, uint>{5, 4}));
+    EXPECT_EQ(b.next(), (std::pair<uint64_t, uint64_t>{5, 4}));
     ASSERT_TRUE(b.more());
-    EXPECT_EQ(b.next(), (std::pair<uint, uint>{4, INVALID}));
+    EXPECT_EQ(b.next(), (std::pair<uint64_t, uint64_t>{4, INVALID}));
     ASSERT_FALSE(b.more());
 }
 

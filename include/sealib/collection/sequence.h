@@ -8,7 +8,7 @@ namespace Sealib {
  * @param T the element type that this sequence holds
  * @author Simon Heuser
  */
-template <class T, class I = uint>
+template <class T, class I = uint64_t>
 class Sequence {
  public:
     /**

@@ -21,15 +21,15 @@ class GraphCreator {
      * @return the generated graph
      * @author Johannes Meintrup
      */
-    static UndirectedGraph createFromAdjacencyMatrix(uint32_t **adjMatrix,
-                                                     uint32_t order);
+    static UndirectedGraph createFromAdjacencyMatrix(uint64_t **adjMatrix,
+                                                     uint64_t order);
 
     static UndirectedGraph *createPointerFromAdjacencyMatrix(
-        uint32_t **adjMatrix, uint32_t order);
+        uint64_t **adjMatrix, uint64_t order);
 
     static std::shared_ptr<UndirectedGraph>
-    createSharedPointerFromAdjacencyMatrix(uint32_t **adjMatrix,
-                                           uint32_t order);
+    createSharedPointerFromAdjacencyMatrix(uint64_t **adjMatrix,
+                                           uint64_t order);
 
     /**
      * Create a random directed graph with a fixed number of outneighbours per
@@ -39,7 +39,7 @@ class GraphCreator {
      * @return the resulting graph G (n = order, m = k*order)
      * @author Simon Heuser
      */
-    static DirectedGraph kOutdegree(uint32_t order, uint32_t k);
+    static DirectedGraph kOutdegree(uint64_t order, uint64_t k);
 
     /**
      * Create a random k-regular graph.
@@ -49,7 +49,7 @@ class GraphCreator {
      * @return the resulting undirected graph G (n = order, m = k*order)
      * @author Simon Heuser
      */
-    static UndirectedGraph kRegular(uint32_t order, uint32_t k);
+    static UndirectedGraph kRegular(uint64_t order, uint64_t k);
 
     /**
      * Create a random sparseDirected graph with a given number of nodes. Each
@@ -59,7 +59,7 @@ class GraphCreator {
      * @return the resulting graph: n = order, m = O(n*log(n))
      * @author Simon Heuser
      */
-    static DirectedGraph sparseDirected(uint32_t order);
+    static DirectedGraph sparseDirected(uint64_t order);
 
     /**
      * Generate a random undirected graph. Each node will be adjacent to O(log
@@ -68,7 +68,7 @@ class GraphCreator {
      * @return the resulting undirected graph: n = order, m = O(n*log(n))
      * @author Simon Heuser
      */
-    static UndirectedGraph sparseUndirected(uint32_t order);
+    static UndirectedGraph sparseUndirected(uint64_t order);
 
     /**
      * Create a random "imbalanced" graph, which contains a handful of very
@@ -77,7 +77,7 @@ class GraphCreator {
      * @return the resulting graph: some nodes have a very large degree (they
      * are "big")
      */
-    static DirectedGraph imbalanced(uint32_t order);
+    static DirectedGraph imbalanced(uint64_t order);
 
     /**
      *  Generate a Gilbert graph G(n,p) in standard representation with n nodes
@@ -89,10 +89,10 @@ class GraphCreator {
      *	@param gen engine to generate a pseudo random sequence of numbers
      *  @author Simon Schniedenharn
      */
-    static CompactGraph generateGilbertGraph(uint32_t n, double p,
+    static CompactGraph generateGilbertGraph(uint64_t n, double p,
                                              std::mt19937_64 *gen);
 
-    static uint *fastGraphGeneration(uint n, uint mPern);
+    static uint64_t *fastGraphGeneration(uint64_t n, uint64_t mPern);
 
     /**
      * Create a random bipartite graph with the vertex sets V1 and V2 and the
@@ -103,10 +103,10 @@ class GraphCreator {
      * @param seed Seed for the random number generator
      * @author Johannes Meintrup
      */
-    static std::unique_ptr<UndirectedGraph> randomBipartite(uint32_t order1,
-                                                            uint32_t order2,
+    static std::unique_ptr<UndirectedGraph> randomBipartite(uint64_t order1,
+                                                            uint64_t order2,
                                                             double p,
-                                                            uint32_t seed);
+                                                            uint64_t seed);
 
     /**
      * Create an undirected windmill graph (m complete graphs of order n joined
@@ -117,7 +117,7 @@ class GraphCreator {
      * n*m*(n-1))
      * @author Simon Heuser
      */
-    static UndirectedGraph windmill(uint32_t order, uint32_t count);
+    static UndirectedGraph windmill(uint64_t order, uint64_t count);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPHCREATOR_H_

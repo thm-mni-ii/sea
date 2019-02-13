@@ -62,19 +62,19 @@ If you encounter any bugs, missing or misleading documentation, do not hesitate 
 
 using namespace Sealib;
 
-bool reachable(DirectedGraph *g, uint a, uint b) {
+bool reachable(DirectedGraph *g, uint64_t a, uint64_t b) {
     bool ret = false;
     std::vector<bool> started(100);
     std::vector<bool> done(100);
     DFS::nloglognBitDFS(g,
-                        [&](uint u) {
+                        [&](uint64_t u) {
                             started[u]=1;
                             if (u == b && started[a] && !done[a]) {
                                 ret = true;
                             }
                         },
                         DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                        [&](uint u) { done[u]=1; });
+                        [&](uint64_t u) { done[u]=1; });
     return ret;
 }
 

@@ -85,9 +85,9 @@ class VisualEdgeMarker : public Sealib::EdgeMarker {
     VisualEdgeMarker(Sealib::UndirectedGraph *g, std::string filename, std::string mode = "standalone", bool silent=false);
     ~VisualEdgeMarker();
 
-    void initEdge(uint u, uint k, uint8_t type) override;
+    void initEdge(uint64_t u, uint64_t k, uint8_t type) override;
 
-    void setMark(uint u, uint k, uint8_t mark) override;
+    void setMark(uint64_t u, uint64_t k, uint8_t mark) override;
 
  private:
     TikzDocument doc;
@@ -97,8 +97,8 @@ class VisualEdgeMarker : public Sealib::EdgeMarker {
 
     void emit();
 
-    std::string getStyle(uint u, uint k);
-    inline void updateEdge(uint u, uint k);
+    std::string getStyle(uint64_t u, uint64_t k);
+    inline void updateEdge(uint64_t u, uint64_t k);
 
     friend class VisualCutVertex;
     friend class VisualBCC;
@@ -108,7 +108,7 @@ class VisualCutVertex : public Sealib::CutVertexIterator {
  public:
     VisualCutVertex(std::shared_ptr<VisualEdgeMarker> e);
 
-    uint next() override;
+    uint64_t next() override;
 
  private:
     std::shared_ptr<VisualEdgeMarker> e;
@@ -120,7 +120,7 @@ class VisualBCC : public Sealib::BCCIterator {
    public:
       VisualBCC(std::shared_ptr<VisualEdgeMarker> e);
 
-      std::pair<uint,uint> next() override;
+      std::pair<uint64_t,uint64_t> next() override;
 
    private:
       std::shared_ptr<VisualEdgeMarker> e;
