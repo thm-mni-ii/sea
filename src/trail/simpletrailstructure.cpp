@@ -5,19 +5,19 @@
 Sealib::SimpleTrailStructure::SimpleTrailStructure(uint64_t _degree) :
     degree(_degree),
     nextUnused(1),
-    lastClosed((uint64_t) -1),
+    lastClosed(INVALID),
     inAndOut(degree),
     matched(degree),
     flags(4),
     unused(degree * 3) {
     nextUnused = 1;
-    lastClosed = (uint64_t) -1;
+    lastClosed = INVALID;
 
     if (degree % 2 == 0) flags[2] = 1;  // set it to true if even
     if (degree == 0) flags[1] = 1;  // node with no edges is possible, set black
 
     for (uint64_t &i : married) {
-        i = (uint64_t) -1;
+        i = INVALID;
     }
     // [1][0][1] [1][1][1] [1][2][1] ... [1][degree-1][1]
     for (uint64_t i = 0; i < degree; i++) {
@@ -29,7 +29,7 @@ Sealib::SimpleTrailStructure::SimpleTrailStructure(uint64_t _degree) :
 
 uint64_t Sealib::SimpleTrailStructure::getNextUnused() {
     if (flags[1]) {  // black node
-        return (uint64_t) -1;
+        return INVALID;
     }
 
     if (!flags[0]) {
@@ -112,7 +112,7 @@ uint64_t Sealib::SimpleTrailStructure::getMatched(uint64_t idx) const {
 
 uint64_t Sealib::SimpleTrailStructure::leave() {
     uint64_t u = getNextUnused();
-    if (u == (uint64_t) -1 || u == 0) {
+    if (u == INVALID || u == 0) {
         return u;
     } else {
         flags[3] = 1;
@@ -124,7 +124,7 @@ uint64_t Sealib::SimpleTrailStructure::enter(uint64_t i) {
     i = i * 3 + 1;  // multiply index so it works with the actual array.
 
     if (flags[1]) {  // black node, should not be called here. something went wrong
-        return (uint64_t) -1;
+        return INVALID;
     }
 
     if (!flags[0]) flags[0] = 1;  // set to grey
@@ -147,7 +147,7 @@ uint64_t Sealib::SimpleTrailStructure::enter(uint64_t i) {
         nextUnused = 0;
         unused.resize(0);
         unused.shrink_to_fit();
-        return (uint64_t) -1;  // returns non-value
+        return INVALID;  // returns non-value
     }
     unused[temp + 1] += nextLink;
 
@@ -225,7 +225,7 @@ bool Sealib::SimpleTrailStructure::isEven() const {
 }
 
 void Sealib::SimpleTrailStructure::marry(uint64_t i, uint64_t o) {
-    if (married[0] == (uint64_t) -1) {  // first call of marry
+    if (married[0] == INVALID) {  // first call of marry
         // unmatch previous matches
         uint64_t iMatch = getMatched(i);
         uint64_t oMatch = getMatched(o);
@@ -255,7 +255,7 @@ uint64_t Sealib::SimpleTrailStructure::getLastClosed() const {
 }
 
 uint64_t Sealib::SimpleTrailStructure::getStartingArc() const {
-    if (!flags[3]) return (uint64_t) -1;
+    if (!flags[3]) return INVALID;
 
     for (uint64_t i = 0; i < inAndOut.size(); i++) {
         uint64_t match = getMatched(i);
@@ -263,7 +263,7 @@ uint64_t Sealib::SimpleTrailStructure::getStartingArc() const {
             return i;
         }
     }
-    return (uint64_t) -1;
+    return INVALID;
 }
 
 bool Sealib::SimpleTrailStructure::hasStartingArc() const {

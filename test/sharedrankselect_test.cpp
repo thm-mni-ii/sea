@@ -2,6 +2,8 @@
 #include <sealib/dictionary/simplerankselect.h>
 #include <sealib/dictionary/sharedrankselect.h>
 
+using Sealib::INVALID;
+
 TEST(SharedRankSelectTest, rankSelect) {
     std::shared_ptr<Sealib::Bitset<uint8_t>> bits_(new Sealib::Bitset<uint8_t>(1));
     (*bits_)[0] = 1;
@@ -9,10 +11,10 @@ TEST(SharedRankSelectTest, rankSelect) {
     Sealib::SharedRankSelect rs(bits_);
     ASSERT_EQ(1, rs.select(1));
     ASSERT_EQ(1, rs.rank(1));
-    ASSERT_EQ((uint64_t) -1, rs.select(0));
-    ASSERT_EQ((uint64_t) -1, rs.rank(0));
-    ASSERT_EQ((uint64_t) -1, rs.select(2));
-    ASSERT_EQ((uint64_t) -1, rs.rank(2));
+    ASSERT_EQ(INVALID, rs.select(0));
+    ASSERT_EQ(INVALID, rs.rank(0));
+    ASSERT_EQ(INVALID, rs.select(2));
+    ASSERT_EQ(INVALID, rs.rank(2));
 
     uint8_t c1 = 0;
     do {

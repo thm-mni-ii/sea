@@ -3,6 +3,7 @@
 
 #include <map>
 #include <list>
+#include "sealib/_types.h"
 
 namespace Sealib {
 class NaiveTrailStructure {

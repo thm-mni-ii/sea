@@ -15,7 +15,7 @@ using std::tuple;
 
 NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
     static const std::tuple<uint64_t, uint64_t> nonArc =
-        std::make_tuple((uint64_t) -1, (uint64_t) -1);
+        std::make_tuple(INVALID, INVALID);
 
     uint64_t order = g->getOrder();
     std::vector<Sealib::NaiveTrailStructure *> ts;
@@ -25,14 +25,14 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
     }
 
     // find first start node
-    uint64_t u = (uint64_t) -1;
+    uint64_t u = INVALID;
     for (uint64_t i = 0; i < order; i++) {
         if (g->getNode(i).getDegree() % 2 != 0) {  // odd
             u = i;
             break;
         }
     }
-    if (u == (uint64_t) -1) {  // no odd found
+    if (u == INVALID) {  // no odd found
         for (uint64_t i = 0; i < order; i++) {
             // first that has edges, it's possible to have a graph with no edges
             if (g->getNode(i).getDegree() != 0) {
@@ -41,12 +41,12 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
             }
         }
     }
-    if (u != (uint64_t) -1) {
+    if (u != INVALID) {
         trails.emplace_back();
     }
 
     // loop the iteration while there is a non-black vertex
-    while (u != (uint64_t) -1) {
+    while (u != INVALID) {
         std::tuple<uint64_t, uint64_t> aOld = nonArc;
         auto tOld = trails.begin();
         if (ts[u]->isEven() && ts[u]->isGrey()) {  // remember aOld
@@ -64,7 +64,7 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
             u = g->getNode(u).getAdj()[k].first;  // next node
             k = ts[u]->enter(uMate);
             tempTrail.addArc(std::make_tuple(from, u));
-        } while (k != (uint64_t) -1);
+        } while (k != INVALID);
 
         if (aOld != nonArc) {
             uint64_t idx = (*tOld).getFirstIndexOf(aOld);
@@ -74,7 +74,7 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
         }
 
         // find next start node
-        u = (uint64_t) -1;
+        u = INVALID;
 
         for (uint64_t i = 0; i < order; i++) {
             if (!ts[i]->isEven() && !ts[i]->isBlack()) {  // odd
@@ -82,7 +82,7 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
                 break;
             }
         }
-        if (u == (uint64_t) -1) {  // no odd found, search for grey
+        if (u == INVALID) {  // no odd found, search for grey
             for (uint64_t i = 0; i < order; i++) {
                 // first that has edges, it's possible to have a graph with no edges
                 if (ts[i]->isGrey()
@@ -92,7 +92,7 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
                 }
             }
         }
-        if (u == (uint64_t) -1) {  // no odd found and no grey found, search for white
+        if (u == INVALID) {  // no odd found and no grey found, search for white
             for (uint64_t i = 0; i < order; i++) {
                 // first that has edges, it's possible to have a graph with no edges
                 if (!ts[i]->isBlack()) {

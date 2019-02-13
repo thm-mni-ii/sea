@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <tuple>
+#include "sealib/_types.h"
 
 namespace Sealib {
 class SimpleTrail {

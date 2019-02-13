@@ -5,13 +5,14 @@
 #include "../src/trail/naivetrailstructure.h"
 
 using Sealib::TrailStructure;
+using Sealib::INVALID;
 
 TEST(TrailStructureTest, enter) {
     TrailStructure ts = TrailStructure(5);
 
     ASSERT_EQ(ts.enter(2), 3);
     ASSERT_EQ(ts.enter(4), 0);
-    ASSERT_EQ(ts.enter(1), (uint64_t) -1);  // last element
+    ASSERT_EQ(ts.enter(1), INVALID);  // last element
 }
 
 TEST(TrailStructureTest, leave) {

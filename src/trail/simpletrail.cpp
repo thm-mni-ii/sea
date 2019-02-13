@@ -28,7 +28,7 @@ std::tuple<uint64_t, uint64_t> Sealib::SimpleTrail::getOutgoingFrom(uint64_t u) 
             return trail[i];
         }
     }
-    return std::make_tuple((uint64_t) -1, (uint64_t) -1);
+    return std::make_tuple(INVALID, INVALID);
 }
 
 uint64_t
@@ -38,7 +38,7 @@ Sealib::SimpleTrail::getFirstIndexOf(std::tuple<uint64_t, uint64_t> arc) const {
             return i;
         }
     }
-    return (uint64_t) -1;
+    return INVALID;
 }
 
 void Sealib::SimpleTrail::pushBackSubTrail(const Sealib::SimpleTrail &subTrail) {

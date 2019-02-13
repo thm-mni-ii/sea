@@ -11,7 +11,7 @@ EulerTrail<TrailStructureType>::iterator::iterator(
     nIndex(nIndex_),
     mIndex(static_cast<uint64_t>(eulerTrail.trailStarts.select(nIndex) - 1)),
     arc(mIndex > eulerTrail.trail.size() ?
-        (uint64_t) -1 : eulerTrail.trail[mIndex].getStartingArc()),
+        INVALID : eulerTrail.trail[mIndex].getStartingArc()),
     ending(false) {
 }
 
@@ -23,12 +23,12 @@ std::tuple<uint64_t, bool> EulerTrail<TrailStructureType>::iterator::operator*()
 template<class TrailStructureType>
 typename EulerTrail<TrailStructureType>::iterator
 &EulerTrail<TrailStructureType>::iterator::operator++() {
-    if (arc != (uint64_t) -1) {
+    if (arc != INVALID) {
         uint64_t uCross = eulerTrail.graph->getNode(mIndex).getAdj()[arc].second;
         mIndex = eulerTrail.graph->getNode(mIndex).getAdj()[arc].first;
         arc = eulerTrail.trail[mIndex].getMatched(uCross);
         if (arc == uCross) {
-            arc = (uint64_t) -1;
+            arc = INVALID;
             ending = true;
         } else {
             ending = false;
@@ -37,7 +37,7 @@ typename EulerTrail<TrailStructureType>::iterator
         ending = false;
         mIndex = static_cast<uint64_t>(eulerTrail.trailStarts.select(++nIndex)) - 1;
         arc = mIndex > eulerTrail.trail.size() ?
-              (uint64_t) -1 : eulerTrail.trail[mIndex].getStartingArc();
+              INVALID : eulerTrail.trail[mIndex].getStartingArc();
     }
     return *this;
 }
@@ -96,7 +96,7 @@ uint64_t EulerTrail<TrailStructureType>::findStartingNode() {
             return i;
         }
     }
-    return (uint64_t) -1;
+    return INVALID;
 }
 
 template<class TrailStructureType>
@@ -112,8 +112,8 @@ EulerTrail<TrailStructureType>::initializeTrail() {
     trail_.shrink_to_fit();
 
     uint64_t u = findStartingNode();
-    while (u != (uint64_t) -1) {  // loop the iteration while there is a non-black vertex
-        auto kOld = (uint64_t) -1;
+    while (u != INVALID) {  // loop the iteration while there is a non-black vertex
+        auto kOld = INVALID;
         if (trail_.at(u).isEven() && trail_.at(u).isGrey()) {  // remember aOld
             kOld = trail_.at(u).getLastClosed();
         }
@@ -125,9 +125,9 @@ EulerTrail<TrailStructureType>::initializeTrail() {
             uMate = graph->getNode(u).getAdj()[k].second;
             u = graph->getNode(u).getAdj()[k].first;  // next node
             k = trail_.at(u).enter(uMate);
-        } while (k != (uint64_t) -1);
+        } while (k != INVALID);
 
-        if (kOld != (uint64_t) -1) {
+        if (kOld != INVALID) {
             uint64_t kLast = uMate;
             uint64_t kOldMatch = trail_.at(u).getMatched(kOld);
             if (kOldMatch != kOld) {  // has match
@@ -151,7 +151,7 @@ EulerTrail<TrailStructureType>::findTrailStarts() {
         bool hasStarting = trail.at(i).hasStartingArc();
         if (hasStarting) {
             uint64_t arc = trail.at(i).getStartingArc();
-            hasStarting = arc != (uint64_t) -1;
+            hasStarting = arc != INVALID;
         }
         bs[i] = hasStarting;
     }

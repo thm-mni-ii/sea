@@ -2,7 +2,7 @@
 
 uint64_t Sealib::NaiveTrailStructure::leave() {
     if (unusedEdges.empty()) {
-        return (uint64_t) -1;
+        return INVALID;
     }
     uint64_t beg = unusedEdges.front();
     unusedEdges.pop_front();
@@ -12,31 +12,31 @@ uint64_t Sealib::NaiveTrailStructure::leave() {
     }
     grey = true;
 
-    pairedEdges[beg] = (uint64_t) -1;
+    pairedEdges[beg] = INVALID;
     currentDegree--;
     return beg;
 }
 
 uint64_t Sealib::NaiveTrailStructure::enter(uint64_t idx) {
     if (unusedEdges.empty()) {
-        return (uint64_t) -1;
+        return INVALID;
     }
     uint64_t size = unusedEdges.size();
     unusedEdges.remove(idx);
     if (size == unusedEdges.size()) {
-        return (uint64_t) -1;  // couldn't remove that idx
+        return INVALID;  // couldn't remove that idx
     }
     currentDegree--;
 
     if (unusedEdges.empty()) {
         black = true;
-        pairedEdges[idx] = (uint64_t) -1;
-        return (uint64_t) -1;
+        pairedEdges[idx] = INVALID;
+        return INVALID;
     }
     grey = true;
 
     uint64_t next = leave();
-    if (next != (uint64_t) -1) {
+    if (next != INVALID) {
         pairedEdges[next] = idx;
         pairedEdges[idx] = next;
     }
@@ -72,6 +72,6 @@ uint64_t Sealib::NaiveTrailStructure::getMatched(uint64_t i) {
     if (pairedEdges.count(i)) {
         return pairedEdges[i];
     } else {
-        return (uint64_t) -1;
+        return INVALID;
     }
 }

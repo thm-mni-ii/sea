@@ -63,7 +63,7 @@ class SubGraph {
 
         if (a == b) {
             return 0;
-        } else if (b == (uint64_t) -1) {
+        } else if (b == INVALID) {
             return a;
         } else {
             return a - b;
@@ -124,18 +124,18 @@ class SubGraph {
                                             + std::to_string(r) + ")");
         }
         uint64_t j = r == 1 ? 0 : rank_p(r - 1);  // pSelect.rank(r - 1);
-        if (j == (uint64_t) -1) {
+        if (j == INVALID) {
             throw std::out_of_range("out of range - no arc r exists! (r = "
                                         + std::to_string(r) + ")");
         }
         j++;
         uint64_t a = select_q(j);  // qSelect.select(j);
-        if (a == (uint64_t) -1) {
+        if (a == INVALID) {
             throw std::out_of_range("out of range - no arc r exists! (r = "
                                         + std::to_string(r) + ")");
         }
         uint64_t b = select_p(j - 1);  // pSelect.select(j - 1);
-        b = b == (uint64_t) -1 ? 0 : b;
+        b = b == INVALID ? 0 : b;
         return std::tuple<uint64_t, uint64_t>(a, r - b);
     }
 

@@ -3,21 +3,21 @@
 
 Sealib::LargeDoubleLinkedList::LargeDoubleLinkedList(uint64_t size) :
     links(size * 2, 1),
-    current(size == 0 ? (uint64_t) -1 : 0) {
+    current(size == 0 ? INVALID : 0) {
 }
 
 uint64_t Sealib::LargeDoubleLinkedList::get() {
-    if (current != (uint64_t) -1) {
+    if (current != INVALID) {
         uint64_t retVal = current;
         remove(current);
         return retVal;
     } else {
-        return (uint64_t) -1;
+        return INVALID;
     }
 }
 
 uint64_t Sealib::LargeDoubleLinkedList::remove(uint64_t idx) {
-    if (current == (uint64_t) -1) {  // empty list
+    if (current == INVALID) {  // empty list
         return current;
     }
 
@@ -38,7 +38,7 @@ uint64_t Sealib::LargeDoubleLinkedList::remove(uint64_t idx) {
         prevIdx = 0;
     }
     if (prevIdx == actualIdx) {  // last element
-        current = (uint64_t) -1;
+        current = INVALID;
         return idx;
     }
     links[static_cast<uint64_t >(prevIdx) + 1] += links[static_cast<uint64_t >(actualIdx) + 1];
@@ -53,5 +53,5 @@ uint64_t Sealib::LargeDoubleLinkedList::remove(uint64_t idx) {
 }
 
 bool Sealib::LargeDoubleLinkedList::isEmpty() {
-    return current == (uint64_t) -1;
+    return current == INVALID;
 }

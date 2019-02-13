@@ -1,6 +1,6 @@
 #ifndef SRC_TRAIL_DOUBLELINKEDLIST_H_
 #define SRC_TRAIL_DOUBLELINKEDLIST_H_
-#include <cstdint>
+#include "sealib/_types.h"
 
 namespace Sealib {
 /**

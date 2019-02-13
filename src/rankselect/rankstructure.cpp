@@ -6,7 +6,7 @@
 
 uint64_t Sealib::RankStructure::rank(uint64_t k) const {
     if (k == 0 || k > maxRank) {
-        return (uint64_t) -1;
+        return INVALID;
     }
     uint64_t segmentIdx = (k - 1) / segmentLength;
     uint8_t segment = bitset.getBlock(segmentIdx);
