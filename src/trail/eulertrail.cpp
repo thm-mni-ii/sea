@@ -67,7 +67,7 @@ typename EulerTrail<TrailStructureType>::iterator EulerTrail<TrailStructureType>
 
 template<class TrailStructureType>
 EulerTrail<TrailStructureType>::EulerTrail(const std::shared_ptr<Sealib::UndirectedGraph> &graph_)
-    : graph(graph_), trail(initializeTrail()), trailStarts(findTrailStarts()) {
+    : graph(graph_), trail(initializeTrail()), trailStarts(std::move(findTrailStarts())) {
 }
 
 template<class TrailStructureType>

@@ -36,6 +36,7 @@ class DyckMatchingStructure {
      * @param word_ - dyck word for the matching structure
      */
     explicit DyckMatchingStructure(const Sealib::Bitset<uint8_t> &word_);
+    explicit DyckMatchingStructure(Sealib::Bitset<uint8_t> &&word_);
 
     /**
      * Default descructor.

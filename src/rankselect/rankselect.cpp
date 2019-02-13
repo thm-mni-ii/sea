@@ -58,3 +58,7 @@ uint64_t Sealib::RankSelect::size() const {
 const Sealib::Bitset<uint8_t> &Sealib::RankSelect::getBitset() const {
     return rankStructure.getBitset();
 }
+Sealib::RankSelect::RankSelect(Sealib::Bitset<uint8_t> &&bitset_) :
+    rankStructure(bitset_),
+    firstInSegment(generateFirstInBlockBitSet(rankStructure)) {
+}
