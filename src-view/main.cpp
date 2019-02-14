@@ -12,12 +12,12 @@
 #include "sealibvisual/tikzstyle.h"
 
 void tikz_example() {
-    unsigned int order = 4;
-    auto **adj_mtrx = (unsigned int **)malloc(sizeof(unsigned int) * 4 * 4);
-    adj_mtrx[0] = new unsigned int[order]{0, 1, 0, 1};
-    adj_mtrx[1] = new unsigned int[order]{1, 0, 1, 0};
-    adj_mtrx[2] = new unsigned int[order]{0, 1, 0, 1};
-    adj_mtrx[3] = new unsigned int[order]{1, 0, 1, 0};
+    uint64_t order = 4;
+    auto **adj_mtrx = (uint64_t **)malloc(sizeof(uint64_t) * 4 * 4);
+    adj_mtrx[0] = new uint64_t[order]{0, 1, 0, 1};
+    adj_mtrx[1] = new uint64_t[order]{1, 0, 1, 0};
+    adj_mtrx[2] = new uint64_t[order]{0, 1, 0, 1};
+    adj_mtrx[3] = new uint64_t[order]{1, 0, 1, 0};
 
     Sealib::UndirectedGraph bg =
         Sealib::GraphCreator::createFromAdjacencyMatrix(adj_mtrx, order);
@@ -43,11 +43,11 @@ void tikz_example() {
     doc.add(fig);
 
     std::vector<std::string> numbers1(10);
-    for (unsigned int i = 0; i < 10; i++) {
+    for (uint64_t i = 0; i < 10; i++) {
         numbers1[i] = std::to_string(i * 45);
     }
 
-    Sealib::Bitset<unsigned char> bits(10);
+    Sealib::Bitset<uint8_t> bits(10);
     bits[4] = 1;
 
     std::shared_ptr<SealibVisual::TikzElement> tikzNode =

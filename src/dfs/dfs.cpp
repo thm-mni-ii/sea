@@ -225,13 +225,13 @@ void DFS::nBitDFS(Graph const *g, Consumer preprocess, BiConsumer preexplore,
                   BiConsumer postexplore, Consumer postprocess) {
     uint64_t n = g->getOrder();
     double e = 0.2;
-    unsigned q = static_cast<unsigned>(ceil(
+    uint64_t q = static_cast<uint64_t>(ceil(
         ceil(e / 6 * n) / (8 * sizeof(std::pair<uint64_t, uint64_t>))));  // 2q entries
                                                                   // on S shall
                                                                   // take up at
                                                                   // most (e/3)n
                                                                   // bits
-    unsigned qs = 3;  // stable segment size (?)
+    uint64_t qs = 3;  // stable segment size (?)
     if (q < qs) q = qs;
 
     // printf("e=%3.2f, q=%u, n=%u\n", e, q, n);

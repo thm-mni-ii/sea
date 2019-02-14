@@ -53,11 +53,11 @@ class VisualTest {
 
     static void testBitset() {
         std::vector<std::string> numbers1(10);
-        for (unsigned int i = 0; i < 10; i++) {
+        for (uint64_t i = 0; i < 10; i++) {
             numbers1[i] = std::to_string(i * 45);
         }
 
-        Sealib::Bitset<unsigned char> bits(10);
+        Sealib::Bitset<uint8_t> bits(10);
         bits[4] = 1;
 
         std::shared_ptr<TikzElement> tikzNode =

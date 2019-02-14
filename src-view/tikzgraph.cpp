@@ -3,8 +3,8 @@ using SealibVisual::TikzGraph;
 using SealibVisual::TikzEdge;
 using std::vector;
 
-TikzGraph::TikzGraph(unsigned int n) : nodes(n) {
-    for (unsigned int i = 0; i < nodes.size(); i++) {
+TikzGraph::TikzGraph(uint64_t n) : nodes(n) {
+    for (uint64_t i = 0; i < nodes.size(); i++) {
         nodes[i].setName(std::to_string(i));
         nodes[i].setContent(std::to_string(i));
         nodes[i].setOptions("draw, circle");

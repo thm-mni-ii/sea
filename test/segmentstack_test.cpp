@@ -9,7 +9,7 @@ using Sealib::CompactArray;
 using Sealib::DirectedGraph;
 
 #define pushn(i, n) \
-    for (unsigned a = (i); a < (n); a++) s->push(std::pair<uint64_t, uint64_t>((a), K))
+    for (uint64_t a = (i); a < (n); a++) s->push(std::pair<uint64_t, uint64_t>((a), K))
 #define popexp(n, exp) \
     for (uint32_t a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 

@@ -23,9 +23,9 @@ class TikzGenerator {
     TikzGenerator() = delete;
 
     static std::shared_ptr<TikzPicture> generateTikzElement(
-        const Sealib::Bitset<unsigned char> &, const std::string &name);
+        const Sealib::Bitset<uint8_t> &, const std::string &name);
     static std::shared_ptr<TikzPicture> generateTikzElement(
-        const Sealib::Bitset<unsigned char> &);
+        const Sealib::Bitset<uint8_t> &);
 
     static std::shared_ptr<TikzGraph> generateTikzElement(
         Sealib::UndirectedGraph const *g);
@@ -40,7 +40,7 @@ class TikzGenerator {
         std::string positionOpts = "");
 
     static std::shared_ptr<TikzPicture> generateTikzElement(
-        std::vector<unsigned int> &, std::string name = "",
+        std::vector<uint64_t> &, std::string name = "",
         bool vertical = false, std::string positionOpts = "");
 };
 }  // namespace SealibVisual
