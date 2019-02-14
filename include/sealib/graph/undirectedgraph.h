@@ -17,13 +17,13 @@ namespace Sealib {
 class UndirectedGraph final : public Graph {
  public:
     /**
-     * Created a new graph object with the nodes provided by the nodes_ vector
-     * @param nodes_ vector of nodes (const ref)
+     * Creates a new graph object from a given node vector.
+     * @param nodes_ vector of nodes
      */
-    explicit UndirectedGraph(std::vector<ExtendedNode> const &nodes_) : nodes(nodes_) {}
+    explicit UndirectedGraph(std::vector<ExtendedNode> _nodes) : nodes(std::move(_nodes)) {}
 
     /**
-     * Created a graph with the specified order and without any edges.
+     * Creates a graph with the specified order and without any edges.
      * @param order - order of the graph
      */
     explicit UndirectedGraph(uint64_t order) : nodes(order) {}

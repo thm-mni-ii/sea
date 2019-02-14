@@ -7,7 +7,9 @@ ScriptHome=$(dirname $(readlink -e "$0"))
 Title="Runtime test"
 Files=""
 Outfile="runtime-plot.jpg"
-Scale="ms"
+XLabel="order"
+YLabel="time (s)"
+Logscale=F
 Ratio=F
 
 printHelp() {
@@ -15,7 +17,9 @@ printHelp() {
 	printf "Options:\n"
 	printf "\t-t <name>		Title for your plot\n"
 	printf "\t-o <file>		Output filename (default: $Outfile)\n"
-	printf "\t-s <unit>		Unit of time measure (default: $Scale)\n"
+	printf "\t-x <text>		Label for the x axis (default: '$XLabel')\n"
+	printf "\t-y <text>		Label for the y axis (default: '$YLabel')\n"
+    printf "\t-l <axes>     Enable logarithmic scale for 'x'/'y'/'xy' axis\n"
 	printf "\t-r			Enable ratio plotting of two data files\n"
 	printf "\n"
 	printf "Example:\nPlot data from standard.csv and efficient.csv in one plot\n"
@@ -26,7 +30,7 @@ if test $# -eq 0; then
 	printHelp
 fi
 
-while getopts "t:o:s:rh" opt; do
+while getopts "t:o:s:l:x:y:rh" opt; do
 	case $opt in
 	t) 
 		Title="$OPTARG" 
@@ -35,9 +39,18 @@ while getopts "t:o:s:rh" opt; do
 	o)
 		Outfile="$OPTARG"
 		;;
-	s)
-		Scale="$OPTARG"
-		;;
+    x)
+        XLabel="$OPTARG"
+        printf "X label: $XLabel\n"
+        ;;
+    y)
+        YLabel="$OPTARG"
+        printf "Y label: $YLabel\n"
+        ;;
+    l)
+        Logscale="$OPTARG"
+        printf "Logscale: $Logscale\n"
+        ;;
 	r)
 		Ratio=T 
 		printf "Ratio: yes\n"
@@ -51,13 +64,24 @@ shift $((OPTIND-1))
 
 printf "Output file: $Outfile\n"
 
+ExtraOptions=""
+if test $Logscale = F; then
+    if test $Logscale = x; then
+        ExtraOptions="$ExtraOptions; logx='yes'"
+    elif test $Logscale = y; then
+        ExtraOptions="$ExtraOptions; logy='yes'"
+    elif test $Logscale = xy; then
+        ExtraOptions="$ExtraOptions; logx='yes'; logy='yes'"
+    fi      
+fi
+
 if test $Ratio = F; then
 	for file in "$@"; do
 		Files="$Files$file "
 	done
 	printf "Plotting files: $Files\n"
-	gnuplot -e "infiles='$Files'; outfile='$Outfile'; title='$Title'; scale='$Scale'" -c "$ScriptHome/plot_helper.gp"
+	gnuplot -e "infiles='$Files'; outfile='$Outfile'; title='$Title'; xlabel='$XLabel'; ylabel='$YLabel'$ExtraOptions" -c "$ScriptHome/plot_helper.gp"
 else
 	printf "Plotting ratio: $1 / $2\n"
-	gnuplot -e "infile1='$1'; infile2='$2'; outfile='$Outfile'; title='$Title'; ratio='yes'" -c "$ScriptHome/plot_helper.gp"
+	gnuplot -e "infile1='$1'; infile2='$2'; outfile='$Outfile'; title='$Title'; xlabel='$XLabel'; ratio='yes'$ExtraOptions" -c "$ScriptHome/plot_helper.gp"
 fi

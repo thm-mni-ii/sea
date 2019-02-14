@@ -15,11 +15,11 @@ namespace Sealib {
 class DirectedGraph : public Graph {
  public:
     /**
-     * Created a new graph object with the nodes provided by the nodes_ vector
-     * @param nodes_ vector of nodes (ref)
+     * Creates a new graph object with the nodes provided by the nodes_ vector
+     * @param nodes_ vector of nodes
      */
-    explicit DirectedGraph(std::vector<SimpleNode> const &_nodes)
-        : nodes(_nodes) {}
+    explicit DirectedGraph(std::vector<SimpleNode> _nodes)
+        : nodes(std::move(_nodes)) {}
 
     /**
      * Created a graph with the specified order and without any edges.

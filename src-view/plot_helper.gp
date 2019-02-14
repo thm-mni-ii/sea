@@ -7,6 +7,8 @@ if (!exists("title")) title="Runtime test"
 set title title
 set grid xtics ytics
 set terminal jpeg size 800,800
+if(exists("logx")) set logscale x
+if(exists("logy")) set logscale y
 if (!exists("outfile")) {
 	outfile="runtime-plot.jpg"
 	print "Generating output to 'runtime-plot.jpg'."
@@ -16,12 +18,11 @@ if (!exists("ratio")) {
 	if (!exists("infiles")) {
 		print "No infiles given."
 	}
-	set xlabel "order"
-	set ylabel "time (".scale.")"
+	set xlabel xlabel
+	set ylabel ylabel
 	set style data lines
 	plot for [basename in infiles] basename.".csv" using 1:3 "%lf,%lf,%lf" skip 1 title basename
 } else {
-	set xlabel "order"
-	set ylabel "factor"
+	set xlabel xlabel
 	plot "< paste ".infile1.".csv ".infile2.".csv" using 1:($3/$6) "%lf,%lf,%lf %lf,%lf,%lf" skip 1
 }
