@@ -24,6 +24,14 @@ class Sequence {
      * @param v element to insert
      */
     virtual void insert(I i, T v) = 0;
+
+ protected:
+    Sequence() = default;
+    Sequence(Sequence const &) = default;
+    Sequence &operator=(Sequence const &) = default;
+    Sequence(Sequence &&) = default;
+    Sequence &operator=(Sequence &&) = default;
+    virtual ~Sequence() = default;
 };
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_SEQUENCE_H_

@@ -1,7 +1,7 @@
 #ifndef SEALIB_GRAPH_GRAPH_H_
 #define SEALIB_GRAPH_GRAPH_H_
-#include <cstdint>
 #include <sealib/_types.h>
+#include <cstdint>
 
 namespace Sealib {
 /**
@@ -30,6 +30,14 @@ class Graph {
     * @return Returns the order of the graph, i.e, the total number of vertices.
     */
     virtual uint getOrder() const = 0;
+
+ protected:
+    Graph() = default;
+    Graph(Graph const &) = default;
+    Graph &operator=(Graph const &) = default;
+    Graph(Graph &&) = default;
+    Graph &operator=(Graph &&) = default;
+    virtual ~Graph() = default;
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPH_H_

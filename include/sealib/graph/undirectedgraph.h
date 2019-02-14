@@ -14,7 +14,7 @@ namespace Sealib {
  * @complexity (O((n + m) log n)) bits Stores a undirected graph with n vertices and m edges using (n + 4m) log n bits.
  * @author Johannes Meintrup
  */
-class UndirectedGraph final : public Graph {
+class UndirectedGraph : public Graph {
  public:
     /**
      * Creates a new graph object from a given node vector.

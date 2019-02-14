@@ -24,7 +24,7 @@ namespace Sealib {
  * @author Johannes Meintrup
  */
 template<typename BlockType, typename AllocatorType>
-class Bitset final : Sequence<bool, uint64_t> {
+class Bitset : Sequence<bool, uint64_t> {
     typedef uint64_t sizeType;
     typedef bool bitType;
 
