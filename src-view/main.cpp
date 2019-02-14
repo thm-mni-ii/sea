@@ -13,7 +13,7 @@
 
 void tikz_example() {
     uint64_t order = 4;
-    auto **adj_mtrx = (uint64_t **)malloc(sizeof(uint64_t) * 4 * 4);
+    auto **adj_mtrx = reinterpret_cast<uint64_t **>(malloc(sizeof(uint64_t) * 4 * 4));
     adj_mtrx[0] = new uint64_t[order]{0, 1, 0, 1};
     adj_mtrx[1] = new uint64_t[order]{1, 0, 1, 0};
     adj_mtrx[2] = new uint64_t[order]{0, 1, 0, 1};
