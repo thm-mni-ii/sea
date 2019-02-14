@@ -66,7 +66,7 @@ void RuntimeTest::runTest(std::function<void(void)> testfunction,
 
     clock_t start = t1.tms_utime + t1.tms_stime,
             end = t2.tms_utime + t2.tms_stime;
-    double runTime = (end - start) / (0. + sysconf(_SC_CLK_TCK));
+    double runTime = static_cast<double>(end - start) / static_cast<double>(sysconf(_SC_CLK_TCK));
     runtimes.push_back(runTime);
 }
 
@@ -74,7 +74,7 @@ void RuntimeTest::addLine(uint32_t order, uint32_t size, uint64_t result) {
     std::cout << "Adding result: " << parameters.size() << " n: " << order
               << " m: " << size << std::endl;
     parameters.push_back({order, size});
-    runtimes.push_back(result);
+    runtimes.push_back(static_cast<double>(result));
 }
 
 void RuntimeTest::printResults() {
