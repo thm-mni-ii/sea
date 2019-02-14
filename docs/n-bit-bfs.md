@@ -16,17 +16,22 @@ This space-efficient variant
 
 ## Example
 ```cpp
-DirectedGraph g=GraphCreator::createRandomFixed(500,2);
-
-BFS bfs(&g, p0, e0);
-bfs.init();		// don't forget initialization of the iterator
-bfs.forEach([&](std::pair<uint, uint>) { 
-    uint u=s.first, dist=s.second;
-    std::cout << "found vertex " << u << " with distance " << dist << "\n";
-});
-
+#include <cstdio>
+#include "sealib/iterator/bfs.h"
+#include "sealib/graph/graphcreator.h"
 
 // example procedures:
-void p0(uint u) { printf("preprocess %u\n", u); }
-void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
+void preproc(uint u) { printf("preprocess %u\n", u); }
+void preexp(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
+
+int main() {
+    DirectedGraph g=GraphCreator::kOutdegree(500,2);
+
+    BFS bfs(&g, preproc, preexp);
+    bfs.init();		// don't forget initialization of the iterator
+    bfs.forEach([&](std::pair<uint, uint> s) { 
+        uint u = s.first, dist = s.second;
+        printf("found vertex %lu with distance %lu\n",u,dist;
+    });
+}
 ```

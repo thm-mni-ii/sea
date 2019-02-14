@@ -14,16 +14,20 @@ This space-efficient variant
 
 ## Example
 ```cpp
-DirectedGraph g=GraphCreator::sparseDirected(50);
-
-DFS::nBitDFS(&g);  // quiet run
-
-DFS::nBitDFS(&g, p0, e0, e1, p1);  // supply procedures to do something with the current node or edge
-
+#include <cstdio>
+#include "sealib/iterator/dfs.h"
+#include "sealib/graph/graphcreator.h"
 
 // example procedures:
-void p0(uint u) { printf("preprocess %u\n", u); }
-void p1(uint u) { printf("postprocess %u\n", u); }
-void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
-void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }
+void preproc(uint u) { printf("preprocess %u\n", u); }
+void postproc(uint u) { printf("postprocess %u\n", u); }
+void preexp(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
+void postexp(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }
+
+int main() {
+    DirectedGraph g=GraphCreator::sparseDirected(50);
+    DFS::nBitDFS(&g);  // quiet run
+
+    DFS::nBitDFS(&g, preproc, preexp, postexp, postproc);  // supply procedures to do something with the current node or edge
+}
 ```
