@@ -59,15 +59,25 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
     const Bitset<uint8_t> pattern;
     const RankSelect rankSelect;
     std::vector<uint64_t> storage;
-    const uint64_t bitsize = sizeof(uint64_t) * 8;
-    static constexpr uint64_t one = 1;
+    static const uint64_t WORD_SIZE = sizeof(uint64_t) * 8;
+    static const uint64_t one = 1;
 
-    CONSTEXPR_IF_CLANG uint64_t getEnd(uint k) const {
-        return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);
+    /**
+     * Gets the bit past the end of sequence A_k.
+     * @param k Number of the sequence (0,...,n-1)
+     * @return Index of first bit of A_{k+1}
+     */
+    uint64_t getEnd(uint k) const {
+        return (k < n - 1) ? rankSelect.select(k + 2) : pattern.size();
     }
 
-    CONSTEXPR_IF_CLANG uint64_t getSize(uint k) const {
-        return getEnd(k + 1) - rankSelect.select(k + 1) - 1;
+    /**
+     * Gets the size of bit sequence A_k.
+     * @param k Number of the sequence (0,...,n-1)
+     * @return Size of sequence A_k
+     */
+    uint64_t getSize(uint k) const {
+        return getEnd(k) - rankSelect.select(k + 1) - 1;
     }
 };
 }  // namespace Sealib

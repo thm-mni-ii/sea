@@ -2,29 +2,26 @@
 #include <cmath>
 #include <numeric>
 #include "sealib/_types.h"
-#define PRELUDE                                                        \
-    uint64_t start = rankSelect.select(i + 1) - i - 1;                 \
-    uint64_t end = start + getSize(i) - 1;                             \
-    uint64_t startBlock = start / bitsize, startBit = start % bitsize, \
-             endBlock = end / bitsize, endBit = end % bitsize;         \
-    uint64_t endGap = bitsize - endBit - 1;
+#define PRELUDE                                                            \
+    uint64_t start = rankSelect.select(i + 1) - i - 1;                     \
+    uint64_t end = start + getSize(i) - 1;                                 \
+    uint64_t startBlock = start / WORD_SIZE, startBit = start % WORD_SIZE, \
+             endBlock = end / WORD_SIZE, endBit = end % WORD_SIZE;         \
+    uint64_t endGap = WORD_SIZE - endBit - 1;
 
 #define IF_SINGLE_BLOCK           \
     if (startBlock == endBlock) { \
         uint64_t mask = (one << (endBit - startBit + 1)) - 1;
 
-#define ELSE_IF_NOT_SINGLE_BLOCK                                \
-    }                                                           \
-    else { /*NOLINT*/                                           \
-        uint64_t startMask = (one << (bitsize - startBit)) - 1, \
+#define ELSE_IF_NOT_SINGLE_BLOCK                                  \
+    }                                                             \
+    else { /*NOLINT*/                                             \
+        uint64_t startMask = (one << (WORD_SIZE - startBit)) - 1, \
                  endMask = (one << (endBit + 1)) - 1;
 
 #define END }
 
-using Sealib::uint;
-using Sealib::Bitset;
-using Sealib::RankSelect;
-using Sealib::StaticSpaceStorage;
+namespace Sealib {
 
 uint64_t StaticSpaceStorage::get(uint i) const {
     PRELUDE
@@ -64,32 +61,19 @@ std::vector<bool> StaticSpaceStorage::makeBitVector(std::vector<uint> *sizes) {
     return r;
 }
 
-static inline uint countWhere(const std::vector<bool> *v, bool x) {
+static inline uint countSetBits(const std::vector<bool> *v) {
     uint r = 0;
     for (bool a : *v) {
-        if (a == x) r++;
+        if (a) r++;
     }
     return r;
 }
 
-static void checkSize(const std::vector<bool> *v, uint64_t maxBitsize) {
-    uint64_t bits = 0;
-    for (bool b : *v) {
-        if (b == 1)
-            bits = 0;
-        else
-            bits++;
-        assert(bits < maxBitsize);
-    }
-}
-
 StaticSpaceStorage::StaticSpaceStorage(const std::vector<bool> &bits)
-    : n(countWhere(&bits, 1)),
+    : n(countSetBits(&bits)),
       pattern(bits),
       rankSelect(pattern),
-      storage(countWhere(&bits, 0)) {
-    checkSize(&bits, bitsize);
-}
+      storage((bits.size() - n) / WORD_SIZE + 1) {}
 
 static std::vector<bool> makeBits(Sealib::Graph const *g) {
     std::vector<bool> bits;
@@ -104,3 +88,5 @@ static std::vector<bool> makeBits(Sealib::Graph const *g) {
 
 StaticSpaceStorage::StaticSpaceStorage(Graph const *g)
     : StaticSpaceStorage(makeBits(g)) {}
+
+}  // namespace Sealib
