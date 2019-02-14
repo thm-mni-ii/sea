@@ -56,8 +56,6 @@ class SubGraphStack {
      */
     void push(const Sealib::Bitset<uint8_t> &v,
               const Sealib::Bitset<uint8_t> &a);
-    void push(Sealib::Bitset<uint8_t> &&v,
-              Sealib::Bitset<uint8_t> &&a);
 
     /**
      * Pushes a new subgraph G_l+1 on G_l.
@@ -69,7 +67,6 @@ class SubGraphStack {
      * @param a Bitsequence of length 2m_l
      */
     void push(const Sealib::Bitset<uint8_t> &a);
-    void push(Bitset<uint8_t> &&a);
 
     /**
      * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).

@@ -29,8 +29,8 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
             p[deg - 1] = 1;
         }
     }
-    qSelect = new RankSelect(std::move(q));
-    pSelect = new RankSelect(std::move(p));
+    qSelect = new RankSelect(q);
+    pSelect = new RankSelect(p);
 }
 
 uint64_t Sealib::BaseSubGraph::head(uint64_t u,

@@ -39,8 +39,6 @@ class RankStructure {
      */
     explicit RankStructure(const Sealib::Bitset<uint8_t> &bitset);
 
-    explicit RankStructure(Sealib::Bitset<uint8_t> &&bitset);
-
     /**
      * default empty constructor
      */

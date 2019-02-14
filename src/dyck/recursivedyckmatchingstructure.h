@@ -24,11 +24,6 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
         const Sealib::Bitset<uint8_t> &word_,
         uint32_t recursions);
 
-    explicit RecursiveDyckMatchingStructure(
-        Sealib::Bitset<uint8_t> &&word_,
-        uint32_t recursions);
-
-
     /**
      * Constructs the matching structure for the given dyck word word_
      * The structure is recursively built for the dyck word d_p consisting of the pioneers of word_
@@ -36,7 +31,6 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
      * @param word_ - valid dyck word. validity is not being tested
      */
     explicit RecursiveDyckMatchingStructure(const Sealib::Bitset<uint8_t> &word_);
-    explicit RecursiveDyckMatchingStructure(Sealib::Bitset<uint8_t> &&word_);
 
     /**
      * finds the match of a parenthesis b in word in constant time
@@ -52,7 +46,7 @@ class RecursiveDyckMatchingStructure : public DyckMatchingStructure {
     RankSelect pioneerRankSelect;
     DyckMatchingStructure *pioneerMatchingStructure;
 
-    Sealib::Bitset<uint8_t> initializePioneerRankSelectBitset();
+    const Sealib::Bitset<uint8_t> initializePioneerRankSelectBitset();
 };
 }  // namespace Sealib
 #endif  // SRC_DYCK_RECURSIVEDYCKMATCHINGSTRUCTURE_H_

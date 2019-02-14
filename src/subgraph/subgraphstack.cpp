@@ -42,17 +42,6 @@ void Sealib::SubGraphStack::push(const Sealib::Bitset<uint8_t> &v,
     clientList.emplace_back(g);
 }
 
-void Sealib::SubGraphStack::push(Sealib::Bitset<uint8_t> &&v,
-                                 Sealib::Bitset<uint8_t> &&a) {
-    assert(currentRef+2 < SubGraphStack::refs.size());
-    if (clientList.size() - 1 == Sealib::SubGraphStack::refs[currentRef + 1]) {
-        currentRef++;
-    }
-    SubGraph *g =
-        new RecursiveSubGraph(this, clientList.size(), currentRef, std::move(v), std::move(a));
-    clientList.emplace_back(g);
-}
-
 void Sealib::SubGraphStack::pop() {
     currentRef = clientList[clientList.size() - 1]->getRidx();
     delete clientList[clientList.size() - 1];
@@ -184,17 +173,6 @@ void Sealib::SubGraphStack::push(const Sealib::Bitset<uint8_t> &a) {
     push(v, a);
 }
 
-void Sealib::SubGraphStack::push(Sealib::Bitset<uint8_t> &&a) {
-    Sealib::Bitset<uint8_t> v(clientList[clientList.size() - 1]->order());
-    for (uint64_t i = 0; i < a.size(); i++) {
-        if (a[i]) {
-            uint64_t vi = std::get<0>(clientList[clientList.size() - 1]->gInv(i + 1));
-            v[vi - 1] = 1;
-        }
-    }
-    push(std::move(v), std::move(a));
-}
-
 uint64_t Sealib::SubGraphStack::gMax(uint64_t i) const {
     return clientList[i]->gMax();
 }
@@ -214,7 +192,7 @@ void Sealib::SubGraphStack::tunephi0(uint64_t i) {
         phi0bs[phi(i, u) - 1] = 1;
     }
     if (tunedPhi0) delete tunedPhi0;
-    tunedPhi0 = new RankSelect(std::move(phi0bs));
+    tunedPhi0 = new RankSelect(phi0bs);
 }
 
 void Sealib::SubGraphStack::tunepsi0(uint64_t i) {
@@ -223,7 +201,7 @@ void Sealib::SubGraphStack::tunepsi0(uint64_t i) {
         psi0bs[psi(i, u) - 1] = 1;
     }
     if (tunedPsi0) delete tunedPsi0;
-    tunedPsi0 = new RankSelect(std::move(psi0bs));
+    tunedPsi0 = new RankSelect(psi0bs);
 }
 
 void Sealib::SubGraphStack::tunephi(uint64_t i) {
@@ -232,7 +210,7 @@ void Sealib::SubGraphStack::tunephi(uint64_t i) {
         phibs[phi(i, i - 1, u) - 1] = 1;
     }
     if (tunedPhi) delete tunedPhi;
-    tunedPhi = new RankSelect(std::move(phibs));
+    tunedPhi = new RankSelect(phibs);
 }
 
 void Sealib::SubGraphStack::tunepsi(uint64_t i) {
@@ -241,5 +219,5 @@ void Sealib::SubGraphStack::tunepsi(uint64_t i) {
         psibs[psi(i, i - 1, u) - 1] = 1;
     }
     if (tunedPsi) delete tunedPsi;
-    tunedPsi = new RankSelect(std::move(psibs));
+    tunedPsi = new RankSelect(psibs);
 }
