@@ -62,7 +62,7 @@ If you encounter any bugs, missing or misleading documentation, do not hesitate 
 
 using namespace Sealib;
 
-bool reachable(DirectedGraph *g, uint a, uint b) {
+bool reachable(DirectedGraph const &g, uint a, uint b) {
     bool ret = false;
     std::vector<bool> started(100);
     std::vector<bool> done(100);
@@ -80,7 +80,7 @@ bool reachable(DirectedGraph *g, uint a, uint b) {
 
 int main(void) {
     DirectedGraph g = GraphCreator::kOutdegree(100, 30);
-    return reachable(&g, 10, 25);
+    return reachable(g, 10, 25);
 }
 ```
 Compile with:

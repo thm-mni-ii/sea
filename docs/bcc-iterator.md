@@ -23,7 +23,7 @@ This space-efficient variant
 ```cpp
 UndirectedGraph g=GraphCreator::windmill(3,4);
 
-BCCIterator b(&g);
+BCCIterator b(g);
 b.init();
 b.start(1,2);
 b.forEach([](std::pair<uint,uint> p) {

@@ -44,7 +44,7 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * G.
      * @param g graph G=(V,E) to create a storage for
      */
-    explicit StaticSpaceStorage(Graph const *g);
+    explicit StaticSpaceStorage(Graph const &g);
 
     /**
      * Convenience method to create a bit pattern from a vector of sizes

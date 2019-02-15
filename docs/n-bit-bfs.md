@@ -18,7 +18,7 @@ This space-efficient variant
 ```cpp
 DirectedGraph g=GraphCreator::createRandomFixed(500,2);
 
-BFS bfs(&g, p0, e0);
+BFS bfs(g, p0, e0);
 bfs.init();		// don't forget initialization of the iterator
 bfs.forEach([&](std::pair<uint, uint>) { 
     uint u=s.first, dist=s.second;

@@ -22,7 +22,7 @@ void tikz_example() {
     Sealib::UndirectedGraph bg =
         Sealib::GraphCreator::createFromAdjacencyMatrix(adj_mtrx, order);
     std::shared_ptr<SealibVisual::TikzGraph> vg =
-        SealibVisual::TikzGenerator::generateTikzElement(&bg);
+        SealibVisual::TikzGenerator::generateTikzElement(bg);
 
     std::shared_ptr<SealibVisual::TikzPicture> pic(
         new SealibVisual::TikzPicture(

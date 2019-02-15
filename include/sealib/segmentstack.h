@@ -101,7 +101,7 @@ class ExtendedSegmentStack : public SegmentStack {
      * @param g Directed graph G=(V,E)
      * @param c Compact array holding color values
      */
-    ExtendedSegmentStack(uint size, Graph const *g, CompactArray *c);
+    ExtendedSegmentStack(uint size, Graph const &g, CompactArray *c);
 
     void push(std::pair<uint, uint> u) override;
 
@@ -177,7 +177,7 @@ class ExtendedSegmentStack : public SegmentStack {
     CompactArray table, edges;
     std::vector<std::pair<uint, uint>> big;
     unsigned bp;
-    Graph const *graph;
+    Graph const &graph;
     unsigned m, n;
     CompactArray *color;
 

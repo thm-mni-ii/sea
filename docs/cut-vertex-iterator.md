@@ -19,7 +19,7 @@ This space-efficient variant
 ```cpp
 UndirectedGraph g=GraphCreator::windmill(3,4);
 
-CutVertexIterator c(&g);
+CutVertexIterator c(g);
 c.init();
 while(c.more()) {
     std::cout << "found: " << c.next() << "\n";

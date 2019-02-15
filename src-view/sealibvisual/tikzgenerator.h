@@ -28,11 +28,11 @@ class TikzGenerator {
         const Sealib::Bitset<unsigned char> &);
 
     static std::shared_ptr<TikzGraph> generateTikzElement(
-        Sealib::UndirectedGraph const *g);
+        Sealib::UndirectedGraph const &g);
     static std::shared_ptr<TikzGraph> generateTikzElement(
-        Sealib::DirectedGraph const *g);
+        Sealib::DirectedGraph const &g);
     static std::shared_ptr<TikzGraph> generateTikzElement(
-        Sealib::Graph const *g);
+        Sealib::Graph const &g);
 
     // Needs tikz libraries: matrix, positioning
     static std::shared_ptr<TikzPicture> generateTikzElement(

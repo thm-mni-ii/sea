@@ -20,7 +20,7 @@ class CutVertexIterator : Iterator<uint> {
      * Create a new cut-vertex iterator for an undirected graph G.
      * @param g the undirected graph G=(V,E)
      */
-    explicit CutVertexIterator(UndirectedGraph const *g);
+    explicit CutVertexIterator(UndirectedGraph const &g);
 
     /**
      * Create a new cut-vertex iterator from a given edge marker (allows
@@ -57,7 +57,7 @@ class CutVertexIterator : Iterator<uint> {
 
  private:
     std::shared_ptr<EdgeMarker> e;
-    UndirectedGraph const *g;
+    UndirectedGraph const &g;
     uint n;
     ChoiceDictionary cc;
     ChoiceDictionary cut;

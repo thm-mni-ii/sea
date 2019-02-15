@@ -7,7 +7,7 @@ namespace Sealib {
 
 TEST(CutVertexIteratorTest, windmillGraph) {
     UndirectedGraph g = GraphCreator::windmill(3, 4);
-    CutVertexIterator c(&g);
+    CutVertexIterator c(g);
     c.init();
 
     // there should be exactly one cut vertex (the windmill's center, which has
@@ -31,7 +31,7 @@ TEST(CutVertexIteratorTest, lineGraph) {
         g.getNode(a + 1).addAdjacency({a, i1});
     }
 
-    CutVertexIterator c(&g);
+    CutVertexIterator c(g);
     c.init();
 
     EXPECT_FALSE(c.isCutVertex(0));
@@ -43,7 +43,7 @@ TEST(CutVertexIteratorTest, lineGraph) {
 
 TEST(CutVertexIteratorTest, stability) {
     UndirectedGraph g = GraphCreator::sparseUndirected(2000);
-    CutVertexIterator c(&g);
+    CutVertexIterator c(g);
     c.init();
     while (c.more()) c.next();
     SUCCEED();

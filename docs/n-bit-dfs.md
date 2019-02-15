@@ -16,9 +16,9 @@ This space-efficient variant
 ```cpp
 DirectedGraph g=GraphCreator::sparseDirected(50);
 
-DFS::nBitDFS(&g);  // quiet run
+DFS::nBitDFS(g);  // quiet run
 
-DFS::nBitDFS(&g, p0, e0, e1, p1);  // supply procedures to do something with the current node or edge
+DFS::nBitDFS(g, p0, e0, e1, p1);  // supply procedures to do something with the current node or edge
 
 
 // example procedures:

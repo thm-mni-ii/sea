@@ -98,7 +98,7 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint32_t),
     if (preexplore == nullptr) preexplore = [](uint, uint) {};
     if (postexplore == nullptr) postexplore = [](uint, uint) {};
     if (postprocess == nullptr) postprocess = [](uint) {};
-    DFS::nloglognBitDFS(static_cast<Graph const *>(graph), preprocess,
+    DFS::nloglognBitDFS(*static_cast<Graph const *>(graph), preprocess,
                         preexplore, postexplore, postprocess);
 }
 }  // namespace Sealib

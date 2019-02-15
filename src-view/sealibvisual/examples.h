@@ -35,7 +35,7 @@ class VisualBFS {
      * @param filename Output file name
      * @param mode Output mode: "standalone" or "beamer"
      */
-    VisualBFS(Sealib::Graph *, Sealib::CompactArray,
+    VisualBFS(Sealib::Graph const &, Sealib::CompactArray,
               std::string filename = "example.tex",
               std::string mode = "standalone");
     /**
@@ -44,7 +44,7 @@ class VisualBFS {
     void run();
 
  private:
-    Sealib::Graph *g;
+    Sealib::Graph const &g;
     std::shared_ptr<TikzGraph> tg;
     Sealib::CompactArray c;
     TikzDocument doc;
@@ -62,7 +62,7 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
      * @param filename Output file name
      * @param mode Output mode: "standalone" or "beamer"
      */
-    VisualDFS(Sealib::Graph *, Sealib::CompactArray *,
+    VisualDFS(Sealib::Graph const &, Sealib::CompactArray *,
               std::string filename = "example.tex",
               std::string mode = "standalone");
     /**
@@ -71,7 +71,7 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
     void run();
 
  private:
-    Sealib::Graph *g;
+    Sealib::Graph const &g;
     std::shared_ptr<TikzGraph> tg;
     Sealib::CompactArray *c;
     TikzDocument doc;
@@ -82,7 +82,7 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
 
 class VisualEdgeMarker : public Sealib::EdgeMarker {
  public:
-    VisualEdgeMarker(Sealib::UndirectedGraph *g, std::string filename, std::string mode = "standalone", bool silent=false);
+    VisualEdgeMarker(Sealib::UndirectedGraph const &g, std::string filename, std::string mode = "standalone", bool silent=false);
     ~VisualEdgeMarker();
 
     void initEdge(uint u, uint k, uint8_t type) override;

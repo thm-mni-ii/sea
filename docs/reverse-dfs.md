@@ -18,7 +18,7 @@ This space-efficient reverse DFS
 ```cpp
 DirectedGraph g = Sealib::GraphCreator::createRandomFixed(1024, 16);
 
-ReverseDFS d(&g);
+ReverseDFS d(g);
 d.init();
 while (d.more()) {
     UserCall c=d.next();

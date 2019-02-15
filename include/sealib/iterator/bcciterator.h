@@ -20,7 +20,7 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
      * Create a new BCC iterator from a given undirected graph.
      * @param g undirected graph G=(V,E)
      */
-    explicit BCCIterator(UndirectedGraph const *g);
+    explicit BCCIterator(UndirectedGraph const &g);
 
     /**
      * Create a new BCC iterator from a given edge marker (allows recycling).
@@ -67,7 +67,7 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
 
  private:
     std::shared_ptr<EdgeMarker> e;
-    UndirectedGraph const *g;
+    UndirectedGraph const &g;
     uint n;
     CompactArray color;
     StaticSpaceStorage parent;

@@ -51,7 +51,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
 
 TEST_P(DFSTest, stdUserproc) {
     DirectedGraph g = GetParam();
-    DFS::standardDFS(&g, incr1, incr2, incr3, incr4);
+    DFS::standardDFS(g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, DEGREE * order);
     EXPECT_EQ(c3, DEGREE * order);
@@ -60,7 +60,7 @@ TEST_P(DFSTest, stdUserproc) {
 
 TEST_P(DFSTest, nBitUserproc) {
     DirectedGraph g = GetParam();
-    DFS::nBitDFS(&g, incr1, incr2, incr3, incr4);
+    DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, DEGREE * order);
     EXPECT_EQ(c3, DEGREE * order);
@@ -69,7 +69,7 @@ TEST_P(DFSTest, nBitUserproc) {
 
 TEST_P(DFSTest, nloglognBitUserproc) {
     DirectedGraph g = GetParam();
-    DFS::nloglognBitDFS(&g, incr1, incr2, incr3, incr4);
+    DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, order);
     EXPECT_EQ(c2, DEGREE * order);
     EXPECT_EQ(c3, DEGREE * order);
@@ -80,7 +80,7 @@ TEST(DFSTest, nplusmBitUserproc) {
     c1 = c2 = c3 = c4 = 0;
     uint n = 4000;
     UndirectedGraph g = GraphCreator::kRegular(n, 20);
-    DFS::nplusmBitDFS(&g, incr1, incr2, incr3, incr4);
+    DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, n);
     EXPECT_EQ(c2, n * 20);
     EXPECT_EQ(c3, n * 20);
@@ -89,7 +89,7 @@ TEST(DFSTest, nplusmBitUserproc) {
 
 TEST(DFSTest, nloglognImbalanced) {
     DirectedGraph g = Sealib::GraphCreator::imbalanced(order);
-    DFS::nloglognBitDFS(&g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
+    DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
                         DFS_NOP_PROCESS);
     SUCCEED();
 }

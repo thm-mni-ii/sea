@@ -33,7 +33,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, BFSTest, ::testing::ValuesIn(makeGraphs()),
 
 TEST_P(BFSTest, userproc) {
     DirectedGraph g = GetParam();
-    BFS bfs(&g, incr1, incr2);
+    BFS bfs(g, incr1, incr2);
     bfs.init();
     bfs.forEach([](std::pair<uint, uint>) {});
     EXPECT_EQ(c1, order);
@@ -43,7 +43,7 @@ TEST_P(BFSTest, userproc) {
 TEST(BFSTest, nextComponent) {
     c1 = c2 = 0;
     DirectedGraph g = GraphCreator::kOutdegree(order, 0);
-    BFS bfs(&g, incr1, incr2);
+    BFS bfs(g, incr1, incr2);
     uint rc = 0;
     bfs.init();
     bfs.forEach([&](std::pair<uint, uint>) { rc++; });

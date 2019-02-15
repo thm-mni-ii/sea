@@ -48,20 +48,20 @@ std::shared_ptr<SealibVisual::TikzPicture> TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<SealibVisual::TikzGraph> TikzGenerator::generateTikzElement(
-    Sealib::UndirectedGraph const *g) {
+    Sealib::UndirectedGraph const &g) {
     std::shared_ptr<SealibVisual::TikzGraph> graph(
-        new SealibVisual::TikzGraph(g->getOrder()));
+        new SealibVisual::TikzGraph(g.getOrder()));
 
     for (auto &a : graph->getNodes()) {
         a.setOptions("draw, circle");
     }
 
-    for (unsigned int i = 0; i < g->getOrder(); i++) {
-        for (unsigned int j = 0; j < g->deg(i); j++) {
+    for (unsigned int i = 0; i < g.getOrder(); i++) {
+        for (unsigned int j = 0; j < g.deg(i); j++) {
             std::tuple<std::string, std::string> key = std::make_tuple(
-                std::to_string(i), std::to_string(g->head(i, j)));
+                std::to_string(i), std::to_string(g.head(i, j)));
             std::tuple<std::string, std::string> keyReverse = std::make_tuple(
-                std::to_string(g->head(i, j)), std::to_string(i));
+                std::to_string(g.head(i, j)), std::to_string(i));
 
             if (!graph->containsEdge(key) && !graph->containsEdge(keyReverse)) {
                 graph->addEdge(key);
@@ -73,17 +73,17 @@ std::shared_ptr<SealibVisual::TikzGraph> TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<TikzGraph> TikzGenerator::generateTikzElement(
-    Sealib::Graph const *g) {
-    std::shared_ptr<TikzGraph> graph(new TikzGraph(g->getOrder()));
+    Sealib::Graph const &g) {
+    std::shared_ptr<TikzGraph> graph(new TikzGraph(g.getOrder()));
 
     for (auto &a : graph->getNodes()) {
         a.setOptions("draw, circle");
     }
 
-    for (unsigned int i = 0; i < g->getOrder(); i++) {
-        for (unsigned int j = 0; j < g->deg(i); j++) {
+    for (unsigned int i = 0; i < g.getOrder(); i++) {
+        for (unsigned int j = 0; j < g.deg(i); j++) {
             std::tuple<std::string, std::string> key = std::make_tuple(
-                std::to_string(i), std::to_string(g->head(i, j)));
+                std::to_string(i), std::to_string(g.head(i, j)));
 
             if (!graph->containsEdge(key)) {
                 graph->addEdge(key, "->");
@@ -94,8 +94,8 @@ std::shared_ptr<TikzGraph> TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<TikzGraph> TikzGenerator::generateTikzElement(
-    Sealib::DirectedGraph const *g) {
-    return generateTikzElement(static_cast<Sealib::Graph const *>(g));
+    Sealib::DirectedGraph const &g) {
+    return generateTikzElement(static_cast<Sealib::Graph const &>(g));
 }
 
 using Sealib::CompactArray;
