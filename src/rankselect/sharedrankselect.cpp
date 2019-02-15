@@ -11,11 +11,11 @@ Sealib::SharedRankSelect::SharedRankSelect(
 
 uint64_t Sealib::SharedRankSelect::select(uint64_t k) const {
     if (k == 0 || rankStructure.getSegmentCount() == 0) {
-        return (uint64_t) -1;
+        return INVALID;
     }
     uint64_t firstInSegmentRank = firstInSegment.rank(k);
-    if (firstInSegmentRank == (uint64_t) -1) {
-        return (uint64_t) -1;
+    if (firstInSegmentRank == INVALID) {
+        return INVALID;
     }
     uint64_t h = rankStructure.getNonEmptySegments()[firstInSegmentRank - 1];
     uint8_t segment = rankStructure.getBitset().getBlock(h);
@@ -29,7 +29,7 @@ Sealib::SharedRankSelect::SharedRankSelect() = default;
 std::shared_ptr<const Sealib::Bitset<uint8_t>>
 Sealib::SharedRankSelect::generateFirstInBlockBitSet(const SharedRankStructure &rs) {
     uint64_t size = rs.rank(rs.size());
-    if (size == (uint64_t) -1) {
+    if (size == INVALID) {
         size = 0;
     }
     std::shared_ptr<Bitset<uint8_t>> firstInBlockBitSet(new Bitset<uint8_t>(size));

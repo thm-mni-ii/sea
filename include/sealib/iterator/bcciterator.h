@@ -14,7 +14,7 @@ namespace Sealib {
  * edge {x,y} in G to set the starting point of the BCC iterator. After that,
  * call more() and next() alternately to retrieve all the vertices of the BCC.
  */
-class BCCIterator : Iterator<std::pair<uint, uint>> {
+class BCCIterator : Iterator<std::pair<uint64_t, uint64_t>> {
  public:
     /**
      * Create a new BCC iterator from a given undirected graph.
@@ -39,7 +39,7 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
      * @param u node in G (ancestor of v)
      * @param v node in G (descendant of u)
      */
-    void start(uint u, uint v);
+    void start(uint64_t u, uint64_t v);
 
     /**
      * Runs a DFS as long as there are more vertices in the BCC.
@@ -54,35 +54,35 @@ class BCCIterator : Iterator<std::pair<uint, uint>> {
      * vertex v.
      * (INVALID is a global constant defined in _types.h.)
      */
-    std::pair<uint, uint> next() override;
+    std::pair<uint64_t, uint64_t> next() override;
 
     /**
      * Execute a given operation for each found pair (u,?).
      * (init() and start() before calling this method!)
      * @param f function to execute for each element
      */
-    void forEach(std::function<void(std::pair<uint, uint>)> f) override {
+    void forEach(std::function<void(std::pair<uint64_t, uint64_t>)> f) override {
         Iterator::forEach(f);
     }
 
  private:
     std::shared_ptr<EdgeMarker> e;
     UndirectedGraph const *g;
-    uint n;
+    uint64_t n;
     CompactArray color;
     StaticSpaceStorage parent;
 
-    std::pair<uint, uint> startEdge;
-    uint node, edge;
+    std::pair<uint64_t, uint64_t> startEdge;
+    uint64_t node, edge;
 
     enum Action { OUTPUT_VERTEX, OUTPUT_BACK_EDGES };
     enum Status { HAVE_NEXT, WAITING, RETREAT };
     Action action;
     Status status;
 
-    uint latestNode;
+    uint64_t latestNode;
     bool gotRetreat = false;
-    uint tmp = 0;
+    uint64_t tmp = 0;
 };
 }  // namespace Sealib
 

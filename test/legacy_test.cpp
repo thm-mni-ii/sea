@@ -52,7 +52,7 @@ TEST(LegacyTest, bitsetAndRankSelect) {
 }
 
 static uint64_t c = 0;
-static void count(uint32_t u) { c += u; }
+static void count(uint64_t u) { c += u; }
 
 TEST(LegacyTest, dfs) {
     void *g = Sealib_Graph_generateRandom(101);

@@ -26,7 +26,7 @@ class UndirectedGraph final : public Graph {
      * Creates a graph with the specified order and without any edges.
      * @param order - order of the graph
      */
-    explicit UndirectedGraph(uint order) : nodes(order) {}
+    explicit UndirectedGraph(uint64_t order) : nodes(order) {}
 
     /**
      * Adds a new node to the graph
@@ -39,15 +39,15 @@ class UndirectedGraph final : public Graph {
      * @param u index in the nodes array.
      * @return Reference to Node in the nodes array.
      */
-    const ExtendedNode &getNode(uint u) const { return nodes[u]; }
-    ExtendedNode &getNode(uint u) { return nodes[u]; }
+    const ExtendedNode &getNode(uint64_t u) const { return nodes[u]; }
+    ExtendedNode &getNode(uint64_t u) { return nodes[u]; }
 
     /**
     * Returns the degree of the node that u points at.
     * @param u Vertex u 
     * @return Returns d that is the degree of node v.
     */
-    uint deg(uint u) const override { return nodes[u].getDegree(); }
+    uint64_t deg(uint64_t u) const override { return nodes[u].getDegree(); }
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
@@ -55,12 +55,12 @@ class UndirectedGraph final : public Graph {
     * @param k index in the adjacency vector of node u
     * @return the k-th neighbor of u
     */
-    uint head(uint u, uint k) const override { return nodes[u].getAdj()[k].first; }
+    uint64_t head(uint64_t u, uint64_t k) const override { return nodes[u].getAdj()[k].first; }
 
     /**
     * @return order of the graph, i.e, the total number of vertices.
     */
-    uint getOrder() const override { return static_cast<uint>(nodes.size()); }
+    uint64_t getOrder() const override { return static_cast<uint64_t>(nodes.size()); }
 
     /**
      * Get the cross index of the given edge.
@@ -68,7 +68,7 @@ class UndirectedGraph final : public Graph {
      * @param k outgoing edge
      * @return index of the edge k' in v that points back to u
      */
-    uint mate(uint u, uint k) const { return nodes[u].getAdj()[k].second; }
+    uint64_t mate(uint64_t u, uint64_t k) const { return nodes[u].getAdj()[k].second; }
 
  private:
     std::vector<ExtendedNode> nodes;

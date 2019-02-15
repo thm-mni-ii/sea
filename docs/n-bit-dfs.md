@@ -22,8 +22,8 @@ DFS::nBitDFS(&g, p0, e0, e1, p1);  // supply procedures to do something with the
 
 
 // example procedures:
-void p0(uint u) { printf("preprocess %u\n", u); }
-void p1(uint u) { printf("postprocess %u\n", u); }
-void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
-void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }
+void p0(uint64_t u) { printf("preprocess %u\n", u); }
+void p1(uint64_t u) { printf("postprocess %u\n", u); }
+void e0(uint64_t u, uint64_t v) { printf("preexplore %u,%u\n", u, v); }
+void e1(uint64_t u, uint64_t v) { printf("postexplore %u,%u\n", u, v); }
 ```

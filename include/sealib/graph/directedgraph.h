@@ -25,7 +25,7 @@ class DirectedGraph : public Graph {
      * Created a graph with the specified order and without any edges.
      * @param order - order of the graph
      */
-    explicit DirectedGraph(uint order) : nodes(order) {}
+    explicit DirectedGraph(uint64_t order) : nodes(order) {}
 
     /**
      * Adds a new node to the graph
@@ -39,15 +39,15 @@ class DirectedGraph : public Graph {
      * @return Reference to the Node in the nodes array (const or non-const
      * version)
      */
-    SimpleNode const &getNode(uint u) const { return nodes[u]; }
-    SimpleNode &getNode(uint u) { return nodes[u]; }
+    SimpleNode const &getNode(uint64_t u) const { return nodes[u]; }
+    SimpleNode &getNode(uint64_t u) { return nodes[u]; }
 
     /**
      * Returns the degree of the node that u points at.
      * @param u Vertex number
      * @return degree of node u
      */
-    uint deg(uint u) const override { return nodes[u].getDegree(); }
+    uint64_t deg(uint64_t u) const override { return nodes[u].getDegree(); }
 
     /**
      * Returns the vertex v that u points at with its k-th edge.
@@ -55,13 +55,13 @@ class DirectedGraph : public Graph {
      * @param k index in the adjacency vector of node u
      * @return the k-th neighbor of u
      */
-    uint head(uint u, uint k) const override { return nodes[u].getAdj()[k]; }
+    uint64_t head(uint64_t u, uint64_t k) const override { return nodes[u].getAdj()[k]; }
 
     /**
      * @return the order of the graph, i.e, the total number of
      * vertices.
      */
-    uint getOrder() const override { return static_cast<uint>(nodes.size()); }
+    uint64_t getOrder() const override { return static_cast<uint64_t>(nodes.size()); }
 
  private:
     std::vector<SimpleNode> nodes;

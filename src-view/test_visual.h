@@ -12,7 +12,7 @@ namespace SealibVisual {
 class VisualTest {
  public:
     static void testBFS() {
-        uint n = 20;
+        uint64_t n = 20;
         Sealib::DirectedGraph g =
             Sealib::GraphImporter::importGML<Sealib::DirectedGraph>(
                 "graph-bfs-v1.gml");
@@ -21,7 +21,7 @@ class VisualTest {
     }
 
     static void testDFS() {
-        uint n = 50;
+        uint64_t n = 50;
         Sealib::DirectedGraph g =
             Sealib::GraphCreator::kOutdegree(n, 1);
         Sealib::CompactArray c(n, 3);
@@ -53,11 +53,11 @@ class VisualTest {
 
     static void testBitset() {
         std::vector<std::string> numbers1(10);
-        for (unsigned int i = 0; i < 10; i++) {
+        for (uint64_t i = 0; i < 10; i++) {
             numbers1[i] = std::to_string(i * 45);
         }
 
-        Sealib::Bitset<unsigned char> bits(10);
+        Sealib::Bitset<uint8_t> bits(10);
         bits[4] = 1;
 
         std::shared_ptr<TikzElement> tikzNode =

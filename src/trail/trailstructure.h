@@ -18,15 +18,15 @@ class DoubleLinkedList;
 namespace Sealib {
 class TrailStructure {
  private:
-    uint32_t lastClosed;
-    uint32_t dyckStart;
+    uint64_t lastClosed;
+    uint64_t dyckStart;
 
     Sealib::Bitset<uint8_t> inAndOut;
     Sealib::Bitset<uint8_t> matched;
     Sealib::Bitset<uint8_t> flags;
 
     std::unique_ptr<DyckMatchingStructure> dyckMatchingStructure;
-    std::unique_ptr<std::vector<uint32_t>> married;
+    std::unique_ptr<std::vector<uint64_t>> married;
     std::unique_ptr<DoubleLinkedList> unused;
 
     /**
@@ -34,7 +34,7 @@ class TrailStructure {
      * Updates links and returns nextUnused.
      * @return nextUnused.
      */
-    inline uint32_t getNextUnused();
+    inline uint64_t getNextUnused();
 
     /**
      * initializes the DyckMatchingStructure used by getMatched
@@ -45,7 +45,7 @@ class TrailStructure {
     /**
      * @return value of degree
      */
-    uint32_t getDegree() const;
+    uint64_t getDegree() const;
 
     /**
      * @return ref to inAndOut bitset
@@ -66,7 +66,7 @@ class TrailStructure {
      * Constructor for the TrailStructure object.
      * @param _degree Degree of the node, equals the number of outgoing arcs.
      */
-    explicit TrailStructure(uint32_t _degree);
+    explicit TrailStructure(uint64_t _degree);
 
     /**
      * check if the TrailStructure is currently grey.
@@ -92,10 +92,10 @@ class TrailStructure {
     /**
      * Leaves the node, gets arbitrary element from unused,
      * moves it to InAndOut and returns it.
-     * If the TrailStructure is black, it returns uint32_t max value.
+     * If the TrailStructure is black, it returns uint64_t max value.
      * @return
      */
-    uint32_t leave();
+    uint64_t leave();
 
     /**
      * Enters the node at the specified edge/arc, and if there is an unused arc left,
@@ -104,7 +104,7 @@ class TrailStructure {
      * @param i arc to enter
      * @return arc that was left, or unsiged int max value if no arc.
      */
-    uint32_t enter(uint32_t i);
+    uint64_t enter(uint64_t i);
 
     /**
      * Matches the elements i and o.
@@ -113,17 +113,17 @@ class TrailStructure {
      * @param i first element to be matched
      * @param o second element to be matched
      */
-    void marry(uint32_t i, uint32_t o);
+    void marry(uint64_t i, uint64_t o);
 
     /**
      * @return value of lastClosed variable.
      */
-    uint32_t getLastClosed() const;
+    uint64_t getLastClosed() const;
 
     /**
-     * @return Starting index of a Trail, or (uint32_t) - 1
+     * @return Starting index of a Trail, or (uint64_t) - 1
      */
-    uint32_t getStartingArc() const;
+    uint64_t getStartingArc() const;
 
     /**
      * @return true if there is a starting arc (unmatched, outgoing edge)
@@ -136,12 +136,12 @@ class TrailStructure {
      * @param i index to check
      * @return true if ending, false otherwise
      */
-    bool isEndingArc(uint32_t i) const;
+    bool isEndingArc(uint64_t i) const;
 
     /**
      * @return value of dyckStart
      */
-    uint32_t getDyckStart() const;
+    uint64_t getDyckStart() const;
 
     /**
      * Gets the match for a given matched arc.
@@ -149,14 +149,14 @@ class TrailStructure {
      * @param idx
      * @return
      */
-    uint32_t getMatched(uint32_t idx) const;
+    uint64_t getMatched(uint64_t idx) const;
 
     /**
      * Used for debugging
      * @param idx
      * @return
      */
-    uint32_t getMatchedNaive(uint32_t idx);
+    uint64_t getMatchedNaive(uint64_t idx);
 };
 }  // namespace Sealib
 #endif  // SRC_TRAIL_TRAILSTRUCTURE_H_

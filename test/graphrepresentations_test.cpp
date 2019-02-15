@@ -6,7 +6,7 @@
 using Sealib::Graphrepresentations;
 
 TEST(CompactGraphRepresentationsTest, beginpointer) {
-    uint *A = new uint[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
+    uint64_t *A = new uint64_t[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
 
     Graphrepresentations::standardToBeginpointer(A);
 
@@ -20,7 +20,7 @@ TEST(CompactGraphRepresentationsTest, beginpointer) {
 }
 
 TEST(CompactGraphRepresentationsTest, swapped) {
-    uint *A = new uint[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
+    uint64_t *A = new uint64_t[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
 
     Graphrepresentations::standardToBeginpointer(A);
     Graphrepresentations::swapRepresentation(A);

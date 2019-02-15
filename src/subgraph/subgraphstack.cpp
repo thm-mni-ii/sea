@@ -14,7 +14,7 @@ std::vector<uint64_t> SubGraphStack::refs = {0, 1, 3, 15, 65535, static_cast<uin
 
 SubGraphStack::SubGraphStack(std::shared_ptr<UndirectedGraph> g_) : clientList(),
                                                                currentRef(0),
-                                                               tuned((uint64_t) -1),
+                                                               tuned(INVALID),
                                                                tunedPhi0(nullptr),
                                                                tunedPsi0(nullptr),
                                                                tunedPhi(nullptr),
