@@ -12,24 +12,28 @@ A rank-select data structure is a data structure initialized for some bitset B={
 
 ## Example
 ```cpp
-Sealib::Bitset<uint8_t> b(10);
-b[1] = 1;
-b[4] = 1;
-b[7] = 1;
-//b = [0,1,0,0,1,0,0,1,0,0]
+#include <sealib/dictionary/rankselect.h>
 
-Sealib::RankSelect<uint8_t> rs(b);
-rs.rank(1); // = 0
-rs.rank(2); // = 1
-rs.rank(3); // = 1
-rs.rank(0); // = (uint64_t) - 1 - illegal argument
-rs.rank(11); // = (uint64_t) - 1
+void main() {
+	Sealib::Bitset<uint8_t> b(10);
+	b[1] = 1;
+	b[4] = 1;
+	b[7] = 1;
+	//b = [0,1,0,0,1,0,0,1,0,0]
 
-rs.select(1); // = 2
-rs.select(2); // = 5
-rs.select(3); // = 8
-rs.select(4); // = (uint64_t)-1 - only 3 bits set to 1 in b
-rs.select(0); // = (uint64_t)-1 - illegal argument;
+	Sealib::RankSelect<uint8_t> rs(b);
+	rs.rank(1); // = 0
+	rs.rank(2); // = 1
+	rs.rank(3); // = 1
+	rs.rank(0); // = (uint64_t) - 1 - illegal argument
+	rs.rank(11); // = (uint64_t) - 1
+
+	rs.select(1); // = 2
+	rs.select(2); // = 5
+	rs.select(3); // = 8
+	rs.select(4); // = (uint64_t)-1 - only 3 bits set to 1 in b
+	rs.select(0); // = (uint64_t)-1 - illegal argument;
+}
 ```
 
 
