@@ -4,18 +4,19 @@
 #include "sealib/_types.h"
 #define PRELUDE                                                            \
     uint64_t start = rankSelect.select(i + 1) - i - 1;                     \
-    uint64_t end = start + getSize(i) - 1;                                 \
+    uint64_t size = getSize(i);                                            \
+    uint64_t end = size == 0 ? 0 : start + size - 1;                       \
     uint64_t startBlock = start / WORD_SIZE, startBit = start % WORD_SIZE, \
              endBlock = end / WORD_SIZE, endBit = end % WORD_SIZE;         \
     uint64_t endGap = WORD_SIZE - endBit - 1;
 
-#define IF_SINGLE_BLOCK           \
-    if (startBlock == endBlock) { \
+#define IF_SINGLE_BLOCK                       \
+    if (startBlock == endBlock && size > 0) { \
         uint64_t mask = (one << (endBit - startBit + 1)) - 1;
 
 #define ELSE_IF_NOT_SINGLE_BLOCK                                  \
     }                                                             \
-    else { /*NOLINT*/                                             \
+    else if (size > 0) { /*NOLINT*/                               \
         uint64_t startMask = (one << (WORD_SIZE - startBit)) - 1, \
                  endMask = (one << (endBit + 1)) - 1;
 
@@ -47,11 +48,12 @@ void StaticSpaceStorage::insert(uint64_t i, uint64_t v) {
     END
 }
 
-std::vector<bool> StaticSpaceStorage::makeBitVector(std::vector<uint64_t> *sizes) {
-    std::vector<bool> r(sizes->size() +
-                        std::accumulate(sizes->begin(), sizes->end(), 0UL));
+std::vector<bool> StaticSpaceStorage::makeBitVector(
+    std::vector<uint64_t> const &sizes) {
+    std::vector<bool> r(sizes.size() +
+                        std::accumulate(sizes.begin(), sizes.end(), 0UL));
     uint64_t index = 0;
-    for (uint64_t a : *sizes) {
+    for (uint64_t a : sizes) {
         r[index] = 1;
         for (uint64_t b = 0; b < a; b++) {
             index++;

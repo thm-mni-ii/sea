@@ -52,7 +52,7 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * @return bit pattern corresponding to the input vector (e.g.
      * 10010001000000100)
      */
-    static std::vector<bool> makeBitVector(std::vector<uint64_t> *sizes);
+    static std::vector<bool> makeBitVector(std::vector<uint64_t> const &sizes);
 
  private:
     const uint64_t n;
