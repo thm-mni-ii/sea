@@ -3,10 +3,7 @@
 #include "sealib/collection/compactarray.h"
 #include "sealib/graph/graphcreator.h"
 
-using Sealib::BasicSegmentStack;
-using Sealib::ExtendedSegmentStack;
-using Sealib::CompactArray;
-using Sealib::DirectedGraph;
+using namespace Sealib;  // NOLINT
 
 #define pushn(i, n)                      \
     for (uint64_t a = (i); a < (n); a++) \
@@ -25,7 +22,7 @@ class BasicSegmentStackTest : public ::testing::Test {
 
 TEST_F(BasicSegmentStackTest, isEmpty) {
     EXPECT_TRUE(s->isEmpty());
-    EXPECT_THROW(s->saveTrailer(), std::logic_error);
+    EXPECT_THROW(s->saveTrailer(), TrailersEmpty);
     pushn(0, 1);
     EXPECT_FALSE(s->isEmpty());
     popexp(1, 0);

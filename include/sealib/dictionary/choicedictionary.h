@@ -39,14 +39,14 @@ class ChoiceDictionary {
 
     /**
      * Returns an arbitrary bit position that is set to 1.
-     * @throws EmptyChoiceDictionary if empty
+     * @throws ChoiceDictionaryEmpty if empty
      */
     uint64_t choice();
 
     /**
      * Sets a bit at specified index to 0.
      * @param index Index of bit that should be set to 0.
-     * @throws EmptyChoiceDictionary if empty
+     * @throws ChoiceDictionaryEmpty if empty
      */
     void remove(uint64_t index);
 
@@ -128,7 +128,7 @@ class ChoiceDictionary {
     bool hasColor(uint64_t primaryIndex);
 };
 
-class EmptyChoiceDictionary : public std::exception {
+class ChoiceDictionaryEmpty : public std::exception {
     const char* what() const noexcept {
         return "Choice dictionary is empty. Operations \'choice()\'"
                " and \'remove()\' are not possible";

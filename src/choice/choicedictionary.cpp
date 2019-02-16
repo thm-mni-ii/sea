@@ -58,7 +58,7 @@ uint64_t ChoiceDictionary::choice() {
     uint64_t secondaryWord;
     uint64_t primaryInnerIndex;
 
-    if (pointer == 0) throw EmptyChoiceDictionary();
+    if (pointer == 0) throw ChoiceDictionaryEmpty();
 
     uint64_t secondaryIndex = validator[pointer - POINTER_OFFSET] - TUPEL_OFFSET;
     secondaryWord = secondary[secondaryIndex];
@@ -80,7 +80,7 @@ void ChoiceDictionary::remove(uint64_t index) {
     uint64_t newPrimaryWord;
     uint64_t targetBit;
 
-    if (pointer == 0) throw EmptyChoiceDictionary();
+    if (pointer == 0) throw ChoiceDictionaryEmpty();
 
     uint64_t primaryIndex = index / wordSize;
     uint64_t primaryInnerIndex = index % wordSize;

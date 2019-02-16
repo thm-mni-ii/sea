@@ -33,10 +33,10 @@ bool BFS::nextComponent() {
 bool BFS::hasGrayNode() {
     try {
         isInner.choice();
-    } catch (std::exception e) {
+    } catch (ChoiceDictionaryEmpty e) {
         try {
             isOuter.choice();
-        } catch (std::exception e2) {
+        } catch (ChoiceDictionaryEmpty e2) {
             return false;
         }
     }
@@ -46,10 +46,10 @@ uint64_t BFS::getGrayNode() {
     uint64_t r = INVALID;
     try {
         r = isInner.choice();
-    } catch (std::exception e) {
+    } catch (ChoiceDictionaryEmpty e) {
         try {
             r = isOuter.choice();
-        } catch (std::exception e2) {
+        } catch (ChoiceDictionaryEmpty e2) {
             throw NoMoreGrayNodes();
         }
     }
