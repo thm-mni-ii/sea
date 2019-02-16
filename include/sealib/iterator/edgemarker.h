@@ -27,7 +27,7 @@ class EdgeMarker {
      * it automatically identifies edge types and marks tree edges.
      * @param g undirected graph
      */
-    explicit EdgeMarker(UndirectedGraph const *g);
+    explicit EdgeMarker(UndirectedGraph const &g);
 
     void init() {
         identifyEdges();
@@ -38,7 +38,7 @@ class EdgeMarker {
      * Get the graph that this edge marker is using.
      * @return pointer to the undirected graph used
      */
-    CONSTEXPR_IF_CLANG UndirectedGraph const *getGraph() const { return g; }
+    CONSTEXPR_IF_CLANG UndirectedGraph const &getGraph() const { return g; }
 
     CONSTEXPR_IF_CLANG bool isInitialized(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) != NONE;
@@ -106,7 +106,7 @@ class EdgeMarker {
                          CROSS = 0x2, NONE = 0x0;
     static const uint8_t PARENT = 0x1;
 
-    UndirectedGraph const *g;
+    UndirectedGraph const &g;
     uint64_t n;
     StaticSpaceStorage parent;
     StaticSpaceStorage edges;

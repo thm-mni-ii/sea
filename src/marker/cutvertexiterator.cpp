@@ -4,13 +4,13 @@
 
 namespace Sealib {
 
-CutVertexIterator::CutVertexIterator(UndirectedGraph const *graph)
+CutVertexIterator::CutVertexIterator(UndirectedGraph const &graph)
     : CutVertexIterator(std::shared_ptr<EdgeMarker>(new EdgeMarker(graph))) {
     e->init();
 }
 
 CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
-    : e(edges), g(e->getGraph()), n(g->getOrder()), cc(n), cut(n), cutI(&cut) {}
+    : e(edges), g(e->getGraph()), n(g.getOrder()), cc(n), cut(n), cutI(cut) {}
 
 void CutVertexIterator::findCCs() {
     CompactArray color(n, 3);
@@ -33,7 +33,7 @@ void CutVertexIterator::init() {
         if (cc.get(u)) {
             // u is root of a DFS tree
             uint64_t num = 0;
-            for (uint64_t k = 0; k < g->deg(u); k++) {
+            for (uint64_t k = 0; k < g.deg(u); k++) {
                 if (e->isTreeEdge(u, k) && e->isParent(u, k)) {
                     num++;
                 }
@@ -43,7 +43,7 @@ void CutVertexIterator::init() {
                 }
             }
         } else {
-            for (uint64_t k = 0; k < g->deg(u); k++) {
+            for (uint64_t k = 0; k < g.deg(u); k++) {
                 if (e->isTreeEdge(u, k) && e->isParent(u, k) &&
                     !e->isFullMarked(u, k)) {
                     cut.insert(u);
@@ -57,7 +57,9 @@ void CutVertexIterator::init() {
 
 bool CutVertexIterator::more() { return cutI.more(); }
 
-uint64_t CutVertexIterator::next() { return static_cast<uint64_t>(cutI.next()); }
+uint64_t CutVertexIterator::next() {
+    return static_cast<uint64_t>(cutI.next());
+}
 
 bool CutVertexIterator::isCutVertex(uint64_t u) { return cut.get(u); }
 

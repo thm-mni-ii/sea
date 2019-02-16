@@ -1,16 +1,8 @@
 #include "sealib/iterator/bfs.h"
-#include <stdexcept>
 #include <utility>
 #include <vector>
 
 namespace Sealib {
-
-class NoMoreGrayNodes : std::exception {
-    const char *what() const noexcept {
-        return "BFS: no more gray nodes found; did you forget to call "
-               "nextComponent()?";
-    }
-};
 
 void BFS::init() {
     u = 0;
@@ -41,10 +33,10 @@ bool BFS::nextComponent() {
 bool BFS::hasGrayNode() {
     try {
         isInner.choice();
-    } catch (std::exception e) {
+    } catch (ChoiceDictionaryEmpty e) {
         try {
             isOuter.choice();
-        } catch (std::exception e2) {
+        } catch (ChoiceDictionaryEmpty e2) {
             return false;
         }
     }
@@ -54,10 +46,10 @@ uint64_t BFS::getGrayNode() {
     uint64_t r = INVALID;
     try {
         r = isInner.choice();
-    } catch (std::exception e) {
+    } catch (ChoiceDictionaryEmpty e) {
         try {
             r = isOuter.choice();
-        } catch (std::exception e2) {
+        } catch (ChoiceDictionaryEmpty e2) {
             throw NoMoreGrayNodes();
         }
     }
@@ -75,8 +67,8 @@ std::pair<uint64_t, uint64_t> BFS::next() {
         std::swap(isInner, isOuter);
         dist++;
     }
-    for (uint64_t k = 0; k < g->deg(u); k++) {
-        uint64_t v = g->head(u, k);
+    for (uint64_t k = 0; k < g.deg(u); k++) {
+        uint64_t v = g.head(u, k);
         preexplore(u, v);
         if (color.get(v) == BFS_WHITE) {
             preprocess(v);
@@ -95,9 +87,9 @@ void BFS::forEach(std::function<void(std::pair<uint64_t, uint64_t>)> f) {
     } while (nextComponent());
 }
 
-BFS::BFS(Graph const *graph, Consumer pp, BiConsumer pe)
+BFS::BFS(Graph const &graph, Consumer pp, BiConsumer pe)
     : g(graph),
-      n(g->getOrder()),
+      n(g.getOrder()),
       color(n, 4),
       isInner(n),
       isOuter(n),
@@ -106,9 +98,9 @@ BFS::BFS(Graph const *graph, Consumer pp, BiConsumer pe)
     for (uint64_t a = 0; a < n; a++) color.insert(a, BFS_WHITE);
 }
 
-BFS::BFS(Graph const *graph, CompactArray c, Consumer pp, BiConsumer pe)
+BFS::BFS(Graph const &graph, CompactArray c, Consumer pp, BiConsumer pe)
     : g(graph),
-      n(g->getOrder()),
+      n(g.getOrder()),
       color(std::move(c)),
       isInner(n),
       isOuter(n),

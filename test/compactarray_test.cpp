@@ -17,8 +17,8 @@ TEST(CompactArrayTest, insertAndGet) {
 }
 
 TEST(CompactArrayTest, alternate) {
-    for (uint64_t b = 2; b < static_cast<uint64_t>(1UL << (sizeof(uint64_t) * 8 - 1));
-         b *= 2) {
+    for (uint64_t b = 2;
+         b < static_cast<uint64_t>(1UL << (sizeof(uint64_t) * 8 - 1)); b *= 2) {
         uint64_t n = 2500;
         CompactArray a(n, b);
         for (uint64_t c = 0; c < n; c++) {

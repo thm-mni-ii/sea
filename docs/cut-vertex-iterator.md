@@ -17,13 +17,19 @@ This space-efficient variant
 
 ## Example
 ```cpp
-UndirectedGraph g=GraphCreator::windmill(3,4);
+#include <cstdio>
+#include "sealib/iterator/cutvertexiterator.h"
+#include "sealib/graph/graphcreator.h"
 
-CutVertexIterator c(&g);
-c.init();
-while(c.more()) {
-    std::cout << "found: " << c.next() << "\n";
+int main() {
+    UndirectedGraph g=GraphCreator::windmill(3,4);
+
+    CutVertexIterator c(g);
+    c.init();
+    while(c.more()) {
+        std::cout << "found: " << c.next() << "\n";
+    }
+
+    printf("center should be cut vertex: %d\n",c.isCutVertex(g.getOrder()-1));
 }
-
-std::cout << "center should be cut vertex: " << c.isCutVertex(g->getOrder()-1) << "\n";
 ```

@@ -44,7 +44,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void standardDFS(Graph const *g,
+    static void standardDFS(Graph const &g,
                             Consumer preprocess = DFS_NOP_PROCESS,
                             BiConsumer preexplore = DFS_NOP_EXPLORE,
                             BiConsumer postexplore = DFS_NOP_EXPLORE,
@@ -60,7 +60,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nBitDFS(Graph const *g, Consumer preprocess = DFS_NOP_PROCESS,
+    static void nBitDFS(Graph const &g, Consumer preprocess = DFS_NOP_PROCESS,
                         BiConsumer preexplore = DFS_NOP_EXPLORE,
                         BiConsumer postexplore = DFS_NOP_EXPLORE,
                         Consumer postprocess = DFS_NOP_PROCESS);
@@ -76,7 +76,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nloglognBitDFS(Graph const *g,
+    static void nloglognBitDFS(Graph const &g,
                                Consumer preprocess = DFS_NOP_PROCESS,
                                BiConsumer preexplore = DFS_NOP_EXPLORE,
                                BiConsumer postexplore = DFS_NOP_EXPLORE,
@@ -94,7 +94,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nplusmBitDFS(UndirectedGraph const *g,
+    static void nplusmBitDFS(UndirectedGraph const &g,
                              Consumer preprocess = DFS_NOP_PROCESS,
                              BiConsumer preexplore = DFS_NOP_EXPLORE,
                              BiConsumer postexplore = DFS_NOP_EXPLORE,
@@ -117,27 +117,27 @@ class DFS {
      * usage.
      */
 
-    static void visit_standard(uint64_t u0, Graph const *g,
+    static void visit_standard(uint64_t u0, Graph const &g,
                                std::vector<uint64_t> *color,
                                std::vector<std::pair<uint64_t, uint64_t>> *s,
                                Consumer preProcess, BiConsumer preExplore,
                                BiConsumer postExplore, Consumer postProcess);
 
-    static void visit_nloglogn(uint64_t u0, Graph const *g, CompactArray *color,
+    static void visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
                                SegmentStack *s,
                                std::function<void(uint64_t u0)> restoration,
                                Consumer preprocess, BiConsumer preexplore,
                                BiConsumer postexplore, Consumer postprocess);
 
-    static void visit_nplusm(uint64_t u0, UndirectedGraph const *g,
+    static void visit_nplusm(uint64_t u0, UndirectedGraph const &g,
                              CompactArray *color, Sequence<uint64_t> *back,
                              Consumer preprocess, BiConsumer preexplore,
                              BiConsumer postexplore, Consumer postprocess);
 
-    static void restore_full(uint64_t u0, Graph const *g, CompactArray *color,
+    static void restore_full(uint64_t u0, Graph const &g, CompactArray *color,
                              BasicSegmentStack *s);
 
-    static void restore_top(uint64_t u0, Graph const *g, CompactArray *color,
+    static void restore_top(uint64_t u0, Graph const &g, CompactArray *color,
                             ExtendedSegmentStack *s);
 };
 }  // namespace Sealib

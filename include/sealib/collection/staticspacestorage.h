@@ -44,7 +44,7 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * G.
      * @param g graph G=(V,E) to create a storage for
      */
-    explicit StaticSpaceStorage(Graph const *g);
+    explicit StaticSpaceStorage(Graph const &g);
 
     /**
      * Convenience method to create a bit pattern from a vector of sizes
@@ -52,22 +52,32 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * @return bit pattern corresponding to the input vector (e.g.
      * 10010001000000100)
      */
-    static std::vector<bool> makeBitVector(std::vector<uint64_t> *sizes);
+    static std::vector<bool> makeBitVector(std::vector<uint64_t> const &sizes);
 
  private:
     const uint64_t n;
     const Bitset<uint8_t> pattern;
     const RankSelect rankSelect;
     std::vector<uint64_t> storage;
-    const uint64_t bitsize = sizeof(uint64_t) * 8;
-    static constexpr uint64_t one = 1;
+    static const uint64_t WORD_SIZE = sizeof(uint64_t) * 8;
+    static const uint64_t one = 1;
 
+    /**
+     * Gets the bit past the end of sequence A_k.
+     * @param k Number of the sequence (0,...,n-1)
+     * @return Index of first bit of A_{k+1}
+     */
     uint64_t getEnd(uint64_t k) const {
-        return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);
+        return (k < n - 1) ? rankSelect.select(k + 2) : pattern.size();
     }
 
+    /**
+     * Gets the size of bit sequence A_k.
+     * @param k Number of the sequence (0,...,n-1)
+     * @return Size of sequence A_k
+     */
     uint64_t getSize(uint64_t k) const {
-        return getEnd(k + 1) - rankSelect.select(k + 1) - 1;
+        return getEnd(k) - rankSelect.select(k + 1) - 1;
     }
 };
 }  // namespace Sealib

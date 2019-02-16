@@ -2,7 +2,6 @@
 #include <math.h>
 #include <sstream>
 #include <stack>
-#include <stdexcept>
 
 using Sealib::SegmentStack;
 using Sealib::BasicSegmentStack;
@@ -64,7 +63,7 @@ void BasicSegmentStack::saveTrailer() {
         savedTrailer = last;
         alignTarget = tp == 1 ? 1 : 2;
     } else {
-        throw std::logic_error("segmentstack: cannot save from empty trailers");
+        throw TrailersEmpty();
     }
 }
 
@@ -85,7 +84,7 @@ bool BasicSegmentStack::isAligned() {
 
 //  -- EXTENDED --
 
-ExtendedSegmentStack::ExtendedSegmentStack(uint64_t size, Graph const *g,
+ExtendedSegmentStack::ExtendedSegmentStack(uint64_t size, Graph const &g,
                                            CompactArray *c)
     : SegmentStack(static_cast<uint64_t>(ceil(size / log2(size)))),
       trailers(size / q + 1),
@@ -95,14 +94,14 @@ ExtendedSegmentStack::ExtendedSegmentStack(uint64_t size, Graph const *g,
       big(q),
       bp(0),
       graph(g),
-      n(graph->getOrder()),
+      n(graph.getOrder()),
       color(c) {
     m = 0;
-    for (uint64_t a = 0; a < n; a++) m += g->deg(a);
+    for (uint64_t a = 0; a < n; a++) m += g.deg(a);
 }
 
 uint64_t ExtendedSegmentStack::approximateEdge(uint64_t u, uint64_t k) {
-    double g = ceil(graph->deg(u) / static_cast<double>(l));
+    double g = ceil(graph.deg(u) / static_cast<double>(l));
     uint64_t f = static_cast<uint64_t>(floor((k - 1) / g));
     return f;
 }
@@ -110,14 +109,14 @@ uint64_t ExtendedSegmentStack::approximateEdge(uint64_t u, uint64_t k) {
 void ExtendedSegmentStack::storeEdges() {
     for (uint64_t c = 0; c < lp; c++) {
         uint64_t u = low[c].first, k = low[c].second;
-        if (graph->deg(u) > m / q) {
+        if (graph.deg(u) > m / q) {
             if (trailers[tp].bi == INVALID) {
                 trailers[tp].bi = bp;
                 trailers[tp].bc = 0;
             }
             big[bp++] = std::pair<uint64_t, uint64_t>(
                 u, k - 1);  // another big vertex is stored
-            if (bp > q) throw std::out_of_range("big storage is full!");
+            if (bp > q) throw BigStackFull();
         } else {  // store an approximation
             uint64_t f = approximateEdge(u, k);
             edges.insert(u, f);
@@ -155,12 +154,12 @@ bool ExtendedSegmentStack::isInTopSegment(uint64_t u, bool restoring) {
 
 uint64_t ExtendedSegmentStack::retrieveEdge(uint64_t u, uint64_t f) {
     uint64_t g =
-        static_cast<uint64_t>(ceil(graph->deg(u) / static_cast<double>(l)));
+        static_cast<uint64_t>(ceil(graph.deg(u) / static_cast<double>(l)));
     return f * g;
 }
 
 uint64_t ExtendedSegmentStack::getOutgoingEdge(uint64_t u) {
-    if (graph->deg(u) > m / q) {
+    if (graph.deg(u) > m / q) {
         if (tp > 0) {  // tp>0 should be given in every restoration, which is
                        // precisely when this method may be called
             Trailer &t = trailers[tp - 1];
@@ -168,8 +167,7 @@ uint64_t ExtendedSegmentStack::getOutgoingEdge(uint64_t u) {
             t.bc += 1;
             return x.second;
         } else {
-            throw std::logic_error(
-                "can't get edge from big vertex because there are no trailers");
+            throw TrailersEmpty();
         }
     } else {
         return retrieveEdge(u, edges.get(u));

@@ -3,13 +3,11 @@
 #include "sealib/collection/compactarray.h"
 #include "sealib/graph/graphcreator.h"
 
-using Sealib::BasicSegmentStack;
-using Sealib::ExtendedSegmentStack;
-using Sealib::CompactArray;
-using Sealib::DirectedGraph;
+using namespace Sealib;  // NOLINT
 
-#define pushn(i, n) \
-    for (uint64_t a = (i); a < (n); a++) s->push(std::pair<uint64_t, uint64_t>((a), K))
+#define pushn(i, n)                      \
+    for (uint64_t a = (i); a < (n); a++) \
+    s->push(std::pair<uint64_t, uint64_t>((a), K))
 #define popexp(n, exp) \
     for (uint32_t a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 
@@ -24,7 +22,7 @@ class BasicSegmentStackTest : public ::testing::Test {
 
 TEST_F(BasicSegmentStackTest, isEmpty) {
     EXPECT_TRUE(s->isEmpty());
-    EXPECT_THROW(s->saveTrailer(), std::logic_error);
+    EXPECT_THROW(s->saveTrailer(), TrailersEmpty);
     pushn(0, 1);
     EXPECT_FALSE(s->isEmpty());
     popexp(1, 0);
@@ -61,7 +59,7 @@ class ExtendedSegmentStackTest : public ::testing::Test {
         g = Sealib::GraphCreator::kOutdegree(n, 10);
         c = new CompactArray(n, 3);
         for (uint64_t a = 0; a < n; a++) c->insert(a, 0);
-        s = new ExtendedSegmentStack(n, &g, c);
+        s = new ExtendedSegmentStack(n, g, c);
         q = static_cast<uint32_t>(ceil(n / log2(n)));
     }
     virtual void TearDown() { delete s; }
@@ -77,7 +75,7 @@ class ExtendedSegmentStackTest2 : public ::testing::Test {
         uint32_t n = 128;
         g = Sealib::GraphCreator::imbalanced(n);
         c = new CompactArray(n, 3);
-        s = new ExtendedSegmentStack(n, &g, c);
+        s = new ExtendedSegmentStack(n, g, c);
         q = static_cast<uint32_t>(ceil(n / log2(n)));
     }
     virtual void TearDown() { delete s; }

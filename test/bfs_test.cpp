@@ -5,9 +5,7 @@
 #include "sealib/graph/graph.h"
 #include "sealib/graph/graphcreator.h"
 
-using Sealib::BFS;
-using Sealib::DirectedGraph;
-using Sealib::GraphCreator;
+using namespace Sealib;  // NOLINT
 
 static uint64_t c1 = 0, c2 = 0;
 static void incr1(uint64_t) { c1++; }
@@ -32,7 +30,9 @@ INSTANTIATE_TEST_CASE_P(ParamTests, BFSTest, ::testing::ValuesIn(makeGraphs()),
 
 TEST_P(BFSTest, userproc) {
     DirectedGraph g = GetParam();
-    BFS bfs(&g, incr1, incr2);
+    BFS bfs(g, incr1, incr2);
+    EXPECT_EQ(bfs.more(), false);
+    EXPECT_THROW(bfs.next(), NoMoreGrayNodes);
     bfs.init();
     bfs.forEach([](std::pair<uint64_t, uint64_t>) {});
     EXPECT_EQ(c1, order);
@@ -42,7 +42,7 @@ TEST_P(BFSTest, userproc) {
 TEST(BFSTest, nextComponent) {
     c1 = c2 = 0;
     DirectedGraph g = GraphCreator::kOutdegree(order, 0);
-    BFS bfs(&g, incr1, incr2);
+    BFS bfs(g, incr1, incr2);
     uint64_t rc = 0;
     bfs.init();
     bfs.forEach([&](std::pair<uint64_t, uint64_t>) { rc++; });

@@ -34,7 +34,8 @@ UndirectedGraph *Sealib::GraphCreator::createPointerFromAdjacencyMatrix(
         for (uint64_t k1 = 0; k1 < deg1; k1++) {
             if (n1[k1].second == INVALID) {
                 uint64_t v = n1[k1].first;
-                std::vector<std::pair<uint64_t, uint64_t>> &n2 = nodes[v].getAdj();
+                std::vector<std::pair<uint64_t, uint64_t>> &n2 =
+                    nodes[v].getAdj();
                 const uint64_t deg2 = nodes[v].getDegree();
 
                 for (uint64_t k2 = 0; k2 < deg2; k2++) {
@@ -94,7 +95,8 @@ static std::random_device rng;
 Sealib::DirectedGraph GraphCreator::imbalanced(uint64_t order) {
     std::vector<SimpleNode> n(order);
     std::uniform_int_distribution<uint64_t> rnd(0, order - 1);
-    std::uniform_int_distribution<uint64_t> dist1(order * order, 2 * order * order);
+    std::uniform_int_distribution<uint64_t> dist1(order * order,
+                                                  2 * order * order);
     std::uniform_int_distribution<uint64_t> dist2(
         0, static_cast<uint64_t>(ceil(log2(order))));
     std::set<uint64_t> big;
@@ -133,7 +135,8 @@ Sealib::DirectedGraph Sealib::GraphCreator::kOutdegree(uint64_t order,
 Sealib::DirectedGraph Sealib::GraphCreator::sparseDirected(uint64_t order) {
     std::vector<SimpleNode> n(order);
     std::uniform_int_distribution<uint64_t> nR(0, order - 1);
-    std::uniform_int_distribution<uint64_t> degR(0, static_cast<uint64_t>(log2(order)));
+    std::uniform_int_distribution<uint64_t> degR(
+        0, static_cast<uint64_t>(log2(order)));
     for (uint64_t a = 0; a < order; a++) {
         uint64_t deg = degR(rng);
         std::vector<uint64_t> ad(deg);
@@ -148,7 +151,8 @@ Sealib::DirectedGraph Sealib::GraphCreator::sparseDirected(uint64_t order) {
 UndirectedGraph GraphCreator::sparseUndirected(uint64_t order) {
     UndirectedGraph g(order);
     std::uniform_int_distribution<uint64_t> nR(0, order - 1);
-    std::uniform_int_distribution<uint64_t> degR(0, static_cast<uint64_t>(log2(order)));
+    std::uniform_int_distribution<uint64_t> degR(
+        0, static_cast<uint64_t>(log2(order)));
     for (uint64_t a = 0; a < order; a++) {
         for (uint64_t c = 0; c < degR(rng); c++) {
             uint64_t b = nR(rng);
@@ -219,7 +223,7 @@ UndirectedGraph GraphCreator::windmill(uint64_t order, uint64_t count) {
 }
 
 static uint64_t *generateRawGilbertGraph(uint64_t order, double p,
-                                     std::mt19937_64 *gen) {
+                                         std::mt19937_64 *gen) {
     uint64_t size = 0;
     uint64_t *edgeArray = new uint64_t[order];
     std::binomial_distribution<uint64_t> dist(order - 1, p);

@@ -47,7 +47,7 @@ uint64_t Sealib_ChoiceDictionary_choice(void *self) {
 
 void *Sealib_ChoiceDictionaryIterator_new(void *choiceDictionary) {
     return new ChoiceDictionaryIterator(
-        static_cast<ChoiceDictionary *>(choiceDictionary));
+        *static_cast<ChoiceDictionary *>(choiceDictionary));
 }
 void Sealib_ChoiceDictionaryIterator_delete(void *self) {
     delete static_cast<ChoiceDictionaryIterator *>(self);
@@ -98,7 +98,7 @@ void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint64_t),
     if (preexplore == nullptr) preexplore = [](uint64_t, uint64_t) {};
     if (postexplore == nullptr) postexplore = [](uint64_t, uint64_t) {};
     if (postprocess == nullptr) postprocess = [](uint64_t) {};
-    DFS::nloglognBitDFS(static_cast<Graph const *>(graph), preprocess,
+    DFS::nloglognBitDFS(*static_cast<Graph const *>(graph), preprocess,
                         preexplore, postexplore, postprocess);
 }
 }  // namespace Sealib

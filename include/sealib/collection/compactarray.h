@@ -13,7 +13,6 @@ namespace Sealib {
  * Groups of bits, packed into an array of uints.
  * To get a bitset, create with v=2. To get a color vector, create with v=3 or
  * v=4.
- * For optimal space usage, see constructor comments.
  * @author Simon Heuser
  */
 class CompactArray : public Sequence<uint64_t> {
@@ -22,9 +21,10 @@ class CompactArray : public Sequence<uint64_t> {
      * Create a new compact array.
      * @param size number of values the compact array should hold
      * @param v number of states for one value (e.g. v=2 for a binary array, v=4
-     * for states 0,1,2,3). Recommended: ld(v) should divide bitsize(uint64_t) (e.g.
-     * groups of 4 bits fit into a 32 bit integer perfectly)
-     * @throws std::domain_error when ld(v) exceeds bitsize(uint64_t)
+     * for states 0,1,2,3).
+     * For maximum performance, let v be a power of 2 (to avoid access over word
+     * boundaries)
+     * @throws VTooWide if log2(v) exceeds 64
      */
     explicit CompactArray(uint64_t count, uint64_t v = 3);
 
@@ -46,5 +46,12 @@ class CompactArray : public Sequence<uint64_t> {
     uint64_t valueWidth, singleMask;
     std::vector<uint64_t> data;
 };
+
+class VTooWide : std::exception {
+    const char *what() const noexcept {
+        return "CompactArray: v is wider than 64 bits";
+    }
+};
+
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_COMPACTARRAY_H_

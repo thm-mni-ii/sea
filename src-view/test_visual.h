@@ -16,7 +16,7 @@ class VisualTest {
         Sealib::DirectedGraph g =
             Sealib::GraphImporter::importGML<Sealib::DirectedGraph>(
                 "graph-bfs-v1.gml");
-        VisualBFS b(&g, Sealib::CompactArray(n, 4), "demo-bfs.tex", "beamer");
+        VisualBFS b(g, Sealib::CompactArray(n, 4), "demo-bfs.tex", "beamer");
         b.run();
     }
 
@@ -25,14 +25,14 @@ class VisualTest {
         Sealib::DirectedGraph g =
             Sealib::GraphCreator::kOutdegree(n, 1);
         Sealib::CompactArray c(n, 3);
-        VisualDFS d(&g, &c, "out-dfs.tex", "beamer");
+        VisualDFS d(g, &c, "out-dfs.tex", "beamer");
         d.run();
     }
 
     static void testCutVertex() {
         Sealib::UndirectedGraph g = Sealib::GraphCreator::windmill(3, 4);
         std::shared_ptr<VisualEdgeMarker> e(
-            new VisualEdgeMarker(&g, "out-cutvertex.tex", "beamer"));
+            new VisualEdgeMarker(g, "out-cutvertex.tex", "beamer"));
         e->init();
         VisualCutVertex c(e);
         c.init();
@@ -43,7 +43,7 @@ class VisualTest {
         Sealib::UndirectedGraph g =
             Sealib::GraphCreator::kRegular(20, 2);
         std::shared_ptr<VisualEdgeMarker> e(
-            new VisualEdgeMarker(&g, "out-bcc.tex", "beamer", true));
+            new VisualEdgeMarker(g, "out-bcc.tex", "beamer", true));
         e->init();
         VisualBCC b(e);
         b.init();

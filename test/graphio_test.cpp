@@ -6,7 +6,7 @@ namespace Sealib {
 
 TEST(GraphIOTest, exportGML) {
     UndirectedGraph g = GraphCreator::sparseUndirected(1e5);
-    GraphExporter::exportGML(&g, false, "graphio1.gml");
+    GraphExporter::exportGML(g, false, "graphio1.gml");
 }
 
 TEST(GraphIOTest, importGML) {

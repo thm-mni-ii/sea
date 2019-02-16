@@ -55,13 +55,17 @@ class DirectedGraph : public Graph {
      * @param k index in the adjacency vector of node u
      * @return the k-th neighbor of u
      */
-    uint64_t head(uint64_t u, uint64_t k) const override { return nodes[u].getAdj()[k]; }
+    uint64_t head(uint64_t u, uint64_t k) const override {
+        return nodes[u].getAdj()[k];
+    }
 
     /**
      * @return the order of the graph, i.e, the total number of
      * vertices.
      */
-    uint64_t getOrder() const override { return static_cast<uint64_t>(nodes.size()); }
+    uint64_t getOrder() const override {
+        return static_cast<uint64_t>(nodes.size());
+    }
 
  private:
     std::vector<SimpleNode> nodes;

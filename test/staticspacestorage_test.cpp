@@ -10,7 +10,7 @@ using Sealib::SimpleSequence;
 TEST(StaticSpaceStorageTest, boundary) {
     std::vector<uint64_t> b = {59, 22, 55, 23, 3};
     std::vector<uint64_t> values = {576646035, 3360686, 193508993, 3833501, 3};
-    StaticSpaceStorage s(StaticSpaceStorage::makeBitVector(&b));
+    StaticSpaceStorage s(StaticSpaceStorage::makeBitVector(b));
 
     for (uint64_t a = 0; a < values.size(); a++) {
         s.insert(a, values[a]);
@@ -28,13 +28,13 @@ TEST(StaticSpaceStorageTest, referenceTest) {
     for (uint64_t a = 0; a < n; a++) {
         sizes.emplace_back(dist(rnd));
     }
-    StaticSpaceStorage s(StaticSpaceStorage::makeBitVector(&sizes));
+    StaticSpaceStorage s(StaticSpaceStorage::makeBitVector(sizes));
     SimpleSequence<uint64_t> c(n);
     // insert random values < size[a]
     for (uint64_t a = 0; a < n; a++) {
-        if (sizes[a] > 0) {
-            uint64_t b =
-                static_cast<uint64_t>(fmod(rnd(), pow(2, sizes[a]) - 1));
+        if (sizes[a] > 1) {
+            std::uniform_int_distribution<uint64_t> valR(1, sizes[a] - 1);
+            uint64_t b = valR(rnd);
             s.insert(a, b);
             c.insert(a, b);
         }

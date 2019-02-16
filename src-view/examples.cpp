@@ -17,7 +17,7 @@ char const *Examples::style_white = "circle,draw=black,fill=white",
 
 //  --- VISUAL BREADTH-FIRST SEARCH ---
 
-VisualBFS::VisualBFS(Graph *graph, CompactArray color, std::string filename,
+VisualBFS::VisualBFS(Graph const &graph, CompactArray color, std::string filename,
                      std::string mode)
     : g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
@@ -80,9 +80,9 @@ void VisualBFS::run() {
 
 // --- VISUAL DEPTH-FIRST SEARCH ---
 
-VisualDFS::VisualDFS(Graph *graph, CompactArray *color, std::string filename,
+VisualDFS::VisualDFS(Graph const &graph, CompactArray *color, std::string filename,
                      std::string mode)
-    : ExtendedSegmentStack(graph->getOrder(), graph, color),
+    : ExtendedSegmentStack(graph.getOrder(), graph, color),
       g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
       c(color),
@@ -111,10 +111,10 @@ void VisualDFS::emit() {
 }
 
 void VisualDFS::run() {
-    for (uint64_t u = 0; u < g->getOrder(); u++) {
+    for (uint64_t u = 0; u < g.getOrder(); u++) {
         if (c->get(u) == DFS_WHITE) {
             DFS::visit_nloglogn(
-                u, reinterpret_cast<Graph *>(g), c, this,
+                u, g, c, this,
                 [&](uint64_t u0) { restore_top(u0, g, c, this); },
                 [this](uint64_t ui) {
                     tg->getNodes().at(ui).setOptions(Examples::style_gray);
@@ -132,7 +132,7 @@ void VisualDFS::run() {
 
 // --- VISUAL EDGE MARKER ---
 
-VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph *graph, std::string filename,
+VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph const &graph, std::string filename,
                                    std::string mode, bool flagSilent)
     : EdgeMarker(graph),
       doc(filename, "matrix,graphdrawing,positioning,quotes", "layered,force",
@@ -156,7 +156,7 @@ void VisualEdgeMarker::emit() {
 
 std::string VisualEdgeMarker::getStyle(uint64_t u, uint64_t k) {
     std::stringstream options;
-    uint64_t v = g->head(u, k);
+    uint64_t v = g.head(u, k);
     if (isParent(u, k)) {
         options << (u < v ? "->" : "<-");
     } else if (!isParent(u, k)) {
@@ -186,7 +186,7 @@ std::string VisualEdgeMarker::getStyle(uint64_t u, uint64_t k) {
 
 void VisualEdgeMarker::updateEdge(uint64_t u, uint64_t k) {
     using key_t = std::tuple<std::string, std::string>;
-    std::string a = std::to_string(u), b = std::to_string(g->head(u, k));
+    std::string a = std::to_string(u), b = std::to_string(g.head(u, k));
     auto edge = tg->getEdges().find(key_t{a, b});
     if (edge != tg->getEdges().end()) {
         edge->second.setOptions(getStyle(u, k));

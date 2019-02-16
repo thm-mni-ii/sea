@@ -1,6 +1,7 @@
 #ifndef SEALIB_SEGMENTSTACK_H_
 #define SEALIB_SEGMENTSTACK_H_
 
+#include <stdexcept>
 #include <utility>
 #include <vector>
 #include "sealib/_types.h"
@@ -101,7 +102,7 @@ class ExtendedSegmentStack : public SegmentStack {
      * @param g Directed graph G=(V,E)
      * @param c Compact array holding color values
      */
-    ExtendedSegmentStack(uint64_t size, Graph const *g, CompactArray *c);
+    ExtendedSegmentStack(uint64_t size, Graph const &g, CompactArray *c);
 
     void push(std::pair<uint64_t, uint64_t> u) override;
 
@@ -122,6 +123,7 @@ class ExtendedSegmentStack : public SegmentStack {
      * Get the outgoing edge for a given node. Retrieve the approximation from
      * the table if u is small, get the edge from the trailer stack if u is big.
      * @param u Node to get the edge for
+     * @throws TrailersEmpty if there are no trailers (should never happen)
      */
     uint64_t getOutgoingEdge(uint64_t u);
     /**
@@ -177,16 +179,32 @@ class ExtendedSegmentStack : public SegmentStack {
     CompactArray table, edges;
     std::vector<std::pair<uint64_t, uint64_t>> big;
     uint64_t bp;
-    Graph const *graph;
+    Graph const &graph;
     uint64_t m, n;
     CompactArray *color;
 
     static constexpr uint64_t INVALID = static_cast<uint64_t>(-1);
+    /**
+     * Store edge indices for the low segment at the appropriate places.
+     * @throws BigStackFull if the big stack is full (should never happen)
+     */
     void storeEdges();
 
 #ifdef SEALIBVISUAL_EXAMPLES_H_
     friend class SealibVisual::VisualDFS;
 #endif  // SEALIBVISUAL_EXAMPLES_H
 };
+
+class TrailersEmpty : std::exception {
+    const char *what() const noexcept {
+        return "SegmentStack (internal error): the trailer stack is empty";
+    }
+};
+class BigStackFull : std::exception {
+    const char *what() const noexcept {
+        return "SegmentStack (internal error): the big-vertex stack is full";
+    }
+};
+
 }  // namespace Sealib
 #endif  // SEALIB_SEGMENTSTACK_H_
