@@ -34,18 +34,18 @@ namespace Sealib {
 */
 class SegmentStack {
  public:
-    virtual void push(std::pair<uint, uint> u) = 0;
-    uint8_t pop(std::pair<uint, uint> *r);
+    virtual void push(std::pair<uint64_t, uint64_t> u) = 0;
+    uint8_t pop(std::pair<uint64_t, uint64_t> *r);
     bool isEmpty();
     virtual bool isAligned() = 0;
     virtual ~SegmentStack() = default;
 
  protected:
-    explicit SegmentStack(unsigned segmentSize);
+    explicit SegmentStack(uint64_t segmentSize);
 
-    unsigned q;
-    std::vector<std::pair<uint, uint>> low, high;
-    unsigned lp, hp, tp;
+    uint64_t q;
+    std::vector<std::pair<uint64_t, uint64_t>> low, high;
+    uint64_t lp, hp, tp;
 };
 
 /**
@@ -55,18 +55,18 @@ class SegmentStack {
  * The segment size can be computed using the ε parameter:
  * 2q entries on the segment stack shall take up at most (ε/3)n bits, thus each
  * segment has a size of ((ε/6)n)/bitsize(ENTRY) bits, where bitsize(x) is the
- * number of bits a type occupies (e.g. bitsize(uint)=32).
+ * number of bits a type occupies (e.g. bitsize(uint64_t)=32).
  */
 class BasicSegmentStack : public SegmentStack {
  public:
-    explicit BasicSegmentStack(unsigned segmentSize);
+    explicit BasicSegmentStack(uint64_t segmentSize);
 
     /**
      * Push a tuple on the stack.
      * @param u Tuple to store on the stack
      *
      */
-    void push(std::pair<uint, uint> u) override;
+    void push(std::pair<uint64_t, uint64_t> u) override;
     /**
      * @return true if the restoration is finished (i.e. saved trailer and
      * actual trailer are aligned)
@@ -83,8 +83,8 @@ class BasicSegmentStack : public SegmentStack {
     void saveTrailer();
 
  private:
-    std::pair<uint, uint> last;
-    std::pair<uint, uint> savedTrailer;
+    std::pair<uint64_t, uint64_t> last;
+    std::pair<uint64_t, uint64_t> savedTrailer;
     int alignTarget;
 };
 
@@ -101,9 +101,9 @@ class ExtendedSegmentStack : public SegmentStack {
      * @param g Directed graph G=(V,E)
      * @param c Compact array holding color values
      */
-    ExtendedSegmentStack(uint size, Graph const &g, CompactArray *c);
+    ExtendedSegmentStack(uint64_t size, Graph const &g, CompactArray *c);
 
-    void push(std::pair<uint, uint> u) override;
+    void push(std::pair<uint64_t, uint64_t> u) override;
 
     /**
      * @return true if saved trailer and actual trailer are aligned
@@ -117,32 +117,32 @@ class ExtendedSegmentStack : public SegmentStack {
      * and
      * values are actively pushed)
      */
-    bool isInTopSegment(uint u, bool restoring = false);
+    bool isInTopSegment(uint64_t u, bool restoring = false);
     /**
      * Get the outgoing edge for a given node. Retrieve the approximation from
      * the table if u is small, get the edge from the trailer stack if u is big.
      * @param u Node to get the edge for
      */
-    uint getOutgoingEdge(uint u);
+    uint64_t getOutgoingEdge(uint64_t u);
     /**
      * Get the second-last trailer (the one that is needed to do a 1-segment
      * restoration).
      * @param r Pointer to the tuple that will hold the trailer
      * @return 0 if a trailer is found, 1 otherwise
      */
-    int getRestoreTrailer(std::pair<uint, uint> *r);
+    int getRestoreTrailer(std::pair<uint64_t, uint64_t> *r);
     /**
      * Get the last trailer (the one that a restoration will align to).
      * @param r Pointer to the tuple that will hold the trailer
      * @return 0 if a trailer is found, 1 otherwise
      */
-    int getTopTrailer(std::pair<uint, uint> *r);
+    int getTopTrailer(std::pair<uint64_t, uint64_t> *r);
     /**
      * Recolor all vertices in the low segment to the given color (used after a
      * restoration when the low segment is actually the top segment of S).
      * @param v Color to apply to the low segment
      */
-    void recolorLow(unsigned v);
+    void recolorLow(uint64_t v);
 
     /**
      * Get the edge approximation for a tuple (u,k)
@@ -150,14 +150,14 @@ class ExtendedSegmentStack : public SegmentStack {
      * @param k Outgoing edge index
      * @return Approximation: f = floor((k-1)/ceil(deg(u)/ld(n)))
      */
-    unsigned approximateEdge(uint u, uint k);
+    uint64_t approximateEdge(uint64_t u, uint64_t k);
     /**
      * Get the outgoing edge index from a given approximation.
      * @param u Node number
      * @param f Approximation
      * @return Outgoing edge: k = ceil(deg(u)/ld(n))*floor((k-1)/gu)
      */
-    uint retrieveEdge(uint u, unsigned f);
+    uint64_t retrieveEdge(uint64_t u, uint64_t f);
 
  private:
     /**
@@ -167,21 +167,21 @@ class ExtendedSegmentStack : public SegmentStack {
      * bc is freely available to increment during restoration.
      */
     struct Trailer {
-        std::pair<uint, uint> x;
-        unsigned bi, bc;
+        std::pair<uint64_t, uint64_t> x;
+        uint64_t bi, bc;
         Trailer() : bi(INVALID), bc(0) {}
     };
 
     std::vector<Trailer> trailers;
-    unsigned l;
+    uint64_t l;
     CompactArray table, edges;
-    std::vector<std::pair<uint, uint>> big;
-    unsigned bp;
+    std::vector<std::pair<uint64_t, uint64_t>> big;
+    uint64_t bp;
     Graph const &graph;
-    unsigned m, n;
+    uint64_t m, n;
     CompactArray *color;
 
-    static constexpr unsigned INVALID = static_cast<unsigned>(-1);
+    static constexpr uint64_t INVALID = static_cast<uint64_t>(-1);
     void storeEdges();
 
 #ifdef SEALIBVISUAL_EXAMPLES_H_

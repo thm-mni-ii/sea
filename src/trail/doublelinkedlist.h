@@ -1,6 +1,6 @@
 #ifndef SRC_TRAIL_DOUBLELINKEDLIST_H_
 #define SRC_TRAIL_DOUBLELINKEDLIST_H_
-#include <cstdint>
+#include "sealib/_types.h"
 
 namespace Sealib {
 /**
@@ -17,12 +17,12 @@ class DoubleLinkedList {
     /**
      * @return the currently pointed to value and removes it, or error value if empty.
      */
-    virtual uint32_t get() = 0;
+    virtual uint64_t get() = 0;
     /**
     * @param element to be removed
     * @return the removed element, or error value if the element was not present.
     */
-    virtual uint32_t remove(uint32_t idx) = 0;
+    virtual uint64_t remove(uint64_t idx) = 0;
     /**
      * @return - true if empty, false otherwise
      */

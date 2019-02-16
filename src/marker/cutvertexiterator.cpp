@@ -14,9 +14,9 @@ CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
 
 void CutVertexIterator::findCCs() {
     CompactArray color(n, 3);
-    for (uint a = 0; a < n; a++) color.insert(a, DFS_WHITE);
+    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     StaticSpaceStorage parent(g);
-    for (uint a = 0; a < n; a++) {
+    for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             cc.insert(a);
             DFS::visit_nplusm(a, g, &color, &parent, DFS_NOP_PROCESS,
@@ -29,11 +29,11 @@ void CutVertexIterator::findCCs() {
 void CutVertexIterator::init() {
     findCCs();
 
-    for (uint u = 0; u < n; u++) {
+    for (uint64_t u = 0; u < n; u++) {
         if (cc.get(u)) {
             // u is root of a DFS tree
-            uint num = 0;
-            for (uint k = 0; k < g.deg(u); k++) {
+            uint64_t num = 0;
+            for (uint64_t k = 0; k < g.deg(u); k++) {
                 if (e->isTreeEdge(u, k) && e->isParent(u, k)) {
                     num++;
                 }
@@ -43,7 +43,7 @@ void CutVertexIterator::init() {
                 }
             }
         } else {
-            for (uint k = 0; k < g.deg(u); k++) {
+            for (uint64_t k = 0; k < g.deg(u); k++) {
                 if (e->isTreeEdge(u, k) && e->isParent(u, k) &&
                     !e->isFullMarked(u, k)) {
                     cut.insert(u);
@@ -57,8 +57,8 @@ void CutVertexIterator::init() {
 
 bool CutVertexIterator::more() { return cutI.more(); }
 
-uint CutVertexIterator::next() { return static_cast<uint>(cutI.next()); }
+uint64_t CutVertexIterator::next() { return static_cast<uint64_t>(cutI.next()); }
 
-bool CutVertexIterator::isCutVertex(uint u) { return cut.get(u); }
+bool CutVertexIterator::isCutVertex(uint64_t u) { return cut.get(u); }
 
 }  // namespace Sealib

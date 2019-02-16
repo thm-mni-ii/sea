@@ -14,7 +14,7 @@ std::ostream &SealibVisual::TikzDraw::out(std::ostream &os) const {
 
     os << "\\draw"
        << "[" << options << "]";
-    for (unsigned int i = 0; i < points.size(); i++) {
+    for (uint64_t i = 0; i < points.size(); i++) {
         os << "(" << points[i] << ")";
         if (i < edges.size()) {
             os << " " << edges[i] << " ";

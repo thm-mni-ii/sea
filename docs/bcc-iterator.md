@@ -26,7 +26,7 @@ UndirectedGraph g=GraphCreator::windmill(3,4);
 BCCIterator b(g);
 b.init();
 b.start(1,2);
-b.forEach([](std::pair<uint,uint> p) {
+b.forEach([](std::pair<uint64_t,uint64_t> p) {
     if(p.second==INVALID) {
         std::cout << "found node: " << p.first << "\n";
     } else {

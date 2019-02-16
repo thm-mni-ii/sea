@@ -35,16 +35,16 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
 
 uint64_t Sealib::BaseSubGraph::head(uint64_t u,
                                          uint64_t k) const {
-    return rGraph->head(static_cast<uint>(u - 1), static_cast<uint>(k - 1)) + 1;
+    return rGraph->head(static_cast<uint64_t>(u - 1), static_cast<uint64_t>(k - 1)) + 1;
 }
 
 std::tuple<uint64_t, uint64_t>
 Sealib::BaseSubGraph::mate(uint64_t u, uint64_t k) const {
-    uint k2 = rGraph->mate(
-        static_cast<uint>(u - 1),
-        static_cast<uint>(k - 1));
+    uint64_t k2 = rGraph->mate(
+        static_cast<uint64_t>(u - 1),
+        static_cast<uint64_t>(k - 1));
     return std::tuple<uint64_t, uint64_t>(
-            rGraph->head(static_cast<uint>(u-1), static_cast<uint>(k-1)) + 1,
+            rGraph->head(static_cast<uint64_t>(u-1), static_cast<uint64_t>(k-1)) + 1,
             k2 + 1);
 }
 

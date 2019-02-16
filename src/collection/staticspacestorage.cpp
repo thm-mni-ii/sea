@@ -21,12 +21,11 @@
 
 #define END }
 
-using Sealib::uint;
 using Sealib::Bitset;
 using Sealib::RankSelect;
 using Sealib::StaticSpaceStorage;
 
-uint64_t StaticSpaceStorage::get(uint i) const {
+uint64_t StaticSpaceStorage::get(uint64_t i) const {
     PRELUDE
     uint64_t r = 0;
     IF_SINGLE_BLOCK
@@ -37,7 +36,7 @@ uint64_t StaticSpaceStorage::get(uint i) const {
     END return r;
 }
 
-void StaticSpaceStorage::insert(uint i, uint64_t v) {
+void StaticSpaceStorage::insert(uint64_t i, uint64_t v) {
     PRELUDE
     IF_SINGLE_BLOCK
     storage[startBlock] &= ~(mask << endGap);
@@ -50,13 +49,13 @@ void StaticSpaceStorage::insert(uint i, uint64_t v) {
     END
 }
 
-std::vector<bool> StaticSpaceStorage::makeBitVector(std::vector<uint> *sizes) {
+std::vector<bool> StaticSpaceStorage::makeBitVector(std::vector<uint64_t> *sizes) {
     std::vector<bool> r(sizes->size() +
                         std::accumulate(sizes->begin(), sizes->end(), 0UL));
-    uint index = 0;
-    for (uint a : *sizes) {
+    uint64_t index = 0;
+    for (uint64_t a : *sizes) {
         r[index] = 1;
-        for (uint b = 0; b < a; b++) {
+        for (uint64_t b = 0; b < a; b++) {
             index++;
         }
         index++;
@@ -64,8 +63,8 @@ std::vector<bool> StaticSpaceStorage::makeBitVector(std::vector<uint> *sizes) {
     return r;
 }
 
-static inline uint countWhere(const std::vector<bool> *v, bool x) {
-    uint r = 0;
+static inline uint64_t countWhere(const std::vector<bool> *v, bool x) {
+    uint64_t r = 0;
     for (bool a : *v) {
         if (a == x) r++;
     }
@@ -93,9 +92,9 @@ StaticSpaceStorage::StaticSpaceStorage(const std::vector<bool> &bits)
 
 static std::vector<bool> makeBits(Sealib::Graph const &g) {
     std::vector<bool> bits;
-    for (uint u = 0; u < g.getOrder(); u++) {
+    for (uint64_t u = 0; u < g.getOrder(); u++) {
         bits.push_back(1);
-        for (uint k = 0; k < ceil(log2(g.deg(u) + 1)); k++) {
+        for (uint64_t k = 0; k < ceil(log2(g.deg(u) + 1)); k++) {
             bits.push_back(0);
         }
     }

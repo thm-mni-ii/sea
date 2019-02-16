@@ -4,13 +4,12 @@
 #include <cstdint>
 
 namespace Sealib {
-// the standard numeric type (used mainly for node names)
-typedef uint32_t uint;
 
-typedef std::function<void(uint)> Consumer;
-typedef std::function<void(uint, uint)> BiConsumer;
+typedef std::function<void(uint64_t)> Consumer;
+typedef std::function<void(uint64_t, uint64_t)> BiConsumer;
 
-static constexpr uint INVALID = static_cast<uint>(-1);
+static constexpr uint64_t INVALID = static_cast<uint64_t>(-1);
+
 }  // namespace Sealib
 
 /**

@@ -21,13 +21,13 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * @param i index of the storage array
      * @return value stored in element i
      */
-    uint64_t get(uint i) const;
+    uint64_t get(uint64_t i) const;
 
     /**
      * @param i index of the storage array
      * @param v value to insert
      */
-    void insert(uint i, uint64_t v);
+    void insert(uint64_t i, uint64_t v);
 
     /**
      * Create a new storage from a bit vector.
@@ -52,21 +52,21 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * @return bit pattern corresponding to the input vector (e.g.
      * 10010001000000100)
      */
-    static std::vector<bool> makeBitVector(std::vector<uint> *sizes);
+    static std::vector<bool> makeBitVector(std::vector<uint64_t> *sizes);
 
  private:
-    const uint n;
+    const uint64_t n;
     const Bitset<uint8_t> pattern;
     const RankSelect rankSelect;
     std::vector<uint64_t> storage;
     const uint64_t bitsize = sizeof(uint64_t) * 8;
     static constexpr uint64_t one = 1;
 
-    CONSTEXPR_IF_CLANG uint64_t getEnd(uint k) const {
+    uint64_t getEnd(uint64_t k) const {
         return (k < n) ? rankSelect.select(k + 1) : (n + storage.size() + 1);
     }
 
-    CONSTEXPR_IF_CLANG uint64_t getSize(uint k) const {
+    uint64_t getSize(uint64_t k) const {
         return getEnd(k + 1) - rankSelect.select(k + 1) - 1;
     }
 };

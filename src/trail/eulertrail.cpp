@@ -6,12 +6,12 @@ using Sealib::EulerTrail;
 
 template<class TrailStructureType>
 EulerTrail<TrailStructureType>::iterator::iterator(
-    const EulerTrail<TrailStructureType> &eulerTrail_, uint32_t nIndex_) :
+    const EulerTrail<TrailStructureType> &eulerTrail_, uint64_t nIndex_) :
     eulerTrail(eulerTrail_),
     nIndex(nIndex_),
-    mIndex(static_cast<uint32_t>(eulerTrail.trailStarts.select(nIndex) - 1)),
+    mIndex(static_cast<uint64_t>(eulerTrail.trailStarts.select(nIndex) - 1)),
     arc(mIndex > eulerTrail.trail.size() ?
-        (uint32_t) -1 : eulerTrail.trail[mIndex].getStartingArc()),
+        INVALID : eulerTrail.trail[mIndex].getStartingArc()),
     ending(false) {
 }
 
@@ -23,21 +23,21 @@ std::tuple<uint64_t, bool> EulerTrail<TrailStructureType>::iterator::operator*()
 template<class TrailStructureType>
 typename EulerTrail<TrailStructureType>::iterator
 &EulerTrail<TrailStructureType>::iterator::operator++() {
-    if (arc != (uint32_t) -1) {
-        uint32_t uCross = eulerTrail.graph->getNode(mIndex).getAdj()[arc].second;
+    if (arc != INVALID) {
+        uint64_t uCross = eulerTrail.graph->getNode(mIndex).getAdj()[arc].second;
         mIndex = eulerTrail.graph->getNode(mIndex).getAdj()[arc].first;
         arc = eulerTrail.trail[mIndex].getMatched(uCross);
         if (arc == uCross) {
-            arc = (uint32_t) -1;
+            arc = INVALID;
             ending = true;
         } else {
             ending = false;
         }
     } else {
         ending = false;
-        mIndex = static_cast<uint32_t>(eulerTrail.trailStarts.select(++nIndex)) - 1;
+        mIndex = static_cast<uint64_t>(eulerTrail.trailStarts.select(++nIndex)) - 1;
         arc = mIndex > eulerTrail.trail.size() ?
-              (uint32_t) -1 : eulerTrail.trail[mIndex].getStartingArc();
+              INVALID : eulerTrail.trail[mIndex].getStartingArc();
     }
     return *this;
 }
@@ -62,7 +62,7 @@ template<class TrailStructureType>
 typename EulerTrail<TrailStructureType>::iterator EulerTrail<TrailStructureType>::end() const {
     return EulerTrail<TrailStructureType>::iterator(
         (const EulerTrail<TrailStructureType> &) *this,
-        static_cast<uint32_t>(trailStarts.rank(trailStarts.size()) + 1));
+        static_cast<uint64_t>(trailStarts.rank(trailStarts.size()) + 1));
 }
 
 template<class TrailStructureType>
@@ -71,10 +71,10 @@ EulerTrail<TrailStructureType>::EulerTrail(const std::shared_ptr<Sealib::Undirec
 }
 
 template<class TrailStructureType>
-uint32_t EulerTrail<TrailStructureType>::findStartingNode() {
-    uint32_t order = graph->getOrder();
+uint64_t EulerTrail<TrailStructureType>::findStartingNode() {
+    uint64_t order = graph->getOrder();
 
-    for (uint32_t i = 0; i < order; i++) {
+    for (uint64_t i = 0; i < order; i++) {
         bool isEven = trail.at(i).isEven();
         bool isBlack = trail.at(i).isBlack();
         if (!isEven && !isBlack) {  // odd
@@ -82,7 +82,7 @@ uint32_t EulerTrail<TrailStructureType>::findStartingNode() {
         }
     }
     // no odd found, search for grey
-    for (uint32_t i = 0; i < order; i++) {
+    for (uint64_t i = 0; i < order; i++) {
         // first that has edges, it's possible to have a graph with no edges
         if (trail.at(i).isGrey()
             && !trail.at(i).isBlack()) {
@@ -90,13 +90,13 @@ uint32_t EulerTrail<TrailStructureType>::findStartingNode() {
         }
     }
     // no odd found and no grey found, search for white
-    for (uint32_t i = 0; i < order; i++) {
+    for (uint64_t i = 0; i < order; i++) {
         // first that has edges, it's possible to have a graph with no edges
         if (!trail.at(i).isBlack()) {
             return i;
         }
     }
-    return (uint32_t) -1;
+    return INVALID;
 }
 
 template<class TrailStructureType>
@@ -104,32 +104,32 @@ std::vector<TrailStructureType>
 EulerTrail<TrailStructureType>::initializeTrail() {
     std::vector<TrailStructureType> trail_;
 
-    uint32_t order = graph->getOrder();
+    uint64_t order = graph->getOrder();
     trail_.reserve(order);
-    for (uint32_t i = 0; i < graph->getOrder(); i++) {
+    for (uint64_t i = 0; i < graph->getOrder(); i++) {
         trail_.emplace_back(graph->getNode(i).getDegree());
     }
     trail_.shrink_to_fit();
 
-    uint32_t u = findStartingNode();
-    while (u != (uint32_t) -1) {  // loop the iteration while there is a non-black vertex
-        auto kOld = (uint32_t) -1;
+    uint64_t u = findStartingNode();
+    while (u != INVALID) {  // loop the iteration while there is a non-black vertex
+        auto kOld = INVALID;
         if (trail_.at(u).isEven() && trail_.at(u).isGrey()) {  // remember aOld
             kOld = trail_.at(u).getLastClosed();
         }
-        uint32_t kFirst = trail_.at(u).leave();
+        uint64_t kFirst = trail_.at(u).leave();
 
-        uint32_t k = kFirst;
-        uint32_t uMate;
+        uint64_t k = kFirst;
+        uint64_t uMate;
         do {
             uMate = graph->getNode(u).getAdj()[k].second;
             u = graph->getNode(u).getAdj()[k].first;  // next node
             k = trail_.at(u).enter(uMate);
-        } while (k != (uint32_t) -1);
+        } while (k != INVALID);
 
-        if (kOld != (uint32_t) -1) {
-            uint32_t kLast = uMate;
-            uint32_t kOldMatch = trail_.at(u).getMatched(kOld);
+        if (kOld != INVALID) {
+            uint64_t kLast = uMate;
+            uint64_t kOldMatch = trail_.at(u).getMatched(kOld);
             if (kOldMatch != kOld) {  // has match
                 trail_.at(u).marry(kOldMatch, kFirst);
                 trail_.at(u).marry(kLast, kOld);
@@ -147,11 +147,11 @@ template<class TrailStructureType>
 Sealib::Bitset<uint8_t>
 EulerTrail<TrailStructureType>::findTrailStarts() {
     Sealib::Bitset<uint8_t> bs(graph->getOrder());
-    for (uint32_t i = 0; i < graph->getOrder(); i++) {
+    for (uint64_t i = 0; i < graph->getOrder(); i++) {
         bool hasStarting = trail.at(i).hasStartingArc();
         if (hasStarting) {
-            uint32_t arc = trail.at(i).getStartingArc();
-            hasStarting = arc != (uint32_t) -1;
+            uint64_t arc = trail.at(i).getStartingArc();
+            hasStarting = arc != INVALID;
         }
         bs[i] = hasStarting;
     }
