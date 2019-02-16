@@ -3,7 +3,7 @@
 
 using Sealib::ChoiceDictionaryIterator;
 
-ChoiceDictionaryIterator::ChoiceDictionaryIterator(ChoiceDictionary *_choicedictionary)
+ChoiceDictionaryIterator::ChoiceDictionaryIterator(ChoiceDictionary const &_choicedictionary)
     : choicedictionary(_choicedictionary) {}
 
 void ChoiceDictionaryIterator::init() {
@@ -32,7 +32,7 @@ bool ChoiceDictionaryIterator::more() {
 
 uint64_t ChoiceDictionaryIterator::next() {
     uint64_t newPrimaryValue;
-    uint64_t wordSize = choicedictionary->getWordSize();
+    uint64_t wordSize = choicedictionary.getWordSize();
 
     uint64_t nextIndex = (uint64_t)__builtin_clzl(primaryWord);
 
@@ -45,18 +45,18 @@ uint64_t ChoiceDictionaryIterator::next() {
 }
 
 bool ChoiceDictionaryIterator::hasNextSecondary() {
-    return choicedictionary->pointerIsValid(pointer);
+    return choicedictionary.pointerIsValid(pointer);
 }
 
 void ChoiceDictionaryIterator::setNextSecondaryWord() {
-    secondaryIndex = choicedictionary->getPointerTarget(pointer);
-    secondaryWord = choicedictionary->getSecondaryWord(secondaryIndex);
+    secondaryIndex = choicedictionary.getPointerTarget(pointer);
+    secondaryWord = choicedictionary.getSecondaryWord(secondaryIndex);
     pointer++;
 }
 
 void ChoiceDictionaryIterator::setNextPrimaryWord() {
     uint64_t targetBit;
-    uint64_t wordSize = choicedictionary->getWordSize();
+    uint64_t wordSize = choicedictionary.getWordSize();
     uint64_t primaryInnerIndex = (uint64_t)__builtin_clzl(secondaryWord);
 
     primaryIndex = (secondaryIndex / 2) * wordSize + primaryInnerIndex;
@@ -65,7 +65,7 @@ void ChoiceDictionaryIterator::setNextPrimaryWord() {
     targetBit = 1UL << targetBit;
 
     secondaryWord = secondaryWord & ~targetBit;
-    primaryWord = choicedictionary->getPrimaryWord(primaryIndex);
+    primaryWord = choicedictionary.getPrimaryWord(primaryIndex);
 }
 
 ChoiceDictionaryIterator::~ChoiceDictionaryIterator() {}

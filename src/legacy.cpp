@@ -47,7 +47,7 @@ uint64_t Sealib_ChoiceDictionary_choice(void *self) {
 
 void *Sealib_ChoiceDictionaryIterator_new(void *choiceDictionary) {
     return new ChoiceDictionaryIterator(
-        static_cast<ChoiceDictionary *>(choiceDictionary));
+        *static_cast<ChoiceDictionary *>(choiceDictionary));
 }
 void Sealib_ChoiceDictionaryIterator_delete(void *self) {
     delete static_cast<ChoiceDictionaryIterator *>(self);

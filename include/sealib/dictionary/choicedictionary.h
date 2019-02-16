@@ -17,63 +17,6 @@ namespace Sealib {
  * @author Dennis Appel
  */
 class ChoiceDictionary {
- private:
-    /**
-     * @param primary Array Structure where each word represents a subset of
-     * the entire bitset.
-     *
-     * @param secondary Tupel structure where the first word in a block
-     * contains a bitset where each bit that is set to 1 points to a subset
-     * in primary with atleast one bit set to 1.
-     * The second word is used for pointer validation with the validator
-     * array.
-     *
-     * @param validator Array used to validate entries in secondary with
-     * validator[i] pointing to a tupel in secondary that has atleast
-     * one bit set to 1.
-     *
-     * @param wordCount Stores the number of words in primary.
-     *
-     * @param pointer Points to the next available word in validator and
-     * pointer-1 to the last linked word in validator.
-     *
-     * @param wordSize 64 for uint64_t
-     */
-    uint32_t wordSize;
-    uint64_t wordCount, pointer;
-    std::vector<uint64_t> primary, secondary, validator;
-
-    void createDataStructure(uint64_t size);
-
-    void createPrimary();
-
-    void createSecondary(uint64_t secondarySize);
-
-    void createValidator(uint64_t validatorSize);
-
-    /**
-     * Updates secondary to represent updates in primary.
-     * @param primaryIndex Index of the updated Word in primary.
-     */
-    void updateSecondary(uint64_t primaryIndex);
-
-    void removeFromSecondary(uint64_t primaryIndex);
-
-    /**
-     * Creates a link between a tupel in secondary and validator.
-     *
-     * @param secondaryIndex Index of the new secondary word.
-     */
-    uint64_t makeLink(uint64_t secondaryIndex);
-
-    void breakLink(uint64_t secondaryIndex);
-
-    void shrinkValidator(uint64_t startIndex);
-
-    bool isInitialized(uint64_t primaryIndex);
-
-    bool hasColor(uint64_t primaryIndex);
-
  public:
     /**
      * Creates choice dictionary with given size
@@ -106,17 +49,82 @@ class ChoiceDictionary {
      */
     void remove(uint64_t index);
 
-    uint64_t getPrimaryWord(uint64_t primaryIndex);
+    uint64_t getPrimaryWord(uint64_t primaryIndex) const {
+        return primary[primaryIndex];
+    }
 
-    uint64_t getSecondaryWord(uint64_t secondaryIndex);
+    uint64_t getSecondaryWord(uint64_t secondaryIndex) const {
+        return secondary[secondaryIndex];
+    }
 
-    uint64_t getPointerTarget(uint64_t nextPointer);
+    uint64_t getPointerTarget(uint64_t nextPointer) const {
+        return validator[nextPointer] - TUPEL_OFFSET;
+    }
 
-    bool pointerIsValid(uint64_t nextPointer);
+    bool pointerIsValid(uint64_t nextPointer) const;
 
-    uint32_t getWordSize();
+    uint64_t getWordSize() const { return wordSize; }
 
-    uint64_t getSecondarySize();
+    uint64_t getSecondarySize() {
+        return wordCount / wordSize + 1;
+    }
+
+ private:
+    /**
+     * 64 for uint64_t
+     */
+    uint64_t wordSize;
+    /**
+     * Stores the number of words in primary.
+     */
+    uint64_t wordCount;
+    /**
+     * Points to the next available word in validator and
+     * pointer-1 to the last linked word in validator.
+     */
+    uint64_t pointer;
+    /**
+     * Array Structure where each word represents a subset of
+     * the entire bitset.
+     */
+    std::vector<uint64_t> primary;
+    /**
+     * Tupel structure where the first word in a block
+     * contains a bitset where each bit that is set to 1 points to a subset
+     * in primary with atleast one bit set to 1.
+     * The second word is used for pointer validation with the validator
+     * array.
+     */
+    std::vector<uint64_t> secondary;
+    /**
+     * Array used to validate entries in secondary with
+     * validator[i] pointing to a tupel in secondary that has atleast
+     * one bit set to 1.
+     */
+    std::vector<uint64_t> validator;
+
+    /**
+     * Updates secondary to represent updates in primary.
+     * @param primaryIndex Index of the updated Word in primary.
+     */
+    void updateSecondary(uint64_t primaryIndex);
+
+    void removeFromSecondary(uint64_t primaryIndex);
+
+    /**
+     * Creates a link between a tupel in secondary and validator.
+     *
+     * @param secondaryIndex Index of the new secondary word.
+     */
+    uint64_t makeLink(uint64_t secondaryIndex);
+
+    void breakLink(uint64_t secondaryIndex);
+
+    void shrinkValidator(uint64_t startIndex);
+
+    bool isInitialized(uint64_t primaryIndex);
+
+    bool hasColor(uint64_t primaryIndex);
 };
 }  // namespace Sealib
 #endif  // SEALIB_DICTIONARY_CHOICEDICTIONARY_H_

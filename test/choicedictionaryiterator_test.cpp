@@ -11,8 +11,8 @@ TEST(ChoiceDictionaryIteratorTest, iterator_integrity) {
     const uint64_t size = 25000;
     const uint64_t setSize = 5000;
 
-    Sealib::ChoiceDictionary *c = new Sealib::ChoiceDictionary(size);
-    ChoiceDictionaryIterator *iterator = new ChoiceDictionaryIterator(c);
+    Sealib::ChoiceDictionary c(size);
+    ChoiceDictionaryIterator iterator(c);
 
     std::array<uint64_t, setSize> set;
 
@@ -28,20 +28,20 @@ TEST(ChoiceDictionaryIteratorTest, iterator_integrity) {
     std::shuffle(set.begin(), set.end(), std::default_random_engine(seed));
 
     for (uint64_t number : set) {
-        c->insert(number);
+        c.insert(number);
     }
     for (uint64_t i = 0; i < 64; i+=5) {
-        c->remove(i);
+        c.remove(i);
     }
-    c->remove(12000);
-    c->remove(12005);
-    c->remove(15000);
-    c->remove(16000);
-    c->remove(16500);
+    c.remove(12000);
+    c.remove(12005);
+    c.remove(15000);
+    c.remove(16000);
+    c.remove(16500);
 
-    iterator->init();
-    while (iterator->more()) {
-        uint64_t index = iterator->next();
+    iterator.init();
+    while (iterator.more()) {
+        uint64_t index = iterator.next();
         for (uint64_t number : set) {
             if (index == number) {
                 count++;
@@ -50,6 +50,4 @@ TEST(ChoiceDictionaryIteratorTest, iterator_integrity) {
         }
     }
     // ASSERT_EQ(count, setSize - 18);
-    delete iterator;
-    delete c;
 }

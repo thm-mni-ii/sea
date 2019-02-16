@@ -24,7 +24,7 @@ class ChoiceDictionaryIterator : Iterator<uint64_t> {
      * @param choicedictionary Pointer to an existing choice dictionary.
      */
     uint64_t primaryWord, secondaryWord, pointer, primaryIndex, secondaryIndex;
-    ChoiceDictionary *choicedictionary;
+    ChoiceDictionary const &choicedictionary;
 
     bool hasNextSecondary();
 
@@ -37,7 +37,7 @@ class ChoiceDictionaryIterator : Iterator<uint64_t> {
      * Creates an Iterator for a choice dictionary.
      * @param _choicedictionary Pointer to an existing choice dictionary.
      */
-    explicit ChoiceDictionaryIterator(ChoiceDictionary *_choicedictionary);
+    explicit ChoiceDictionaryIterator(ChoiceDictionary const &choicedictionary);
 
     /**
      * Initializes the iterator.

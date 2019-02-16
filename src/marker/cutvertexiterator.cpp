@@ -10,7 +10,7 @@ CutVertexIterator::CutVertexIterator(UndirectedGraph const &graph)
 }
 
 CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
-    : e(edges), g(e->getGraph()), n(g.getOrder()), cc(n), cut(n), cutI(&cut) {}
+    : e(edges), g(e->getGraph()), n(g.getOrder()), cc(n), cut(n), cutI(cut) {}
 
 void CutVertexIterator::findCCs() {
     CompactArray color(n, 3);
