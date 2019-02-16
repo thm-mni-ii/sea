@@ -16,15 +16,17 @@ This space-efficient reverse DFS
 
 ## Example
 ```cpp
-DirectedGraph g = Sealib::GraphCreator::createRandomFixed(1024, 16);
+#include "sealib/iterator/reversedfs.h"
+#include "sealib/graph/graphcreator.h"
 
-ReverseDFS d(g);
-d.init();
-while (d.more()) {
-    UserCall c=d.next();
-    if(c.type==UserCall::postprocess) {
-        // do something
+int main() {
+    DirectedGraph g = Sealib::GraphCreator::createRandomFixed(1024, 16);
+
+    ReverseDFS d(g);
+    d.init();
+    while (d.more()) {
+        UserCall c=d.next();
+        // do something with the user call
     }
-    //...
 }
 ```
