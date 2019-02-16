@@ -60,7 +60,7 @@ bool BCCIterator::more() {
                     color.insert(node, DFS_BLACK);
                     if (node != startEdge.second) {
                         uint64_t bk = static_cast<uint64_t>(parent.get(node)),
-                             pu = g.head(node, bk), pk = g.mate(node, bk);
+                                 pu = g.head(node, bk), pk = g.mate(node, bk);
                         node = pu;
                         latestNode = node;
                         edge = pk + 1;
@@ -87,7 +87,8 @@ std::pair<uint64_t, uint64_t> BCCIterator::next() {
             case OUTPUT_BACK_EDGES:
                 while (tmp < g.deg(node)) {
                     if (e->isBackEdge(node, tmp) && !e->isParent(node, tmp)) {
-                        r = std::pair<uint64_t, uint64_t>(g.head(node, tmp), node);
+                        r = std::pair<uint64_t, uint64_t>(g.head(node, tmp),
+                                                          node);
                         break;
                     }
                     tmp++;

@@ -1,16 +1,8 @@
 #include "sealib/iterator/bfs.h"
-#include <stdexcept>
 #include <utility>
 #include <vector>
 
 namespace Sealib {
-
-class NoMoreGrayNodes : std::exception {
-    const char *what() const noexcept {
-        return "BFS: no more gray nodes found; did you forget to call "
-               "nextComponent()?";
-    }
-};
 
 void BFS::init() {
     u = 0;

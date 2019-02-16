@@ -1,6 +1,7 @@
 #ifndef SEALIB_ITERATOR_BFS_H_
 #define SEALIB_ITERATOR_BFS_H_
 
+#include <stdexcept>
 #include <utility>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
@@ -60,7 +61,7 @@ class BFS : Iterator<std::pair<uint64_t, uint64_t>> {
      * Get the next node from the current component.
      * @return a tuple (u,d) where d is the distance of u to the component's
      * starting node
-     * @throws std::logic_error if no next node is available
+     * @throws NoMoreGrayNodes if no next node is available
      */
     std::pair<uint64_t, uint64_t> next() override;
 
@@ -83,6 +84,13 @@ class BFS : Iterator<std::pair<uint64_t, uint64_t>> {
 
     bool hasGrayNode();
     uint64_t getGrayNode();
+};
+
+class NoMoreGrayNodes : std::exception {
+    const char *what() const noexcept {
+        return "BFS: no more gray nodes found; did you forget to call "
+               "nextComponent()?";
+    }
 };
 
 }  // namespace Sealib

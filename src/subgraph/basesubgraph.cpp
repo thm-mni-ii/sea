@@ -50,25 +50,25 @@ Sealib::BaseSubGraph::mate(uint64_t u, uint64_t k) const {
 
 uint64_t Sealib::BaseSubGraph::phi(uint64_t u) const {
     if (u == 0) {
-        throw std::invalid_argument("u needs to be > 0");
+        throw ZeroArgumentGiven();
     }
     return u;
 }
 uint64_t Sealib::BaseSubGraph::psi(uint64_t a) const {
     if (a == 0) {
-        throw std::invalid_argument("a needs to be > 0");
+        throw ZeroArgumentGiven();
     }
     return a;
 }
 uint64_t Sealib::BaseSubGraph::phiInv(uint64_t u) const {
     if (u == 0) {
-        throw std::invalid_argument("u needs to be > 0");
+        throw ZeroArgumentGiven();
     }
     return u;
 }
 uint64_t Sealib::BaseSubGraph::psiInv(uint64_t a) const {
     if (a == 0) {
-        throw std::invalid_argument("a needs to be > 0");
+        throw ZeroArgumentGiven();
     }
     return a;
 }

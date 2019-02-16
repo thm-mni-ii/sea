@@ -1,7 +1,8 @@
 #ifndef SEALIB_DICTIONARY_CHOICEDICTIONARY_H_
 #define SEALIB_DICTIONARY_CHOICEDICTIONARY_H_
-#include <cstdint>
+#include <stdexcept>
 #include <vector>
+#include "sealib/_types.h"
 
 #define SHIFT_OFFSET 1UL
 #define POINTER_OFFSET 1UL
@@ -38,14 +39,14 @@ class ChoiceDictionary {
 
     /**
      * Returns an arbitrary bit position that is set to 1.
-     * @throws std::exception if empty
+     * @throws EmptyChoiceDictionary if empty
      */
     uint64_t choice();
 
     /**
      * Sets a bit at specified index to 0.
      * @param index Index of bit that should be set to 0.
-     * @throws std::exception if empty
+     * @throws EmptyChoiceDictionary if empty
      */
     void remove(uint64_t index);
 
@@ -125,6 +126,13 @@ class ChoiceDictionary {
     bool isInitialized(uint64_t primaryIndex);
 
     bool hasColor(uint64_t primaryIndex);
+};
+
+class EmptyChoiceDictionary : public std::exception {
+    const char* what() const noexcept {
+        return "Choice dictionary is empty. Operations \'choice()\'"
+               " and \'remove()\' are not possible";
+    }
 };
 }  // namespace Sealib
 #endif  // SEALIB_DICTIONARY_CHOICEDICTIONARY_H_

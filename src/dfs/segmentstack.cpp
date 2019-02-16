@@ -2,7 +2,6 @@
 #include <math.h>
 #include <sstream>
 #include <stack>
-#include <stdexcept>
 
 using Sealib::SegmentStack;
 using Sealib::BasicSegmentStack;
@@ -64,7 +63,7 @@ void BasicSegmentStack::saveTrailer() {
         savedTrailer = last;
         alignTarget = tp == 1 ? 1 : 2;
     } else {
-        throw std::logic_error("segmentstack: cannot save from empty trailers");
+        throw TrailersEmpty();
     }
 }
 
@@ -117,7 +116,7 @@ void ExtendedSegmentStack::storeEdges() {
             }
             big[bp++] = std::pair<uint64_t, uint64_t>(
                 u, k - 1);  // another big vertex is stored
-            if (bp > q) throw std::out_of_range("big storage is full!");
+            if (bp > q) throw BigStackFull();
         } else {  // store an approximation
             uint64_t f = approximateEdge(u, k);
             edges.insert(u, f);
@@ -168,8 +167,7 @@ uint64_t ExtendedSegmentStack::getOutgoingEdge(uint64_t u) {
             t.bc += 1;
             return x.second;
         } else {
-            throw std::logic_error(
-                "can't get edge from big vertex because there are no trailers");
+            throw TrailersEmpty();
         }
     } else {
         return retrieveEdge(u, edges.get(u));

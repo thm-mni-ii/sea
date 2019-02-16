@@ -6,7 +6,8 @@
 
 namespace Sealib {
 
-void DFS::visit_standard(uint64_t u0, Graph const &g, std::vector<uint64_t> *color,
+void DFS::visit_standard(uint64_t u0, Graph const &g,
+                         std::vector<uint64_t> *color,
                          std::vector<std::pair<uint64_t, uint64_t>> *s,
                          Consumer preprocess, BiConsumer preexplore,
                          BiConsumer postexplore, Consumer postprocess) {
@@ -124,9 +125,10 @@ void DFS::restore_full(uint64_t u0, Graph const &g, CompactArray *color,
  * is an 'enclosing' edge)
  */
 static std::pair<bool, uint64_t> findEdge(const uint64_t u, const uint64_t k,
-                                      Graph const &g, CompactArray *c,
-                                      ExtendedSegmentStack *s) {
-    std::pair<bool, uint64_t> r = std::make_pair(false, static_cast<uint64_t>(-1));
+                                          Graph const &g, CompactArray *c,
+                                          ExtendedSegmentStack *s) {
+    std::pair<bool, uint64_t> r =
+        std::make_pair(false, static_cast<uint64_t>(-1));
     for (uint64_t i = k; i < g.deg(u); i++) {
         uint64_t v = g.head(u, i);
         if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
@@ -170,10 +172,10 @@ void DFS::restore_top(uint64_t u0, Graph const &g, CompactArray *color,
     s->recolorLow(DFS_GRAY);
 }
 
-void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g, CompactArray *color,
-                       Sequence<uint64_t> *back, Consumer preprocess,
-                       BiConsumer preexplore, BiConsumer postexplore,
-                       Consumer postprocess) {
+void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g,
+                       CompactArray *color, Sequence<uint64_t> *back,
+                       Consumer preprocess, BiConsumer preexplore,
+                       BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
     preprocess(u0);
     uint64_t u = u0, k = 0;
@@ -197,7 +199,7 @@ void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g, CompactArray *colo
             postprocess(u);
             if (u != u0) {
                 uint64_t pk = g.mate(u, static_cast<uint64_t>(back->get(u))),
-                     pu = g.head(u, static_cast<uint64_t>(back->get(u)));
+                         pu = g.head(u, static_cast<uint64_t>(back->get(u)));
                 postexplore(pu, pk);
                 u = pu;
                 k = pk + 1;
@@ -225,12 +227,13 @@ void DFS::nBitDFS(Graph const &g, Consumer preprocess, BiConsumer preexplore,
                   BiConsumer postexplore, Consumer postprocess) {
     uint64_t n = g.getOrder();
     double e = 0.2;
-    uint64_t q = static_cast<uint64_t>(ceil(
-        ceil(e / 6 * n) / (8 * sizeof(std::pair<uint64_t, uint64_t>))));  // 2q entries
-                                                                  // on S shall
-                                                                  // take up at
-                                                                  // most (e/3)n
-                                                                  // bits
+    uint64_t q = static_cast<uint64_t>(
+        ceil(ceil(e / 6 * n) /
+             (8 * sizeof(std::pair<uint64_t, uint64_t>))));  // 2q entries
+                                                             // on S shall
+                                                             // take up at
+                                                             // most (e/3)n
+                                                             // bits
     uint64_t qs = 3;  // stable segment size (?)
     if (q < qs) q = qs;
 
@@ -240,9 +243,10 @@ void DFS::nBitDFS(Graph const &g, Consumer preprocess, BiConsumer preexplore,
     for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            visit_nloglogn(a, g, &color, &s,
-                           [&](uint64_t u0) { restore_full(u0, g, &color, &s); },
-                           preprocess, preexplore, postexplore, postprocess);
+            visit_nloglogn(
+                a, g, &color, &s,
+                [&](uint64_t u0) { restore_full(u0, g, &color, &s); },
+                preprocess, preexplore, postexplore, postprocess);
     }
 }
 

@@ -61,7 +61,8 @@ class BCCIterator : Iterator<std::pair<uint64_t, uint64_t>> {
      * (init() and start() before calling this method!)
      * @param f function to execute for each element
      */
-    void forEach(std::function<void(std::pair<uint64_t, uint64_t>)> f) override {
+    void forEach(
+        std::function<void(std::pair<uint64_t, uint64_t>)> f) override {
         Iterator::forEach(f);
     }
 
