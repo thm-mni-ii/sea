@@ -17,37 +17,37 @@ namespace Sealib {
 class UndirectedGraph : public Graph {
  public:
     /**
-     * Created a new graph object with the nodes provided by the nodes_ vector
-     * @param nodes_ vector of nodes (const ref)
+     * Creates a new graph object from a given node vector.
+     * @param nodes_ vector of nodes
      */
-    explicit UndirectedGraph(std::vector<NodeU> const &nodes_) : nodes(nodes_) {}
+    explicit UndirectedGraph(std::vector<ExtendedNode> _nodes) : nodes(std::move(_nodes)) {}
 
     /**
-     * Created a graph with the specified order and without any edges.
+     * Creates a graph with the specified order and without any edges.
      * @param order - order of the graph
      */
-    explicit UndirectedGraph(uint order) : nodes(order) {}
+    explicit UndirectedGraph(uint64_t order) : nodes(order) {}
 
     /**
      * Adds a new node to the graph
      * @param const ref of node to be added
      */
-    void addNode(NodeU const &node) { nodes.emplace_back(node); }
+    void addNode(ExtendedNode const &node) { nodes.emplace_back(node); }
 
     /**
      * Getter for a specific node in the nodes array.
      * @param u index in the nodes array.
      * @return Reference to Node in the nodes array.
      */
-    const NodeU &getNode(uint u) const { return nodes[u]; }
-    NodeU &getNode(uint u) { return nodes[u]; }
+    const ExtendedNode &getNode(uint64_t u) const { return nodes[u]; }
+    ExtendedNode &getNode(uint64_t u) { return nodes[u]; }
 
     /**
     * Returns the degree of the node that u points at.
     * @param u Vertex u 
     * @return Returns d that is the degree of node v.
     */
-    uint deg(uint u) const override { return nodes[u].getDegree(); }
+    uint64_t deg(uint64_t u) const override { return nodes[u].getDegree(); }
 
     /**
     * Returns the vertex v that u points at with its k-th edge.
@@ -55,12 +55,12 @@ class UndirectedGraph : public Graph {
     * @param k index in the adjacency vector of node u
     * @return the k-th neighbor of u
     */
-    uint head(uint u, uint k) const override { return nodes[u].getAdj()[k].first; }
+    uint64_t head(uint64_t u, uint64_t k) const override { return nodes[u].getAdj()[k].first; }
 
     /**
     * @return order of the graph, i.e, the total number of vertices.
     */
-    uint getOrder() const override { return nodes.size(); }
+    uint64_t getOrder() const override { return static_cast<uint64_t>(nodes.size()); }
 
     /**
      * Get the cross index of the given edge.
@@ -68,10 +68,10 @@ class UndirectedGraph : public Graph {
      * @param k outgoing edge
      * @return index of the edge k' in v that points back to u
      */
-    uint mate(uint u, uint k) const { return nodes[u].getAdj()[k].second; }
+    uint64_t mate(uint64_t u, uint64_t k) const { return nodes[u].getAdj()[k].second; }
 
  private:
-    std::vector<NodeU> nodes;
+    std::vector<ExtendedNode> nodes;
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_UNDIRECTEDGRAPH_H_

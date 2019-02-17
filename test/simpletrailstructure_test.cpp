@@ -1,17 +1,18 @@
 #include <gtest/gtest.h>
-#include <sealib/simpletrailstructure.h>
-#include <sealib/dyckwordlexicon.h>
-#include <sealib/dyckmatchingstructure.h>
-#include <sealib/trailstructure.h>
+#include "../src/trail/simpletrailstructure.h"
+#include "../src/dyck/dyckwordlexicon.h"
+#include "../src/dyck/dyckmatchingstructure.h"
+#include "../src/trail/trailstructure.h"
 
 using Sealib::SimpleTrailStructure;
+using Sealib::INVALID;
 
 TEST(SimpleTrailStructureTest, enter) {
     SimpleTrailStructure ts = SimpleTrailStructure(5);
 
     ASSERT_EQ(ts.enter(2), 3);
     ASSERT_EQ(ts.enter(4), 0);
-    ASSERT_EQ(ts.enter(1), (uint32_t) -1);  // last element
+    ASSERT_EQ(ts.enter(1), INVALID);  // last element
 }
 
 TEST(SimpleTrailStructureTest, leave) {

@@ -12,27 +12,27 @@ namespace SealibVisual {
 class VisualTest {
  public:
     static void testBFS() {
-        uint n = 20;
+        uint64_t n = 20;
         Sealib::DirectedGraph g =
             Sealib::GraphImporter::importGML<Sealib::DirectedGraph>(
                 "graph-bfs-v1.gml");
-        VisualBFS b(&g, Sealib::CompactArray(n, 4), "demo-bfs.tex", "beamer");
+        VisualBFS b(g, Sealib::CompactArray(n, 4), "demo-bfs.tex", "beamer");
         b.run();
     }
 
     static void testDFS() {
-        uint n = 50;
+        uint64_t n = 50;
         Sealib::DirectedGraph g =
-            Sealib::GraphCreator::createRandomKRegularGraph(n, 1);
+            Sealib::GraphCreator::kOutdegree(n, 1);
         Sealib::CompactArray c(n, 3);
-        VisualDFS d(&g, &c, "out-dfs.tex", "beamer");
+        VisualDFS d(g, &c, "out-dfs.tex", "beamer");
         d.run();
     }
 
     static void testCutVertex() {
-        Sealib::UndirectedGraph g = Sealib::GraphCreator::createWindmill(3, 4);
+        Sealib::UndirectedGraph g = Sealib::GraphCreator::windmill(3, 4);
         std::shared_ptr<VisualEdgeMarker> e(
-            new VisualEdgeMarker(&g, "out-cutvertex.tex", "beamer"));
+            new VisualEdgeMarker(g, "out-cutvertex.tex", "beamer"));
         e->init();
         VisualCutVertex c(e);
         c.init();
@@ -41,9 +41,9 @@ class VisualTest {
 
     static void testBCC() {
         Sealib::UndirectedGraph g =
-            Sealib::GraphCreator::createRandomKRegularUndirectedGraph(20, 2);
+            Sealib::GraphCreator::kRegular(20, 2);
         std::shared_ptr<VisualEdgeMarker> e(
-            new VisualEdgeMarker(&g, "out-bcc.tex", "beamer", true));
+            new VisualEdgeMarker(g, "out-bcc.tex", "beamer", true));
         e->init();
         VisualBCC b(e);
         b.init();
@@ -53,11 +53,11 @@ class VisualTest {
 
     static void testBitset() {
         std::vector<std::string> numbers1(10);
-        for (unsigned int i = 0; i < 10; i++) {
+        for (uint64_t i = 0; i < 10; i++) {
             numbers1[i] = std::to_string(i * 45);
         }
 
-        Sealib::Bitset<unsigned char> bits(10);
+        Sealib::Bitset<uint8_t> bits(10);
         bits[4] = 1;
 
         std::shared_ptr<TikzElement> tikzNode =

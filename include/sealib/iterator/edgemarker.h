@@ -20,14 +20,14 @@ namespace Sealib {
  * can run algorithms like cut-vertex finding and biconnected-component
  * outputting.
  */
-class EdgeMarker : DFS {
+class EdgeMarker {
  public:
     /**
      * Create a new edge marker from a given undirected graph. On construction,
      * it automatically identifies edge types and marks tree edges.
      * @param g undirected graph
      */
-    explicit EdgeMarker(UndirectedGraph const *g);
+    explicit EdgeMarker(UndirectedGraph const &g);
 
     void init() {
         identifyEdges();
@@ -38,24 +38,24 @@ class EdgeMarker : DFS {
      * Get the graph that this edge marker is using.
      * @return pointer to the undirected graph used
      */
-    CONSTEXPR_IF_CLANG UndirectedGraph const *getGraph() const { return g; }
+    CONSTEXPR_IF_CLANG UndirectedGraph const &getGraph() const { return g; }
 
-    CONSTEXPR_IF_CLANG bool isInitialized(uint u, uint k) const {
+    CONSTEXPR_IF_CLANG bool isInitialized(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) != NONE;
     }
-    CONSTEXPR_IF_CLANG bool isTreeEdge(uint u, uint k) const {
+    CONSTEXPR_IF_CLANG bool isTreeEdge(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) >= UNMARKED;
     }
-    CONSTEXPR_IF_CLANG bool isBackEdge(uint u, uint k) const {
+    CONSTEXPR_IF_CLANG bool isBackEdge(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) == BACK;
     }
     /**
      * @return true if u is closer to the root of the DFS tree
      */
-    CONSTEXPR_IF_CLANG bool isParent(uint u, uint k) const {
+    CONSTEXPR_IF_CLANG bool isParent(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & PARENT_MASK) == PARENT;
     }
-    CONSTEXPR_IF_CLANG bool isFullMarked(uint u, uint k) const {
+    CONSTEXPR_IF_CLANG bool isFullMarked(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) == FULL;
     }
 
@@ -68,7 +68,7 @@ class EdgeMarker : DFS {
      * @param k outgoing edge index
      * @param mark marking (can be FULL, HALF or UNMARKED)
      */
-    virtual void setMark(uint u, uint k, uint8_t mark);
+    virtual void setMark(uint64_t u, uint64_t k, uint8_t mark);
 
     /**
      * Initializes the kth edge of u to the given type. u will be set as parent.
@@ -76,7 +76,7 @@ class EdgeMarker : DFS {
      * @param k outgoing edge index
      * @param type FULL, HALF, UNMARKED, BACK or CROSS
      */
-    virtual void initEdge(uint u, uint k, uint8_t type);
+    virtual void initEdge(uint64_t u, uint64_t k, uint8_t type);
 
  private:
     /**
@@ -106,18 +106,18 @@ class EdgeMarker : DFS {
                          CROSS = 0x2, NONE = 0x0;
     static const uint8_t PARENT = 0x1;
 
-    UndirectedGraph const *g;
-    uint n;
+    UndirectedGraph const &g;
+    uint64_t n;
     StaticSpaceStorage parent;
     StaticSpaceStorage edges;
     RankSelect offset;
 
-    void markParents(uint w, uint u);
+    void markParents(uint64_t w, uint64_t u);
 
-    CONSTEXPR_IF_CLANG uint edgeIndex(uint u) const {
-        return static_cast<uint>(offset.select(u + 1) - u - 1U);
+    CONSTEXPR_IF_CLANG uint64_t edgeIndex(uint64_t u) const {
+        return static_cast<uint64_t>(offset.select(u + 1) - u - 1U);
     }
-    CONSTEXPR_IF_CLANG uint64_t getEdgeData(uint u, uint k) const {
+    CONSTEXPR_IF_CLANG uint64_t getEdgeData(uint64_t u, uint64_t k) const {
         return edges.get(edgeIndex(u) + k);
     }
 

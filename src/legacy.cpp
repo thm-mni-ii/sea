@@ -8,28 +8,28 @@
 
 namespace Sealib {
 
-void *Sealib_Graph_new(uint32_t **m, uint32_t order) {
-    return GraphCreator::createGraphPointerFromAdjacencyMatrix(m, order);
+void *Sealib_Graph_new(uint64_t **m, uint64_t order) {
+    return GraphCreator::createPointerFromAdjacencyMatrix(m, order);
 }
 void Sealib_Graph_delete(void *self) {
-    delete static_cast<Graph const *>(self);
+    delete static_cast<UndirectedGraph const *>(self);
 }
-void *Sealib_Graph_generateRandom(uint32_t order) {
-    std::vector<NodeD> n(order);
+void *Sealib_Graph_generateRandom(uint64_t order) {
+    std::vector<SimpleNode> n(order);
     static std::random_device rng;
-    std::uniform_int_distribution<uint32_t> rnd(0, order - 1);
-    for (uint32_t a = 0; a < order; a++) {
-        uint32_t deg = rnd(rng);
-        std::vector<uint> ad;
-        for (uint32_t b = 0; b < deg; b++) {
+    std::uniform_int_distribution<uint64_t> rnd(0, order - 1);
+    for (uint64_t a = 0; a < order; a++) {
+        uint64_t deg = rnd(rng);
+        std::vector<uint64_t> ad;
+        for (uint64_t b = 0; b < deg; b++) {
             ad.emplace_back(rnd(rng));
         }
-        n[a] = NodeD(ad);
+        n[a] = SimpleNode(ad);
     }
     return new DirectedGraph(n);
 }
 
-void *Sealib_ChoiceDictionary_new(uint32_t size) {
+void *Sealib_ChoiceDictionary_new(uint64_t size) {
     return new ChoiceDictionary(size);
 }
 void Sealib_ChoiceDictionary_delete(void *self) {
@@ -47,7 +47,7 @@ uint64_t Sealib_ChoiceDictionary_choice(void *self) {
 
 void *Sealib_ChoiceDictionaryIterator_new(void *choiceDictionary) {
     return new ChoiceDictionaryIterator(
-        static_cast<ChoiceDictionary *>(choiceDictionary));
+        *static_cast<ChoiceDictionary *>(choiceDictionary));
 }
 void Sealib_ChoiceDictionaryIterator_delete(void *self) {
     delete static_cast<ChoiceDictionaryIterator *>(self);
@@ -90,15 +90,15 @@ uint64_t Sealib_RankSelect_size(void *self) {
     return static_cast<RankSelect *>(self)->size();
 }
 
-void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint32_t),
-                               void (*preexplore)(uint32_t, uint32_t),
-                               void (*postexplore)(uint32_t, uint32_t),
-                               void (*postprocess)(uint32_t)) {
-    if (preprocess == nullptr) preprocess = [](uint) {};
-    if (preexplore == nullptr) preexplore = [](uint, uint) {};
-    if (postexplore == nullptr) postexplore = [](uint, uint) {};
-    if (postprocess == nullptr) postprocess = [](uint) {};
-    DFS::nloglognBitDFS(static_cast<Graph const *>(graph), preprocess,
+void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint64_t),
+                               void (*preexplore)(uint64_t, uint64_t),
+                               void (*postexplore)(uint64_t, uint64_t),
+                               void (*postprocess)(uint64_t)) {
+    if (preprocess == nullptr) preprocess = [](uint64_t) {};
+    if (preexplore == nullptr) preexplore = [](uint64_t, uint64_t) {};
+    if (postexplore == nullptr) postexplore = [](uint64_t, uint64_t) {};
+    if (postprocess == nullptr) postprocess = [](uint64_t) {};
+    DFS::nloglognBitDFS(*static_cast<Graph const *>(graph), preprocess,
                         preexplore, postexplore, postprocess);
 }
 }  // namespace Sealib

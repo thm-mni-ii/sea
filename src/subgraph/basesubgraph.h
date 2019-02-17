@@ -16,10 +16,15 @@ class BaseSubGraph : public SubGraph {
 
     std::tuple<uint64_t, uint64_t> mate(uint64_t u, uint64_t k) const override;
 
+    /**
+     * For the following functions:
+     * @throws ZeroArgumentGiven if u or a is 0
+     */
     uint64_t phi(uint64_t u) const override;
     uint64_t psi(uint64_t a) const override;
     uint64_t phiInv(uint64_t u) const override;
     uint64_t psiInv(uint64_t a) const override;
+
     explicit BaseSubGraph(stack_t *stack, std::shared_ptr<UndirectedGraph> rGraph);
     ~BaseSubGraph() override;
 };

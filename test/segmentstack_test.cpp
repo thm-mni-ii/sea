@@ -3,18 +3,16 @@
 #include "sealib/collection/compactarray.h"
 #include "sealib/graph/graphcreator.h"
 
-using Sealib::BasicSegmentStack;
-using Sealib::ExtendedSegmentStack;
-using Sealib::CompactArray;
-using Sealib::DirectedGraph;
+using namespace Sealib;  // NOLINT
 
-#define pushn(i, n) \
-    for (unsigned a = (i); a < (n); a++) s->push(std::pair<uint, uint>((a), K))
+#define pushn(i, n)                      \
+    for (uint64_t a = (i); a < (n); a++) \
+    s->push(std::pair<uint64_t, uint64_t>((a), K))
 #define popexp(n, exp) \
     for (uint32_t a = 0; a < (n); a++) EXPECT_EQ(s->pop(&r), (exp))
 
-static std::pair<uint, uint> r;
-static const uint K = 5;
+static std::pair<uint64_t, uint64_t> r;
+static const uint64_t K = 5;
 
 class BasicSegmentStackTest : public ::testing::Test {
  protected:
@@ -24,7 +22,7 @@ class BasicSegmentStackTest : public ::testing::Test {
 
 TEST_F(BasicSegmentStackTest, isEmpty) {
     EXPECT_TRUE(s->isEmpty());
-    EXPECT_THROW(s->saveTrailer(), std::logic_error);
+    EXPECT_THROW(s->saveTrailer(), TrailersEmpty);
     pushn(0, 1);
     EXPECT_FALSE(s->isEmpty());
     popexp(1, 0);
@@ -58,10 +56,10 @@ class ExtendedSegmentStackTest : public ::testing::Test {
     DirectedGraph g{0};
     virtual void SetUp() {
         uint32_t n = 256;
-        g = Sealib::GraphCreator::createRandomKRegularGraph(n, 10);
+        g = Sealib::GraphCreator::kOutdegree(n, 10);
         c = new CompactArray(n, 3);
-        for (uint a = 0; a < n; a++) c->insert(a, 0);
-        s = new ExtendedSegmentStack(n, &g, c);
+        for (uint64_t a = 0; a < n; a++) c->insert(a, 0);
+        s = new ExtendedSegmentStack(n, g, c);
         q = static_cast<uint32_t>(ceil(n / log2(n)));
     }
     virtual void TearDown() { delete s; }
@@ -75,9 +73,9 @@ class ExtendedSegmentStackTest2 : public ::testing::Test {
     DirectedGraph g{0};
     virtual void SetUp() {
         uint32_t n = 128;
-        g = Sealib::GraphCreator::createRandomImbalanced(n);
+        g = Sealib::GraphCreator::imbalanced(n);
         c = new CompactArray(n, 3);
-        s = new ExtendedSegmentStack(n, &g, c);
+        s = new ExtendedSegmentStack(n, g, c);
         q = static_cast<uint32_t>(ceil(n / log2(n)));
     }
     virtual void TearDown() { delete s; }
@@ -88,19 +86,19 @@ TEST_F(ExtendedSegmentStackTest, topSegment) {
      * recognized
      */
     pushn(0, 3 * q);
-    for (uint a = 0; a < 2 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
-    for (uint a = 2 * q; a < 3 * q; a++) EXPECT_TRUE(s->isInTopSegment(a));
+    for (uint64_t a = 0; a < 2 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
+    for (uint64_t a = 2 * q; a < 3 * q; a++) EXPECT_TRUE(s->isInTopSegment(a));
     /* We push one value to the fourth segment. Expected: Only the new value is
      * now in a top segment */
-    s->push(std::pair<uint, uint>(3 * q, K));
-    for (uint a = 0; a < 3 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
+    s->push(std::pair<uint64_t, uint64_t>(3 * q, K));
+    for (uint64_t a = 0; a < 3 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
     EXPECT_TRUE(s->isInTopSegment(3 * q));
     /* We pop the top value, which will leave us with 3 segments. Expected:
      * Again,
      * the third segment is the top segment of S */
     s->pop(&r);
-    for (uint a = 0; a < 2 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
-    for (uint a = 2 * q; a < 3 * q; a++) EXPECT_TRUE(s->isInTopSegment(a));
+    for (uint64_t a = 0; a < 2 * q; a++) EXPECT_FALSE(s->isInTopSegment(a));
+    for (uint64_t a = 2 * q; a < 3 * q; a++) EXPECT_TRUE(s->isInTopSegment(a));
     popexp(q, 0);
     EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
     EXPECT_TRUE(s->isInTopSegment(2 * q - 1));
@@ -129,8 +127,8 @@ TEST_F(ExtendedSegmentStackTest, secondLastTrailer) {
 TEST_F(ExtendedSegmentStackTest, recolorLow) {
     pushn(0, 3 * q + 1);
     s->recolorLow(1);
-    for (uint a = 0; a < 2 * q; a++) EXPECT_EQ(c->get(a), 0);
-    for (uint a = 2 * q; a < 3 * q; a++) EXPECT_EQ(c->get(a), 1);
+    for (uint64_t a = 0; a < 2 * q; a++) EXPECT_EQ(c->get(a), 0);
+    for (uint64_t a = 2 * q; a < 3 * q; a++) EXPECT_EQ(c->get(a), 1);
     EXPECT_EQ(c->get(3 * q), 0);
 }
 
@@ -161,32 +159,32 @@ TEST_F(ExtendedSegmentStackTest, outgoingEdgeSmall) {
 }
 
 TEST_F(ExtendedSegmentStackTest2, outgoingEdgeBig) {
-    uint m = 0;
-    std::set<uint> big;
-    for (uint u = 0; u < g.getOrder(); u++) m += g.deg(u);
-    for (uint u = 0; u < g.getOrder(); u++) {
+    uint64_t m = 0;
+    std::set<uint64_t> big;
+    for (uint64_t u = 0; u < g.getOrder(); u++) m += g.deg(u);
+    for (uint64_t u = 0; u < g.getOrder(); u++) {
         if (g.deg(u) > m / q) {
             big.insert(u);
         }
     }
-    for (uint a = 0; a < 4 * q; a++) {
-        s->push(std::pair<uint, uint>(a, 0));
+    for (uint64_t a = 0; a < 4 * q; a++) {
+        s->push(std::pair<uint64_t, uint64_t>(a, 0));
         s->pop(&r);
-        s->push(std::pair<uint, uint>(a, 3));
+        s->push(std::pair<uint64_t, uint64_t>(a, 3));
     }
     popexp(2 * q, 0);
     EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
     EXPECT_EQ(s->getRestoreTrailer(&r), 0);
     EXPECT_EQ(r.first, q - 1);
     EXPECT_EQ(r.second, 3);
-    for (uint a = q; a < 2 * q; a++) {
+    for (uint64_t a = q; a < 2 * q; a++) {
         EXPECT_FALSE(s->isAligned());
         if (big.find(a) == big.end()) {
-            s->push(std::pair<uint, uint>(a, 3));
+            s->push(std::pair<uint64_t, uint64_t>(a, 3));
         } else {
-            uint b = s->getOutgoingEdge(a);
+            uint64_t b = s->getOutgoingEdge(a);
             EXPECT_EQ(b, 2);
-            s->push(std::pair<uint, uint>(a, 3));
+            s->push(std::pair<uint64_t, uint64_t>(a, 3));
         }
     }
     EXPECT_TRUE(s->isAligned());
@@ -199,18 +197,18 @@ TEST_F(ExtendedSegmentStackTest, aligned) {
     popexp(q + 1, 0);
     EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
     /* We restore one segment correctly. Expected: the stack is aligned */
-    for (uint a = q; a < 2 * q; a++) {
+    for (uint64_t a = q; a < 2 * q; a++) {
         EXPECT_FALSE(s->isAligned());
-        s->push(std::pair<uint, uint>(a, K));
+        s->push(std::pair<uint64_t, uint64_t>(a, K));
     }
     EXPECT_TRUE(s->isAligned());
     /* We pop the segment again and restore. Expected: The restoration is
      * successful */
     popexp(q, 0);
     EXPECT_EQ(s->pop(&r), DFS_DO_RESTORE);
-    for (uint a = 0; a < q; a++) {
+    for (uint64_t a = 0; a < q; a++) {
         EXPECT_FALSE(s->isAligned());
-        s->push(std::pair<uint, uint>(a, K));
+        s->push(std::pair<uint64_t, uint64_t>(a, K));
     }
     EXPECT_TRUE(s->isAligned());
     /* We replace the top element with a wrong one. Expected: the trailer does
@@ -218,7 +216,7 @@ TEST_F(ExtendedSegmentStackTest, aligned) {
      * match */
     s->pop(&r);
     EXPECT_FALSE(s->isAligned());
-    s->push(std::pair<uint, uint>(0, K));
+    s->push(std::pair<uint64_t, uint64_t>(0, K));
     EXPECT_FALSE(s->isAligned());
     popexp(q, 0);
     EXPECT_EQ(s->pop(&r), DFS_NO_MORE_NODES);

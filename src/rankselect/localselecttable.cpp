@@ -1,5 +1,5 @@
-#include <sealib/localselecttable.h>
-#include <sealib/sharedrankstructure.h>
+#include "localselecttable.h"
+#include <sealib/dictionary/sharedrankstructure.h>
 #include <iostream>
 
 Sealib::LocalSelectTable::LocalSelectTable() : localSelectLookupTable(256) {

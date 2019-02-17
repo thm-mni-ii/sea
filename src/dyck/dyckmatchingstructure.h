@@ -1,5 +1,5 @@
-#ifndef SEALIB_DYCKMATCHINGSTRUCTURE_H_
-#define SEALIB_DYCKMATCHINGSTRUCTURE_H_
+#ifndef SRC_DYCK_DYCKMATCHINGSTRUCTURE_H_
+#define SRC_DYCK_DYCKMATCHINGSTRUCTURE_H_
 
 #include <sealib/collection/bitset.h>
 #include <iostream>
@@ -36,6 +36,7 @@ class DyckMatchingStructure {
      * @param word_ - dyck word for the matching structure
      */
     explicit DyckMatchingStructure(const Sealib::Bitset<uint8_t> &word_);
+    explicit DyckMatchingStructure(Sealib::Bitset<uint8_t> &&word_);
 
     /**
      * Default descructor.
@@ -53,4 +54,4 @@ class DyckMatchingStructure {
     static constexpr const uint8_t mSegmentLength = 7;
 };
 }  // namespace Sealib
-#endif  // SEALIB_DYCKMATCHINGSTRUCTURE_H_
+#endif  // SRC_DYCK_DYCKMATCHINGSTRUCTURE_H_

@@ -36,13 +36,24 @@ class RecursiveSubGraph : public SubGraph {
                       const Sealib::Bitset<uint8_t> &v,
                       const Sealib::Bitset<uint8_t> &a);
 
+    RecursiveSubGraph(stack_t *stack,
+                      uint64_t sidx_,
+                      uint64_t ridx_,
+                      Sealib::Bitset<uint8_t> &&v,
+                      Sealib::Bitset<uint8_t> &&a);
+
     uint64_t head(uint64_t u, uint64_t k) const override;
     std::tuple<uint64_t, uint64_t> mate(uint64_t u, uint64_t k) const override;
 
+    /**
+     * For the following functions:
+     * @throws ZeroArgumentGiven if u or a is 0
+     */
     uint64_t phi(uint64_t u) const override;
     uint64_t psi(uint64_t a) const override;
     uint64_t phiInv(uint64_t u) const final;
     uint64_t psiInv(uint64_t a) const final;
+
     ~RecursiveSubGraph() override;
 };
 }  // namespace Sealib

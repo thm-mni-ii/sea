@@ -19,7 +19,7 @@ class TikzGraph : public TikzElement {
     using map_t = std::map<key_t, TikzEdge>;
 
  public:
-    explicit TikzGraph(unsigned int nodes);
+    explicit TikzGraph(uint64_t nodes);
 
     std::ostream &out(std::ostream &os) const override;
 

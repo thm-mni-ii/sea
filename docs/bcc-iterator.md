@@ -21,17 +21,22 @@ This space-efficient variant
 
 ## Example
 ```cpp
-UndirectedGraph g=GraphCreator::createWindmill(3,4);
+#include <cstdio>
+#include "sealib/iterator/bcciterator.h"
+#include "sealib/graph/graphcreator.h"
 
-BCCIterator b(&g);
-b.init();
-b.start(1,2);
-while(b.more()) {
-    std::pair&lt;uint,uint&gt; p=b.next();  
-    if(p.second==INVALID) {
-        std::cout << "found node: " << p.first << "\n";
-    } else {
-        std::cout << "found edge: " << p.first << "," << p.second << "\n";
-    }
+int main() {
+    UndirectedGraph g=GraphCreator::windmill(3,4);
+
+    BCCIterator b(g);
+    b.init();
+    b.start(1,2);
+    b.forEach([](std::pair<uint64_t,uint64_t> p) {
+        if(p.second==INVALID) {
+            std::cout << "found node: " << p.first << "\n";
+        } else {
+            std::cout << "found edge: " << p.first << "," << p.second << "\n";
+        }
+    });
 }
 ```

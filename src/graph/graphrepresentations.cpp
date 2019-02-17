@@ -13,8 +13,8 @@
 using Sealib::Graphrepresentations;
 using Sealib::CompactGraph;
 
-void Graphrepresentations::standardToCrosspointer(uint32_t* a) {
-  uint32_t n = a[0], v, u, pv, pu;
+void Graphrepresentations::standardToCrosspointer(uint64_t* a) {
+  uint64_t n = a[0], v, u, pv, pu;
   // n = order of the graph
   v = pv = pu = 0;
   u = 1;
@@ -40,11 +40,11 @@ void Graphrepresentations::standardToCrosspointer(uint32_t* a) {
   return;
 }
 
-void Graphrepresentations::standardToBeginpointer(uint32_t* a) {
-  uint32_t order = a[0];
-  uint32_t numEdges = a[order + 1];
-  uint32_t graphSize = order + numEdges + 2;
-  for (uint32_t i = order + 2; i < graphSize; ++i) {
+void Graphrepresentations::standardToBeginpointer(uint64_t* a) {
+  uint64_t order = a[0];
+  uint64_t numEdges = a[order + 1];
+  uint64_t graphSize = order + numEdges + 2;
+  for (uint64_t i = order + 2; i < graphSize; ++i) {
     // checks if a[i] is not a node of order 0
     if (a[a[i]] != a[a[i] - 1] || i == order + 2) {
       a[i] = a[a[i]];
@@ -53,24 +53,24 @@ void Graphrepresentations::standardToBeginpointer(uint32_t* a) {
   return;
 }
 
-void Graphrepresentations::swappedBeginpointerToStandard(uint32_t* a) {
-  uint32_t order = a[0];
-  uint32_t numEdges = a[order + 1];
-  uint32_t graphSize = order + numEdges + 2;
-  for (uint32_t i = order + 2; i < graphSize; ++i) {
+void Graphrepresentations::swappedBeginpointerToStandard(uint64_t* a) {
+  uint64_t order = a[0];
+  uint64_t numEdges = a[order + 1];
+  uint64_t graphSize = order + numEdges + 2;
+  for (uint64_t i = order + 2; i < graphSize; ++i) {
     if (a[i] > order) {
       a[i] = a[a[i]];
     }
   }
-  for (uint32_t i = 1; i <= order; ++i) {
+  for (uint64_t i = 1; i <= order; ++i) {
     a[i] = a[a[i]];
   }
 
-  uint32_t v = order;
+  uint64_t v = order;
   while (a[v] == v) {
     --v;
   }
-  for (uint32_t i = graphSize - 1; i > order + 1; --i) {
+  for (uint64_t i = graphSize - 1; i > order + 1; --i) {
     if (a[i] == v) {
       a[i] = a[v];
       a[v] = i;
@@ -88,10 +88,10 @@ void Graphrepresentations::swappedBeginpointerToStandard(uint32_t* a) {
  * swapped cross or beginpointer representation
  * @param a graph in cross or beginpointer representation
  */
-void Graphrepresentations::swapRepresentation(uint32_t* a) {
-  uint32_t order = a[0];
-  for (uint32_t i = 1; i <= order; ++i) {
-    uint32_t temp = a[a[i]];
+void Graphrepresentations::swapRepresentation(uint64_t* a) {
+  uint64_t order = a[0];
+  for (uint64_t i = 1; i <= order; ++i) {
+    uint64_t temp = a[a[i]];
     a[a[i]] = i;
     a[i] = temp;
   }

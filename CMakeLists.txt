@@ -10,12 +10,7 @@ set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated bina
 set(CMAKE_INCLUDE_PATH include/)
 
 set(CMAKE_INCLUDE_CURRENT_DIR OFF)
-
-set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wswitch-default -Wswitch-enum \
--Wunreachable-code -Wwrite-strings -Wcast-align -Wshadow -Wundef -Wcast-qual -Wctor-dtor-privacy \
--Wdisabled-optimization -Winit-self -Wmissing-declarations -Wmissing-include-dirs \
--Woverloaded-virtual -Wredundant-decls -Wsign-conversion -Wsign-promo \
--Wstrict-overflow=5 -Wfloat-equal")
+set(WARNING_FLAGS "-Werror -Wall -Wextra -Wpedantic -Wconversion -Wdeprecated")
 set(BUILD_FLAGS "-std=c++11 -O3 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
 set(TEST_FLAGS "-std=c++11 -g -O0 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
 

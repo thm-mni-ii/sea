@@ -1,5 +1,5 @@
-#ifndef SEALIB_RANKSTRUCTURE_H_
-#define SEALIB_RANKSTRUCTURE_H_
+#ifndef SEALIB_DICTIONARY_RANKSTRUCTURE_H_
+#define SEALIB_DICTIONARY_RANKSTRUCTURE_H_
 #define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
 
 #include <sealib/collection/bitset.h>
@@ -39,6 +39,8 @@ class RankStructure {
      */
     explicit RankStructure(const Sealib::Bitset<uint8_t> &bitset);
 
+    explicit RankStructure(Sealib::Bitset<uint8_t> &&bitset);
+
     /**
      * default empty constructor
      */
@@ -63,4 +65,4 @@ class RankStructure {
     uint32_t setBefore(uint64_t segment) const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_RANKSTRUCTURE_H_
+#endif  // SEALIB_DICTIONARY_RANKSTRUCTURE_H_

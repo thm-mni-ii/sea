@@ -1,4 +1,4 @@
-#include <sealib/recursivedyckmatchingstructure.h>
+#include "recursivedyckmatchingstructure.h"
 #include <cmath>
 #include <iostream>
 
@@ -32,8 +32,8 @@ Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(
     : RecursiveDyckMatchingStructure(word_, 2) {
 }
 
-const Sealib::Bitset<uint8_t>
-    Sealib::RecursiveDyckMatchingStructure::initializePioneerRankSelectBitset() {
+Sealib::Bitset<uint8_t>
+Sealib::RecursiveDyckMatchingStructure::initializePioneerRankSelectBitset() {
     Sealib::Bitset<uint8_t> pioneerRankSelectBitset(word.size());
 
     for (uint32_t i = 0; i < segments; i++) {
@@ -227,4 +227,34 @@ uint64_t Sealib::RecursiveDyckMatchingStructure::getMatch(uint64_t idx) {
     }
     return idx;
 }
+Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(
+    Sealib::Bitset<uint8_t> &&word_,
+    uint32_t recursions) :
+    DyckMatchingStructure(word_),
+    segments(static_cast<uint32_t>(word_.size() / segmentLength)),
+    lastSegment(static_cast<uint8_t>(word_.size() % segmentLength)),
+    pioneerRankSelect(initializePioneerRankSelectBitset()),
+    pioneerMatchingStructure(nullptr) {
+    uint64_t maxRank =
+        pioneerRankSelect.rank(pioneerRankSelect.size());
+    if (maxRank > 0) {
+        Sealib::Bitset<uint8_t> pioneerWord(maxRank);
+        for (uint64_t i = 0; i < maxRank; i++) {
+            uint64_t idx = pioneerRankSelect.select(i + 1);
+            pioneerWord[i] = word[idx - 1];
+        }
+        if (recursions > 0) {
+            pioneerMatchingStructure =
+                new Sealib::RecursiveDyckMatchingStructure(
+                    std::move(pioneerWord), recursions - 1);
+        } else {
+            pioneerMatchingStructure =
+                new Sealib::DyckMatchingStructure(
+                    std::move(pioneerWord));
+        }
+    }
+}
 
+Sealib::RecursiveDyckMatchingStructure::RecursiveDyckMatchingStructure(
+    Sealib::Bitset<uint8_t> &&word_)
+    : RecursiveDyckMatchingStructure(word_, 2) {}

@@ -10,7 +10,7 @@ std::ostream &SealibVisual::TikzArray::out(std::ostream &os) const {
     // array content
     os << "{\n\t";
     if (showIndices) {
-        for (unsigned int i = 0; i < content.size(); i++) {
+        for (uint64_t i = 0; i < content.size(); i++) {
             os << i;
             if (i < content.size() - 1) {
                 os << " \\& ";
@@ -21,7 +21,7 @@ std::ostream &SealibVisual::TikzArray::out(std::ostream &os) const {
         os << "\n";
     }
     os << "\t";
-    for (unsigned int i = 0; i < content.size(); i++) {
+    for (uint64_t i = 0; i < content.size(); i++) {
         os << content[i];
         if (i < content.size() - 1) {
             os << " \\& ";

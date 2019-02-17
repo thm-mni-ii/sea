@@ -14,26 +14,26 @@ using std::set;
 using std::tuple;
 
 NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
-    static const std::tuple<uint32_t, uint32_t> nonArc =
-        std::make_tuple((uint32_t) -1, (uint32_t) -1);
+    static const std::tuple<uint64_t, uint64_t> nonArc =
+        std::make_tuple(INVALID, INVALID);
 
-    uint32_t order = g->getOrder();
+    uint64_t order = g->getOrder();
     std::vector<Sealib::NaiveTrailStructure *> ts;
-    for (uint32_t i = 0; i < order; i++) {
-        uint32_t degree = g->getNode(i).getDegree();
+    for (uint64_t i = 0; i < order; i++) {
+        uint64_t degree = g->getNode(i).getDegree();
         ts.push_back(new Sealib::NaiveTrailStructure(degree));
     }
 
     // find first start node
-    uint32_t u = (uint32_t) -1;
-    for (uint32_t i = 0; i < order; i++) {
+    uint64_t u = INVALID;
+    for (uint64_t i = 0; i < order; i++) {
         if (g->getNode(i).getDegree() % 2 != 0) {  // odd
             u = i;
             break;
         }
     }
-    if (u == (uint32_t) -1) {  // no odd found
-        for (uint32_t i = 0; i < order; i++) {
+    if (u == INVALID) {  // no odd found
+        for (uint64_t i = 0; i < order; i++) {
             // first that has edges, it's possible to have a graph with no edges
             if (g->getNode(i).getDegree() != 0) {
                 u = i;
@@ -41,13 +41,13 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
             }
         }
     }
-    if (u != (uint32_t) -1) {
+    if (u != INVALID) {
         trails.emplace_back();
     }
 
     // loop the iteration while there is a non-black vertex
-    while (u != (uint32_t) -1) {
-        std::tuple<uint32_t, uint32_t> aOld = nonArc;
+    while (u != INVALID) {
+        std::tuple<uint64_t, uint64_t> aOld = nonArc;
         auto tOld = trails.begin();
         if (ts[u]->isEven() && ts[u]->isGrey()) {  // remember aOld
             while (tOld++ != trails.end()) {
@@ -56,15 +56,15 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
             }
         }
         Sealib::SimpleTrail tempTrail;
-        uint32_t k = ts[u]->leave();
-        uint32_t uMate;
+        uint64_t k = ts[u]->leave();
+        uint64_t uMate;
         do {
-            uint32_t from = u;
+            uint64_t from = u;
             uMate = g->getNode(u).getAdj()[k].second;
             u = g->getNode(u).getAdj()[k].first;  // next node
             k = ts[u]->enter(uMate);
             tempTrail.addArc(std::make_tuple(from, u));
-        } while (k != (uint32_t) -1);
+        } while (k != INVALID);
 
         if (aOld != nonArc) {
             uint64_t idx = (*tOld).getFirstIndexOf(aOld);
@@ -74,16 +74,16 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
         }
 
         // find next start node
-        u = (uint32_t) -1;
+        u = INVALID;
 
-        for (uint32_t i = 0; i < order; i++) {
+        for (uint64_t i = 0; i < order; i++) {
             if (!ts[i]->isEven() && !ts[i]->isBlack()) {  // odd
                 u = i;
                 break;
             }
         }
-        if (u == (uint32_t) -1) {  // no odd found, search for grey
-            for (uint32_t i = 0; i < order; i++) {
+        if (u == INVALID) {  // no odd found, search for grey
+            for (uint64_t i = 0; i < order; i++) {
                 // first that has edges, it's possible to have a graph with no edges
                 if (ts[i]->isGrey()
                     && !ts[i]->isBlack()) {
@@ -92,8 +92,8 @@ NaiveEulerTrail::NaiveEulerTrail(const shared_ptr<UndirectedGraph> &g) {
                 }
             }
         }
-        if (u == (uint32_t) -1) {  // no odd found and no grey found, search for white
-            for (uint32_t i = 0; i < order; i++) {
+        if (u == INVALID) {  // no odd found and no grey found, search for white
+            for (uint64_t i = 0; i < order; i++) {
                 // first that has edges, it's possible to have a graph with no edges
                 if (!ts[i]->isBlack()) {
                     u = i;

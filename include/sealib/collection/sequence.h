@@ -8,7 +8,7 @@ namespace Sealib {
  * @param T the element type that this sequence holds
  * @author Simon Heuser
  */
-template <class T, class I = uint>
+template <class T, class I = uint64_t>
 class Sequence {
  public:
     /**
@@ -25,6 +25,12 @@ class Sequence {
      */
     virtual void insert(I i, T v) = 0;
 
+ protected:
+    Sequence() = default;
+    Sequence(Sequence const &) = default;
+    Sequence &operator=(Sequence const &) = default;
+    Sequence(Sequence &&) = default;
+    Sequence &operator=(Sequence &&) = default;
     virtual ~Sequence() = default;
 };
 }  // namespace Sealib

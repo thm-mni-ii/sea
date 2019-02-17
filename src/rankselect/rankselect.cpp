@@ -1,5 +1,5 @@
 #include <sealib/dictionary/rankselect.h>
-#include <sealib/localselecttable.h>
+#include "localselecttable.h"
 #include <iostream>
 #include <utility>
 
@@ -11,11 +11,11 @@ Sealib::RankSelect::RankSelect(
 
 uint64_t Sealib::RankSelect::select(uint64_t k) const {
     if (k == 0 || rankStructure.getSegmentCount() == 0) {
-        return (uint64_t) -1;
+        return INVALID;
     }
     uint64_t firstInSegmentRank = firstInSegment.rank(k);
-    if (firstInSegmentRank == (uint64_t) -1) {
-        return (uint64_t) -1;
+    if (firstInSegmentRank == INVALID) {
+        return INVALID;
     }
     uint64_t h = rankStructure.getNonEmptySegments()[firstInSegmentRank - 1];
     uint8_t segment = rankStructure.getBitset().getBlock(h);
@@ -29,7 +29,7 @@ Sealib::RankSelect::RankSelect() = default;
 const Sealib::Bitset<uint8_t> Sealib::RankSelect::generateFirstInBlockBitSet(
     const RankStructure &rs) {
     uint64_t size = rs.rank(rs.size());
-    if (size == (uint64_t) -1) {
+    if (size == INVALID) {
         size = 0;
     }
     Bitset<uint8_t> firstInBlockBitSet(size);
@@ -57,4 +57,8 @@ uint64_t Sealib::RankSelect::size() const {
 }
 const Sealib::Bitset<uint8_t> &Sealib::RankSelect::getBitset() const {
     return rankStructure.getBitset();
+}
+Sealib::RankSelect::RankSelect(Sealib::Bitset<uint8_t> &&bitset_) :
+    rankStructure(bitset_),
+    firstInSegment(generateFirstInBlockBitSet(rankStructure)) {
 }

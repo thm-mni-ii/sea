@@ -17,21 +17,21 @@ extern "C" {
  * @param order Size of the matrix
  * @return Pointer to the generated graph
  */
-void *Sealib_Graph_new(uint32_t **m, uint32_t order);
+void *Sealib_Graph_new(uint64_t **m, uint64_t order);
 void Sealib_Graph_delete(void *self);
 /**
  * Generate a random graph.
  * @param order Number of vertices
  * @return Pointer to the generated graph
  */
-void *Sealib_Graph_generateRandom(uint32_t order);
+void *Sealib_Graph_generateRandom(uint64_t order);
 
 /**
  * Create a new choice dictionary.
  * @param size Number of entries
  * @return Pointer to the choice dictionary
  */
-void *Sealib_ChoiceDictionary_new(uint32_t size);
+void *Sealib_ChoiceDictionary_new(uint64_t size);
 void Sealib_ChoiceDictionary_delete(void *self);
 /**
  * Set a bit to 1.
@@ -135,10 +135,10 @@ uint64_t Sealib_RankSelect_size(void *self);
  * @param postexplore user procedure to execute before exploring an edge u,v
  * @param postprocess user procedure to execute before processing a node u
  */
-void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint32_t),
-                               void (*preexplore)(uint32_t, uint32_t),
-                               void (*postexplore)(uint32_t, uint32_t),
-                               void (*postprocess)(uint32_t));
+void Sealib_DFS_nloglognBitDFS(void *graph, void (*preprocess)(uint64_t),
+                               void (*preexplore)(uint64_t, uint64_t),
+                               void (*postexplore)(uint64_t, uint64_t),
+                               void (*postprocess)(uint64_t));
 
 #ifdef __cplusplus
 }

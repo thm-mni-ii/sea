@@ -12,21 +12,21 @@ namespace Sealib {
 /* @author Simon Schniedenharn */
 class LinearTimeInplaceDFSRunner {
  private:
-  uint *A;
-  uint n;
-  uint N;
-  uint m_startVertex;
-  uint startPos;
-  uint pBar = 0;
+  uint64_t *A;
+  uint64_t n;
+  uint64_t N;
+  uint64_t m_startVertex;
+  uint64_t startPos;
+  uint64_t pBar = 0;
 
-  uint m_initialStartVertex;
-  uint m_initialStartPos;
+  uint64_t m_initialStartVertex;
+  uint64_t m_initialStartPos;
 
   Consumer m_preProcess;
   Consumer m_postProcess;
 
  public:
-  LinearTimeInplaceDFSRunner(uint *graph, Consumer preProcess,
+  LinearTimeInplaceDFSRunner(uint64_t *graph, Consumer preProcess,
                              Consumer postProcess)
       : A(graph),
         n(A[0]),
@@ -34,7 +34,7 @@ class LinearTimeInplaceDFSRunner {
         m_preProcess(preProcess),
         m_postProcess(postProcess) {}
 
-  void run(const uint t_startVertex) {
+  void run(const uint64_t t_startVertex) {
     this->m_startVertex = t_startVertex;
     this->m_initialStartVertex = t_startVertex;
     auto p = n + 2;
@@ -46,7 +46,7 @@ class LinearTimeInplaceDFSRunner {
 
     visit(p);
 
-    uint current = m_startVertex;
+    uint64_t current = m_startVertex;
     while (current != this->m_initialStartVertex) {
       if (isWhite(current)) {
         p = startPos + 1;
@@ -69,14 +69,14 @@ class LinearTimeInplaceDFSRunner {
   }
 
  private:
-  inline uint &U(uint i) {
+  inline uint64_t &U(uint64_t i) {
     if (name(i) != 0) {
       return A[A[i]];
     }
     return A[i];
   }
 
-  inline uint name(uint i) {
+  inline uint64_t name(uint64_t i) {
     if (i == 0 || i == this->n + 1 || i > this->N) {
       std::stringstream ostr;
       ostr << "Never access 0 or n + 1, i = " << i << " n: " << n
@@ -109,7 +109,7 @@ class LinearTimeInplaceDFSRunner {
     return 0u;
   }
 
-  inline uint &R(uint i) {
+  inline uint64_t &R(uint64_t i) {
     if (name(i) == 0 || A[i] == A[A[i]]) {
       return U(i);
     }
@@ -130,7 +130,7 @@ class LinearTimeInplaceDFSRunner {
     return U(p);
   }
 
-  inline bool isWhite(uint vertex) {
+  inline bool isWhite(uint64_t vertex) {
     if (vertex == 0 || vertex > this->n) {
       return false;
     }
@@ -149,7 +149,7 @@ class LinearTimeInplaceDFSRunner {
     return v != 0 && A[v] <= n;
   }
 
-  inline int gradeAtPosition(uint q) {
+  inline int gradeAtPosition(uint64_t q) {
     if (A[q] == q) {
       return GRADE_ZERO;
     }
@@ -162,7 +162,7 @@ class LinearTimeInplaceDFSRunner {
     return GRADE_AT_LEAST_TWO;
   }
 
-  inline int pointsAtNodeOfGrade(uint p) {
+  inline int pointsAtNodeOfGrade(uint64_t p) {
     auto x = U(p);
     if (A[x] == x) {
       return GRADE_ZERO;
@@ -176,7 +176,7 @@ class LinearTimeInplaceDFSRunner {
     return GRADE_AT_LEAST_TWO;
   }
 
-  void visit(uint p) {
+  void visit(uint64_t p) {
     auto v = name(p);
     if (v == 0) {
       std::stringstream ostr;
@@ -190,14 +190,14 @@ class LinearTimeInplaceDFSRunner {
     nextNeighbor(p, true);
   }
 
-  inline void swap(uint a, uint b) {
+  inline void swap(uint64_t a, uint64_t b) {
     auto rA = R(a);
     auto rB = R(b);
     R(b) = rA;
     R(a) = rB;
   }
 
-  void nextNeighbor(uint p, bool ignoreCheck) {
+  void nextNeighbor(uint64_t p, bool ignoreCheck) {
     // Check if we reached the next adjacency list or the end -> must backtrack
 
     // We ignore this check for visiting the first adjacency entry.
@@ -219,7 +219,7 @@ class LinearTimeInplaceDFSRunner {
       return goToParent(q);
     } else {
       // Otherwise p points at a vertex of at least grade 2
-      auto p1 = 0u, p2 = 0u;
+      uint64_t p1 = 0, p2 = 0;
       auto swapped = false;
       if (name(p) != 0) {
         p1 = p;
@@ -249,7 +249,7 @@ class LinearTimeInplaceDFSRunner {
     }
   }
 
-  void goToParent(uint q) {
+  void goToParent(uint64_t q) {
     // If q is of grade 0
     // Will never happen because we can never go into the adjacency
     // array of a node of grade 0, we only peek inside
@@ -286,7 +286,7 @@ class LinearTimeInplaceDFSRunner {
   }
 
   // Never call this method with p pointing at a vertex of grade zero!
-  void goToChild(uint p) {
+  void goToChild(uint64_t p) {
     auto q = R(p);
 
     int grade = pointsAtNodeOfGrade(p);
@@ -399,16 +399,16 @@ class LinearTimeInplaceDFSRunner {
 
   inline void restore() {
     // Restoration of vertices of degree at least two
-    for (uint v = 1; v <= this->n; v++) {
+    for (uint64_t v = 1; v <= this->n; v++) {
       if (v != m_startVertex && !isWhite(v)) {
         A[v] = A[v] - 1;
       }
     }
 
     // Restoration of degree one vertices!
-    for (uint p = n + 2; p <= this->N; ++p) {
+    for (uint64_t p = n + 2; p <= this->N; ++p) {
       auto v = U(p);
-      auto u = 0u;
+      uint64_t u = 0;
       if (!isWhite(v)) {
         if ((v <= n && name(p) == 0) || ((u = A[v]) && name(u) != 0) ||
             ((u = name(p)) && A[v] == p + 1)) {

@@ -1,8 +1,10 @@
 #ifndef SEALIB_ITERATOR_DFS_H_
 #define SEALIB_ITERATOR_DFS_H_
-
+#include <functional>
+#include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
+#include "sealib/collection/sequence.h"
 #include "sealib/collection/staticspacestorage.h"
 #include "sealib/graph/graph.h"
 #include "sealib/graph/node.h"
@@ -11,9 +13,9 @@
 
 namespace Sealib {
 
-const uint DFS_WHITE = 0, DFS_GRAY = 1, DFS_BLACK = 2, DFS_RESERVED = 3;
-const Consumer DFS_NOP_PROCESS = [](uint) {};
-const BiConsumer DFS_NOP_EXPLORE = [](uint, uint) {};
+const uint64_t DFS_WHITE = 0, DFS_GRAY = 1, DFS_BLACK = 2, DFS_RESERVED = 3;
+const Consumer DFS_NOP_PROCESS = [](uint64_t) {};
+const BiConsumer DFS_NOP_EXPLORE = [](uint64_t, uint64_t) {};
 
 /**
  * This class contains depth-first search algorithms.
@@ -42,7 +44,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void standardDFS(Graph const *g,
+    static void standardDFS(Graph const &g,
                             Consumer preprocess = DFS_NOP_PROCESS,
                             BiConsumer preexplore = DFS_NOP_EXPLORE,
                             BiConsumer postexplore = DFS_NOP_EXPLORE,
@@ -58,7 +60,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nBitDFS(Graph const *g, Consumer preprocess = DFS_NOP_PROCESS,
+    static void nBitDFS(Graph const &g, Consumer preprocess = DFS_NOP_PROCESS,
                         BiConsumer preexplore = DFS_NOP_EXPLORE,
                         BiConsumer postexplore = DFS_NOP_EXPLORE,
                         Consumer postprocess = DFS_NOP_PROCESS);
@@ -74,7 +76,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nloglognBitDFS(Graph const *g,
+    static void nloglognBitDFS(Graph const &g,
                                Consumer preprocess = DFS_NOP_PROCESS,
                                BiConsumer preexplore = DFS_NOP_EXPLORE,
                                BiConsumer postexplore = DFS_NOP_EXPLORE,
@@ -92,7 +94,7 @@ class DFS {
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
-    static void nplusmBitDFS(UndirectedGraph const *g,
+    static void nplusmBitDFS(UndirectedGraph const &g,
                              Consumer preprocess = DFS_NOP_PROCESS,
                              BiConsumer preexplore = DFS_NOP_EXPLORE,
                              BiConsumer postexplore = DFS_NOP_EXPLORE,
@@ -106,32 +108,36 @@ class DFS {
      * @param startVertex startVertex The begin of the DFS tree.
      * @author Simon Schniedenharn
      */
-    static void runLinearTimeInplaceDFS(uint32_t *graph, Consumer preProcess,
+    static void runLinearTimeInplaceDFS(uint64_t *graph, Consumer preProcess,
                                         Consumer postProcess,
-                                        uint32_t startVertex);
+                                        uint64_t startVertex);
 
- protected:
-    static void process_standard(uint u0, Graph const *g, uint *color,
-                                 Consumer preprocess, BiConsumer preexplore,
-                                 BiConsumer postexplore, Consumer postprocess);
+    /**
+     * The following helper procedures are only for internal or experimental
+     * usage.
+     */
 
-    template <class SS>
-    static void process_small(uint u0, Graph const *g, CompactArray *color,
-                              SS *s, void (*restoration)(uint, Graph const *,
-                                                         CompactArray *, SS *),
-                              Consumer preprocess, BiConsumer preexplore,
-                              BiConsumer postexplore, Consumer postprocess);
+    static void visit_standard(uint64_t u0, Graph const &g,
+                               std::vector<uint64_t> *color,
+                               std::vector<std::pair<uint64_t, uint64_t>> *s,
+                               Consumer preProcess, BiConsumer preExplore,
+                               BiConsumer postExplore, Consumer postProcess);
 
-    template <class S>
-    static void process_static(uint u0, UndirectedGraph const *g,
-                               CompactArray *color, S *back,
+    static void visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
+                               SegmentStack *s,
+                               std::function<void(uint64_t u0)> restoration,
                                Consumer preprocess, BiConsumer preexplore,
                                BiConsumer postexplore, Consumer postprocess);
 
-    static void restore_full(uint u0, Graph const *g, CompactArray *color,
+    static void visit_nplusm(uint64_t u0, UndirectedGraph const &g,
+                             CompactArray *color, Sequence<uint64_t> *back,
+                             Consumer preprocess, BiConsumer preexplore,
+                             BiConsumer postexplore, Consumer postprocess);
+
+    static void restore_full(uint64_t u0, Graph const &g, CompactArray *color,
                              BasicSegmentStack *s);
 
-    static void restore_top(uint u0, Graph const *g, CompactArray *color,
+    static void restore_top(uint64_t u0, Graph const &g, CompactArray *color,
                             ExtendedSegmentStack *s);
 };
 }  // namespace Sealib

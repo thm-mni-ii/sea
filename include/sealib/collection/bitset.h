@@ -24,43 +24,78 @@ namespace Sealib {
  * @author Johannes Meintrup
  */
 template<typename BlockType, typename AllocatorType>
-class Bitset : Sequence<bool, uint64_t> {
-    typedef uint64_t sizeType;
-    typedef bool bitType;
-
- private:
-    static const uint32_t bitsPerBlock = sizeof(BlockType) * 8;
+class Bitset final : Sequence<bool, uint64_t> {
+    static const uint64_t bitsPerBlock = sizeof(BlockType) * 8;
     static const BlockType BlockTypeOne = BlockType(1);
 
-    sizeType bits;
+    uint64_t bits;
     std::vector<BlockType, AllocatorType> mbits;
 
-    inline bitType get(const BlockType &i, sizeType b) const {
-        return static_cast<bitType>(i & (BlockTypeOne << b));
+    inline bool get(const BlockType &i, uint64_t b) const {
+        return static_cast<bool>(i & (BlockTypeOne << b));
     }
 
  public:
-    static const sizeType npos = std::numeric_limits<sizeType>::max();
+    static const uint64_t npos = std::numeric_limits<uint64_t>::max();
 
-    explicit Bitset(sizeType bits_);
+    explicit Bitset(uint64_t bits_);
 
     explicit Bitset(const std::vector<bool> &bitvector);
 
     Bitset();
 
-    ~Bitset() override = default;
+    class BitReference;
 
     /**
      * @param bit idx of the bit
      * @return true if the bit is set, false otherwise
      */
-    bool get(sizeType bit) const override;
+    bool get(uint64_t bit) const override;
 
     /**
      * @param bit index to insert to
      * @param value 0/1 to unset/set the bit
      */
-    void insert(sizeType bit, bool value) override;
+    void insert(uint64_t bit, bool value) override;
+
+    /**
+      * non-const version of the [] operator, uses the BitReference wrapper class.
+      * @param bit index of the bit
+      * @return BitReference referencing the block and index of the bit.
+      */
+     BitReference operator[](uint64_t bit);
+
+     /**
+      * const version of the operator needs only a simple get instead of the BitReference wrapper class.
+      * @param bit index of the bit
+      * @return true if set, false otherwise
+      */
+     bool operator[](uint64_t bit) const;
+
+    /**
+     * sets all bits to true
+     */
+    void set();
+
+    /**
+     * clears all bits
+     */
+    void clear();
+
+    /**
+     * flip bitset
+     */
+    void flip();
+
+    /**
+     * @return number of bits held by bitset
+     */
+    uint64_t size() const { return bits; }
+
+    /**
+     * @return number of blocks used to store bits
+     */
+    uint64_t blocks() const { return (uint64_t)mbits.size(); }
 
     /**
      * Proxy class to simulate lvalues of bit type.
@@ -73,6 +108,8 @@ class Bitset : Sequence<bool, uint64_t> {
                  mblock(b),
                  mmask(static_cast<BlockType>(BlockType(1) << pos))
          {}
+
+         BitReference(BitReference const &) = default;
 
       private:
          BlockType *mblock;
@@ -125,62 +162,24 @@ class Bitset : Sequence<bool, uint64_t> {
          }
      };
 
-     /**
-      * non-const version of the [] operator, uses the BitReference wrapper class.
-      * @param bit index of the bit
-      * @return BitReference referencing the block and index of the bit.
-      */
-     BitReference operator[](sizeType bit);
-
-     /**
-      * const version of the operator needs only a simple get instead of the BitReference wrapper class.
-      * @param bit index of the bit
-      * @return true if set, false otherwise
-      */
-     bool operator[](sizeType bit) const;
-
-    /**
-     * sets all bits to true
-     */
-    void set();
-
-    /**
-     * clears all bits
-     */
-    void clear();
-
-    /**
-     * flip bitset
-     */
-    void flip();
-
-    /**
-     * @return number of bits held by bitset
-     */
-    sizeType size() const;
-    /**
-     * @return number of blocks used to store bits
-     */
-    sizeType blocks() const;
-
     /**
      * @param idx of the block
      * @return const ref to the block
      */
-    const BlockType& getBlock(sizeType idx) const;
+    const BlockType& getBlock(uint64_t idx) const;
 
     /**
      * @param idx of the bit the block should start at, it will create a new block starting at idx until idx+blocksize.
      * This way you can get a block that is somewhere in the bitset, but residing in two actual blocks.
      * @return the created new block
      */
-    BlockType getShiftedBlock(sizeType idx) const;
+    BlockType getShiftedBlock(uint64_t idx) const;
 
     /**
      * @param idx of the block
      * @param block value to be set
      */
-    void setBlock(sizeType idx,  BlockType block);
+    void setBlock(uint64_t idx,  BlockType block);
 
     /**
      * @return allocator used for allocation of the internal storage

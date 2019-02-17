@@ -14,16 +14,21 @@ This space-efficient variant *only works with undirected graphs*:
 
 ## Example
 ```cpp
-UndirectedGraph g=GraphCreator::createRandomKRegularUndirectedGraph(100,5)
-
-DFS::nplusmBitDFS(&g);  // quiet run
-
-DFS::nplusmBitDFS(&g, p0, e0, e1, p1);  // supply procedures to do something with the current node or edge
-
+#include <cstdio>
+#include "sealib/iterator/dfs.h"
+#include "sealib/graph/graphcreator.h"
 
 // example procedures:
-void p0(uint u) { printf("preprocess %u\n", u); }
-void p1(uint u) { printf("postprocess %u\n", u); }
-void e0(uint u, uint v) { printf("preexplore %u,%u\n", u, v); }
-void e1(uint u, uint v) { printf("postexplore %u,%u\n", u, v); }
+void preproc(uint64_t u) { printf("preprocess %u\n", u); }
+void postproc(uint64_t u) { printf("postprocess %u\n", u); }
+// ! Attention: for this DFS variant, the 'explore' calls return the edge INDEX k, not the node v
+void preexp(uint64_t u, uint64_t k) { printf("preexplore %u,%u\n", u, k); }
+void postexp(uint64_t u, uint64_t k) { printf("postexplore %u,%u\n", u, k); }
+
+int main() {
+    UndirectedGraph g=GraphCreator::kRegular(100,5);
+    DFS::nBitDFS(g);  // quiet run
+
+    DFS::nBitDFS(g, preproc, preexp, postexp, postproc);  // supply procedures to do something with the current node or edge
+}
 ```

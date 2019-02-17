@@ -15,7 +15,6 @@ namespace Sealib {
 * the ReverseDFS iterator.
 */
 struct UserCall {
- public:
     enum Type { preprocess = 0, preexplore, postexplore, postprocess, nop };
 
     /**
@@ -24,7 +23,7 @@ struct UserCall {
      * @param p1 first number
      * @param p2 second number (optional, depending on user call type)
      */
-    UserCall(unsigned t, uint p1, uint p2 = 0) : type(t), u(p1), k(p2) {}
+    UserCall(uint8_t t, uint64_t p1, uint64_t p2 = 0) : type(t), u(p1), k(p2) {}
 
     constexpr UserCall() : type(nop), u(0), k(0) {}
 
@@ -33,8 +32,8 @@ struct UserCall {
     }
     bool operator!=(UserCall p) const { return !(*this == p); }
 
-    unsigned type;
-    uint u, k;
+    uint8_t type;
+    uint64_t u, k;
 };
 
 /**
@@ -49,8 +48,7 @@ struct UserCall {
  */
 class ReverseDFS : Iterator<UserCall>, DFS {
  public:
-    explicit ReverseDFS(Graph const *);
-    ~ReverseDFS();
+    explicit ReverseDFS(Graph const &);
 
     /**
      * Run a normal DFS to record data about the intervals.
@@ -74,39 +72,39 @@ class ReverseDFS : Iterator<UserCall>, DFS {
  private:
     struct IntervalData {
      public:
-        std::pair<uint, uint> h1,
+        std::pair<uint64_t, uint64_t> h1,
             h2;  // top entries at start and end of the interval
-        std::pair<uint, uint> hd;                     // value of deepest entry
-        uint hdc = std::numeric_limits<uint>::max();  // index of deepest entry
+        std::pair<uint64_t, uint64_t> hd;                     // value of deepest entry
+        uint64_t hdc = std::numeric_limits<uint64_t>::max();  // index of deepest entry
         UserCall c1 = UserCall();
-        uint size = 0;  // call counter for the interval
+        uint64_t size = 0;  // call counter for the interval
         bool inUse = false;
     };
 
-    Graph const *g;
-    uint n, r, w;
+    Graph const &g;
+    uint64_t n, r, w;
     CompactArray c;
     CompactArray d, f;
     ExtendedSegmentStack s;  // only used for recording run
-    uint ns = 0;
+    uint64_t ns = 0;
     UserCall firstCall;
-    IntervalData *i;
-    uint j = 0;  // interval pointer
+    std::vector<IntervalData> i;
+    uint64_t j = 0;  // interval pointer
     std::vector<UserCall> major;
     UserCall previous;
     std::vector<UserCall>::reverse_iterator majorI;
 
-    void process_recording(uint u0);
+    void process_recording(uint64_t u0);
 
-    void storeTime(unsigned df, uint u);
-    void updateInterval(uint actions, bool end = false);
+    void storeTime(bool df, uint64_t u);
+    void updateInterval(uint64_t actions, bool end = false);
     void setCall(UserCall call);
 
-    std::stack<std::pair<uint, uint>> reconstructPart(
-        std::pair<uint, uint> from, std::pair<uint, uint> to);
+    std::stack<std::pair<uint64_t, uint64_t>> reconstructPart(
+        std::pair<uint64_t, uint64_t> from, std::pair<uint64_t, uint64_t> to);
 
-    std::vector<UserCall> simulate(std::stack<std::pair<uint, uint>> *const sj,
-                                   std::pair<uint, uint> until, UserCall first);
+    std::vector<UserCall> simulate(std::stack<std::pair<uint64_t, uint64_t>> *const sj,
+                                   std::pair<uint64_t, uint64_t> until, UserCall first);
 };
 
 /**
@@ -121,7 +119,7 @@ class SimpleReverseDFS : Iterator<UserCall> {
      * @param g Input graph pointer
      * @param filter Filter to select the desired user call type
      */
-    explicit SimpleReverseDFS(Graph const *g,
+    explicit SimpleReverseDFS(Graph const &g,
                               UserCall::Type filter = UserCall::nop);
 
     /**
@@ -143,7 +141,7 @@ class SimpleReverseDFS : Iterator<UserCall> {
     UserCall next() override { return *resultI++; }
 
  private:
-    Graph const *g;
+    Graph const &g;
     UserCall::Type filter;
     std::vector<UserCall> result;
     std::vector<UserCall>::reverse_iterator resultI;

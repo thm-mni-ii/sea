@@ -5,9 +5,9 @@
 using namespace Sealib;  // NOLINT
 
 TEST(ReverseDFSTest, postprocess) {
-    DirectedGraph g = GraphCreator::createRandomKRegularGraph(1024, 16);
-    ReverseDFS r(&g);
-    SimpleReverseDFS s(&g, UserCall::postprocess);
+    DirectedGraph g = GraphCreator::kOutdegree(1024, 16);
+    ReverseDFS r(g);
+    SimpleReverseDFS s(g, UserCall::postprocess);
     r.init();
     s.init();
     while (r.more()) {

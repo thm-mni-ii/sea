@@ -13,10 +13,10 @@
 namespace SealibVisual {
 
 std::shared_ptr<SealibVisual::TikzPicture> TikzGenerator::generateTikzElement(
-    const Sealib::Bitset<unsigned char> &t, const std::string &name) {
+    const Sealib::Bitset<uint8_t> &t, const std::string &name) {
     std::vector<std::string> arr(t.size());
 
-    for (unsigned int i = 0; i < t.size(); i++) {
+    for (uint64_t i = 0; i < t.size(); i++) {
         arr[i] = t[i] ? "1" : "0";
     }
     std::shared_ptr<TikzPicture> inner(new TikzPicture(
@@ -43,25 +43,25 @@ std::shared_ptr<SealibVisual::TikzPicture> TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<SealibVisual::TikzPicture> TikzGenerator::generateTikzElement(
-    const Sealib::Bitset<unsigned char> &t) {
+    const Sealib::Bitset<uint8_t> &t) {
     return generateTikzElement(t, "bitset");
 }
 
 std::shared_ptr<SealibVisual::TikzGraph> TikzGenerator::generateTikzElement(
-    Sealib::UndirectedGraph const *g) {
+    Sealib::UndirectedGraph const &g) {
     std::shared_ptr<SealibVisual::TikzGraph> graph(
-        new SealibVisual::TikzGraph(g->getOrder()));
+        new SealibVisual::TikzGraph(g.getOrder()));
 
     for (auto &a : graph->getNodes()) {
         a.setOptions("draw, circle");
     }
 
-    for (unsigned int i = 0; i < g->getOrder(); i++) {
-        for (unsigned int j = 0; j < g->deg(i); j++) {
+    for (uint64_t i = 0; i < g.getOrder(); i++) {
+        for (uint64_t j = 0; j < g.deg(i); j++) {
             std::tuple<std::string, std::string> key = std::make_tuple(
-                std::to_string(i), std::to_string(g->head(i, j)));
+                std::to_string(i), std::to_string(g.head(i, j)));
             std::tuple<std::string, std::string> keyReverse = std::make_tuple(
-                std::to_string(g->head(i, j)), std::to_string(i));
+                std::to_string(g.head(i, j)), std::to_string(i));
 
             if (!graph->containsEdge(key) && !graph->containsEdge(keyReverse)) {
                 graph->addEdge(key);
@@ -73,17 +73,17 @@ std::shared_ptr<SealibVisual::TikzGraph> TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<TikzGraph> TikzGenerator::generateTikzElement(
-    Sealib::Graph const *g) {
-    std::shared_ptr<TikzGraph> graph(new TikzGraph(g->getOrder()));
+    Sealib::Graph const &g) {
+    std::shared_ptr<TikzGraph> graph(new TikzGraph(g.getOrder()));
 
     for (auto &a : graph->getNodes()) {
         a.setOptions("draw, circle");
     }
 
-    for (unsigned int i = 0; i < g->getOrder(); i++) {
-        for (unsigned int j = 0; j < g->deg(i); j++) {
+    for (uint64_t i = 0; i < g.getOrder(); i++) {
+        for (uint64_t j = 0; j < g.deg(i); j++) {
             std::tuple<std::string, std::string> key = std::make_tuple(
-                std::to_string(i), std::to_string(g->head(i, j)));
+                std::to_string(i), std::to_string(g.head(i, j)));
 
             if (!graph->containsEdge(key)) {
                 graph->addEdge(key, "->");
@@ -94,8 +94,8 @@ std::shared_ptr<TikzGraph> TikzGenerator::generateTikzElement(
 }
 
 std::shared_ptr<TikzGraph> TikzGenerator::generateTikzElement(
-    Sealib::DirectedGraph const *g) {
-    return generateTikzElement(static_cast<Sealib::Graph const *>(g));
+    Sealib::DirectedGraph const &g) {
+    return generateTikzElement(static_cast<Sealib::Graph const &>(g));
 }
 
 using Sealib::CompactArray;
@@ -104,7 +104,7 @@ using SealibVisual::TikzPicture;
 std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
     CompactArray *c, size_t size, std::string name, std::string positionOpts) {
     std::vector<std::string> u;
-    for (unsigned a = 0; a < size; a++) {
+    for (uint64_t a = 0; a < size; a++) {
         u.push_back(std::to_string(c->get(a)));
     }
     std::shared_ptr<TikzElement> array(new TikzArray(u, "C", "array", true));
@@ -137,10 +137,10 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
 
 using SealibVisual::TikzStack;
 std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
-    std::vector<unsigned int> &v, std::string name, bool vertical,
+    std::vector<uint64_t> &v, std::string name, bool vertical,
     std::string positionOpts) {
     std::vector<std::string> s;
-    for (unsigned a : v) {
+    for (uint64_t a : v) {
         s.push_back(std::to_string(a));
     }
     std::shared_ptr<TikzElement> array;

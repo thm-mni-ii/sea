@@ -38,7 +38,6 @@ class TrackingAllocator {
     };
 
     TrackingAllocator() = default;
-    ~TrackingAllocator() = default;
 
     /**
      * Needed to rebind a TrackingAllocator<U> to TrackingAllocator<U'>,

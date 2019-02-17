@@ -1,12 +1,12 @@
-#include <sealib/localranktable.h>
-#include <sealib/sharedrankstructure.h>
+#include "localranktable.h"
+#include <sealib/dictionary/sharedrankstructure.h>
 #include <iostream>
 #include <cmath>
 #include <utility>
 
 uint64_t Sealib::SharedRankStructure::rank(uint64_t k) const {
     if (k == 0 || k > maxRank) {
-        return (uint64_t) -1;
+        return INVALID;
     }
     uint64_t segmentIdx = (k - 1) / segmentLength;
     uint8_t segment = bitset->getBlock(segmentIdx);

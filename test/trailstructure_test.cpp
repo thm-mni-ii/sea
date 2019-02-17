@@ -1,17 +1,18 @@
 #include <gtest/gtest.h>
-#include <sealib/trailstructure.h>
-#include <sealib/dyckwordlexicon.h>
-#include <sealib/simpletrailstructure.h>
+#include "../src/trail/trailstructure.h"
+#include "../src/dyck/dyckwordlexicon.h"
+#include "../src/trail/simpletrailstructure.h"
 #include "../src/trail/naivetrailstructure.h"
 
 using Sealib::TrailStructure;
+using Sealib::INVALID;
 
 TEST(TrailStructureTest, enter) {
     TrailStructure ts = TrailStructure(5);
 
     ASSERT_EQ(ts.enter(2), 3);
     ASSERT_EQ(ts.enter(4), 0);
-    ASSERT_EQ(ts.enter(1), (uint32_t) -1);  // last element
+    ASSERT_EQ(ts.enter(1), INVALID);  // last element
 }
 
 TEST(TrailStructureTest, leave) {
@@ -73,11 +74,11 @@ TEST(TrailStructureTest, enterLeaveCombination) {
 
 TEST(SimpleTrailStructureTest, allEvenPossibilities) {
     const uint64_t maxLen = 16;
-    for (uint32_t len = 2; len < maxLen; len += 2) {
+    for (uint64_t len = 2; len < maxLen; len += 2) {
         Sealib::DyckWordLexicon lex(len);
         for (const Sealib::Bitset<uint8_t> &word : lex.getLexicon()) {
             std::vector<std::vector<uint64_t>> depths(len);
-            for (uint32_t j = 0; j < len; j++) {
+            for (uint64_t j = 0; j < len; j++) {
                 if (word[j]) {
                     uint64_t match =
                         Sealib::DyckMatchingStructure::getMatchNaive(word, j);
@@ -86,7 +87,7 @@ TEST(SimpleTrailStructureTest, allEvenPossibilities) {
                 }
             }
 
-            for (uint32_t k = 0; k < len; k++) {
+            for (uint64_t k = 0; k < len; k++) {
                 std::vector<std::vector<uint64_t>> shiftedDepths(depths);
                 for (auto &shiftedDepth : shiftedDepths) {
                     for (uint64_t &j : shiftedDepth) {
@@ -100,16 +101,16 @@ TEST(SimpleTrailStructureTest, allEvenPossibilities) {
                 for (std::vector<uint64_t> &depthVector : shiftedDepths) {
                     if (!depthVector.empty()) {
                         for (uint64_t &idx : depthVector) {
-                            naiveTrailStructure.enter(static_cast<uint32_t>(idx));
-                            simpleTrailStructure.enter(static_cast<uint32_t>(idx));
-                            trailStructure.enter(static_cast<uint32_t>(idx));
+                            naiveTrailStructure.enter(static_cast<uint64_t>(idx));
+                            simpleTrailStructure.enter(static_cast<uint64_t>(idx));
+                            trailStructure.enter(static_cast<uint64_t>(idx));
                         }
                     }
                 }
-                for (uint32_t i = 0; i < len; i++) {
-                    uint32_t naiveMatch = naiveTrailStructure.getMatched(i);
-                    uint32_t simpleMatch = simpleTrailStructure.getMatched(i);
-                    uint32_t match = trailStructure.getMatched(i);
+                for (uint64_t i = 0; i < len; i++) {
+                    uint64_t naiveMatch = naiveTrailStructure.getMatched(i);
+                    uint64_t simpleMatch = simpleTrailStructure.getMatched(i);
+                    uint64_t match = trailStructure.getMatched(i);
                     ASSERT_NE(naiveMatch, i);
                     ASSERT_NE(simpleMatch, i);
                     ASSERT_NE(match, i);

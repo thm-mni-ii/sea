@@ -15,7 +15,7 @@ class GraphExporter {
      * @param g the graph to export
      * @param filename target file name
      */
-    static void exportGML(Graph const *g, bool directed, std::string filename);
+    static void exportGML(Graph const &g, bool directed, std::string filename);
 };
 
 class GraphImporter {

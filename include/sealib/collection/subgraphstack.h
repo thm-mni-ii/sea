@@ -1,5 +1,5 @@
-#ifndef SEALIB_SUBGRAPHSTACK_H_
-#define SEALIB_SUBGRAPHSTACK_H_
+#ifndef SEALIB_COLLECTION_SUBGRAPHSTACK_H_
+#define SEALIB_COLLECTION_SUBGRAPHSTACK_H_
 
 #include <sealib/graph/undirectedgraph.h>
 #include <sealib/collection/bitset.h>
@@ -56,6 +56,8 @@ class SubGraphStack {
      */
     void push(const Sealib::Bitset<uint8_t> &v,
               const Sealib::Bitset<uint8_t> &a);
+    void push(Sealib::Bitset<uint8_t> &&v,
+              Sealib::Bitset<uint8_t> &&a);
 
     /**
      * Pushes a new subgraph G_l+1 on G_l.
@@ -67,6 +69,7 @@ class SubGraphStack {
      * @param a Bitsequence of length 2m_l
      */
     void push(const Sealib::Bitset<uint8_t> &a);
+    void push(Bitset<uint8_t> &&a);
 
     /**
      * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).
@@ -237,4 +240,4 @@ class SubGraphStack {
     virtual ~SubGraphStack();
 };
 }  // namespace Sealib
-#endif  // SEALIB_SUBGRAPHSTACK_H_
+#endif  // SEALIB_COLLECTION_SUBGRAPHSTACK_H_

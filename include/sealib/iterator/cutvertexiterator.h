@@ -14,13 +14,13 @@ namespace Sealib {
  * order. There is also the possibility to check if a specific vertex is a cut
  * vertex.
  */
-class CutVertexIterator : Iterator<uint>, DFS {
+class CutVertexIterator : Iterator<uint64_t> {
  public:
     /**
      * Create a new cut-vertex iterator for an undirected graph G.
      * @param g the undirected graph G=(V,E)
      */
-    explicit CutVertexIterator(UndirectedGraph const *g);
+    explicit CutVertexIterator(UndirectedGraph const &g);
 
     /**
      * Create a new cut-vertex iterator from a given edge marker (allows
@@ -44,7 +44,7 @@ class CutVertexIterator : Iterator<uint>, DFS {
     /**
      * @return the next cut vertex of the graph
      */
-    uint next() override;
+    uint64_t next() override;
 
     /**
      * Check if a given vertex is a cut vertex of the graph.
@@ -53,17 +53,17 @@ class CutVertexIterator : Iterator<uint>, DFS {
      * @return true if the vertex is a cut vertex (i.e. u has at least one
      * "outgoing" edge that is not full marked)
      */
-    bool isCutVertex(uint u);
+    bool isCutVertex(uint64_t u);
 
  private:
     std::shared_ptr<EdgeMarker> e;
-    UndirectedGraph const *g;
-    uint n;
+    UndirectedGraph const &g;
+    uint64_t n;
     ChoiceDictionary cc;
     ChoiceDictionary cut;
     ChoiceDictionaryIterator cutI;
 
-    void markParents(uint w, uint u, StaticSpaceStorage *parent);
+    void markParents(uint64_t w, uint64_t u, StaticSpaceStorage *parent);
 
     inline void findCCs();
 };

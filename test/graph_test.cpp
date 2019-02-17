@@ -7,8 +7,8 @@ using Sealib::UndirectedGraph;
 using Sealib::Graph;
 
 TEST(GraphTest, graph_integrity) {
-    uint32_t order = 4;
-    uint32_t **adj_mtrx = new uint32_t *[order];
+    uint64_t order = 4;
+    uint64_t **adj_mtrx = new uint64_t *[order];
     /**
      * (n)       0       1       2       3
      *      **********************************
@@ -21,13 +21,13 @@ TEST(GraphTest, graph_integrity) {
      *  3   *    1   *   0   *   1   *   0   *
      *      **********************************
      */
-    adj_mtrx[0] = new uint32_t[order]{0, 2, 0, 1};
-    adj_mtrx[1] = new uint32_t[order]{2, 0, 1, 0};
-    adj_mtrx[2] = new uint32_t[order]{0, 1, 0, 1};
-    adj_mtrx[3] = new uint32_t[order]{1, 0, 1, 0};
+    adj_mtrx[0] = new uint64_t[order]{0, 2, 0, 1};
+    adj_mtrx[1] = new uint64_t[order]{2, 0, 1, 0};
+    adj_mtrx[2] = new uint64_t[order]{0, 1, 0, 1};
+    adj_mtrx[3] = new uint64_t[order]{1, 0, 1, 0};
 
     UndirectedGraph g =
-        GraphCreator::createGraphFromAdjacencyMatrix(adj_mtrx, order);
+        GraphCreator::createFromAdjacencyMatrix(adj_mtrx, order);
 
     // verify correct order and degree of nodes
     ASSERT_EQ(g.getOrder(), order);

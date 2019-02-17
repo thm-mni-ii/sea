@@ -1,7 +1,7 @@
 #ifndef SEALIB_DICTIONARY_RANKSELECT_H_
 #define SEALIB_DICTIONARY_RANKSELECT_H_
 
-#include <sealib/rankstructure.h>
+#include <sealib/dictionary/rankstructure.h>
 #include <sealib/collection/bitset.h>
 
 namespace Sealib {
@@ -21,6 +21,7 @@ class RankSelect {
      * @param Sealib::Bitset used for RankSelect
      */
     explicit RankSelect(const Bitset<uint8_t> &bitset);
+    explicit RankSelect(Bitset<uint8_t> &&bitset);
     RankSelect();
 
     /**

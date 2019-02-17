@@ -29,46 +29,46 @@ Sealib::BaseSubGraph::BaseSubGraph(stack_t *stack_, rgraph_t rGraph_) :
             p[deg - 1] = 1;
         }
     }
-    qSelect = new RankSelect(q);
-    pSelect = new RankSelect(p);
+    qSelect = new RankSelect(std::move(q));
+    pSelect = new RankSelect(std::move(p));
 }
 
 uint64_t Sealib::BaseSubGraph::head(uint64_t u,
                                          uint64_t k) const {
-    return rGraph->head(static_cast<uint32_t>(u - 1), static_cast<uint32_t>(k - 1)) + 1;
+    return rGraph->head(static_cast<uint64_t>(u - 1), static_cast<uint64_t>(k - 1)) + 1;
 }
 
 std::tuple<uint64_t, uint64_t>
 Sealib::BaseSubGraph::mate(uint64_t u, uint64_t k) const {
-    uint k2 = rGraph->mate(
-        static_cast<uint>(u - 1),
-        static_cast<uint>(k - 1));
+    uint64_t k2 = rGraph->mate(
+        static_cast<uint64_t>(u - 1),
+        static_cast<uint64_t>(k - 1));
     return std::tuple<uint64_t, uint64_t>(
-            rGraph->head(u-1, k-1) + 1,
+            rGraph->head(static_cast<uint64_t>(u-1), static_cast<uint64_t>(k-1)) + 1,
             k2 + 1);
 }
 
 uint64_t Sealib::BaseSubGraph::phi(uint64_t u) const {
     if (u == 0) {
-        throw std::invalid_argument("u needs to be > 0");
+        throw ZeroArgumentGiven();
     }
     return u;
 }
 uint64_t Sealib::BaseSubGraph::psi(uint64_t a) const {
     if (a == 0) {
-        throw std::invalid_argument("a needs to be > 0");
+        throw ZeroArgumentGiven();
     }
     return a;
 }
 uint64_t Sealib::BaseSubGraph::phiInv(uint64_t u) const {
     if (u == 0) {
-        throw std::invalid_argument("u needs to be > 0");
+        throw ZeroArgumentGiven();
     }
     return u;
 }
 uint64_t Sealib::BaseSubGraph::psiInv(uint64_t a) const {
     if (a == 0) {
-        throw std::invalid_argument("a needs to be > 0");
+        throw ZeroArgumentGiven();
     }
     return a;
 }
