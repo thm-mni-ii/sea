@@ -24,18 +24,18 @@ void DFS::visit_standard(uint64_t u0, Graph const &g,
         if (k < g.deg(u)) {
             s->push_back({u, k + 1});
             uint64_t v = g.head(u, k);
-            preexplore(u, v);
+            preexplore(u, k);
             if (color->operator[](v) == DFS_WHITE) {
                 s->push_back({v, 0});
             } else {
-                postexplore(u, v);
+                postexplore(u, k);
             }
         } else {
             color->operator[](u) = DFS_BLACK;
             postprocess(u);
             if (u != u0) {
-                uint64_t pu = s->back().first;
-                postexplore(pu, u);
+                std::pair<uint64_t, uint64_t> p = s->back();
+                postexplore(p.first, p.second-1);
             }
         }
     }
@@ -66,13 +66,15 @@ void DFS::visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
         if (k < g.deg(u)) {
             s->push(std::pair<uint64_t, uint64_t>(u, k + 1));
             uint64_t v = g.head(u, k);
-            preexplore(u, v);
+            preexplore(u, k);
             if (color->get(v) == DFS_WHITE) {
                 s->push(std::pair<uint64_t, uint64_t>(v, 0));
             } else {
-                postexplore(u, v);
+                postexplore(u, k);
             }
         } else {
+            color->insert(u, DFS_BLACK);
+            postprocess(u);
             if (u != u0) {
                 std::pair<uint64_t, uint64_t> px;
                 sr = s->pop(&px);
@@ -80,12 +82,9 @@ void DFS::visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
                     restoration(u0);
                     s->pop(&px);
                 }
-                uint64_t pu = px.first;
-                postexplore(pu, u);
+                postexplore(px.first, px.second-1);
                 s->push(px);
             }
-            color->insert(u, DFS_BLACK);
-            postprocess(u);
         }
     }
 }

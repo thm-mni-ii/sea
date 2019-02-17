@@ -19,10 +19,13 @@ const BiConsumer DFS_NOP_EXPLORE = [](uint64_t, uint64_t) {};
 
 /**
  * This class contains depth-first search algorithms.
- * The depth-first search of a graph processes all its nodes and
- * explores all its edges.
- * During this procedure, the nodes will be colored
- * from white (initial) to gray (being processed) to black (finished processing)
+ * The depth-first search of a graph processes all its nodes and explores all its edges.
+ * During this procedure, the nodes will be colored from white (initial) to gray (being processed) to black (finished processing).
+ * You can give user calls (aka callbacks) to the DFS procedures that will be called at appropriate times:
+ * - preprocess(u): before a vertex u turns gray
+ * - postprocess(u): after a vertex u turns black
+ * - preexplore(u,k): before the k'th edge outgoing from u is considered
+ * - postexplore(u,k): after the k'th edge outgoing from u is considered
  *
  * The following DFS variants are available:
  *  - standardDFS: the normal DFS, uses implicit recursion stack
@@ -39,8 +42,8 @@ class DFS {
      * EFFICIENCY: O(n+m) time, O(n log n) bits
      * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
-     * @param preexplore to be executed before exploring an edge (u,v)
-     * @param postexplore to be executed after exploring an edge (u,v)
+     * @param preexplore to be executed before exploring an edge (u,k)
+     * @param postexplore to be executed after exploring an edge (u,k)
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
@@ -55,8 +58,8 @@ class DFS {
      * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) bits
      * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
-     * @param preexplore to be executed before exploring an edge (u,v)
-     * @param postexplore to be executed after exploring an edge (u,v)
+     * @param preexplore to be executed before exploring an edge (u,k)
+     * @param postexplore to be executed after exploring an edge (u,k)
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
@@ -71,8 +74,8 @@ class DFS {
      * EFFICIENCY: O(n+m) time, O(n log log n) bits
      * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
-     * @param preexplore to be executed before exploring an edge (u,v)
-     * @param postexplore to be executed after exploring an edge (u,v)
+     * @param preexplore to be executed before exploring an edge (u,k)
+     * @param postexplore to be executed after exploring an edge (u,k)
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
