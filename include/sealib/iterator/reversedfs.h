@@ -59,7 +59,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     /**
      * @return true if there are more UserCalls in the DFS
      */
-    bool more() override { return !(j == 0 && majorI == major.rend()); }
+    bool more() override { return !(ip == 0 && majorI == major.rend()); }
 
     /**
      * Get the next user call from the interval.
@@ -72,25 +72,24 @@ class ReverseDFS : Iterator<UserCall>, DFS {
  private:
     struct IntervalData {
      public:
-        std::pair<uint64_t, uint64_t> h1,
-            h2;  // top entries at start and end of the interval
-        std::pair<uint64_t, uint64_t> hd;  // value of deepest entry
-        uint64_t hdc =
+        std::pair<uint64_t, uint64_t> top1, top2;  // top entries at start and end of the interval
+        std::pair<uint64_t, uint64_t> bottom;  // value of deepest entry during Ij at time tj
+        uint64_t depth =
             std::numeric_limits<uint64_t>::max();  // index of deepest entry
-        UserCall c1 = UserCall();
-        uint64_t size = 0;  // call counter for the interval
+        UserCall call1 = UserCall(), call2 = UserCall();
+        uint64_t width = 0;  // stack-operation counter for the interval
         bool inUse = false;
     };
 
     Graph const &g;
-    uint64_t n, r, w;
+    uint64_t n, iCount, iWidth;
     CompactArray c;
     CompactArray d, f;
     ExtendedSegmentStack s;  // only used for recording run
-    uint64_t ns = 0;
+    uint64_t niveau = 0;  // stack height
     UserCall firstCall;
     std::vector<IntervalData> i;
-    uint64_t j = 0;  // interval pointer
+    uint64_t ip = 0;  // interval pointer
     std::vector<UserCall> major;
     UserCall previous;
     std::vector<UserCall>::reverse_iterator majorI;
