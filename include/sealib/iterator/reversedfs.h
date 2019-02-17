@@ -11,11 +11,11 @@
 
 namespace Sealib {
 /**
-* Representation of a user call. A sequence of these can be retrieved from
-* the ReverseDFS iterator.
-*/
+ * Representation of a user call. A sequence of these can be retrieved from
+ * the ReverseDFS iterator.
+ */
 struct UserCall {
-    enum Type { nop=0, preprocess, preexplore, postexplore, postprocess };
+    enum Type { nop = 0, preprocess, preexplore, postexplore, postprocess };
 
     /**
      * Create a UserCall object of the given type.
@@ -88,8 +88,10 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     ExtendedSegmentStack s;  // only used for recording run
     uint64_t niveau = 0;     // stack height
     UserCall firstCall;
-    std::vector<IntervalData> i;
+    std::vector<IntervalData> intervals;
     uint64_t ip = 0;  // interval pointer
+    std::vector<IntervalData>::iterator i =
+        intervals.begin();  // interval iterator
     std::vector<UserCall> major;
     UserCall previous;
     std::vector<UserCall>::reverse_iterator majorI;
