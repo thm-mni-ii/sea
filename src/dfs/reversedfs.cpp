@@ -7,8 +7,8 @@ namespace Sealib {
 ReverseDFS::ReverseDFS(Graph const &graph)
     : g(graph),
       n(g.getOrder()),
-      iCount(static_cast<uint64_t>(ceil(8 * log2(n)))),
-      iWidth(static_cast<uint64_t>(ceil(n / log2(n)))),
+      iCount(static_cast<uint64_t>(ceil(log2(n) / log2(log2(n))))),
+      iWidth(static_cast<uint64_t>(ceil(n * log2(log2(n)) / log2(n)))),
       c(n, 3),
       d(n, iCount + 1),
       f(n, iCount + 1),
@@ -24,8 +24,46 @@ ReverseDFS::ReverseDFS(Graph const &graph)
 }
 
 void ReverseDFS::init() {
+    i[ip].top1 = i[ip].bottom = {INVALID, INVALID};
+    i[ip].call1 = UserCall(UserCall::preprocess, 0);
     for (uint64_t u = 0; u < n; u++) {
-        if (c.get(u) == DFS_WHITE) process_recording(u);
+        if (c.get(u) == DFS_WHITE) {
+            DFS::visit_nloglogn(
+                u, g, &c, &s, [&](uint64_t u0) { restore_top(u0, g, &c, &s); },
+                DFS_NOP_PROCESS,
+                [this](uint64_t u, uint64_t k) {
+                    uint64_t v = g.head(u, k);
+                    if (i[ip].width > iWidth) {
+                        ip++;
+                        i[ip].top1 = i[ip].bottom = {u, k + 1};
+                        i[ip].call1 = UserCall(UserCall::preexplore, u, k);
+                    } else if (i[ip].width == iWidth && c.get(v) == DFS_WHITE) {
+                        ip++;
+                        i[ip].top1 = i[ip].bottom = {v, 0};
+                        i[ip].call1 = UserCall(UserCall::preprocess, v);
+                    }
+                    i[ip].width++;
+                },
+                [this](uint64_t u, uint16_t k) {
+                    if (i[ip].width > iWidth) {
+                        ip++;
+                        // we peek at the stack because of preceding (u,k+1)<=S
+                        std::pair<uint64_t, uint64_t> p;
+                        s.pop(&p);
+                        s.push(p);
+                        i[ip].top1 = i[ip].bottom = p;
+                        i[ip].call1 = UserCall(UserCall::postexplore, u, k);
+                    } else if (i[ip].width == iWidth) {
+                        // we know that S<=(u,k+1) is the next instruction
+                        i[ip].top1 = i[ip].bottom = {u, k + 1};
+                        // the only next possible user call since (u,k+1) will
+                        // be at top
+                        i[ip].call1 = UserCall(UserCall::preexplore, u, k + 1);
+                    }
+                    i[ip].width++;
+                },
+                DFS_NOP_PROCESS);
+        }
     }
     updateInterval(0, true);
     while (i[ip].width == 0) ip--;  // discard empty intervals

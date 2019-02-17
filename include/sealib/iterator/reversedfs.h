@@ -15,7 +15,7 @@ namespace Sealib {
 * the ReverseDFS iterator.
 */
 struct UserCall {
-    enum Type { preprocess = 0, preexplore, postexplore, postprocess, nop };
+    enum Type { nop=0, preprocess, preexplore, postexplore, postprocess };
 
     /**
      * Create a UserCall object of the given type.
@@ -71,12 +71,12 @@ class ReverseDFS : Iterator<UserCall>, DFS {
 
  private:
     struct IntervalData {
-     public:
-        std::pair<uint64_t, uint64_t> top1, top2;  // top entries at start and end of the interval
-        std::pair<uint64_t, uint64_t> bottom;  // value of deepest entry during Ij at time tj
-        uint64_t depth =
-            std::numeric_limits<uint64_t>::max();  // index of deepest entry
-        UserCall call1 = UserCall(), call2 = UserCall();
+        std::pair<uint64_t, uint64_t> top1,
+            top2;  // top entries at start and end of the interval
+        std::pair<uint64_t, uint64_t>
+            bottom;  // value of deepest entry during Ij at time tj
+        uint64_t depth = INVALID;  // index of deepest entry
+        UserCall call1, call2;
         uint64_t width = 0;  // stack-operation counter for the interval
         bool inUse = false;
     };
@@ -86,7 +86,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     CompactArray c;
     CompactArray d, f;
     ExtendedSegmentStack s;  // only used for recording run
-    uint64_t niveau = 0;  // stack height
+    uint64_t niveau = 0;     // stack height
     UserCall firstCall;
     std::vector<IntervalData> i;
     uint64_t ip = 0;  // interval pointer

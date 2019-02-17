@@ -35,7 +35,7 @@ void DFS::visit_standard(uint64_t u0, Graph const &g,
             postprocess(u);
             if (u != u0) {
                 std::pair<uint64_t, uint64_t> p = s->back();
-                postexplore(p.first, p.second-1);
+                postexplore(p.first, p.second - 1);
             }
         }
     }
@@ -82,7 +82,7 @@ void DFS::visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
                     restoration(u0);
                     s->pop(&px);
                 }
-                postexplore(px.first, px.second-1);
+                postexplore(px.first, px.second - 1);
                 s->push(px);
             }
         }
