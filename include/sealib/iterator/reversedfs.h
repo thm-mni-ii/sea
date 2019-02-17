@@ -59,7 +59,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     /**
      * @return true if there are more UserCalls in the DFS
      */
-    bool more() override;
+    bool more() override { return !(j == 0 && majorI == major.rend()); }
 
     /**
      * Get the next user call from the interval.
@@ -74,8 +74,9 @@ class ReverseDFS : Iterator<UserCall>, DFS {
      public:
         std::pair<uint64_t, uint64_t> h1,
             h2;  // top entries at start and end of the interval
-        std::pair<uint64_t, uint64_t> hd;                     // value of deepest entry
-        uint64_t hdc = std::numeric_limits<uint64_t>::max();  // index of deepest entry
+        std::pair<uint64_t, uint64_t> hd;  // value of deepest entry
+        uint64_t hdc =
+            std::numeric_limits<uint64_t>::max();  // index of deepest entry
         UserCall c1 = UserCall();
         uint64_t size = 0;  // call counter for the interval
         bool inUse = false;
@@ -103,48 +104,9 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     std::stack<std::pair<uint64_t, uint64_t>> reconstructPart(
         std::pair<uint64_t, uint64_t> from, std::pair<uint64_t, uint64_t> to);
 
-    std::vector<UserCall> simulate(std::stack<std::pair<uint64_t, uint64_t>> *const sj,
-                                   std::pair<uint64_t, uint64_t> until, UserCall first);
-};
-
-/**
- * Simple reverse DFS iterator. Returns representations of the user calls of a
- * normal DFS in reverse order, with an optional filter to select only one type
- * of user call.
- */
-class SimpleReverseDFS : Iterator<UserCall> {
- public:
-    /**
-     * Create a new reverse DFS iterator.
-     * @param g Input graph pointer
-     * @param filter Filter to select the desired user call type
-     */
-    explicit SimpleReverseDFS(Graph const &g,
-                              UserCall::Type filter = UserCall::nop);
-
-    /**
-     * Initialize the reverse DFS (runs a normal DFS and stores the desired user
-     * calls).
-     */
-    void init() override;
-
-    /**
-     * @return true if there are more user calls that can be retrieved
-     */
-    bool more() override { return resultI != result.rend(); }
-
-    /**
-     * Get the next user call object.
-     * If a filter is given, only the selected type can appear as output.
-     * @return representation of the reverse sequence's next user call
-     */
-    UserCall next() override { return *resultI++; }
-
- private:
-    Graph const &g;
-    UserCall::Type filter;
-    std::vector<UserCall> result;
-    std::vector<UserCall>::reverse_iterator resultI;
+    std::vector<UserCall> simulate(
+        std::stack<std::pair<uint64_t, uint64_t>> *const sj,
+        std::pair<uint64_t, uint64_t> until, UserCall first);
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_REVERSEDFS_H_

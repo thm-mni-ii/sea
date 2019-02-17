@@ -1,5 +1,6 @@
 #include "sealib/iterator/reversedfs.h"
 #include <gtest/gtest.h>
+#include "../src/dfs/simplereversedfs.h"
 #include "sealib/graph/graphcreator.h"
 
 using namespace Sealib;  // NOLINT
