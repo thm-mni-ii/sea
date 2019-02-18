@@ -1,6 +1,7 @@
 #include "sealib/iterator/reversedfs.h"
 #include <cmath>
 #include <set>
+#define ip static_cast<uint64_t>(i - intervals.begin())
 
 namespace Sealib {
 
@@ -14,12 +15,12 @@ ReverseDFS::ReverseDFS(Graph const &graph)
       f(n, iCount + 1),
       s(n, g, &c),
       intervals(iCount),
-      major{0},
-      majorI(major.rend()) {
+      sequence(),
+      seqI(sequence.rend()) {
     for (uint64_t a = 0; a < n; a++) {
         c.insert(a, 0);
-        d.insert(a, iCount + 1);
-        f.insert(a, iCount + 1);
+        // d.insert(a, iCount + 1);
+        // f.insert(a, iCount + 1);
     }
 }
 
@@ -42,8 +43,10 @@ void ReverseDFS::init() {
                             s.push(p);
                             i->top1 = i->bottom = p;
                         }
-                        i->call1=UserCall(UserCall::preprocess,u);
+                        i->call1 = UserCall(UserCall::preprocess, u);
                     }
+                    d.insert(u, ip);
+                    i->width++;
                 },
                 [this](uint64_t u, uint64_t k) {
                     uint64_t v = g.head(u, k);
@@ -78,18 +81,16 @@ void ReverseDFS::init() {
                     }
                     i->width++;
                 },
-                DFS_NOP_PROCESS);
+                [this](uint u) { f.insert(u, ip); });
         }
     }
-    updateInterval(0, true);
-    while (intervals[ip].width == 0) ip--;  // discard empty intervals
 }
 
 UserCall ReverseDFS::next() {
-    if (majorI != major.rend()) {
+    if (seqI != sequence.rend()) {
         static uint64_t mu = INVALID, mk = 0;
         static bool delayedPostexp = false;
-        UserCall &cc = *majorI;
+        UserCall &cc = *seqI;
         UserCall ret;
         if (delayedPostexp) {
             delayedPostexp = false;
@@ -110,8 +111,8 @@ UserCall ReverseDFS::next() {
             }
         }
         if (mu == INVALID) {
-            previous = *majorI;
-            ret = *(majorI++);
+            previous = *seqI;
+            ret = *(seqI++);
         }
         return ret;
     } else {  // build new sequence
@@ -125,10 +126,9 @@ UserCall ReverseDFS::next() {
             }
         }
         std::stack<std::pair<uint64_t, uint64_t>> sj =
-            reconstructPart(intervals[ip].bottom, intervals[ip].top1);
-        major = simulate(&sj, intervals[ip].top2, intervals[ip].call1);
-        majorI = major.rbegin();
-        ip--;
+            reconstructStack();
+        sequence = simulate(&sj, i->top2, i->call1);
+        seqI = sequence.rbegin();
         return next();
     }
 }
@@ -203,7 +203,6 @@ void ReverseDFS::updateInterval(uint64_t actions, bool end) {
         ci.top2 = top;
         ci.call1 = firstCall;
         firstCall = UserCall();
-        ip++;
         if (ip >= iCount) throw std::out_of_range("too many intervals");
         updateInterval(0);
     }
@@ -215,10 +214,10 @@ void ReverseDFS::setCall(UserCall call) {
     }
 }
 
-std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructPart(
-    std::pair<uint64_t, uint64_t> from, std::pair<uint64_t, uint64_t> to) {
+std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
     std::stack<std::pair<uint64_t, uint64_t>> sj;
     std::set<uint64_t> tmp;
+    std::pair<uint64_t,uint64_t> &to=i->top1, &from=i->bottom;
     if (to.first != INVALID) {
         if (from.first == INVALID) {
             sj.push(to);
@@ -293,7 +292,7 @@ std::vector<UserCall> ReverseDFS::simulate(
                 uint64_t pu = sj->top().first, pk = sj->top().second;
                 ret.emplace_back(
                     UserCall(UserCall::Type::postexplore, pu,
-                             pk - 1));  // this postexplore is a major call
+                             pk - 1));  // this postexplore is a sequence call
             }
         }
         if (sj->empty()) {

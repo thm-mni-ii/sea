@@ -59,7 +59,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     /**
      * @return true if there are more UserCalls in the DFS
      */
-    bool more() override { return !(ip == 0 && majorI == major.rend()); }
+    bool more() override { return !(i == intervals.begin() && seqI == sequence.rend()); }
 
     /**
      * Get the next user call from the interval.
@@ -89,12 +89,12 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     uint64_t niveau = 0;     // stack height
     UserCall firstCall;
     std::vector<IntervalData> intervals;
-    uint64_t ip = 0;  // interval pointer
+    //uint64_t ip = 0;  // interval pointer
     std::vector<IntervalData>::iterator i =
         intervals.begin();  // interval iterator
-    std::vector<UserCall> major;
+    std::vector<UserCall> sequence;
     UserCall previous;
-    std::vector<UserCall>::reverse_iterator majorI;
+    std::vector<UserCall>::reverse_iterator seqI;
 
     void process_recording(uint64_t u0);
 
@@ -102,8 +102,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     void updateInterval(uint64_t actions, bool end = false);
     void setCall(UserCall call);
 
-    std::stack<std::pair<uint64_t, uint64_t>> reconstructPart(
-        std::pair<uint64_t, uint64_t> from, std::pair<uint64_t, uint64_t> to);
+    std::stack<std::pair<uint64_t, uint64_t>> reconstructStack();
 
     std::vector<UserCall> simulate(
         std::stack<std::pair<uint64_t, uint64_t>> *const sj,
