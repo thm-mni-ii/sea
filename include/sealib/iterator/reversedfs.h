@@ -82,6 +82,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     };
 
     Graph const &g;
+    static const uint64_t WORD_SIZE = sizeof(uint64_t)*8;
     uint64_t n, iCount, iWidth;
     CompactArray c;
     CompactArray d, f;
@@ -89,20 +90,23 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     uint64_t niveau = 0;     // stack height
     UserCall firstCall;
     std::vector<IntervalData> intervals;
-    //uint64_t ip = 0;  // interval pointer
+    uint64_t ip = 0;  // interval pointer
     std::vector<IntervalData>::iterator i =
         intervals.begin();  // interval iterator
+    
     std::vector<UserCall> sequence;
     UserCall previous;
     std::vector<UserCall>::reverse_iterator seqI;
+
+    void advanceInterval();
+
+    std::stack<std::pair<uint64_t, uint64_t>> reconstructStack();
 
     void process_recording(uint64_t u0);
 
     void storeTime(bool df, uint64_t u);
     void updateInterval(uint64_t actions, bool end = false);
     void setCall(UserCall call);
-
-    std::stack<std::pair<uint64_t, uint64_t>> reconstructStack();
 
     std::vector<UserCall> simulate(
         std::stack<std::pair<uint64_t, uint64_t>> *const sj,
