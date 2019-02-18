@@ -4,12 +4,10 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
-#include "sealib/collection/sequence.h"
 #include "sealib/collection/staticspacestorage.h"
-#include "sealib/graph/graph.h"
-#include "sealib/graph/node.h"
+#include "sealib/graph/directedgraph.h"
 #include "sealib/graph/undirectedgraph.h"
-#include "sealib/segmentstack.h"
+#include "sealib/collection/segmentstack.h"
 
 namespace Sealib {
 
