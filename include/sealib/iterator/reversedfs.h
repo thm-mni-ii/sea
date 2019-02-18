@@ -59,7 +59,9 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     /**
      * @return true if there are more UserCalls in the DFS
      */
-    bool more() override { return !(i == intervals.begin() && seqI == sequence.rend()); }
+    bool more() override {
+        return !(i == intervals.begin() && seqI == sequence.rend());
+    }
 
     /**
      * Get the next user call from the interval.
@@ -82,7 +84,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     };
 
     Graph const &g;
-    static const uint64_t WORD_SIZE = sizeof(uint64_t)*8;
+    static const uint64_t WORD_SIZE = sizeof(uint64_t) * 8;
     uint64_t n, iCount, iWidth;
     CompactArray c;
     CompactArray d, f;
@@ -93,7 +95,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     uint64_t ip = 0;  // interval pointer
     std::vector<IntervalData>::iterator i =
         intervals.begin();  // interval iterator
-    
+
     std::vector<UserCall> sequence;
     UserCall previous;
     std::vector<UserCall>::reverse_iterator seqI;
@@ -102,15 +104,26 @@ class ReverseDFS : Iterator<UserCall>, DFS {
 
     std::stack<std::pair<uint64_t, uint64_t>> reconstructStack();
 
+    /**
+     * Simulate the current interval pointed to by `i`.
+     * @throws IntervalStackEmpty if sj is empty and no suitable first user call
+     * exists to create an entry
+     */
+    std::vector<UserCall> simulate(
+        std::stack<std::pair<uint64_t, uint64_t>> *sj);
+
     void process_recording(uint64_t u0);
 
     void storeTime(bool df, uint64_t u);
     void updateInterval(uint64_t actions, bool end = false);
     void setCall(UserCall call);
-
-    std::vector<UserCall> simulate(
-        std::stack<std::pair<uint64_t, uint64_t>> *const sj,
-        std::pair<uint64_t, uint64_t> until, UserCall first);
 };
+
+class IntervalStackEmpty : public std::exception {
+    const char *what() const noexcept {
+        return "Reverse DFS (internal error): interval stack is empty";
+    }
+};
+
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_REVERSEDFS_H_

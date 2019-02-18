@@ -81,9 +81,10 @@ void ReverseDFS::init() {
                     }
                     // peek the stack to see in which postexplore() we are
                     std::pair<uint64_t, uint64_t> p;
-                    s.pop(&p);
-                    s.push(p);
-                    if (p.first != u) {
+                    uint8_t a = s.pop(&p);
+                    if (a != 0) s.push(p);
+                    // if pop failed, we must also be in the major postexplore
+                    if (a == 0 || p.first != u) {
                         // this means we have a preceding (u,k+1)<=S
                         // -> "major" postexplore
                         i->width++;
@@ -92,6 +93,7 @@ void ReverseDFS::init() {
                 [this](uint u) { f.insert(u, ip); });
         }
     }
+    assert(ip < iCount);
 }
 
 void ReverseDFS::advanceInterval() {
@@ -100,7 +102,7 @@ void ReverseDFS::advanceInterval() {
 }
 
 UserCall ReverseDFS::next() {
-    if (seqI != sequence.rend()) {
+    if (/*seqI != sequence.rend()*/ false) {
         static uint64_t mu = INVALID, mk = 0;
         static bool delayedPostexp = false;
         UserCall &cc = *seqI;
@@ -129,6 +131,10 @@ UserCall ReverseDFS::next() {
         }
         return ret;
     } else {  // build new sequence
+        if (i > intervals.begin())
+            i--;
+        else
+            return UserCall();
         for (uint64_t a = 0; a < n; a++) {
             if (f.get(a) < ip) {
                 c.insert(a, DFS_BLACK);
@@ -139,7 +145,7 @@ UserCall ReverseDFS::next() {
             }
         }
         std::stack<std::pair<uint64_t, uint64_t>> sj = reconstructStack();
-        sequence = simulate(&sj, i->top2, i->call1);
+        sequence = simulate(&sj);
         seqI = sequence.rbegin();
         return next();
     }
@@ -204,6 +210,108 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
         }
     }
     return sj;
+}*/
+
+std::vector<UserCall> ReverseDFS::simulate(
+    std::stack<std::pair<uint64_t, uint64_t>> *sj) {
+    std::vector<UserCall> r;
+    if (sj->empty()) {
+        if (i->call1.type == UserCall::preprocess) {
+            sj->push({i->call1.u, 0});
+        } else {
+            throw IntervalStackEmpty();
+        }
+    }
+
+    while (!sj->empty() && sj->top() != (i - 1)->top1) {
+        std::pair<uint64_t, uint64_t> x = sj->top();
+        sj->pop();
+        uint64_t u = x.first, k = x.second;
+        if (c.get(u) == DFS_WHITE) {
+            r.emplace_back(UserCall(UserCall::preprocess, u));
+            c.insert(u, DFS_GRAY);
+        }
+        if (k < g.deg(u)) {
+            sj->push({u, k + 1});
+            uint64_t v = g.head(u, k);
+            if (c.get(v) == DFS_WHITE) {
+                r.emplace_back(UserCall(UserCall::preexplore, u, k));
+                sj->push({v, 0});
+            } else {
+                r.emplace_back(UserCall(UserCall::postexplore, u, k));
+            }
+        } else {
+            c.insert(u, DFS_BLACK);
+            r.emplace_back(UserCall(UserCall::Type::postprocess, u));
+            if (sj->size() > 0) {
+                std::pair<uint64_t, uint64_t> p = sj->top();
+                r.emplace_back(UserCall(UserCall::Type::postexplore, p.first,
+                                        p.second - 1));
+            }
+        }
+    }
+    return r;
+}
+
+/*std::vector<UserCall> ReverseDFS::simulate(
+    std::stack<std::pair<uint64_t, uint64_t>> *const sj,
+    std::pair<uint64_t, uint64_t> until, UserCall first) {
+    std::vector<UserCall> ret;
+
+    if (sj->empty()) {
+        if (first.type == UserCall::preprocess) {
+            sj->push(std::pair<uint64_t, uint64_t>(first.u, 0));
+        } else if (first.type == UserCall::preexplore) {
+            sj->push(std::pair<uint64_t, uint64_t>(first.u, first.k));
+        } else {
+            throw std::logic_error("stack empty");
+        }
+    }
+
+    while (sj->top() != until) {
+        std::pair<uint64_t, uint64_t> x = sj->top();
+        sj->pop();
+        uint64_t u = x.first, k = x.second;
+        if (k == 0 && c.get(u) == DFS_WHITE) {
+            ret.emplace_back(UserCall(UserCall::Type::preprocess, u));
+            c.insert(u, DFS_GRAY);
+        }
+        if (k < g.deg(u)) {
+            sj->push(std::pair<uint64_t, uint64_t>(u, k + 1));
+            uint64_t v = g.head(u, k);
+            if (c.get(v) == DFS_WHITE) {
+                ret.emplace_back(UserCall(UserCall::Type::preexplore, u, k));
+                sj->push(std::pair<uint64_t, uint64_t>(v, 0));
+            } else {
+                // no postexplore: will be simulated later
+            }
+        } else {
+            c.insert(u, DFS_BLACK);
+            ret.emplace_back(UserCall(UserCall::Type::postprocess, u));
+            if (sj->size() > 0) {
+                uint64_t pu = sj->top().first, pk = sj->top().second;
+                ret.emplace_back(
+                    UserCall(UserCall::Type::postexplore, pu,
+                             pk - 1));  // this postexplore is a sequence call
+            }
+        }
+        if (sj->empty()) {
+            bool a = false;
+            for (uint64_t b = 0; b < n; b++) {
+                if (c.get(b) == DFS_WHITE && d.get(b) == ip) {
+                    sj->push(std::pair<uint64_t, uint64_t>(b, 0));
+                    a = true;
+                    break;
+                } else if (c.get(b) == DFS_GRAY && f.get(b) == ip) {
+                    sj->push(std::pair<uint64_t, uint64_t>(b, g.deg(b)));
+                    a = true;
+                    break;
+                }
+            }
+            if (!a) break;
+        }
+    }
+    return ret;
 }*/
 
 void ReverseDFS::process_recording(uint64_t u0) {
@@ -285,67 +393,6 @@ void ReverseDFS::setCall(UserCall call) {
     if (firstCall == UserCall()) {
         firstCall = call;
     }
-}
-
-std::vector<UserCall> ReverseDFS::simulate(
-    std::stack<std::pair<uint64_t, uint64_t>> *const sj,
-    std::pair<uint64_t, uint64_t> until, UserCall first) {
-    std::vector<UserCall> ret;
-
-    if (sj->empty()) {
-        if (first.type == UserCall::preprocess) {
-            sj->push(std::pair<uint64_t, uint64_t>(first.u, 0));
-        } else if (first.type == UserCall::preexplore) {
-            sj->push(std::pair<uint64_t, uint64_t>(first.u, first.k));
-        } else {
-            throw std::logic_error("stack empty");
-        }
-    }
-
-    while (sj->top() != until) {
-        std::pair<uint64_t, uint64_t> x = sj->top();
-        sj->pop();
-        uint64_t u = x.first, k = x.second;
-        if (k == 0 && c.get(u) == DFS_WHITE) {
-            ret.emplace_back(UserCall(UserCall::Type::preprocess, u));
-            c.insert(u, DFS_GRAY);
-        }
-        if (k < g.deg(u)) {
-            sj->push(std::pair<uint64_t, uint64_t>(u, k + 1));
-            uint64_t v = g.head(u, k);
-            if (c.get(v) == DFS_WHITE) {
-                ret.emplace_back(UserCall(UserCall::Type::preexplore, u, k));
-                sj->push(std::pair<uint64_t, uint64_t>(v, 0));
-            } else {
-                // no postexplore: will be simulated later
-            }
-        } else {
-            c.insert(u, DFS_BLACK);
-            ret.emplace_back(UserCall(UserCall::Type::postprocess, u));
-            if (sj->size() > 0) {
-                uint64_t pu = sj->top().first, pk = sj->top().second;
-                ret.emplace_back(
-                    UserCall(UserCall::Type::postexplore, pu,
-                             pk - 1));  // this postexplore is a sequence call
-            }
-        }
-        if (sj->empty()) {
-            bool a = false;
-            for (uint64_t b = 0; b < n; b++) {
-                if (c.get(b) == DFS_WHITE && d.get(b) == ip) {
-                    sj->push(std::pair<uint64_t, uint64_t>(b, 0));
-                    a = true;
-                    break;
-                } else if (c.get(b) == DFS_GRAY && f.get(b) == ip) {
-                    sj->push(std::pair<uint64_t, uint64_t>(b, g.deg(b)));
-                    a = true;
-                    break;
-                }
-            }
-            if (!a) break;
-        }
-    }
-    return ret;
 }
 
 }  // namespace Sealib
