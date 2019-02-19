@@ -38,6 +38,8 @@ void ReverseDFS::init() {
                         uint8_t r = s.pop(&p);
                         if (r == DFS_NO_MORE_NODES) {
                             i->top1 = i->bottom = {INVALID, INVALID};
+                        } else if (r == DFS_DO_RESTORE) {
+                            // ?
                         } else {
                             s.push(p);
                             i->top1 = i->bottom = p;
@@ -82,9 +84,9 @@ void ReverseDFS::init() {
                     // peek the stack to see in which postexplore() we are
                     std::pair<uint64_t, uint64_t> p;
                     uint8_t a = s.pop(&p);
-                    if (a != 0) s.push(p);
+                    if (a == 0) s.push(p);
                     // if pop failed, we must also be in the major postexplore
-                    if (a == 0 || p.first != u) {
+                    if (a != 0 || p.first != u) {
                         // this means we have a preceding (u,k+1)<=S
                         // -> "major" postexplore
                         i->width++;
@@ -153,16 +155,18 @@ UserCall ReverseDFS::next() {
 
 std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
     std::stack<std::pair<uint64_t, uint64_t>> r;
+    std::vector<bool> used(n, 0);
     if (i->bottom.first != INVALID) {
         // restore all u with d[u]<j and f[u]==j
         std::pair<uint64_t, uint64_t> a = i->bottom;
         r.push(a);
         while (a != i->top1) {
             for (uint64_t b = 0; /*crashes if not found*/; b++) {
-                if (f.get(g.head(a.first, b)) == ip &&
-                    d.get(g.head(a.first, b)) < ip) {
+                uint64_t v = g.head(a.first, b);
+                if (f.get(v) == ip && d.get(v) < ip && !used[v]) {
+                    used[v] = true;
                     r.top().second = b + 1;
-                    a = {g.head(a.first, b), INVALID};
+                    a = {v, INVALID};
                     break;
                 }
             }
