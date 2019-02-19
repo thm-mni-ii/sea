@@ -4,10 +4,10 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
+#include "sealib/collection/segmentstack.h"
 #include "sealib/collection/staticspacestorage.h"
 #include "sealib/graph/directedgraph.h"
 #include "sealib/graph/undirectedgraph.h"
-#include "sealib/collection/segmentstack.h"
 
 namespace Sealib {
 
@@ -127,11 +127,13 @@ class DFS {
                                Consumer preProcess, BiConsumer preExplore,
                                BiConsumer postExplore, Consumer postProcess);
 
-    static void visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
-                               SegmentStack *s,
-                               std::function<void(uint64_t u0)> restoration,
-                               Consumer preprocess, BiConsumer preexplore,
-                               BiConsumer postexplore, Consumer postprocess);
+    static void visit_nloglogn(
+        uint64_t u0, Graph const &g, CompactArray *color, SegmentStack *s,
+        std::function<void(uint64_t, Graph const &, CompactArray *,
+                           SegmentStack *)>
+            restoration,
+        Consumer preprocess, BiConsumer preexplore, BiConsumer postexplore,
+        Consumer postprocess);
 
     static void visit_nplusm(uint64_t u0, UndirectedGraph const &g,
                              CompactArray *color, Sequence<uint64_t> *back,
@@ -139,10 +141,10 @@ class DFS {
                              BiConsumer postexplore, Consumer postprocess);
 
     static void restore_full(uint64_t u0, Graph const &g, CompactArray *color,
-                             BasicSegmentStack *s);
+                             /*Basic*/ SegmentStack *s);
 
     static void restore_top(uint64_t u0, Graph const &g, CompactArray *color,
-                            ExtendedSegmentStack *s);
+                            /*Extended*/ SegmentStack *s);
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_DFS_H_

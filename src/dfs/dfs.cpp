@@ -41,17 +41,18 @@ void DFS::visit_standard(uint64_t u0, Graph const &g,
     }
 }
 
-void DFS::visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
-                         SegmentStack *s,
-                         std::function<void(uint64_t u)> restoration,
-                         Consumer preprocess, BiConsumer preexplore,
-                         BiConsumer postexplore, Consumer postprocess) {
+void DFS::visit_nloglogn(
+    uint64_t u0, Graph const &g, CompactArray *color, SegmentStack *s,
+    std::function<void(uint64_t, Graph const &, CompactArray *, SegmentStack *)>
+        restoration,
+    Consumer preprocess, BiConsumer preexplore, BiConsumer postexplore,
+    Consumer postprocess) {
     s->push(std::pair<uint64_t, uint64_t>(u0, 0));
     std::pair<uint64_t, uint64_t> x;
     while (!s->isEmpty()) {
         uint8_t sr = s->pop(&x);
         if (sr == DFS_DO_RESTORE) {
-            restoration(u0);
+            restoration(u0, g, color, s);
             s->pop(&x);
         } else if (sr == DFS_NO_MORE_NODES) {
             return;
@@ -79,7 +80,7 @@ void DFS::visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
                 std::pair<uint64_t, uint64_t> px;
                 sr = s->pop(&px);
                 if (sr == DFS_DO_RESTORE) {
-                    restoration(u0);
+                    restoration(u0, g, color, s);
                     s->pop(&px);
                 }
                 postexplore(px.first, px.second - 1);
@@ -90,7 +91,8 @@ void DFS::visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
 }
 
 void DFS::restore_full(uint64_t u0, Graph const &g, CompactArray *color,
-                       BasicSegmentStack *s) {
+                       SegmentStack *ps) {
+    BasicSegmentStack *s = reinterpret_cast<BasicSegmentStack *>(ps);
     s->saveTrailer();
     s->dropAll();
     for (uint64_t a = 0; a < g.getOrder(); a++) {
@@ -144,7 +146,8 @@ static std::pair<bool, uint64_t> findEdge(const uint64_t u, const uint64_t k,
 }
 
 void DFS::restore_top(uint64_t u0, Graph const &g, CompactArray *color,
-                      ExtendedSegmentStack *s) {
+                      SegmentStack *ps) {
+    ExtendedSegmentStack *s = reinterpret_cast<ExtendedSegmentStack *>(ps);
     std::pair<uint64_t, uint64_t> x;
     uint64_t u = u0, k = 0;
     if (s->getRestoreTrailer(&x) == 1) {
@@ -241,10 +244,8 @@ void DFS::nBitDFS(Graph const &g, Consumer preprocess, BiConsumer preexplore,
     for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            visit_nloglogn(
-                a, g, &color, &s,
-                [&](uint64_t u0) { restore_full(u0, g, &color, &s); },
-                preprocess, preexplore, postexplore, postprocess);
+            visit_nloglogn(a, g, &color, &s, restore_full, preprocess,
+                           preexplore, postexplore, postprocess);
     }
 }
 
@@ -257,9 +258,8 @@ void DFS::nloglognBitDFS(Graph const &g, Consumer preprocess,
     for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            visit_nloglogn(a, g, &color, &s,
-                           [&](uint64_t u0) { restore_top(u0, g, &color, &s); },
-                           preprocess, preexplore, postexplore, postprocess);
+            visit_nloglogn(a, g, &color, &s, restore_top, preprocess,
+                           preexplore, postexplore, postprocess);
     }
 }
 

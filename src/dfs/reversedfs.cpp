@@ -12,6 +12,7 @@ ReverseDFS::ReverseDFS(Graph const &graph)
       c(n, 3),
       d(n, iCount + 1),
       f(n, iCount + 1),
+      s(n, g, &c),
       intervals(iCount),
       i(intervals.begin()),
       sequence(),
@@ -26,53 +27,76 @@ ReverseDFS::ReverseDFS(Graph const &graph)
 void ReverseDFS::init() {
     i->top = i->bottom = {0, 0};
     i->firstCall = UserCall(UserCall::preprocess, 0);
+    niveau = 1;
     UserCall::Type trace;
-    DFS::nloglognBitDFS(
-        g,
-        [this, &trace](uint64_t u) {
-            if (i->width > iWidth) {
-                i++;
-                i->top = i->bottom = {u, 0};  // (actually just popped)
-                i->firstCall = UserCall(UserCall::preprocess, u);
-            }
-            d.insert(u, ip);
-            i->width++;
-            trace = UserCall::preprocess;
-        },
-        [this, &trace](uint64_t u, uint64_t k) {
-            uint64_t v = g.head(u, k);
-            if (d.get(v) == iCount + 1) {
-                if (i->width > iWidth) {
-                    i++;
-                    i->top = i->bottom = {u, k + 1};
-                    i->firstCall = UserCall(UserCall::preexplore, u, k);
-                }
-                i->width++;
-            }
-            trace = UserCall::preexplore;
-        },
-        [this, &trace](uint64_t u, uint64_t k) {
-            if (trace != UserCall::preexplore) {
-                // major postexplore
-                if (i->width > iWidth) {
-                    i++;
-                    i->top = i->bottom = {u, k + 1};  // (actually just popped)
-                    i->firstCall = UserCall(UserCall::postexplore, u, k);
-                }
-                i->width++;
-            }
-            trace = UserCall::postexplore;
-        },
-        [this, &trace](uint64_t u) {
-            f.insert(u, ip);
-            if (i->width > iWidth) {
-                i++;
-                i->top = i->bottom = {u, g.deg(u)};
-                i->firstCall = UserCall(UserCall::postprocess, u);
-            }
-            i->width++;
-            trace = UserCall::postprocess;
-        });
+    for (uint64_t u0 = 0; u0 < n; u0++) {
+        if (c.get(u0) == DFS_WHITE) {
+            DFS::visit_nloglogn(
+                u0, g, &c, &s, DFS::restore_top,
+                [this, &trace](uint64_t u) {
+                    if (i->width > iWidth) {
+                        i++;
+                        i->top = i->bottom = {u, 0};  // (actually just popped)
+                        i->depth = s.size();
+                        i->firstCall = UserCall(UserCall::preprocess, u);
+                    } else if (s.size() < i->depth) {
+                        i->depth = s.size();
+                        i->bottom = s.top();  // may be INVALID, restore?
+                    }
+                    d.insert(u, ip);
+                    i->width++;
+                    trace = UserCall::preprocess;
+                },
+                [this, &trace](uint64_t u, uint64_t k) {
+                    uint64_t v = g.head(u, k);
+                    if (d.get(v) == iCount + 1) {
+                        if (i->width > iWidth) {
+                            i++;
+                            i->top = i->bottom = {u, k + 1};
+                            i->depth = s.size();
+                            i->firstCall = UserCall(UserCall::preexplore, u, k);
+                        } else if (s.size() < i->depth) {
+                            i->depth = s.size();
+                            i->bottom = s.top();  // may be INVALID, restore?
+                        }
+                        i->width++;
+                    }
+                    trace = UserCall::preexplore;
+                },
+                [this, &trace](uint64_t u, uint64_t k) {
+                    if (trace != UserCall::preexplore) {
+                        // major postexplore
+                        if (i->width > iWidth) {
+                            i++;
+                            i->top = i->bottom = {
+                                u, k + 1};  // (actually just popped)
+                            i->depth = s.size();
+                            i->firstCall =
+                                UserCall(UserCall::postexplore, u, k);
+                        } else if (s.size() < i->depth) {
+                            i->depth = s.size();
+                            i->bottom = s.top();  // may be INVALID, restore?
+                        }
+                        i->width++;
+                    }
+                    trace = UserCall::postexplore;
+                },
+                [this, &trace](uint64_t u) {
+                    f.insert(u, ip);
+                    if (i->width > iWidth) {
+                        i++;
+                        i->top = i->bottom = {u, g.deg(u)};
+                        i->depth = s.size();
+                        i->firstCall = UserCall(UserCall::postprocess, u);
+                    } else if (s.size() < i->depth) {
+                        i->depth = s.size();
+                        i->bottom = s.top();  // may be INVALID, restore?
+                    }
+                    i->width++;
+                    trace = UserCall::postprocess;
+                });
+        }
+    }
 
     assert(ip < iCount);
 }
@@ -216,7 +240,6 @@ std::vector<UserCall> ReverseDFS::simulate(
                 r.emplace_back(UserCall(UserCall::preexplore, u, k));
                 sj->push({v, 0});
             } else {
-                r.emplace_back(UserCall(UserCall::postexplore, u, k));
             }
         } else {
             c.insert(u, DFS_BLACK);

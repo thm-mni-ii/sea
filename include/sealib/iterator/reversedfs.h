@@ -73,7 +73,8 @@ class ReverseDFS : Iterator<UserCall>, DFS {
 
  private:
     struct IntervalData {
-        std::pair<uint64_t, uint64_t> top;  // top entry at start and end of the interval
+        std::pair<uint64_t, uint64_t>
+            top;  // top entry at start and end of the interval
         std::pair<uint64_t, uint64_t>
             bottom;  // value of deepest entry during Ij at time tj
         uint64_t depth = INVALID;  // index of deepest entry
@@ -87,9 +88,10 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     uint64_t n, iCount, iWidth;
     CompactArray c;
     CompactArray d, f;
-    uint64_t niveau = 0;     // stack height
+    ExtendedSegmentStack s;
+    uint64_t niveau = 0;  // stack height
     std::vector<IntervalData> intervals;
-    uint64_t ip = 0;  // interval pointer
+    uint64_t ip = 0;                        // interval pointer
     std::vector<IntervalData>::iterator i;  // interval iterator
 
     std::vector<UserCall> sequence;
