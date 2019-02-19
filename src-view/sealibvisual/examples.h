@@ -7,7 +7,7 @@
 #include <sealib/iterator/bcciterator.h>
 #include <sealib/iterator/dfs.h>
 #include <sealib/iterator/edgemarker.h>
-#include <sealib/segmentstack.h>
+#include <sealib/collection/segmentstack.h>
 #include <string>
 #include "./tikzdocument.h"
 #include "./tikzgraph.h"

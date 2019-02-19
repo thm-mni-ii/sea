@@ -7,100 +7,74 @@ namespace Sealib {
 ReverseDFS::ReverseDFS(Graph const &graph)
     : g(graph),
       n(g.getOrder()),
-      iCount(static_cast<uint64_t>(20 * WORD_SIZE / log2(WORD_SIZE)) + 1),
-      iWidth(static_cast<uint64_t>(n * log2(WORD_SIZE) / WORD_SIZE) + 1),
+      iCount(static_cast<uint64_t>(200 * log2(n) / log2(log2(n))) + 1),
+      iWidth(static_cast<uint64_t>(n * log2(log2(n)) / log2(n)) + 1),
       c(n, 3),
-      d(n, iCount),
-      f(n, iCount),
-      s(n, g, &c),
+      d(n, iCount + 1),
+      f(n, iCount + 1),
       intervals(iCount),
+      i(intervals.begin()),
       sequence(),
       seqI(sequence.rend()) {
     for (uint64_t a = 0; a < n; a++) {
         c.insert(a, 0);
-        // d.insert(a, iCount + 1);
-        // f.insert(a, iCount + 1);
+        d.insert(a, iCount);
+        f.insert(a, iCount);
     }
 }
 
 void ReverseDFS::init() {
-    i->top1 = i->bottom = {INVALID, INVALID};
-    i->call1 = UserCall(UserCall::preprocess, 0);
-    for (uint64_t u = 0; u < n; u++) {
-        if (c.get(u) == DFS_WHITE) {
-            DFS::visit_nloglogn(
-                u, g, &c, &s, [&](uint64_t u0) { restore_top(u0, g, &c, &s); },
-                [this](uint u) {
-                    if (i->width > iWidth) {
-                        advanceInterval();
-                        // we peek at the stack because of preceding (u,k)<=S
-                        std::pair<uint64_t, uint64_t> p;
-                        uint8_t r = s.pop(&p);
-                        if (r == DFS_NO_MORE_NODES) {
-                            i->top1 = i->bottom = {INVALID, INVALID};
-                        } else if (r == DFS_DO_RESTORE) {
-                            // ?
-                        } else {
-                            s.push(p);
-                            i->top1 = i->bottom = p;
-                        }
-                        i->call1 = UserCall(UserCall::preprocess, u);
-                    }
-                    d.insert(u, ip);
-                    i->width++;
-                },
-                [this](uint64_t u, uint64_t k) {
-                    uint64_t v = g.head(u, k);
-                    if (i->width > iWidth) {
-                        advanceInterval();
-                        i->top1 = i->bottom = {u, k + 1};
-                        i->call1 = UserCall(UserCall::preexplore, u, k);
-                    } else if (i->width == iWidth && c.get(v) == DFS_WHITE) {
-                        advanceInterval();
-                        i->top1 = i->bottom = {v, 0};
-                        i->call1 = UserCall(UserCall::preprocess, v);
-                    }
-                    i->width++;
-                },
-                [this](uint64_t u, uint16_t k) {
-                    // this should only be executed in the meaningful
-                    // postexplore (major call)
-                    if (i->width > iWidth) {
-                        advanceInterval();
-                        // we peek at the stack because of preceding (pu,pk)<=S
-                        std::pair<uint64_t, uint64_t> p;
-                        s.pop(&p);
-                        s.push(p);
-                        i->top1 = i->bottom = p;
-                        i->call1 = UserCall(UserCall::postexplore, u, k);
-                    } else if (i->width == iWidth) {
-                        advanceInterval();
-                        // we know that S<=(u,k+1) is the next instruction
-                        i->top1 = i->bottom = {u, k + 1};
-                        // the only next possible user call since (u,k+1) will
-                        // be at top
-                        i->call1 = UserCall(UserCall::preexplore, u, k + 1);
-                    }
-                    // peek the stack to see in which postexplore() we are
-                    std::pair<uint64_t, uint64_t> p;
-                    uint8_t a = s.pop(&p);
-                    if (a == 0) s.push(p);
-                    // if pop failed, we must also be in the major postexplore
-                    if (a != 0 || p.first != u) {
-                        // this means we have a preceding (u,k+1)<=S
-                        // -> "major" postexplore
-                        i->width++;
-                    }
-                },
-                [this](uint u) { f.insert(u, ip); });
-        }
-    }
-    assert(ip < iCount);
-}
+    i->top = i->bottom = {0, 0};
+    i->firstCall = UserCall(UserCall::preprocess, 0);
+    UserCall::Type trace;
+    DFS::nloglognBitDFS(
+        g,
+        [this, &trace](uint64_t u) {
+            if (i->width > iWidth) {
+                i++;
+                i->top = i->bottom = {u, 0};  // (actually just popped)
+                i->firstCall = UserCall(UserCall::preprocess, u);
+            }
+            d.insert(u, ip);
+            i->width++;
+            trace = UserCall::preprocess;
+        },
+        [this, &trace](uint64_t u, uint64_t k) {
+            uint64_t v = g.head(u, k);
+            if (d.get(v) == iCount + 1) {
+                if (i->width > iWidth) {
+                    i++;
+                    i->top = i->bottom = {u, k + 1};
+                    i->firstCall = UserCall(UserCall::preexplore, u, k);
+                }
+                i->width++;
+            }
+            trace = UserCall::preexplore;
+        },
+        [this, &trace](uint64_t u, uint64_t k) {
+            if (trace != UserCall::preexplore) {
+                // major postexplore
+                if (i->width > iWidth) {
+                    i++;
+                    i->top = i->bottom = {u, k + 1};  // (actually just popped)
+                    i->firstCall = UserCall(UserCall::postexplore, u, k);
+                }
+                i->width++;
+            }
+            trace = UserCall::postexplore;
+        },
+        [this, &trace](uint64_t u) {
+            f.insert(u, ip);
+            if (i->width > iWidth) {
+                i++;
+                i->top = i->bottom = {u, g.deg(u)};
+                i->firstCall = UserCall(UserCall::postprocess, u);
+            }
+            i->width++;
+            trace = UserCall::postprocess;
+        });
 
-void ReverseDFS::advanceInterval() {
-    ip++;
-    i++;
+    assert(ip < iCount);
 }
 
 UserCall ReverseDFS::next() {
@@ -160,7 +134,7 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
         // restore all u with d[u]<j and f[u]==j
         std::pair<uint64_t, uint64_t> a = i->bottom;
         r.push(a);
-        while (a != i->top1) {
+        while (a != i->top) {
             for (uint64_t b = 0; /*crashes if not found*/; b++) {
                 uint64_t v = g.head(a.first, b);
                 if (f.get(v) == ip && d.get(v) < ip && !used[v]) {
@@ -170,9 +144,9 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
                     break;
                 }
             }
-            s.push(a);
+            r.push(a);
         }  // loop only ends when top has been pushed
-        r.top() = i->top1;
+        r.top() = i->top;
     }
     return r;
 }
@@ -180,7 +154,7 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
 /*std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
     std::stack<std::pair<uint64_t, uint64_t>> sj;
     std::set<uint64_t> tmp;
-    std::pair<uint64_t, uint64_t> &to = i->top1, &from = i->bottom;
+    std::pair<uint64_t, uint64_t> &to = i->top, &from = i->bottom;
     if (to.first != INVALID) {
         if (from.first == INVALID) {
             sj.push(to);
@@ -220,14 +194,14 @@ std::vector<UserCall> ReverseDFS::simulate(
     std::stack<std::pair<uint64_t, uint64_t>> *sj) {
     std::vector<UserCall> r;
     if (sj->empty()) {
-        if (i->call1.type == UserCall::preprocess) {
-            sj->push({i->call1.u, 0});
+        if (i->firstCall.type == UserCall::preprocess) {
+            sj->push({i->firstCall.u, 0});
         } else {
             throw IntervalStackEmpty();
         }
     }
 
-    while (!sj->empty() && sj->top() != (i - 1)->top1) {
+    while (!sj->empty() && sj->top() != (i - 1)->top) {
         std::pair<uint64_t, uint64_t> x = sj->top();
         sj->pop();
         uint64_t u = x.first, k = x.second;
@@ -318,7 +292,7 @@ std::vector<UserCall> ReverseDFS::simulate(
     return ret;
 }*/
 
-void ReverseDFS::process_recording(uint64_t u0) {
+/*void ReverseDFS::process_recording(uint64_t u0) {
     updateInterval(0);
     s.push(std::pair<uint64_t, uint64_t>(u0, 0));
     niveau = 1;
@@ -376,7 +350,7 @@ void ReverseDFS::updateInterval(uint64_t actions, bool end) {
     IntervalData &ci = intervals[ip];
     std::pair<uint64_t, uint64_t> top = s.top();
     if (ci.width == 0 && ci.inUse == false) {
-        ci.top1 = top;
+        ci.top = top;
         ci.inUse = true;
     }
     ci.width += actions;
@@ -386,17 +360,17 @@ void ReverseDFS::updateInterval(uint64_t actions, bool end) {
     }
     if (ci.width > iWidth || end) {
         ci.top2 = top;
-        ci.call1 = firstCall;
-        firstCall = UserCall();
+        ci.firstCall = fCall;
+        fCall = UserCall();
         if (ip >= iCount) throw std::out_of_range("too many intervals");
         updateInterval(0);
     }
 }
 
 void ReverseDFS::setCall(UserCall call) {
-    if (firstCall == UserCall()) {
-        firstCall = call;
+    if (fCall == UserCall()) {
+        fCall = call;
     }
-}
+}*/
 
 }  // namespace Sealib
