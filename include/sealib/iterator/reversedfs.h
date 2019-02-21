@@ -96,6 +96,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
 
     // issued by a user call if it does not know the top entry and left it empty
     bool needTopOfStack = false;
+    bool needBelowTop = false;
 
     std::vector<UserCall> sequence;
     UserCall previous;
