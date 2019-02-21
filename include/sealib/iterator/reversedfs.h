@@ -77,7 +77,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
             top;  // top entry at start and end of the interval
         std::pair<uint64_t, uint64_t>
             bottom;  // value of deepest entry during Ij at time tj
-        uint64_t depth = INVALID;  // index of deepest entry
+        uint64_t height = INVALID, depth = INVALID;  // index of deepest entry
         UserCall firstCall;
         uint64_t width = 0;  // stack-operation counter for the interval
         bool inUse = false;
@@ -94,13 +94,16 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     uint64_t ip = 0;                        // interval pointer
     std::vector<IntervalData>::iterator i;  // interval iterator
 
+    // issued by a user call if it does not know the top entry and left it empty
+    bool needTopOfStack = false;
+
     std::vector<UserCall> sequence;
     UserCall previous;
     std::vector<UserCall>::reverse_iterator seqI;
 
-    void advanceInterval();
-
     std::stack<std::pair<uint64_t, uint64_t>> reconstructStack();
+    inline void nextInterval();
+    inline void trackSize(uint64_t u0);
 
     /**
      * Simulate the current interval pointed to by `i`.
@@ -120,6 +123,12 @@ class ReverseDFS : Iterator<UserCall>, DFS {
 class IntervalStackEmpty : public std::exception {
     const char *what() const noexcept {
         return "Reverse DFS (internal error): interval stack is empty";
+    }
+};
+class NodeReconstructionFailed : public std::exception {
+    const char *what() const noexcept {
+        return "Reverse DFS (internal error): could not reconstruct stack, no "
+               "node with i<j && f=j found";
     }
 };
 

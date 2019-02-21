@@ -31,7 +31,7 @@ std::pair<uint64_t, uint64_t> SegmentStack::top() {
     } else if (lp > 0) {
         return low[lp - 1];
     } else {
-        return std::pair<uint, uint>(INVALID, INVALID);
+        return std::pair<uint64_t, uint64_t>(INVALID, tp);
     }
 }
 
@@ -41,7 +41,7 @@ bool SegmentStack::isEmpty() {
     return r;
 }
 
-uint64_t SegmentStack::size() { return tp * q + hp * q + lp * q; }
+uint64_t SegmentStack::size() { return tp * q + hp + lp; }
 
 //  -- BASIC --
 

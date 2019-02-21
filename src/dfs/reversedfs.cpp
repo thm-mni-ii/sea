@@ -7,7 +7,7 @@ namespace Sealib {
 ReverseDFS::ReverseDFS(Graph const &graph)
     : g(graph),
       n(g.getOrder()),
-      iCount(static_cast<uint64_t>(200 * log2(n) / log2(log2(n))) + 1),
+      iCount(static_cast<uint64_t>(20 * log2(n) / log2(log2(n))) + 1),
       iWidth(static_cast<uint64_t>(n * log2(log2(n)) / log2(n)) + 1),
       c(n, 3),
       d(n, iCount + 1),
@@ -33,76 +33,87 @@ void ReverseDFS::init() {
         if (c.get(u0) == DFS_WHITE) {
             DFS::visit_nloglogn(
                 u0, g, &c, &s, DFS::restore_top,
-                [this, &trace](uint64_t u) {
+                [this, &trace, &u0](uint64_t u) {
                     if (i->width > iWidth) {
-                        i++;
-                        i->top = i->bottom = {u, 0};  // (actually just popped)
-                        i->depth = s.size();
+                        nextInterval();
+                        needTopOfStack = true;
                         i->firstCall = UserCall(UserCall::preprocess, u);
-                    } else if (s.size() < i->depth) {
-                        i->depth = s.size();
-                        i->bottom = s.top();  // may be INVALID, restore?
                     }
                     d.insert(u, ip);
                     i->width++;
                     trace = UserCall::preprocess;
                 },
-                [this, &trace](uint64_t u, uint64_t k) {
+                [this, &trace, &u0](uint64_t u, uint64_t k) {
                     uint64_t v = g.head(u, k);
                     if (d.get(v) == iCount + 1) {
                         if (i->width > iWidth) {
-                            i++;
+                            nextInterval();
                             i->top = i->bottom = {u, k + 1};
-                            i->depth = s.size();
                             i->firstCall = UserCall(UserCall::preexplore, u, k);
-                        } else if (s.size() < i->depth) {
-                            i->depth = s.size();
-                            i->bottom = s.top();  // may be INVALID, restore?
                         }
                         i->width++;
                     }
+                    if (needTopOfStack) {
+                        needTopOfStack = false;
+                        // NOT (u,k+1): we need the top entry from a previous
+                        // call
+                        i->top = i->bottom = {u, k};
+                    }
                     trace = UserCall::preexplore;
                 },
-                [this, &trace](uint64_t u, uint64_t k) {
+                [this, &trace, &u0](uint64_t u, uint64_t k) {
                     if (trace != UserCall::preexplore) {
                         // major postexplore
                         if (i->width > iWidth) {
-                            i++;
-                            i->top = i->bottom = {
-                                u, k + 1};  // (actually just popped)
-                            i->depth = s.size();
+                            nextInterval();
+                            needTopOfStack = true;
                             i->firstCall =
                                 UserCall(UserCall::postexplore, u, k);
-                        } else if (s.size() < i->depth) {
+                        } else if (s.size() < i->depth && s.size() > 0) {
                             i->depth = s.size();
-                            i->bottom = s.top();  // may be INVALID, restore?
+                            i->bottom = {u, k + 1};
                         }
                         i->width++;
                     }
                     trace = UserCall::postexplore;
                 },
-                [this, &trace](uint64_t u) {
-                    f.insert(u, ip);
+                [this, &trace, &u0](uint64_t u) {
                     if (i->width > iWidth) {
-                        i++;
-                        i->top = i->bottom = {u, g.deg(u)};
-                        i->depth = s.size();
+                        needTopOfStack = true;
                         i->firstCall = UserCall(UserCall::postprocess, u);
-                    } else if (s.size() < i->depth) {
-                        i->depth = s.size();
-                        i->bottom = s.top();  // may be INVALID, restore?
                     }
+                    f.insert(u, ip);
                     i->width++;
                     trace = UserCall::postprocess;
                 });
         }
     }
-
     assert(ip < iCount);
 }
 
+void ReverseDFS::nextInterval() {
+    i++;
+    ip++;
+    i->depth = s.size();
+}
+
+void ReverseDFS::trackSize(uint64_t u0) {
+    if (s.size() < i->depth) {
+        i->depth = s.size();
+        if (i->depth > 0) {
+            i->bottom = s.top();  // may be INVALID, restore?
+            if (i->bottom.first == INVALID) {
+                DFS::restore_top(u0, g, &c, &s);
+                i->bottom = s.top();
+            }
+        } else {
+            i->bottom = {INVALID, INVALID};
+        }
+    }
+}
+
 UserCall ReverseDFS::next() {
-    if (/*seqI != sequence.rend()*/ false) {
+    if (seqI != sequence.rend()) {
         static uint64_t mu = INVALID, mk = 0;
         static bool delayedPostexp = false;
         UserCall &cc = *seqI;
@@ -131,10 +142,6 @@ UserCall ReverseDFS::next() {
         }
         return ret;
     } else {  // build new sequence
-        if (i > intervals.begin())
-            i--;
-        else
-            return UserCall();
         for (uint64_t a = 0; a < n; a++) {
             if (f.get(a) < ip) {
                 c.insert(a, DFS_BLACK);
@@ -147,6 +154,8 @@ UserCall ReverseDFS::next() {
         std::stack<std::pair<uint64_t, uint64_t>> sj = reconstructStack();
         sequence = simulate(&sj);
         seqI = sequence.rbegin();
+        i--;
+        ip--;
         return next();
     }
 }
@@ -159,7 +168,7 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
         std::pair<uint64_t, uint64_t> a = i->bottom;
         r.push(a);
         while (a != i->top) {
-            for (uint64_t b = 0; /*crashes if not found*/; b++) {
+            for (uint64_t b = 0; b < g.deg(a.first); b++) {
                 uint64_t v = g.head(a.first, b);
                 if (f.get(v) == ip && d.get(v) < ip && !used[v]) {
                     used[v] = true;
@@ -168,51 +177,15 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
                     break;
                 }
             }
-            r.push(a);
+            if (a.second == INVALID)
+                r.push(a);
+            else
+                throw NodeReconstructionFailed();
         }  // loop only ends when top has been pushed
         r.top() = i->top;
     }
     return r;
 }
-
-/*std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
-    std::stack<std::pair<uint64_t, uint64_t>> sj;
-    std::set<uint64_t> tmp;
-    std::pair<uint64_t, uint64_t> &to = i->top, &from = i->bottom;
-    if (to.first != INVALID) {
-        if (from.first == INVALID) {
-            sj.push(to);
-        } else {
-            std::pair<uint64_t, uint64_t> a =
-                std::pair<uint64_t, uint64_t>(from.first, 0);
-            tmp.insert(a.first);
-            do {
-                uint64_t u = a.first;
-                if (u == to.first) {
-                    sj.push(to);
-                } else {
-                    bool found = false;
-                    for (uint64_t k = a.second; k < g.deg(u); k++) {
-                        uint64_t v = g.head(u, k);
-                        if (f.get(v) == ip && tmp.find(v) == tmp.end()) {
-                            // using a temp. set to avoid cycles
-                            a = std::pair<uint64_t, uint64_t>(v, 0);
-                            sj.push(std::pair<uint64_t, uint64_t>(u, k + 1));
-                            tmp.insert(v);
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        throw std::logic_error(
-                            "no white path found in reconstruction");
-                    }
-                }
-            } while (sj.top() != to);
-        }
-    }
-    return sj;
-}*/
 
 std::vector<UserCall> ReverseDFS::simulate(
     std::stack<std::pair<uint64_t, uint64_t>> *sj) {
