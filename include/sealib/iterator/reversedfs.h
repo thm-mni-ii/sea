@@ -81,7 +81,6 @@ class ReverseDFS : Iterator<UserCall>, DFS {
         uint64_t depth = 0;  // index of deepest entry
         UserCall firstCall;
         uint64_t width = 0;  // major-call counter for the interval
-        bool inUse = false;
     };
 
     Graph const &g;
@@ -98,7 +97,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     // issued by postexp or postproc if it needs i->top to be filled
     bool needTopOfStack = false;
     // issued by preproc if it needs i->top to be filled
-    bool needBelowTop = false;
+    std::vector<uint64_t> needBelowTop;
 
     std::vector<UserCall> sequence;
     UserCall previous;

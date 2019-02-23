@@ -3,11 +3,14 @@
 #include <cstdio>
 #include "../src/dfs/simplereversedfs.h"
 #include "sealib/graph/graphcreator.h"
+#include "sealib/graph/graphio.h"
 
 using namespace Sealib;  // NOLINT
 
 TEST(ReverseDFSTest, postprocess) {
-    DirectedGraph g = GraphCreator::kOutdegree(6, 1);
+    // DirectedGraph g=GraphCreator::kOutdegree(6,1);
+    // GraphExporter::exportGML(g,true,"test-rdfs.gml");
+    DirectedGraph g = GraphImporter::importGML<DirectedGraph>("test-rdfs.gml");
     ReverseDFS r(g);
     SimpleReverseDFS s(g, UserCall::postprocess);
     r.init();
@@ -21,7 +24,7 @@ TEST(ReverseDFSTest, postprocess) {
         UserCall a=s.next();
         if(a.type==UserCall::postprocess) v2.push_back(a);
     }
-    ASSERT_GE(v2.size(),v1.size());
+    ASSERT_LE(v1.size(),v2.size());
     bool equal=true;
     printf("[ ");
     for(uint64_t a=0; a<v1.size(); a++) {
@@ -35,4 +38,5 @@ TEST(ReverseDFSTest, postprocess) {
     }
     printf(" ]\n");
     EXPECT_TRUE(equal);
+    EXPECT_EQ(v1.size(),v2.size());
 }
