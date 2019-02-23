@@ -72,11 +72,12 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     UserCall next() override;
 
  private:
+    static const std::pair<uint64_t, uint64_t> NIL;
     struct IntervalData {
-        std::pair<uint64_t, uint64_t>
-            top;  // top entry at start and end of the interval
-        std::pair<uint64_t, uint64_t>
-            bottom;  // value of deepest entry during Ij at time tj
+        std::pair<uint64_t, uint64_t> top =
+            NIL;  // top entry at start and end of the interval
+        std::pair<uint64_t, uint64_t> bottom =
+            NIL;  // value of deepest entry during Ij at time tj
         uint64_t height = INVALID, depth = INVALID;  // index of deepest entry
         UserCall firstCall;
         uint64_t width = 0;  // stack-operation counter for the interval
@@ -94,8 +95,9 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     uint64_t ip = 0;                        // interval pointer
     std::vector<IntervalData>::iterator i;  // interval iterator
 
-    // issued by a user call if it does not know the top entry and left it empty
+    // issued by postexp or postproc if it needs i->top to be filled
     bool needTopOfStack = false;
+    // issued by preproc if it needs i->top to be filled
     bool needBelowTop = false;
 
     std::vector<UserCall> sequence;
