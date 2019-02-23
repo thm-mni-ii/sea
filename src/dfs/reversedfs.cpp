@@ -70,25 +70,25 @@ void ReverseDFS::init() {
                             if (intervals[b].depth - 1 == s.size()) {
                                 needBelowTop.pop_back();
                                 intervals[b].top = {u, k + 1};
-                                if (intervals[b].bottom == NIL)
-                                    intervals[b].bottom = {u, k + 1};
+                                intervals[b].bottom = {u, k + 1};
                             }
-                        } else if (needTopOfStack) {
+                        }
+                        if (needTopOfStack) {
                             // we have cycled back into the postexplore
                             needTopOfStack = false;
                             uint64_t v = g.head(u, k);
                             i->top = {v, g.deg(v)};
-                            if (i->bottom == NIL) i->bottom = {v, g.deg(v)};
-                        } else if (s.size() < i->depth && s.size() > 0) {
-                            // track depth
-                            i->depth = s.size();
-                            i->bottom = {u, k + 1};
+                            i->bottom = {v, g.deg(v)};
                         }
                         if (i->width == iWidth) {
                             nextInterval();
                             needTopOfStack = true;
                             i->firstCall =
                                 UserCall(UserCall::postexplore, u, k);
+                        } else if (s.size() < i->depth) {
+                            // track depth
+                            i->depth = s.size();
+                            i->bottom = {u, k + 1};
                         }
                         i->width++;
                     }
