@@ -128,10 +128,10 @@ class IntervalStackEmpty : public std::exception {
         return "Reverse DFS (internal error): interval stack is empty";
     }
 };
-class NodeReconstructionFailed : public std::exception {
+class StackReconstructionFailed : public std::exception {
     const char *what() const noexcept {
         return "Reverse DFS (internal error): could not reconstruct stack, no "
-               "node with i<j && f=j found";
+               "node with i < j && f == j found";
     }
 };
 

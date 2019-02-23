@@ -68,7 +68,13 @@ void ReverseDFS::init() {
                         if (needBelowTop) {
                             needBelowTop = false;
                             i->top = {u, k + 1};
-                            if (i->bottom == NIL) i->bottom = {u, k};
+                            if (i->bottom == NIL) i->bottom = {u, k + 1};
+                        } else if (needTopOfStack) {
+                            // we have cycled back into the postexplore
+                            needTopOfStack = false;
+                            uint64_t v = g.head(u, k);
+                            i->top = {v, g.deg(v)};
+                            if (i->bottom == NIL) i->bottom = {v, g.deg(v)};
                         } else if (s.size() < i->depth && s.size() > 0) {
                             // track depth
                             i->depth = s.size();
@@ -181,7 +187,7 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
         while (a != i->top) {
             for (uint64_t b = 0; b < g.deg(a.first); b++) {
                 uint64_t v = g.head(a.first, b);
-                if (f.get(v) == ip && d.get(v) < ip && !used[v]) {
+                if (d.get(v) < ip && f.get(v) == ip && !used[v]) {
                     used[v] = true;
                     r.top().second = b + 1;
                     a = {v, INVALID};
@@ -191,7 +197,7 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
             if (a.second == INVALID)
                 r.push(a);
             else
-                throw NodeReconstructionFailed();
+                throw StackReconstructionFailed();
         }  // loop only ends when top has been pushed
         r.top() = i->top;
     }

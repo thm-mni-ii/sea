@@ -1,6 +1,6 @@
 #include "sealib/iterator/reversedfs.h"
 #include <gtest/gtest.h>
-#include <iostream>
+#include <cstdio>
 #include "../src/dfs/simplereversedfs.h"
 #include "sealib/graph/graphcreator.h"
 
@@ -22,7 +22,17 @@ TEST(ReverseDFSTest, postprocess) {
         if(a.type==UserCall::postprocess) v2.push_back(a);
     }
     ASSERT_GE(v2.size(),v1.size());
+    bool equal=true;
+    printf("[ ");
     for(uint64_t a=0; a<v1.size(); a++) {
-        EXPECT_EQ(v1[a].u,v2[a].u);
+        if(v1[a].u!=v2[a].u) {
+            equal=false;
+            printf(" <<%lu!=%lu>> ",v1[a].u,v2[a].u);
+        }
+        else {
+            printf(" %lu ",v1[a].u);
+        }
     }
+    printf(" ]\n");
+    EXPECT_TRUE(equal);
 }
