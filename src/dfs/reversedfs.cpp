@@ -19,6 +19,7 @@ ReverseDFS::ReverseDFS(Graph const &graph)
       seqI(sequence.rend()) {
     for (uint64_t a = 0; a < n; a++) {
         c.insert(a, 0);
+        d.insert(a, iCount);
     }
 }
 
@@ -34,7 +35,7 @@ void ReverseDFS::init() {
                 [this, &trace, &u0](uint64_t u) {
                     if (i->width > iWidth) {
                         nextInterval();
-                        if (u != u0) needBelowTop = true;
+                        if (i->depth > 0) needBelowTop = true;
                         i->firstCall = UserCall(UserCall::preprocess, u);
                     }
                     d.insert(u, ip);
@@ -44,12 +45,14 @@ void ReverseDFS::init() {
                 [this, &trace](uint64_t u, uint64_t k) {
                     if (needTopOfStack) {
                         needTopOfStack = false;
-                        // NOT (u,k+1): we need the top entry from a previous
-                        // call
-                        i->top = i->bottom = {u, k};
+                        // NOT (u,k+1): we need the top entry at time of a
+                        // previous call
+                        i->top = {u, k};
+                        if (i->bottom == NIL) i->bottom = {u, k};
                     }
                     uint64_t v = g.head(u, k);
-                    if (d.get(v) == iCount + 1) {
+                    if (d.get(v) == iCount) {
+                        // major preexplore
                         if (i->width > iWidth) {
                             nextInterval();
                             i->top = i->bottom = {u, k + 1};
@@ -64,8 +67,9 @@ void ReverseDFS::init() {
                         // major postexplore
                         if (needBelowTop) {
                             needBelowTop = false;
-                            i->top = i->bottom = {u, k + 1};
-                        } else if (s.size() < i->depth && i->top != NIL) {
+                            i->top = {u, k + 1};
+                            if (i->bottom == NIL) i->bottom = {u, k};
+                        } else if (s.size() < i->depth && s.size() > 0) {
                             // track depth
                             i->depth = s.size();
                             i->bottom = {u, k + 1};
@@ -83,7 +87,7 @@ void ReverseDFS::init() {
                 [this, &trace](uint64_t u) {
                     if (i->width > iWidth) {
                         nextInterval();
-                        needTopOfStack = true;
+                        if (i->depth > 0) needTopOfStack = true;
                         i->firstCall = UserCall(UserCall::postprocess, u);
                     }
                     f.insert(u, ip);
@@ -239,7 +243,7 @@ std::vector<UserCall> ReverseDFS::simulate(
                 }
             }
         }
-    } while (!sj->empty());
+    } while (!sj->empty() && r.size() < i->width);
     return r;
 }
 

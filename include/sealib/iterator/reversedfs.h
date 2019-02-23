@@ -77,10 +77,10 @@ class ReverseDFS : Iterator<UserCall>, DFS {
         std::pair<uint64_t, uint64_t> top =
             NIL;  // top entry at start and end of the interval
         std::pair<uint64_t, uint64_t> bottom =
-            NIL;  // value of deepest entry during Ij at time tj
-        uint64_t height = INVALID, depth = INVALID;  // index of deepest entry
+            NIL;             // value of deepest entry during Ij at time tj
+        uint64_t depth = 0;  // index of deepest entry
         UserCall firstCall;
-        uint64_t width = 0;  // stack-operation counter for the interval
+        uint64_t width = 0;  // major-call counter for the interval
         bool inUse = false;
     };
 
