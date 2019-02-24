@@ -118,7 +118,7 @@ void ReverseDFS::nextInterval() {
 }
 
 bool ReverseDFS::more() {
-    return ip != static_cast<uint64_t>(-1) || seqI != sequence.rend();
+    return static_cast<int64_t>(ip) != -1 || seqI != sequence.rend();
 }
 
 UserCall ReverseDFS::next() {
@@ -178,6 +178,9 @@ std::vector<UserCall> ReverseDFS::simulate(
     std::vector<UserCall> r;
     if (i->firstCall.type == UserCall::preprocess) {
         sj->push({i->firstCall.u, 0});
+    } else if (i->firstCall.type == UserCall::preexplore) {
+        // we don't have to be careful here because u must be gray
+        sj->top().second -= 1;
     } else if (i->firstCall.type == UserCall::postprocess) {
         if (sj->empty()) sj->push({i->firstCall.u, g.deg(i->firstCall.u)});
     } else if (i->firstCall.type == UserCall::postexplore) {
