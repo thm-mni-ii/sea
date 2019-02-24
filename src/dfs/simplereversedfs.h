@@ -13,10 +13,8 @@ class SimpleReverseDFS : Iterator<UserCall> {
     /**
      * Create a new reverse DFS iterator.
      * @param g Input graph pointer
-     * @param filter Filter to select the desired user call type
      */
-    explicit SimpleReverseDFS(Graph const &g,
-                              UserCall::Type filter = UserCall::nop);
+    explicit SimpleReverseDFS(Graph const &g);
 
     /**
      * Initialize the reverse DFS (runs a normal DFS and stores the desired user
@@ -38,7 +36,6 @@ class SimpleReverseDFS : Iterator<UserCall> {
 
  private:
     Graph const &g;
-    UserCall::Type filter;
     std::vector<UserCall> result;
     std::vector<UserCall>::reverse_iterator resultI;
 };

@@ -122,10 +122,37 @@ bool ReverseDFS::more() {
 }
 
 UserCall ReverseDFS::next() {
+    if (haveNext) {
+        return insertMinor();
+    }
     if (seqI != sequence.rend()) {
         UserCall r = *seqI;
-        seqI++;
-        return r;
+        if (latestOutput.type == UserCall::preexplore && latestOutput.k > 0 &&
+            r.type == UserCall::preprocess) {
+            insertLast = {r.u, 0};
+            insertNext = {latestOutput.u, latestOutput.k - 1};
+            haveNext = true;
+            nextType = UserCall::postexplore;
+        } else if (latestOutput.type == UserCall::postprocess &&
+                   r.type == UserCall::preprocess) {
+            insertLast = {r.u, 0};
+            insertNext = {latestOutput.u, g.deg(latestOutput.u) - 1};
+            haveNext = true;
+            nextType = UserCall::postexplore;
+        } else if (latestOutput.type == UserCall::postprocess &&
+                   r.type == UserCall::postexplore && r.k != g.deg(r.u) - 1) {
+            insertLast = {r.u, r.k + 1};
+            insertNext = {r.u, g.deg(r.u) - 1};
+            haveNext = true;
+            nextType = UserCall::postexplore;
+        }
+        if (haveNext) {
+            return insertMinor();
+        } else {
+            latestOutput = r;
+            seqI++;
+            return r;
+        }
     } else {  // build new sequence
         for (uint64_t a = 0; a < n; a++) {
             if (f.get(a) < ip) {
@@ -143,6 +170,22 @@ UserCall ReverseDFS::next() {
         ip--;
         return next();
     }
+}
+
+UserCall ReverseDFS::insertMinor() {
+    UserCall r(nextType, insertNext.first, insertNext.second);
+    if (nextType == UserCall::preexplore) {
+        if (insertNext == insertLast) {
+            haveNext = false;
+        } else {
+            insertNext.second--;
+            nextType = UserCall::postexplore;
+        }
+    } else if (nextType == UserCall::postexplore) {
+        nextType = UserCall::preexplore;
+    }
+    latestOutput = r;
+    return r;
 }
 
 std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {

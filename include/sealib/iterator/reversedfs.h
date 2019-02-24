@@ -97,8 +97,13 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     std::vector<uint64_t> needBelowTop;
 
     std::vector<UserCall> sequence;
-    UserCall previous;
     std::vector<UserCall>::reverse_iterator seqI;
+
+    UserCall insertMinor();
+    UserCall latestOutput;
+    bool haveNext = false;
+    std::pair<uint64_t, uint64_t> insertLast, insertNext;
+    UserCall::Type nextType;
 
     /**
      * Reconstruct sj from the current bottom to top entry.
