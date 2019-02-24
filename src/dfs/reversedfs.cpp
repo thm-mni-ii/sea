@@ -82,7 +82,7 @@ void ReverseDFS::init() {
                         }
                         if (i->width == iWidth) {
                             nextInterval();
-                            needTopOfStack = true;
+                            if (i->depth > 0) needTopOfStack = true;
                             i->firstCall =
                                 UserCall(UserCall::postexplore, u, k);
                         } else if (s.size() < i->depth) {
@@ -152,6 +152,7 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
         // restore all u with d[u]<j and f[u]==j
         std::pair<uint64_t, uint64_t> a = i->bottom;
         r.push(a);
+        used[a.first] = true;
         while (a.first != i->top.first) {
             for (uint64_t b = 0; b < g.deg(a.first); b++) {
                 uint64_t v = g.head(a.first, b);
@@ -178,10 +179,11 @@ std::vector<UserCall> ReverseDFS::simulate(
     if (i->firstCall.type == UserCall::preprocess) {
         sj->push({i->firstCall.u, 0});
     } else if (i->firstCall.type == UserCall::postprocess) {
-        r.emplace_back(UserCall(UserCall::postprocess, i->firstCall.u));
+        if (sj->empty()) sj->push({i->firstCall.u, g.deg(i->firstCall.u)});
     } else if (i->firstCall.type == UserCall::postexplore) {
         r.emplace_back(
             UserCall(UserCall::postexplore, i->firstCall.u, i->firstCall.k));
+        if (sj->empty()) sj->push({i->firstCall.u, g.deg(i->firstCall.u)});
         // now, proceed normally
     }
 
