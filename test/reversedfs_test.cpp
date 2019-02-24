@@ -24,7 +24,7 @@ TEST(ReverseDFSTest, postprocess) {
         UserCall a=s.next();
         if(a.type==UserCall::postprocess) v2.push_back(a);
     }
-    ASSERT_LE(v1.size(),v2.size());
+    ASSERT_EQ(v1.size(),v2.size());
     bool equal=true;
     printf("[ ");
     for(uint64_t a=0; a<v1.size(); a++) {
@@ -38,5 +38,4 @@ TEST(ReverseDFSTest, postprocess) {
     }
     printf(" ]\n");
     EXPECT_TRUE(equal);
-    EXPECT_EQ(v1.size(),v2.size());
 }

@@ -126,33 +126,6 @@ UserCall ReverseDFS::next() {
         UserCall r = *seqI;
         seqI++;
         return r;
-        /*static uint64_t mu = INVALID, mk = 0;
-        static bool delayedPostexp = false;
-        UserCall &cc = *seqI;
-        UserCall ret;
-        if (delayedPostexp) {
-            delayedPostexp = false;
-            ret = UserCall(UserCall::postexplore, cc.u, g.head(cc.u, mk));
-        } else if (previous.u == cc.u && (cc.type == UserCall::preprocess ||
-                                          cc.type == UserCall::postexplore)) {
-            if (mu == INVALID) {
-                mk = previous.k - 1;
-            } else {
-                mk--;
-            }
-            if (static_cast<int>(mk) >= 0) {
-                uint64_t v = g.head(cc.u, mk);
-                delayedPostexp = true;
-                ret = UserCall(UserCall::preexplore, cc.u, v);
-            } else {
-                mu = INVALID;
-            }
-        }
-        if (mu == INVALID) {
-            previous = *seqI;
-            ret = *(seqI++);
-        }
-        return ret;*/
     } else {  // build new sequence
         for (uint64_t a = 0; a < n; a++) {
             if (f.get(a) < ip) {

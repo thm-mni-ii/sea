@@ -51,7 +51,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     explicit ReverseDFS(Graph const &);
 
     /**
-     * Run a normal DFS to record data about the intervals.
+     * Runs a normal DFS to record data about the intervals.
      * EFFICIENCY: O(n+m) time, O(n log(log(n))) bits
      */
     void init() override;
@@ -62,8 +62,8 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     bool more() override;
 
     /**
-     * Get the next user call from the interval.
-     * If necessary, first reconstruct the stack and simulate the DFS until the
+     * Gets the next user call from the reverse sequence.
+     * If necessary, first reconstructs the stack and simulate the DFS until the
      * end of the interval.
      * @return next user call from the reverse sequence
      */
@@ -87,7 +87,6 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     CompactArray c;
     CompactArray d, f;
     ExtendedSegmentStack s;
-    uint64_t niveau = 0;  // stack height
     std::vector<IntervalData> intervals;
     uint64_t ip = 0;                        // interval pointer
     std::vector<IntervalData>::iterator i;  // interval iterator
@@ -101,9 +100,12 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     UserCall previous;
     std::vector<UserCall>::reverse_iterator seqI;
 
+    /**
+     * Reconstruct sj from the current bottom to top entry.
+     * @return the resulting interval stack sj
+     */
     std::stack<std::pair<uint64_t, uint64_t>> reconstructStack();
     inline void nextInterval();
-    inline void trackSize(uint64_t u0);
 
     /**
      * Simulate the current interval pointed to by `i`.
@@ -112,12 +114,6 @@ class ReverseDFS : Iterator<UserCall>, DFS {
      */
     std::vector<UserCall> simulate(
         std::stack<std::pair<uint64_t, uint64_t>> *sj);
-
-    void process_recording(uint64_t u0);
-
-    void storeTime(bool df, uint64_t u);
-    void updateInterval(uint64_t actions, bool end = false);
-    void setCall(UserCall call);
 };
 
 class IntervalStackEmpty : public std::exception {
