@@ -59,9 +59,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     /**
      * @return true if there are more UserCalls in the DFS
      */
-    bool more() override {
-        return !(i == intervals.begin() && seqI == sequence.rend());
-    }
+    bool more() override;
 
     /**
      * Get the next user call from the interval.
