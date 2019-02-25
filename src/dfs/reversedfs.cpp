@@ -51,7 +51,7 @@ void ReverseDFS::init() {
                         if (i->bottom == NIL) i->bottom = {u, k};
                     }
                     uint64_t v = g.head(u, k);
-                    if (d.get(v) == iCount) {
+                    if (c.get(v) == DFS_WHITE) {
                         // major preexplore
                         if (i->width == iWidth) {
                             nextInterval();
@@ -130,19 +130,26 @@ UserCall ReverseDFS::next() {
         if (latestOutput.type == UserCall::preexplore && latestOutput.k > 0 &&
             r.type == UserCall::preprocess) {
             insertLast = {r.u, 0};
-            insertNext = {latestOutput.u, latestOutput.k - 1};
+            insertNext = {r.u, latestOutput.k - 1};
             haveNext = true;
             nextType = UserCall::postexplore;
         } else if (latestOutput.type == UserCall::postprocess &&
-                   r.type == UserCall::preprocess) {
+                   r.type == UserCall::preprocess && g.deg(r.u) > 0) {
             insertLast = {r.u, 0};
-            insertNext = {latestOutput.u, g.deg(latestOutput.u) - 1};
+            insertNext = {r.u, g.deg(r.u) - 1};
             haveNext = true;
             nextType = UserCall::postexplore;
         } else if (latestOutput.type == UserCall::postprocess &&
                    r.type == UserCall::postexplore && r.k != g.deg(r.u) - 1) {
             insertLast = {r.u, r.k + 1};
             insertNext = {r.u, g.deg(r.u) - 1};
+            haveNext = true;
+            nextType = UserCall::postexplore;
+        } else if (latestOutput.type == UserCall::preexplore &&
+                   r.type == UserCall::postexplore &&
+                   latestOutput.k > r.k + 1) {
+            insertLast = {r.u, r.k + 1};
+            insertNext = {r.u, latestOutput.k - 1};
             haveNext = true;
             nextType = UserCall::postexplore;
         }
@@ -229,7 +236,7 @@ std::vector<UserCall> ReverseDFS::simulate(
     } else if (i->firstCall.type == UserCall::postexplore) {
         r.emplace_back(
             UserCall(UserCall::postexplore, i->firstCall.u, i->firstCall.k));
-        if (sj->empty()) sj->push({i->firstCall.u, g.deg(i->firstCall.u)});
+        if (sj->empty()) sj->push({i->firstCall.u, i->firstCall.k + 1});
         // now, proceed normally
     }
 
