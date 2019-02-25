@@ -32,7 +32,7 @@ void ReverseDFS::init() {
         if (c.get(u0) == DFS_WHITE) {
             DFS::visit_nloglogn(
                 u0, g, &c, &s, DFS::restore_top,
-                [this, &trace, &u0](uint64_t u) {
+                [this, &trace](uint64_t u) {
                     if (i->width == iWidth) {
                         nextInterval();
                         if (i->depth > 0) needBelowTop.push_back(ip);
@@ -157,7 +157,7 @@ UserCall ReverseDFS::next() {
             return insertMinor();
         } else {
             latestOutput = r;
-            seqI++;
+            std::advance(seqI, 1);
             return r;
         }
     } else {  // build new sequence
@@ -173,7 +173,7 @@ UserCall ReverseDFS::next() {
         std::stack<std::pair<uint64_t, uint64_t>> sj = reconstructStack();
         sequence = simulate(&sj);
         seqI = sequence.rbegin();
-        i--;
+        std::advance(i, -1);
         ip--;
         return next();
     }
@@ -259,7 +259,7 @@ std::vector<UserCall> ReverseDFS::simulate(
             } else if (r.size() < i->width) {
                 c.insert(u, DFS_BLACK);
                 r.emplace_back(UserCall(UserCall::Type::postprocess, u));
-                if (sj->size() > 0 && r.size() < i->width) {
+                if (!sj->empty() && r.size() < i->width) {
                     std::pair<uint64_t, uint64_t> p = sj->top();
                     r.emplace_back(UserCall(UserCall::Type::postexplore,
                                             p.first, p.second - 1));

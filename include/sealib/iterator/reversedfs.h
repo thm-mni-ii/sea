@@ -37,12 +37,13 @@ struct UserCall {
 };
 
 /**
- * Reverse DFS iterator which returns a sequence of all the user calls in
+ * Reverse DFS iterator which returns a the user calls of a normal DFS in
  * reverse order.
  * To accomplish this in lower space, the forward run of a DFS is split into
- * log(n) intervals and those are simulated in reverse order. <br>
+ * log(n) intervals and those are simulated in reverse order.
  * As usual, call init() first, and check with more() before getting the next
  * element.
+ * @author Simon Heuser
  *
  * EFFICIENCY: O(n+m) time, O(n log(log(n))) bits
  */
@@ -62,10 +63,9 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     bool more() override;
 
     /**
-     * Gets the next user call from the reverse sequence.
-     * If necessary, first reconstructs the stack and simulate the DFS until the
-     * end of the interval.
-     * @return next user call from the reverse sequence
+     * Gets the next user call from the reverse DFS. The UserCall struct is
+     * shown above.
+     * @return next user call
      */
     UserCall next() override;
 
@@ -99,6 +99,10 @@ class ReverseDFS : Iterator<UserCall>, DFS {
     std::vector<UserCall> sequence;
     std::vector<UserCall>::reverse_iterator seqI;
 
+    /**
+     * Inserts the missing parts (preexp/postexp) from insertNext until
+     * insertLast.
+     */
     UserCall insertMinor();
     UserCall latestOutput;
     bool haveNext = false;
