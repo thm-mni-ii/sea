@@ -8,10 +8,10 @@
 #include <set>
 #include <unordered_set>
 
-using Sealib::DirectedGraph;
-using Sealib::UndirectedGraph;
 using Sealib::CompactGraph;
+using Sealib::DirectedGraph;
 using Sealib::GraphCreator;
+using Sealib::UndirectedGraph;
 
 UndirectedGraph *Sealib::GraphCreator::createPointerFromAdjacencyMatrix(
     uint64_t **adjMatrix, uint64_t order) {
@@ -220,6 +220,15 @@ UndirectedGraph GraphCreator::windmill(uint64_t order, uint64_t count) {
         g.getNode(a).addAdjacency({n - 1, i1});
     }
     return g;
+}
+
+DirectedGraph GraphCreator::transpose(DirectedGraph const &g) {
+    std::vector<SimpleNode> nodes(g.getOrder());
+    for (uint64_t u = 0; u < g.getOrder(); u++) {
+        for (uint64_t k = 0; k < g.deg(u); k++) {
+            nodes[g.head(u, k)].addAdjacency(u);
+        }
+    }
 }
 
 static uint64_t *generateRawGilbertGraph(uint64_t order, double p,

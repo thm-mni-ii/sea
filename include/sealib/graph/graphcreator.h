@@ -118,6 +118,14 @@ class GraphCreator {
      * @author Simon Heuser
      */
     static UndirectedGraph windmill(uint64_t order, uint64_t count);
+
+    /**
+     * Create a transpose of the input graph. In a transposed graph, all the
+     * edge directions are reversed.
+     * @param g directed graph
+     * @return transposed input graph
+     */
+    static DirectedGraph transpose(DirectedGraph const &g);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPHCREATOR_H_
