@@ -229,6 +229,7 @@ DirectedGraph GraphCreator::transpose(DirectedGraph const &g) {
             nodes[g.head(u, k)].addAdjacency(u);
         }
     }
+    return DirectedGraph(nodes);
 }
 
 static uint64_t *generateRawGilbertGraph(uint64_t order, double p,
