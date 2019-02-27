@@ -43,7 +43,7 @@ static std::vector<DirectedGraph> makeGraphs() {
 class DFSTest : public ::testing::TestWithParam<DirectedGraph> {
  protected:
     virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
-                                                     // TEST_P
+    // TEST_P
 };
 
 INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),

@@ -1,5 +1,5 @@
-#ifndef SEALIB_SEGMENTSTACK_H_
-#define SEALIB_SEGMENTSTACK_H_
+#ifndef SEALIB_COLLECTION_SEGMENTSTACK_H_
+#define SEALIB_COLLECTION_SEGMENTSTACK_H_
 
 #include <stdexcept>
 #include <utility>
@@ -35,9 +35,22 @@ namespace Sealib {
 */
 class SegmentStack {
  public:
+    /**
+     * Push a tuple.
+     */
     virtual void push(std::pair<uint64_t, uint64_t> u) = 0;
+    /**
+     * Pop a tuple.
+     * @param r address where the tuple will be stored
+     * @return 0 (on success), DFS_NO_MORE_NODES or DFS_DO_RESTORE
+     */
     uint8_t pop(std::pair<uint64_t, uint64_t> *r);
+    std::pair<uint64_t, uint64_t> top();
     bool isEmpty();
+    /**
+     * @return number of tuples on the entire stack
+     */
+    uint64_t size();
     virtual bool isAligned() = 0;
     virtual ~SegmentStack() = default;
 
@@ -65,7 +78,6 @@ class BasicSegmentStack : public SegmentStack {
     /**
      * Push a tuple on the stack.
      * @param u Tuple to store on the stack
-     *
      */
     void push(std::pair<uint64_t, uint64_t> u) override;
     /**
@@ -207,4 +219,4 @@ class BigStackFull : std::exception {
 };
 
 }  // namespace Sealib
-#endif  // SEALIB_SEGMENTSTACK_H_
+#endif  // SEALIB_COLLECTION_SEGMENTSTACK_H_

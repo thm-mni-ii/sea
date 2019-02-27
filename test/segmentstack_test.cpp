@@ -1,4 +1,4 @@
-#include "sealib/segmentstack.h"
+#include "sealib/collection/segmentstack.h"
 #include <gtest/gtest.h>
 #include "sealib/collection/compactarray.h"
 #include "sealib/graph/graphcreator.h"

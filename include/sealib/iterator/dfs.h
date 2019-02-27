@@ -4,12 +4,10 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
-#include "sealib/collection/sequence.h"
+#include "sealib/collection/segmentstack.h"
 #include "sealib/collection/staticspacestorage.h"
-#include "sealib/graph/graph.h"
-#include "sealib/graph/node.h"
+#include "sealib/graph/directedgraph.h"
 #include "sealib/graph/undirectedgraph.h"
-#include "sealib/segmentstack.h"
 
 namespace Sealib {
 
@@ -19,10 +17,16 @@ const BiConsumer DFS_NOP_EXPLORE = [](uint64_t, uint64_t) {};
 
 /**
  * This class contains depth-first search algorithms.
- * The depth-first search of a graph processes all its nodes and
- * explores all its edges.
- * During this procedure, the nodes will be colored
- * from white (initial) to gray (being processed) to black (finished processing)
+ * The depth-first search of a graph processes all its nodes and explores all
+ * its edges.
+ * During this procedure, the nodes will be colored from white (initial) to gray
+ * (being processed) to black (finished processing).
+ * You can give user calls (aka callbacks) to the DFS procedures that will be
+ * called at appropriate times:
+ * - preprocess(u): before a vertex u turns gray
+ * - postprocess(u): after a vertex u turns black
+ * - preexplore(u,k): before the k'th edge outgoing from u is considered
+ * - postexplore(u,k): after the k'th edge outgoing from u is considered
  *
  * The following DFS variants are available:
  *  - standardDFS: the normal DFS, uses implicit recursion stack
@@ -39,8 +43,8 @@ class DFS {
      * EFFICIENCY: O(n+m) time, O(n log n) bits
      * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
-     * @param preexplore to be executed before exploring an edge (u,v)
-     * @param postexplore to be executed after exploring an edge (u,v)
+     * @param preexplore to be executed before exploring an edge (u,k)
+     * @param postexplore to be executed after exploring an edge (u,k)
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
@@ -55,8 +59,8 @@ class DFS {
      * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) bits
      * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
-     * @param preexplore to be executed before exploring an edge (u,v)
-     * @param postexplore to be executed after exploring an edge (u,v)
+     * @param preexplore to be executed before exploring an edge (u,k)
+     * @param postexplore to be executed after exploring an edge (u,k)
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
@@ -71,8 +75,8 @@ class DFS {
      * EFFICIENCY: O(n+m) time, O(n log log n) bits
      * @param g graph G=(V,E) to iterate over
      * @param preprocess to be executed before processing a node u
-     * @param preexplore to be executed before exploring an edge (u,v)
-     * @param postexplore to be executed after exploring an edge (u,v)
+     * @param preexplore to be executed before exploring an edge (u,k)
+     * @param postexplore to be executed after exploring an edge (u,k)
      * @param postprocess to be executed after processing a node u
      * @author Simon Heuser
      */
@@ -123,11 +127,13 @@ class DFS {
                                Consumer preProcess, BiConsumer preExplore,
                                BiConsumer postExplore, Consumer postProcess);
 
-    static void visit_nloglogn(uint64_t u0, Graph const &g, CompactArray *color,
-                               SegmentStack *s,
-                               std::function<void(uint64_t u0)> restoration,
-                               Consumer preprocess, BiConsumer preexplore,
-                               BiConsumer postexplore, Consumer postprocess);
+    static void visit_nloglogn(
+        uint64_t u0, Graph const &g, CompactArray *color, SegmentStack *s,
+        std::function<void(uint64_t, Graph const &, CompactArray *,
+                           SegmentStack *)>
+            restoration,
+        Consumer preprocess, BiConsumer preexplore, BiConsumer postexplore,
+        Consumer postprocess);
 
     static void visit_nplusm(uint64_t u0, UndirectedGraph const &g,
                              CompactArray *color, Sequence<uint64_t> *back,
@@ -135,10 +141,10 @@ class DFS {
                              BiConsumer postexplore, Consumer postprocess);
 
     static void restore_full(uint64_t u0, Graph const &g, CompactArray *color,
-                             BasicSegmentStack *s);
+                             /*Basic*/ SegmentStack *s);
 
     static void restore_top(uint64_t u0, Graph const &g, CompactArray *color,
-                            ExtendedSegmentStack *s);
+                            /*Extended*/ SegmentStack *s);
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_DFS_H_

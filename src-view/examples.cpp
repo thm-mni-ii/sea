@@ -17,8 +17,8 @@ char const *Examples::style_white = "circle,draw=black,fill=white",
 
 //  --- VISUAL BREADTH-FIRST SEARCH ---
 
-VisualBFS::VisualBFS(Graph const &graph, CompactArray color, std::string filename,
-                     std::string mode)
+VisualBFS::VisualBFS(Graph const &graph, CompactArray color,
+                     std::string filename, std::string mode)
     : g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
       c(std::move(color)),
@@ -80,8 +80,8 @@ void VisualBFS::run() {
 
 // --- VISUAL DEPTH-FIRST SEARCH ---
 
-VisualDFS::VisualDFS(Graph const &graph, CompactArray *color, std::string filename,
-                     std::string mode)
+VisualDFS::VisualDFS(Graph const &graph, CompactArray *color,
+                     std::string filename, std::string mode)
     : ExtendedSegmentStack(graph.getOrder(), graph, color),
       g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
@@ -114,8 +114,7 @@ void VisualDFS::run() {
     for (uint64_t u = 0; u < g.getOrder(); u++) {
         if (c->get(u) == DFS_WHITE) {
             DFS::visit_nloglogn(
-                u, g, c, this,
-                [&](uint64_t u0) { restore_top(u0, g, c, this); },
+                u, g, c, this, restore_top,
                 [this](uint64_t ui) {
                     tg->getNodes().at(ui).setOptions(Examples::style_gray);
                     emit();
@@ -132,8 +131,9 @@ void VisualDFS::run() {
 
 // --- VISUAL EDGE MARKER ---
 
-VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph const &graph, std::string filename,
-                                   std::string mode, bool flagSilent)
+VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph const &graph,
+                                   std::string filename, std::string mode,
+                                   bool flagSilent)
     : EdgeMarker(graph),
       doc(filename, "matrix,graphdrawing,positioning,quotes", "layered,force",
           true, mode),

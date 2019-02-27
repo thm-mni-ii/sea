@@ -1,11 +1,9 @@
-#include "sealib/segmentstack.h"
+#include "sealib/collection/segmentstack.h"
 #include <math.h>
 #include <sstream>
 #include <stack>
 
-using Sealib::SegmentStack;
-using Sealib::BasicSegmentStack;
-using Sealib::ExtendedSegmentStack;
+namespace Sealib {
 
 //  -- SUPERCLASS --
 
@@ -27,11 +25,23 @@ uint8_t SegmentStack::pop(std::pair<uint64_t, uint64_t> *r) {
     return 0;
 }
 
+std::pair<uint64_t, uint64_t> SegmentStack::top() {
+    if (hp > 0) {
+        return high[hp - 1];
+    } else if (lp > 0) {
+        return low[lp - 1];
+    } else {
+        return std::pair<uint64_t, uint64_t>(INVALID, tp);
+    }
+}
+
 bool SegmentStack::isEmpty() {
     bool r;
     r = lp == 0 && hp == 0 && tp == 0;
     return r;
 }
+
+uint64_t SegmentStack::size() { return tp * q + hp + lp; }
 
 //  -- BASIC --
 
@@ -208,3 +218,5 @@ bool ExtendedSegmentStack::isAligned() {
     }
     return r;
 }
+
+}  // namespace Sealib
