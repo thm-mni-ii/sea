@@ -34,7 +34,7 @@ bool SCCIterator::more() {
 }
 
 uint64_t SCCIterator::next() {
-    DFS::visit_nloglogn(u0, g, &c, &s, DFS::restore_top, preprocess, preexplore,
+    DFS::visit_nloglogn(u0, t, &c, &s, DFS::restore_top, preprocess, preexplore,
                         postexplore, postprocess);
     return u0;
 }

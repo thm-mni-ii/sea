@@ -47,6 +47,7 @@ class SCCIterator : Iterator<uint64_t> {
      * Example (output all vertices in the first SCC):
      * SCCIterator s(g,[](uint u){ printf("found vertex %lu\n",u); });
      * s.init();
+     * s.more();
      * s.next();
      */
     uint64_t next() override;
