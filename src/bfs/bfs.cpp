@@ -16,7 +16,7 @@ void BFS::init() {
 
 bool BFS::nextComponent() {
     bool found = false;
-    for (uint64_t a = 0; a < n; a++) {
+    for (uint64_t a = u; a < n; a++) {
         if (color.get(a) == BFS_WHITE) {
             u = a;
             found = true;
@@ -88,15 +88,7 @@ void BFS::forEach(std::function<void(std::pair<uint64_t, uint64_t>)> f) {
 }
 
 BFS::BFS(Graph const &graph, Consumer pp, BiConsumer pe)
-    : g(graph),
-      n(g.getOrder()),
-      color(n, 4),
-      isInner(n),
-      isOuter(n),
-      preprocess(pp),
-      preexplore(pe) {
-    for (uint64_t a = 0; a < n; a++) color.insert(a, BFS_WHITE);
-}
+    : BFS(graph, CompactArray(graph.getOrder(), 4), pp, pe) {}
 
 BFS::BFS(Graph const &graph, CompactArray c, Consumer pp, BiConsumer pe)
     : g(graph),
