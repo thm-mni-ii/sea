@@ -70,7 +70,11 @@ class BFS : Iterator<std::pair<uint64_t, uint64_t>> {
      * (init() before calling this method!)
      * @param f function to execute for each element
      */
-    void forEach(std::function<void(std::pair<uint64_t, uint64_t>)> f) override;
+    void forEach(std::function<void(std::pair<uint64_t, uint64_t>)> f) override {
+        do {
+            while (more()) f(next());
+        } while (nextComponent());
+    }
 
  private:
     Graph const &g;

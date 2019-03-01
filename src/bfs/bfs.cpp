@@ -81,12 +81,6 @@ std::pair<uint64_t, uint64_t> BFS::next() {
     return std::pair<uint64_t, uint64_t>(u, dist);
 }
 
-void BFS::forEach(std::function<void(std::pair<uint64_t, uint64_t>)> f) {
-    do {
-        while (more()) f(next());
-    } while (nextComponent());
-}
-
 BFS::BFS(Graph const &graph, Consumer pp, BiConsumer pe)
     : BFS(graph, CompactArray(graph.getOrder(), 4), pp, pe) {}
 

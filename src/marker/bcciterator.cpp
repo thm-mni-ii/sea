@@ -29,7 +29,7 @@ bool BCCIterator::more() {
         case RETREAT:
             status = WAITING;
             edge = g.deg(node);
-        // FALL THROUGH
+            [[clang::fallthrough]];
         case WAITING:
             while (true) {
                 if (edge < g.deg(node)) {
@@ -97,7 +97,7 @@ std::pair<uint64_t, uint64_t> BCCIterator::next() {
                     break;
                 } else {
                     tmp = 0;
-                    // FALL THROUGH
+                    [[clang::fallthrough]];
                 }
             case OUTPUT_VERTEX:
                 r = std::pair<uint64_t, uint64_t>(node, INVALID);
