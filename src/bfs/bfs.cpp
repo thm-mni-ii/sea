@@ -97,8 +97,6 @@ BFS::BFS(Graph const &graph, CompactArray c, Consumer pp, BiConsumer pe)
       isInner(n),
       isOuter(n),
       preprocess(pp),
-      preexplore(pe) {
-    for (uint64_t a = 0; a < n; a++) color.insert(a, BFS_WHITE);
-}
+      preexplore(pe) {}
 
 }  // namespace Sealib

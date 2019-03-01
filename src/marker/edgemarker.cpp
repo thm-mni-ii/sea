@@ -43,7 +43,6 @@ EdgeMarker::EdgeMarker(UndirectedGraph const &graph)
 
 void EdgeMarker::identifyEdges() {
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             DFS::visit_nplusm(a, g, &color, &parent, DFS_NOP_PROCESS,
@@ -72,7 +71,6 @@ void EdgeMarker::identifyEdges() {
 
 void EdgeMarker::markTreeEdges() {
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             DFS::visit_nplusm(

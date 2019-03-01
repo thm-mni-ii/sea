@@ -241,7 +241,6 @@ void DFS::nBitDFS(Graph const &g, Consumer preprocess, BiConsumer preexplore,
 
     BasicSegmentStack s(q);
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
             visit_nloglogn(a, g, &color, &s, restore_full, preprocess,
@@ -255,7 +254,6 @@ void DFS::nloglognBitDFS(Graph const &g, Consumer preprocess,
     uint64_t n = g.getOrder();
     CompactArray color(n, 3);
     ExtendedSegmentStack s(n, g, &color);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
             visit_nloglogn(a, g, &color, &s, restore_top, preprocess,
@@ -268,7 +266,6 @@ void DFS::nplusmBitDFS(UndirectedGraph const &g, Consumer preprocess,
                        Consumer postprocess) {
     uint64_t n = g.getOrder();
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     std::vector<bool> bits;
     for (uint64_t u = 0; u < n; u++) {
         bits.push_back(1);

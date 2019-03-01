@@ -58,7 +58,6 @@ class ExtendedSegmentStackTest : public ::testing::Test {
         uint32_t n = 256;
         g = Sealib::GraphCreator::kOutdegree(n, 10);
         c = new CompactArray(n, 3);
-        for (uint64_t a = 0; a < n; a++) c->insert(a, 0);
         s = new ExtendedSegmentStack(n, g, c);
         q = static_cast<uint32_t>(ceil(n / log2(n)));
     }

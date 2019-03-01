@@ -14,7 +14,6 @@ CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
 
 void CutVertexIterator::findCCs() {
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     StaticSpaceStorage parent(g);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {

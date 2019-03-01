@@ -10,9 +10,7 @@ BCCIterator::BCCIterator(UndirectedGraph const &graph)
 BCCIterator::BCCIterator(std::shared_ptr<EdgeMarker> edges)
     : e(edges), g(e->getGraph()), n(g.getOrder()), color(n, 3), parent(g) {}
 
-void BCCIterator::init() {
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-}
+void BCCIterator::init() {}
 
 void BCCIterator::start(uint64_t u, uint64_t v) {
     startEdge = std::pair<uint64_t, uint64_t>(u, v);
