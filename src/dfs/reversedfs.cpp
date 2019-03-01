@@ -7,7 +7,7 @@ namespace Sealib {
 ReverseDFS::ReverseDFS(Graph const &graph)
     : g(graph),
       n(g.getOrder()),
-      iCount(static_cast<uint64_t>(20 * log2(n) / log2(log2(n))) + 1),
+      iCount(static_cast<uint64_t>(4 * log2(n) / log2(log2(n))) + 1),
       iWidth(static_cast<uint64_t>(n * log2(log2(n)) / log2(n)) + 1),
       c(n, 3),
       d(n, iCount + 1),
