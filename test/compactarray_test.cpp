@@ -1,24 +1,37 @@
 #include <gtest/gtest.h>
-#include <sealib/compactarray.h>
+#include <sealib/collection/compactarray.h>
 #include <stdexcept>
 
 using Sealib::CompactArray;
 
 TEST(CompactArrayTest, insertAndGet) {
-  CompactArray *a = new CompactArray(1500, 6);
-  for (unsigned int b = 0; b < 50; b++) a->insert(b, 5);
-  for (unsigned int b = 0; b < 50; b++) EXPECT_EQ(a->get(b), 5);
-  for (unsigned int b = 50; b < 1500; b++) EXPECT_EQ(a->get(b), 0);
-  a->insert(60, 1);
-  EXPECT_EQ(a->get(60), 1);
-  a->insert(1499, 1);
-  EXPECT_EQ(a->get(1499), 1);
-  EXPECT_THROW(a->get(1500), std::out_of_range);
-  EXPECT_THROW(a->insert(1500, 1), std::out_of_range);
-  delete a;
+    CompactArray a(1500, 6);
+    for (uint32_t b = 0; b < 1500; b++) a.insert(b, 0);
+    for (uint32_t b = 0; b < 50; b++) a.insert(b, 5);
+    for (uint32_t b = 0; b < 50; b++) EXPECT_EQ(a.get(b), 5);
+    for (uint32_t b = 50; b < 1500; b++) EXPECT_EQ(a.get(b), 0);
+    a.insert(60, 1);
+    EXPECT_EQ(a.get(60), 1);
+    a.insert(1499, 1);
+    EXPECT_EQ(a.get(1499), 1);
 }
 
-TEST(CompactArrayTest, tooWide) {
-  CompactArray a(20, 3);
-  EXPECT_THROW(a.insert(0, 42), std::invalid_argument);
+TEST(CompactArrayTest, alternate) {
+    for (uint64_t b = 2;
+         b < static_cast<uint64_t>(1UL << (sizeof(uint64_t) * 8 - 1)); b *= 2) {
+        uint64_t n = 2500;
+        CompactArray a(n, b);
+        for (uint64_t c = 0; c < n; c++) {
+            if (c % 2 == 0)
+                a.insert(c, 1);
+            else
+                a.insert(c, b - 1);
+        }
+        for (uint64_t c = 0; c < n; c++) {
+            if (c % 2 == 0)
+                EXPECT_EQ(a.get(c), 1);
+            else
+                EXPECT_EQ(a.get(c), b - 1);
+        }
+    }
 }

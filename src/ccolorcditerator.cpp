@@ -37,9 +37,10 @@ unsigned long int CcolorCdIterator::next() {
     unsigned long int innerIndex = index / colorFieldSize;
     activeWord = activeWord & ~(1UL << (WORDSIZE - index - SHIFT_OFFSET));
 
-    return ((activeBlock + nextWordIndex - 1) * WORDSIZE) / colorFieldSize + innerIndex;
-    // unsigned long int wordIndex = activeBlock * blockSize + nextWordIndex - 1;
-    // return (wordIndex * WORDSIZE) / colorFieldSize + innerIndex;
+    return ((activeBlock + nextWordIndex - 1) * WORDSIZE) / colorFieldSize +
+           innerIndex;
+    // unsigned long int wordIndex = activeBlock * blockSize + nextWordIndex -
+    // 1; return (wordIndex * WORDSIZE) / colorFieldSize + innerIndex;
 }
 
 bool CcolorCdIterator::nextWord() {
@@ -50,8 +51,10 @@ bool CcolorCdIterator::nextWord() {
     }
 
     while (activeWord == 0) {
-        activeWord = choicedictionary->getWordValue(activeBlock + nextWordIndex);
-        activeWord = CdBitUtil::cdColorIndices(activeWord, color, colorFieldSize);
+        activeWord =
+            choicedictionary->getWordValue(activeBlock + nextWordIndex);
+        activeWord =
+            CdBitUtil::cdColorIndices(activeWord, color, colorFieldSize);
         nextWordIndex++;
 
         if (activeWord == 0 && nextWordIndex == blockSize + 1) {

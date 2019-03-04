@@ -27,15 +27,19 @@ class CdBitUtil {
  private:
     static unsigned long int getXor(unsigned long int colorFieldSize);
     static unsigned long int getMask(unsigned long int colorFieldSize);
-    static unsigned long int foldWord(unsigned long int _word, unsigned long int colorFieldSize);
+    static unsigned long int foldWord(unsigned long int _word,
+                                      unsigned long int colorFieldSize);
     static unsigned long int generateXorWord(unsigned long int color,
                                              unsigned long int colorFieldSize,
                                              unsigned long int word);
 
  public:
-    static long int cdXorLoop(unsigned long int _word, unsigned long int color, unsigned long int colorFieldSize);
-    static long int cdXor(unsigned long int _word, unsigned long int color, unsigned long int colorFieldSize);
-    static unsigned long int cdColorIndices(unsigned long int value, unsigned long int color,
+    static long int cdXorLoop(unsigned long int _word, unsigned long int color,
+                              unsigned long int colorFieldSize);
+    static long int cdXor(unsigned long int _word, unsigned long int color,
+                          unsigned long int colorFieldSize);
+    static unsigned long int cdColorIndices(unsigned long int value,
+                                            unsigned long int color,
                                             unsigned long int colorFieldSize);
 };
 

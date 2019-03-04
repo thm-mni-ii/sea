@@ -20,7 +20,8 @@ class CcolorChoiceDictionary {
  private:
     unsigned long int *choiceDictionary, *pointerStructure, *pointer;
 
-    const unsigned long int wordSize, colorCount, colorFieldSize, wordCount, mask;
+    const unsigned long int wordSize, colorCount, colorFieldSize, wordCount,
+        mask;
 
     unsigned long int extend(unsigned long int color);
 
@@ -36,10 +37,11 @@ class CcolorChoiceDictionary {
 
     bool isChained(unsigned long int index, unsigned long int color);
 
-    void makeChain(unsigned long int blockWritten, unsigned long int blockUnwritten,
-                   unsigned long int color);
+    void makeChain(unsigned long int blockWritten,
+                   unsigned long int blockUnwritten, unsigned long int color);
 
-    unsigned long int chainedWith(unsigned long int blockIndex, unsigned long int color);
+    unsigned long int chainedWith(unsigned long int blockIndex,
+                                  unsigned long int color);
 
     void breakChain(unsigned long int index, unsigned long int color);
 
@@ -56,7 +58,8 @@ class CcolorChoiceDictionary {
      * @param length Length of the choice dictionary
      * @param colors Amount of colors including zero
      */
-    explicit CcolorChoiceDictionary(unsigned long int size, unsigned long int colors);
+    explicit CcolorChoiceDictionary(unsigned long int size,
+                                    unsigned long int colors);
 
     /**
      * Sets a field at specified index to a color.
@@ -100,7 +103,8 @@ class CcolorChoiceDictionary {
      * @param pointerIndex Index within the pointer structure.
      * @param color Color which the index corresponds to.
      */
-    unsigned long int getBlock(unsigned long int pointerIndex, unsigned long int color);
+    unsigned long int getBlock(unsigned long int pointerIndex,
+                               unsigned long int color);
 
     /**
      * Returns the index of the first word of the last block that contains

@@ -25,7 +25,8 @@ class CcolorCdIterator : Iterator<unsigned long int> {
      */
     const unsigned long int blockSize, colorFieldSize;
     CcolorChoiceDictionary* choicedictionary;
-    unsigned long int pointer, barrier, activeBlock, activeWord, nextWordIndex, color;
+    unsigned long int pointer, barrier, activeBlock, activeWord, nextWordIndex,
+        color;
     bool done;
 
     bool nextBlock();

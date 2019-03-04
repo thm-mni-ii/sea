@@ -15,7 +15,8 @@ struct emptyChoiceDictionary : public std::exception {
 struct colorOutOfRange : public std::exception {
     const char *what() const throw() {
         return "Color cannot be used with computed fieldsize. The  biggest "
-               "supported color by the operations \'choice()\' and \'insert()\' is "
+               "supported color by the operations \'choice()\' and "
+               "\'insert()\' is "
                "equal to the defined color count minus one.";
     }
 };
@@ -35,7 +36,8 @@ CcolorChoiceDictionary::CcolorChoiceDictionary(unsigned long int size,
  * DURCH BLOCK IN D ITERIEREN, MAX ITERATIONEN: ANZAHL FARBEN
  */
 
-void CcolorChoiceDictionary::insert(unsigned long int index, unsigned long int color) {
+void CcolorChoiceDictionary::insert(unsigned long int index,
+                                    unsigned long int color) {
     if (color >= colorCount) throw colorOutOfRange();
     unsigned long int wordIndex = index * colorFieldSize / wordSize;
     unsigned long int blockIndex = (wordIndex / colorCount);
@@ -44,7 +46,8 @@ void CcolorChoiceDictionary::insert(unsigned long int index, unsigned long int c
         if (isChained(blockIndex, color)) {
             if (color != 0) {
                 unsigned long int freeWrittenBlock = extend(color);
-                unsigned long int chainedBlock = chainedWith(blockIndex, color) / colorCount;
+                unsigned long int chainedBlock =
+                    chainedWith(blockIndex, color) / colorCount;
                 breakChain(blockIndex, color);
                 makeChain(freeWrittenBlock, chainedBlock, color);
             }
@@ -64,7 +67,8 @@ void CcolorChoiceDictionary::insert(unsigned long int index, unsigned long int c
     }
 
     unsigned long int innerIndex = (index * colorFieldSize) % wordSize;
-    unsigned long int colorMask = color << (wordSize - innerIndex - colorFieldSize);
+    unsigned long int colorMask = color
+                                  << (wordSize - innerIndex - colorFieldSize);
     unsigned long int dataWord = choiceDictionary[wordIndex];
 
     dataWord = dataWord & ~(mask << (wordSize - innerIndex - colorFieldSize));
@@ -111,7 +115,8 @@ unsigned long int CcolorChoiceDictionary::choice(unsigned long int color) {
         innerIndex = CdBitUtil::cdXor(word, color, colorFieldSize);
 
         if (innerIndex >= 0) {
-            index = (wordIndex * wordSize) / colorFieldSize + (unsigned long int)innerIndex;
+            index = (wordIndex * wordSize) / colorFieldSize +
+                    (unsigned long int)innerIndex;
             found = true;
         }
 
@@ -121,11 +126,16 @@ unsigned long int CcolorChoiceDictionary::choice(unsigned long int color) {
     return index;
 }
 
-unsigned long int CcolorChoiceDictionary::getBlockSize() { return colorCount - 1; }
+unsigned long int CcolorChoiceDictionary::getBlockSize() {
+    return colorCount - 1;
+}
 
-unsigned long int CcolorChoiceDictionary::getColorFieldSize() { return colorFieldSize; }
+unsigned long int CcolorChoiceDictionary::getColorFieldSize() {
+    return colorFieldSize;
+}
 
-unsigned long int CcolorChoiceDictionary::getWordValue(unsigned long int index) {
+unsigned long int CcolorChoiceDictionary::getWordValue(
+    unsigned long int index) {
     return choiceDictionary[index];
 }
 
@@ -170,7 +180,8 @@ void CcolorChoiceDictionary::updatePointer(unsigned long int blockIndex) {
             wordValue = choiceDictionary[wordIndex];
 
             if (wordValue > 0)
-                segmentWithColor = CdBitUtil::cdXor(wordValue, color, colorFieldSize);
+                segmentWithColor =
+                    CdBitUtil::cdXor(wordValue, color, colorFieldSize);
             else
                 segmentWithColor = -1;
 
@@ -181,7 +192,8 @@ void CcolorChoiceDictionary::updatePointer(unsigned long int blockIndex) {
             wordIndex++;
         }
         if (!blockHasColor) {
-            if (!isWritten(blockIndex, color) && !isChained(blockIndex, color)) continue;
+            if (!isWritten(blockIndex, color) && !isChained(blockIndex, color))
+                continue;
             lastBlock = pointer[color] / colorCount;
             if (lastBlock > 0) lastBlock--;
             if (isWritten(blockIndex, color)) {
@@ -213,7 +225,8 @@ void CcolorChoiceDictionary::updatePointer(unsigned long int blockIndex) {
     }
 }
 
-void CcolorChoiceDictionary::movePointer(unsigned long int color, bool forward) {
+void CcolorChoiceDictionary::movePointer(unsigned long int color,
+                                         bool forward) {
     if (forward) {
         pointer[color] += colorCount;
 
@@ -225,7 +238,8 @@ void CcolorChoiceDictionary::movePointer(unsigned long int color, bool forward) 
     }
 }
 
-bool CcolorChoiceDictionary::isWritten(unsigned long int blockIndex, unsigned long int color) {
+bool CcolorChoiceDictionary::isWritten(unsigned long int blockIndex,
+                                       unsigned long int color) {
     unsigned long int targetPointerWord = blockIndex * colorCount + color;
 
     if (targetPointerWord < pointer[color]) {
@@ -251,7 +265,8 @@ void CcolorChoiceDictionary::initializeBlock(unsigned long int blockIndex) {
     }
 }
 
-bool CcolorChoiceDictionary::isChained(unsigned long int blockIndex, unsigned long int color) {
+bool CcolorChoiceDictionary::isChained(unsigned long int blockIndex,
+                                       unsigned long int color) {
     unsigned long int chainTarget = blockIndex * colorCount + color;
 
     if (chainTarget >= wordCount) return false;
@@ -266,13 +281,14 @@ bool CcolorChoiceDictionary::isChained(unsigned long int blockIndex, unsigned lo
     return false;
 }
 
-unsigned long int CcolorChoiceDictionary::chainedWith(unsigned long int blockIndex,
-                                                      unsigned long int color) {
+unsigned long int CcolorChoiceDictionary::chainedWith(
+    unsigned long int blockIndex, unsigned long int color) {
     return pointerStructure[blockIndex * colorCount + color];
 }
 
 void CcolorChoiceDictionary::makeChain(unsigned long int blockWritten,
-                                       unsigned long int blockUnwritten, unsigned long int color) {
+                                       unsigned long int blockUnwritten,
+                                       unsigned long int color) {
     unsigned long int writtenTarget = blockWritten * colorCount + color;
     unsigned long int unwrittenTarget = blockUnwritten * colorCount + color;
 
@@ -280,13 +296,15 @@ void CcolorChoiceDictionary::makeChain(unsigned long int blockWritten,
     pointerStructure[unwrittenTarget] = writtenTarget;
 }
 
-void CcolorChoiceDictionary::breakChain(unsigned long int blockIndex, unsigned long int color) {
+void CcolorChoiceDictionary::breakChain(unsigned long int blockIndex,
+                                        unsigned long int color) {
     unsigned long int chain = chainedWith(blockIndex, color);
     pointerStructure[chain] = 0;
 }
 
 unsigned long int CcolorChoiceDictionary::computeColorFieldSize() {
-    unsigned long int _colorFieldSize = (unsigned long int)ceil(log2f(colorCount));
+    unsigned long int _colorFieldSize =
+        (unsigned long int)ceil(log2f(colorCount));
 
     while (wordSize % _colorFieldSize != 0) {
         _colorFieldSize++;

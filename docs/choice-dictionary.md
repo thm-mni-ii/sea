@@ -10,23 +10,25 @@ A choice dictionary is a bitset containing n elements that supports reading and 
 
 ## Efficiency
 * Time: O(1) (all operations)
-* Space: O(n + n/w + 3n/(w^2))
+* Space: n+o(n)
 
 ## Example
 
 ```cpp
-ChoiceDictionary* cd = new ChoiceDictionary(12);
-cd.insert(0); // Indexing beginns with 0
-cd.insert(4);
-cd.insert(7);
-cd.insert(11);
+#include "sealib/dictionary/choicedictionary.h"
 
-cd.get(0); // Returns 1
-cd.get(2); // Returns 0
+int main() {
+    ChoiceDictionary cd(12);
+    cd.insert(0); // Indexing begins with 0
+    cd.insert(4);
+    cd.insert(7);
+    cd.insert(11);
 
-cd.choice(); // May return 0, 4, 7 or 11.
+    cd.get(0); // Returns 1
+    cd.get(2); // Returns 0
 
-delete cd;
+    cd.choice(); // May return 0, 4, 7 or 11.
+}
 ```
 <br>
 
@@ -47,19 +49,20 @@ It supports the so-called *more* operation that returns true if the choice dicti
 ## Example
 
 ```cpp
-ChoiceDictionary* cd = new ChoiceDictionary(12);
-ChoiceDictionaryIterator* it = new ChoiceDictionaryIterator(cd);
-cd->insert(0); // Indexing beginns with 0
-cd->insert(4);
-cd->insert(7);
-cd->insert(11);
+#include "sealib/iterator/choicedictionaryiterator.h"
 
-it->init();
+int main() {
+    ChoiceDictionary cd(12);
+    ChoiceDictionaryIterator it(&cd);
+    cd.insert(0); // Indexing beginns with 0
+    cd.insert(4);
+    cd.insert(7);
+    cd.insert(11);
 
-while (it->more()) { // Returns true if more bits are set to 1
-    it->next(); // May return the next arbitrary bit 0, 4, 7 or 11.
+    it.init();
+
+    while (it.more()) { // Returns true if more bits are set to 1
+        it.next(); // May return the next arbitrary bit 0, 4, 7 or 11.
+    }
 }
-
-delete it;
-delete cd;
 ```

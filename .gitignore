@@ -1,4 +1,5 @@
 # Downloaded Dependencies
+graphio1.gml
 /third-party
 # Files for Build System
 /.gradle
@@ -17,6 +18,22 @@ DartConfiguration.tcl
 *.cbp
 # Visual Studio Code
 .project
+
+# L(u)atex
+*.log
+*.aux
+*.bib
+*.tex
+*.pdf
+*.nav
+*.snm
+*.toc
+# uncomment to whitelist:
+#!mysample1.pdf
+
+# Image output
+*.gif
+*.mp4
 
 # Created by .ignore support plugin (hsz.mobi)
 ### C template
