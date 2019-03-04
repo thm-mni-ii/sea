@@ -43,16 +43,21 @@ class CcolorCdIterator : Iterator<unsigned long int> {
      * Initializes the iterator.
      */
     void init();
+
+    /**
+     * Set the iterator to a color to iterate over.
+     * @param Color to iterate over
+     */
     void setColor(unsigned long int color);
 
     /**
-     * Returns true when there are more bits that are set to 1 in the choice
-     * dictionary and updates the used words if neccessary.
+     * Returns true if there are more fields of a color in the choice
+     * dictionary.
      */
     bool more();
 
     /**
-     * Returns the next index of a bit set to 1.
+     * Returns the arbitrary index of a field with a color.
      */
     unsigned long int next();
 

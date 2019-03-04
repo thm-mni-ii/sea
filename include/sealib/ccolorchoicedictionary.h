@@ -8,9 +8,9 @@
 namespace Sealib {
 /**
  * A choice dictionary is a bitset containing n elements that supports reading
- * and setting a bit in constant time and additionally a so-called choice
- * operation that returns the position of an arbitrary bit that is set to 1
- * in constant time.
+ * and setting a field of bits to a color in constant time and additionally a
+ * so-called _choice_ operation that returns the position of an arbitrary index
+ * of a field that has a chosen color other than 0 in constant time.
  * @author Dennis Appel
  */
 
@@ -19,9 +19,8 @@ const unsigned long int ULONGBITS = sizeof(unsigned long int) * 8;
 class CcolorChoiceDictionary {
  private:
     unsigned long int *choiceDictionary, *pointerStructure, *pointer;
-    const unsigned long int wordSize, colorCount, colorFieldSize, wordCount, mask;
 
-    /* Helper Funcions */
+    const unsigned long int wordSize, colorCount, colorFieldSize, wordCount, mask;
 
     unsigned long int extend(unsigned long int color);
 
@@ -53,45 +52,60 @@ class CcolorChoiceDictionary {
 
  public:
     /**
-     * Creates choice dictionary with given size
+     * Creates choice dictionary with given size and colors.
      * @param length Length of the choice dictionary
+     * @param colors Amount of colors including zero
      */
-    explicit CcolorChoiceDictionary(unsigned long int size, unsigned long int colorCount);
+    explicit CcolorChoiceDictionary(unsigned long int size, unsigned long int colors);
 
     /**
-     * Sets a bit at specified index to 1.
-     * @param index Index of bit that should be set to 1.
+     * Sets a field at specified index to a color.
+     * @param index Index of the field that should be set to a color.
+     * @param color Color the field should be set to.
      */
     void insert(unsigned long int index, unsigned long int color);
 
     /**
-     * Returns the bit at specified index.
-     * @param index Index to read.
+     * Returns the color of the field at the specified index.
+     * @param index Index of field.
      */
     unsigned long int get(unsigned long int index);
 
     /**
-     * Returns an arbitrary bit position that is set to 1.
+     * Returns an arbitrary position of a field with a color.
+     * @param color Color of the field.
      */
     unsigned long int choice(unsigned long int color);
 
     /**
+     * Returns the block size used within the choice dictionary.
+     * The block size is directly related to the amount of colors.
      */
     unsigned long int getBlockSize();
 
     /**
+     * Returns the size of a field that can store a color.
+     * The field size is usually a power of 2.
      */
     unsigned long int getColorFieldSize();
 
     /**
+     * Returns the value of an entire word containing multiple fields.
+     * @wordIndex index of the word which value is to be returned.
      */
     unsigned long int getWordValue(unsigned long int wordIndex);
 
     /**
+     * Returns the block that corresponds to a pointer of a color.
+     * @param pointerIndex Index within the pointer structure.
+     * @param color Color which the index corresponds to.
      */
     unsigned long int getBlock(unsigned long int pointerIndex, unsigned long int color);
 
     /**
+     * Returns the index of the first word of the last block that contains
+     * either a pointer to a block with a color or the block itself.
+     * @param color Color for which the barrier is to be returned.
      */
     unsigned long int getBarrier(unsigned long int color);
 
