@@ -38,24 +38,24 @@ class EdgeMarker {
      * Get the graph that this edge marker is using.
      * @return pointer to the undirected graph used
      */
-    CONSTEXPR_IF_CLANG UndirectedGraph const &getGraph() const { return g; }
+    UndirectedGraph const &getGraph() const { return g; }
 
-    CONSTEXPR_IF_CLANG bool isInitialized(uint64_t u, uint64_t k) const {
+    bool isInitialized(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) != NONE;
     }
-    CONSTEXPR_IF_CLANG bool isTreeEdge(uint64_t u, uint64_t k) const {
+    bool isTreeEdge(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) >= UNMARKED;
     }
-    CONSTEXPR_IF_CLANG bool isBackEdge(uint64_t u, uint64_t k) const {
+    bool isBackEdge(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) == BACK;
     }
     /**
      * @return true if u is closer to the root of the DFS tree
      */
-    CONSTEXPR_IF_CLANG bool isParent(uint64_t u, uint64_t k) const {
+    bool isParent(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & PARENT_MASK) == PARENT;
     }
-    CONSTEXPR_IF_CLANG bool isFullMarked(uint64_t u, uint64_t k) const {
+    bool isFullMarked(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) == FULL;
     }
 
@@ -114,10 +114,10 @@ class EdgeMarker {
 
     void markParents(uint64_t w, uint64_t u);
 
-    CONSTEXPR_IF_CLANG uint64_t edgeIndex(uint64_t u) const {
+    uint64_t edgeIndex(uint64_t u) const {
         return static_cast<uint64_t>(offset.select(u + 1) - u - 1U);
     }
-    CONSTEXPR_IF_CLANG uint64_t getEdgeData(uint64_t u, uint64_t k) const {
+    uint64_t getEdgeData(uint64_t u, uint64_t k) const {
         return edges.get(edgeIndex(u) + k);
     }
 

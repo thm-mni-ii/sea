@@ -50,7 +50,7 @@ class SubGraph {
           stack(stack_),
           qSelect(nullptr),
           pSelect(nullptr) {}
-    
+
     SubGraph(SubGraph const &) = default;
     SubGraph & operator=(SubGraph const &) = default;
     SubGraph(SubGraph &&) = default;
@@ -77,7 +77,7 @@ class SubGraph {
         delete pSelect;
         delete qSelect;
     }
-    
+
     inline uint64_t getSidx() const {
         return sidx;
     }

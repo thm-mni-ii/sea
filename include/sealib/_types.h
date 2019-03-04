@@ -12,13 +12,4 @@ static constexpr uint64_t INVALID = static_cast<uint64_t>(-1);
 
 }  // namespace Sealib
 
-/**
- * Macro for constexpr qualifier on member functions
- */
-#ifdef __clang__
-#define CONSTEXPR_IF_CLANG constexpr
-#else
-#define CONSTEXPR_IF_CLANG inline
-#endif
-
 #endif  // SEALIB__TYPES_H_
