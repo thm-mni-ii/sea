@@ -40,11 +40,14 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
     explicit StaticSpaceStorage(const std::vector<bool> &bits);
 
     /**
-     * Create a new storage with O(log(deg(u)) bits for each node u in the graph
-     * G.
+     * Create a new storage with the given number of bits per vertex/edge.
      * @param g graph G=(V,E) to create a storage for
+     * @param bitsPerEntry If 0: O(log(deg(u)) or deg(u) bits per vertex (dep. on 3rd param.), otherwise: given
+     * number of bits per entry.
+     * @param entryIsEdge If 0: entry = vertex, if 1: entry = edge
      */
-    explicit StaticSpaceStorage(Graph const &g);
+    explicit StaticSpaceStorage(Graph const &g, uint8_t bitsPerEntry = 0,
+                                bool entryIsEdge = 0);
 
     /**
      * Convenience method to create a bit pattern from a vector of sizes

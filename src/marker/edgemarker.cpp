@@ -2,27 +2,6 @@
 
 namespace Sealib {
 
-static std::vector<bool> makeEdges(UndirectedGraph const &g) {
-    std::vector<bool> bits;
-    uint64_t m = 0;
-    for (uint64_t u = 0; u < g.getOrder(); u++) {
-        if (g.deg(u) == 0) {
-            bits.push_back(1);
-            m++;
-        } else {
-            for (uint64_t k = 0; k < g.deg(u); k++) {
-                bits.push_back(1);
-                m++;
-                bits.push_back(0);
-                bits.push_back(0);
-                bits.push_back(0);
-                bits.push_back(0);
-            }
-        }
-    }
-    return bits;
-}
-
 static Bitset<uint8_t> makeOffset(UndirectedGraph const &g) {
     std::vector<bool> bits;
     for (uint64_t u = 0; u < g.getOrder(); u++) {
@@ -38,7 +17,7 @@ EdgeMarker::EdgeMarker(UndirectedGraph const &graph)
     : g(graph),
       n(g.getOrder()),
       parent(g),
-      edges(makeEdges(g)),
+      edges(g, 4, true),
       offset(makeOffset(g)) {}
 
 void EdgeMarker::identifyEdges() {
