@@ -37,7 +37,7 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      *      10001001100
      *      => 4 data packs: size 3, 2, 0 and 2 bits
      */
-    explicit StaticSpaceStorage(const std::vector<bool> &bits);
+    explicit StaticSpaceStorage(std::vector<bool> &&bits);
 
     /**
      * Create a new storage with the given number of bits per vertex/edge.

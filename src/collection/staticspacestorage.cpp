@@ -71,11 +71,11 @@ static inline uint64_t countSetBits(const std::vector<bool> *v) {
     return r;
 }
 
-StaticSpaceStorage::StaticSpaceStorage(const std::vector<bool> &bits)
+StaticSpaceStorage::StaticSpaceStorage(std::vector<bool> &&bits)
     : n(countSetBits(&bits)),
-      pattern(bits),
+      pattern(std::move(bits)),
       rankSelect(pattern),
-      storage((bits.size() - n) / WORD_SIZE + 1) {}
+      storage((pattern.size() - n) / WORD_SIZE + 1) {}
 
 static std::vector<bool> makeBits(Sealib::Graph const &g, uint8_t b, bool e) {
     std::vector<bool> bits;

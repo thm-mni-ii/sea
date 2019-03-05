@@ -102,8 +102,8 @@ class EdgeMarker {
      */
     static const uint8_t TYPE_MASK = 0xe,  // 0b1110
         PARENT_MASK = 0x1;                 // 0b0001
-    static const uint8_t FULL = 0xa, HALF = 0x8, UNMARKED = 0x6, BACK = 0x4,
-                         CROSS = 0x2, NONE = 0x0;
+    static const uint8_t FULL = 0x8, HALF = 0x6, UNMARKED = 0x4, BACK = 0x2,
+                         NONE = 0x0;
     static const uint8_t PARENT = 0x1;
 
     UndirectedGraph const &g;
@@ -115,7 +115,7 @@ class EdgeMarker {
     void markParents(uint64_t w, uint64_t u);
 
     uint64_t edgeIndex(uint64_t u) const {
-        return static_cast<uint64_t>(offset.select(u + 1) - u - 1U);
+        return offset.select(u + 1) - u - 1U;
     }
     uint64_t getEdgeData(uint64_t u, uint64_t k) const {
         return edges.get(edgeIndex(u) + k);

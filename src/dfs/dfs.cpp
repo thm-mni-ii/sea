@@ -273,7 +273,7 @@ void DFS::nplusmBitDFS(UndirectedGraph const &g, Consumer preprocess,
             bits.push_back(0);
         }
     }
-    StaticSpaceStorage back(bits);
+    StaticSpaceStorage back(std::move(bits));
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
             visit_nplusm(a, g, &color, &back, preprocess, preexplore,
