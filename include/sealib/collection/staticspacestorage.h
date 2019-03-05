@@ -18,18 +18,6 @@ namespace Sealib {
 class StaticSpaceStorage : public Sequence<uint64_t> {
  public:
     /**
-     * @param i index of the storage array
-     * @return value stored in element i
-     */
-    uint64_t get(uint64_t i) const;
-
-    /**
-     * @param i index of the storage array
-     * @param v value to insert
-     */
-    void insert(uint64_t i, uint64_t v);
-
-    /**
      * Create a new storage from a bit vector.
      * @param bits bit pattern that shows the position and size of entries. The
      * bits reserved for an entry must NOT exceed 64.
@@ -42,12 +30,24 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
     /**
      * Create a new storage with the given number of bits per vertex/edge.
      * @param g graph G=(V,E) to create a storage for
-     * @param bitsPerEntry If 0: O(log(deg(u)) or deg(u) bits per vertex (dep. on 3rd param.), otherwise: given
-     * number of bits per entry.
+     * @param bitsPerEntry If 0: O(log(deg(u)) or deg(u) bits per vertex (dep.
+     * on 3rd param.), otherwise: given number of bits per entry.
      * @param entryIsEdge If 0: entry = vertex, if 1: entry = edge
      */
     explicit StaticSpaceStorage(Graph const &g, uint8_t bitsPerEntry = 0,
                                 bool entryIsEdge = 0);
+
+    /**
+     * @param i index of the storage array
+     * @return value stored in element i
+     */
+    uint64_t get(uint64_t i) const;
+
+    /**
+     * @param i index of the storage array
+     * @param v value to insert
+     */
+    void insert(uint64_t i, uint64_t v);
 
     /**
      * Convenience method to create a bit pattern from a vector of sizes
@@ -58,9 +58,8 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
     static std::vector<bool> makeBitVector(std::vector<uint64_t> const &sizes);
 
  private:
-    const uint64_t n;
-    const Bitset<uint8_t> pattern;
-    const RankSelect rankSelect;
+    uint64_t n, nb;
+    RankSelect rankSelect;
     std::vector<uint64_t> storage;
     static const uint64_t WORD_SIZE = sizeof(uint64_t) * 8;
     static const uint64_t one = 1;
@@ -71,7 +70,7 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * @return Index of first bit of A_{k+1}
      */
     uint64_t getEnd(uint64_t k) const {
-        return (k < n - 1) ? rankSelect.select(k + 2) : pattern.size();
+        return (k < n - 1) ? rankSelect.select(k + 2) : nb;
     }
 
     /**

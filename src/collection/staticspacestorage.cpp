@@ -24,6 +24,56 @@
 
 namespace Sealib {
 
+StaticSpaceStorage::StaticSpaceStorage(std::vector<bool> &&bits)
+    : n(countSetBits(&bits)),
+      nb(bits.size()),
+      rankSelect(Bitset<uint8_t>(std::move(bits))),
+      storage((nb - n) / WORD_SIZE + 1) {}
+
+StaticSpaceStorage::StaticSpaceStorage(Graph const &g, uint8_t bitsPerEntry,
+                                       bool entryIsEdge)
+    : StaticSpaceStorage(makeBits(g, bitsPerEntry, entryIsEdge)) {}
+
+static std::vector<bool> makeBits(Sealib::Graph const &g, uint8_t b, bool e) {
+    std::vector<bool> bits;
+    if (b == 0) {
+        for (uint64_t u = 0; u < g.getOrder(); u++) {
+            bits.push_back(1);
+            if (!e) {
+                // insert log(deg(u)) bits per vertex u
+                for (uint64_t k = 0; k < ceil(log2(g.deg(u) + 1)); k++) {
+                    bits.push_back(0);
+                }
+            } else {
+                // insert deg(u) bits per vertex u
+                for (uint64_t k = 0; k < g.deg(u); k++) {
+                    bits.push_back(0);
+                }
+            }
+        }
+    } else {
+        for (uint64_t u = 0; u < g.getOrder(); u++) {
+            if (!e) {
+                // insert b bits per vertex u
+                bits.push_back(1);
+                for (uint64_t a = 0; a < b; a++) {
+                    bits.push_back(0);
+                }
+            } else {
+                // insert b bits per edge e
+                if (g.deg(u) == 0) bits.push_back(1);
+                for (uint64_t k = 0; k < g.deg(u); k++) {
+                    bits.push_back(1);
+                    for (uint64_t a = 0; a < b; a++) {
+                        bits.push_back(0);
+                    }
+                }
+            }
+        }
+    }
+    return bits;
+}
+
 uint64_t StaticSpaceStorage::get(uint64_t i) const {
     PRELUDE
     uint64_t r = 0;
@@ -70,55 +120,5 @@ static inline uint64_t countSetBits(const std::vector<bool> *v) {
     }
     return r;
 }
-
-StaticSpaceStorage::StaticSpaceStorage(std::vector<bool> &&bits)
-    : n(countSetBits(&bits)),
-      pattern(std::move(bits)),
-      rankSelect(pattern),
-      storage((pattern.size() - n) / WORD_SIZE + 1) {}
-
-static std::vector<bool> makeBits(Sealib::Graph const &g, uint8_t b, bool e) {
-    std::vector<bool> bits;
-    if (b == 0) {
-        for (uint64_t u = 0; u < g.getOrder(); u++) {
-            bits.push_back(1);
-            if (!e) {
-                // insert log(deg(u)) bits per vertex u
-                for (uint64_t k = 0; k < ceil(log2(g.deg(u) + 1)); k++) {
-                    bits.push_back(0);
-                }
-            } else {
-                // insert deg(u) bits per vertex u
-                for (uint64_t k = 0; k < g.deg(u); k++) {
-                    bits.push_back(0);
-                }
-            }
-        }
-    } else {
-        for (uint64_t u = 0; u < g.getOrder(); u++) {
-            if (!e) {
-                // insert b bits per vertex u
-                bits.push_back(1);
-                for (uint64_t a = 0; a < b; a++) {
-                    bits.push_back(0);
-                }
-            } else {
-                // insert b bits per edge e
-                if (g.deg(u) == 0) bits.push_back(1);
-                for (uint64_t k = 0; k < g.deg(u); k++) {
-                    bits.push_back(1);
-                    for (uint64_t a = 0; a < b; a++) {
-                        bits.push_back(0);
-                    }
-                }
-            }
-        }
-    }
-    return bits;
-}
-
-StaticSpaceStorage::StaticSpaceStorage(Graph const &g, uint8_t bitsPerEntry,
-                                       bool entryIsEdge)
-    : StaticSpaceStorage(makeBits(g, bitsPerEntry, entryIsEdge)) {}
 
 }  // namespace Sealib
