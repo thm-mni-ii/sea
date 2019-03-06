@@ -1,18 +1,18 @@
-#include "sealib/cdbitutil.h"
+#include <sealib/collection/cdbitutil.h>
 #include <cmath>
 #include <exception>
 #include <iostream>
 
 using Sealib::CdBitUtil;
 
-long int CdBitUtil::cdXorLoop(unsigned long int _word, unsigned long int color, unsigned long int _colorFieldSize) {
-    unsigned long int compareField;
-    unsigned long int word;
+int64_t CdBitUtil::cdXorLoop(uint64_t _word, uint64_t color, uint64_t _colorFieldSize) {
+    uint64_t compareField;
+    uint64_t word;
     bool found = false;
-    unsigned long int field = 0;
-    unsigned long int colorFieldSize = _colorFieldSize;
-    unsigned long int mask = getMask(colorFieldSize);
-    long int index = -1;
+    uint64_t field = 0;
+    uint64_t colorFieldSize = _colorFieldSize;
+    uint64_t mask = getMask(colorFieldSize);
+    int64_t index = -1;
 
     word = foldWord(generateXorWord(_word, color, colorFieldSize), colorFieldSize);
 
@@ -27,9 +27,9 @@ long int CdBitUtil::cdXorLoop(unsigned long int _word, unsigned long int color, 
     return index;
 }
 
-long int CdBitUtil::cdXor(unsigned long int _word, unsigned long int color, unsigned long int colorFieldSize) {
-    unsigned long int word;
-    long int index = -1;
+int64_t CdBitUtil::cdXor(uint64_t _word, uint64_t color, uint64_t colorFieldSize) {
+    uint64_t word;
+    int64_t index = -1;
 
     word = foldWord(generateXorWord(_word, color, colorFieldSize), colorFieldSize);
 
@@ -40,26 +40,26 @@ long int CdBitUtil::cdXor(unsigned long int _word, unsigned long int color, unsi
     return index;
 }
 
-unsigned long int CdBitUtil::cdColorIndices(unsigned long int word, unsigned long int color,
-                                            unsigned long int colorFieldSize) {
+uint64_t CdBitUtil::cdColorIndices(uint64_t word, uint64_t color,
+                                            uint64_t colorFieldSize) {
     return foldWord(generateXorWord(word, color, colorFieldSize), colorFieldSize);
 }
 
-unsigned long int CdBitUtil::generateXorWord(unsigned long int word,
-                                             unsigned long int color,
-                                             unsigned long int colorFieldSize) {
-    unsigned long int xorValue;
-    for (unsigned long int i = 0; i < WORDSIZE / colorFieldSize; i++) {
+uint64_t CdBitUtil::generateXorWord(uint64_t word,
+                                             uint64_t color,
+                                             uint64_t colorFieldSize) {
+    uint64_t xorValue;
+    for (uint64_t i = 0; i < WORDSIZE / colorFieldSize; i++) {
         xorValue = xorValue << colorFieldSize;
         xorValue += color;
     }
     return ~word ^ xorValue;
 }
 
-unsigned long int CdBitUtil::foldWord(unsigned long int _word, unsigned long int colorFieldSize) {
-    unsigned long int xorMask;
-    unsigned long int maskSize = colorFieldSize;
-    unsigned long int word = _word;
+uint64_t CdBitUtil::foldWord(uint64_t _word, uint64_t colorFieldSize) {
+    uint64_t xorMask;
+    uint64_t maskSize = colorFieldSize;
+    uint64_t word = _word;
     while (maskSize > 1) {
         xorMask = getXor(colorFieldSize);
         word = word & (word << maskSize / 2);
@@ -69,7 +69,7 @@ unsigned long int CdBitUtil::foldWord(unsigned long int _word, unsigned long int
     return word;
 }
 
-unsigned long int CdBitUtil::getXor(unsigned long int colorFieldSize) {
+uint64_t CdBitUtil::getXor(uint64_t colorFieldSize) {
     switch (colorFieldSize) {
         case THIRTYTWO:
             return XOR_32;
@@ -90,6 +90,6 @@ unsigned long int CdBitUtil::getXor(unsigned long int colorFieldSize) {
     return 0;
 }
 
-unsigned long int CdBitUtil::getMask(unsigned long int colorFieldSize) {
-    return (unsigned long int)pow(2, colorFieldSize) - 1;
+uint64_t CdBitUtil::getMask(uint64_t colorFieldSize) {
+    return (uint64_t)pow(2, colorFieldSize) - 1;
 }

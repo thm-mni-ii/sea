@@ -1,4 +1,4 @@
-#include "sealib/ccolorcditerator.h"
+#include <sealib/iterator/ccolorcditerator.h>
 #include <iostream>
 
 using Sealib::CcolorCdIterator;
@@ -18,7 +18,7 @@ void CcolorCdIterator::init() {
     nextWord();
 }
 
-void CcolorCdIterator::setColor(unsigned long int _color) { color = _color; }
+void CcolorCdIterator::setColor(uint64_t _color) { color = _color; }
 
 bool CcolorCdIterator::more() {
     if (done) return false;
@@ -32,14 +32,14 @@ bool CcolorCdIterator::more() {
     return true;
 }
 
-unsigned long int CcolorCdIterator::next() {
-    unsigned long int index = (unsigned long int)__builtin_clzl(activeWord);
-    unsigned long int innerIndex = index / colorFieldSize;
+uint64_t CcolorCdIterator::next() {
+    uint64_t index = static_cast<uint64_t>(__builtin_clzl(activeWord));
+    uint64_t innerIndex = index / colorFieldSize;
     activeWord = activeWord & ~(1UL << (WORDSIZE - index - SHIFT_OFFSET));
 
     return ((activeBlock + nextWordIndex - 1) * WORDSIZE) / colorFieldSize +
            innerIndex;
-    // unsigned long int wordIndex = activeBlock * blockSize + nextWordIndex -
+    // uint64_t wordIndex = activeBlock * blockSize + nextWordIndex -
     // 1; return (wordIndex * WORDSIZE) / colorFieldSize + innerIndex;
 }
 

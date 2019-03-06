@@ -3,7 +3,8 @@
 
 #define SHIFT_OFFSET 1UL
 
-#include "sealib/cdbitutil.h"
+#include <cstdint>
+#include <sealib/collection/cdbitutil.h>
 
 namespace Sealib {
 /**
@@ -14,41 +15,41 @@ namespace Sealib {
  * @author Dennis Appel
  */
 
-const unsigned long int ULONGBITS = sizeof(unsigned long int) * 8;
+const uint64_t ULONGBITS = sizeof(uint64_t) * 8;
 
 class CcolorChoiceDictionary {
  private:
-    unsigned long int *choiceDictionary, *pointerStructure, *pointer;
+    uint64_t *choiceDictionary, *pointerStructure, *pointer;
 
-    const unsigned long int wordSize, colorCount, colorFieldSize, wordCount,
+    const uint64_t wordSize, colorCount, colorFieldSize, wordCount,
         mask;
 
-    unsigned long int extend(unsigned long int color);
+    uint64_t extend(uint64_t color);
 
-    void updatePointer(unsigned long int blockIndex);
+    void updatePointer(uint64_t blockIndex);
 
-    void movePointer(unsigned long int color, bool forward);
+    void movePointer(uint64_t color, bool forward);
 
-    bool isWritten(unsigned long int index, unsigned long int color);
+    bool isWritten(uint64_t index, uint64_t color);
 
-    bool isInitialized(unsigned long int blockIndex);
+    bool isInitialized(uint64_t blockIndex);
 
-    void initializeBlock(unsigned long int blockIndex);
+    void initializeBlock(uint64_t blockIndex);
 
-    bool isChained(unsigned long int index, unsigned long int color);
+    bool isChained(uint64_t index, uint64_t color);
 
-    void makeChain(unsigned long int blockWritten,
-                   unsigned long int blockUnwritten, unsigned long int color);
+    void makeChain(uint64_t blockWritten,
+                   uint64_t blockUnwritten, uint64_t color);
 
-    unsigned long int chainedWith(unsigned long int blockIndex,
-                                  unsigned long int color);
+    uint64_t chainedWith(uint64_t blockIndex,
+                                  uint64_t color);
 
-    void breakChain(unsigned long int index, unsigned long int color);
+    void breakChain(uint64_t index, uint64_t color);
 
     /* Initialization Functions */
-    unsigned long int computeColorFieldSize();
+    uint64_t computeColorFieldSize();
 
-    unsigned long int computeMask();
+    uint64_t computeMask();
 
     void createDataStructure();
 
@@ -58,60 +59,60 @@ class CcolorChoiceDictionary {
      * @param length Length of the choice dictionary
      * @param colors Amount of colors including zero
      */
-    explicit CcolorChoiceDictionary(unsigned long int size,
-                                    unsigned long int colors);
+    explicit CcolorChoiceDictionary(uint64_t size,
+                                    uint64_t colors);
 
     /**
      * Sets a field at specified index to a color.
      * @param index Index of the field that should be set to a color.
      * @param color Color the field should be set to.
      */
-    void insert(unsigned long int index, unsigned long int color);
+    void insert(uint64_t index, uint64_t color);
 
     /**
      * Returns the color of the field at the specified index.
      * @param index Index of field.
      */
-    unsigned long int get(unsigned long int index);
+    uint64_t get(uint64_t index);
 
     /**
      * Returns an arbitrary position of a field with a color.
      * @param color Color of the field.
      */
-    unsigned long int choice(unsigned long int color);
+    uint64_t choice(uint64_t color);
 
     /**
      * Returns the block size used within the choice dictionary.
      * The block size is directly related to the amount of colors.
      */
-    unsigned long int getBlockSize();
+    uint64_t getBlockSize();
 
     /**
      * Returns the size of a field that can store a color.
      * The field size is usually a power of 2.
      */
-    unsigned long int getColorFieldSize();
+    uint64_t getColorFieldSize();
 
     /**
      * Returns the value of an entire word containing multiple fields.
      * @wordIndex index of the word which value is to be returned.
      */
-    unsigned long int getWordValue(unsigned long int wordIndex);
+    uint64_t getWordValue(uint64_t wordIndex);
 
     /**
      * Returns the block that corresponds to a pointer of a color.
      * @param pointerIndex Index within the pointer structure.
      * @param color Color which the index corresponds to.
      */
-    unsigned long int getBlock(unsigned long int pointerIndex,
-                               unsigned long int color);
+    uint64_t getBlock(uint64_t pointerIndex,
+                               uint64_t color);
 
     /**
      * Returns the index of the first word of the last block that contains
      * either a pointer to a block with a color or the block itself.
      * @param color Color for which the barrier is to be returned.
      */
-    unsigned long int getBarrier(unsigned long int color);
+    uint64_t getBarrier(uint64_t color);
 
     ~CcolorChoiceDictionary();
 };

@@ -1,8 +1,9 @@
 #ifndef SEALIB_CCOLORCDITERATOR_H_
 #define SEALIB_CCOLORCDITERATOR_H_
 
-#include "sealib/ccolorchoicedictionary.h"
-#include "sealib/iterator.h"
+#include <cstdint>
+#include <sealib/dictionary/ccolorchoicedictionary.h>
+#include <sealib/iterator/iterator.h>
 
 #define SHIFT_OFFSET 1UL
 
@@ -13,7 +14,7 @@ namespace Sealib {
  *
  * @author Dennis Appel
  */
-class CcolorCdIterator : Iterator<unsigned long int> {
+class CcolorCdIterator : Iterator<uint64_t> {
  private:
     /**
      * @param primaryWord Value of the currently used word in primary.
@@ -23,9 +24,9 @@ class CcolorCdIterator : Iterator<unsigned long int> {
      * @param pointer currently used pointer Position.
      * @param choicedictionary Pointer to an existing choice dictionary.
      */
-    const unsigned long int blockSize, colorFieldSize;
+    const uint64_t blockSize, colorFieldSize;
     CcolorChoiceDictionary* choicedictionary;
-    unsigned long int pointer, barrier, activeBlock, activeWord, nextWordIndex,
+    uint64_t pointer, barrier, activeBlock, activeWord, nextWordIndex,
         color;
     bool done;
 
@@ -49,7 +50,7 @@ class CcolorCdIterator : Iterator<unsigned long int> {
      * Set the iterator to a color to iterate over.
      * @param Color to iterate over
      */
-    void setColor(unsigned long int color);
+    void setColor(uint64_t color);
 
     /**
      * Returns true if there are more fields of a color in the choice
@@ -60,7 +61,7 @@ class CcolorCdIterator : Iterator<unsigned long int> {
     /**
      * Returns the arbitrary index of a field with a color.
      */
-    unsigned long int next();
+    uint64_t next();
 
     ~CcolorCdIterator();
 };

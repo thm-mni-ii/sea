@@ -5,12 +5,12 @@
 
 using Sealib::CcolorChoiceDictionarySingle;
 
-struct emptyChoiceDictionary : public std::exception {
-    const char *what() const throw() {
-        return "Choice dictionary is empty. Operations \'choice()\'"
-               " and \'remove()\' are not possible";
-    }
-};
+// struct emptyChoiceDictionary : public std::exception {
+//     const char *what() const throw() {
+//         return "Choice dictionary is empty. Operations \'choice()\'"
+//                " and \'remove()\' are not possible";
+//     }
+// };
 
 CcolorChoiceDictionarySingle::CcolorChoiceDictionarySingle(unsigned long int length,
                                                            unsigned long int _colorCount)
@@ -254,7 +254,7 @@ unsigned long int CcolorChoiceDictionarySingle::get(unsigned long int index) {
 }
 
 unsigned long int CcolorChoiceDictionarySingle::choice(unsigned long int color) {
-    if (pointer[color] < colorCount) throw emptyChoiceDictionary();
+    // if (pointer[color] < colorCount) throw emptyChoiceDictionary();
     unsigned long int index = 500;
     unsigned long int wordIndex;
     unsigned long int word;
