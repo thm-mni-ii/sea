@@ -22,6 +22,12 @@ class TikzPicture : public TikzElement {
      */
     explicit TikzPicture(std::string _options = "", bool _scope = true)
         : elements(), options(std::move(_options)), scope(_scope) {}
+
+    TikzPicture(const TikzPicture &) = default;
+    TikzPicture(TikzPicture &&) noexcept = default;
+    TikzPicture& operator=(const TikzPicture &) = default;
+    // TikzPicture& operator=(TikzPicture &&) noexcept = default;
+    virtual ~TikzPicture() = default;
     void add(std::shared_ptr<TikzElement> tikzElement);
 
  protected:

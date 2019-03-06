@@ -18,6 +18,13 @@ class TikzStack : public TikzArray {
         const std::vector<std::string> &content, std::string name = "array",
         std::string options = "matrix of nodes, ampersand replacement=\\&",
         bool showIndices = false);
+    TikzStack() = default;
+    TikzStack(const TikzStack &) = default;
+    TikzStack(TikzStack &&) noexcept = default;
+    TikzStack& operator=(const TikzStack &) = default;
+    // TikzStack& operator=(TikzStack &&) noexcept = default;
+    virtual ~TikzStack() = default;
+
     std::ostream &out(std::ostream &os) const override;
 };
 }  // namespace SealibVisual

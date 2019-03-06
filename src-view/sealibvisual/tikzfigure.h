@@ -25,6 +25,12 @@ class TikzFigure : public TikzElement {
     TikzFigure(const std::string &_caption,
                const std::shared_ptr<TikzPicture> &_content)
         : caption(_caption), content(_content) {}
+    TikzFigure(const TikzFigure &) = default;
+    TikzFigure(TikzFigure &&) noexcept = default;
+    TikzFigure& operator=(const TikzFigure &) = default;
+    // TikzFigure& operator=(TikzFigure &&) noexcept = default;
+    virtual ~TikzFigure() = default;
+
     const std::string &getCaption() { return caption; }
     void setCaption(const std::string &_caption) { caption = _caption; }
     std::shared_ptr<TikzElement> &getContent() { return content; }
