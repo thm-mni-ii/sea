@@ -23,8 +23,8 @@ namespace Sealib {
 class EdgeMarker {
  public:
     /**
-     * Create a new edge marker from a given undirected graph. On construction,
-     * it automatically identifies edge types and marks tree edges.
+     * Create a new edge marker from a given undirected graph. Call init() to
+     * identify edge types and mark tree edges.
      * @param g undirected graph
      */
     explicit EdgeMarker(UndirectedGraph const &g);
@@ -36,7 +36,7 @@ class EdgeMarker {
 
     /**
      * Get the graph that this edge marker is using.
-     * @return pointer to the undirected graph used
+     * @return reference to the undirected graph used
      */
     UndirectedGraph const &getGraph() const { return g; }
 

@@ -63,8 +63,6 @@ class CutVertexIterator : Iterator<uint64_t> {
     ChoiceDictionary cut;
     ChoiceDictionaryIterator cutI;
 
-    void markParents(uint64_t w, uint64_t u, StaticSpaceStorage *parent);
-
     inline void findCCs();
 };
 }  // namespace Sealib

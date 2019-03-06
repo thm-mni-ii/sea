@@ -7,8 +7,7 @@ namespace Sealib {
 TEST(BCCIteratorTest, windmillGraph) {
     UndirectedGraph g = GraphCreator::windmill(5, 4);
     BCCIterator b(g);
-    b.init();
-    b.start(1, 16);
+    b.init(16);
     std::set<uint64_t> nodes;
     std::set<std::set<uint64_t>> edges;
     b.forEach([&](std::pair<uint64_t, uint64_t> n) {
@@ -52,8 +51,7 @@ TEST(BCCIteratorTest, lineGraph) {
     }
 
     BCCIterator b(g);
-    b.init();
-    b.start(4, 5);
+    b.init(5);
 
     ASSERT_TRUE(b.more());
     EXPECT_EQ(b.next(), (std::pair<uint64_t, uint64_t>{5, INVALID}));
@@ -67,8 +65,7 @@ TEST(BCCIteratorTest, lineGraph) {
 TEST(BCCIteratorTest, stability) {
     UndirectedGraph g = GraphCreator::sparseUndirected(2000);
     BCCIterator b(g);
-    b.init();
-    b.start(10, g.head(10, 2));  // select an arbitrary edge
+    b.init(g.head(10, 2));  // select an arbitrary edge
     while (b.more()) b.next();
     SUCCEED();
 }

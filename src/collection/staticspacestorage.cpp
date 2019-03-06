@@ -24,15 +24,19 @@
 
 namespace Sealib {
 
+static inline uint64_t countSetBits(const std::vector<bool> *v) {
+    uint64_t r = 0;
+    for (bool a : *v) {
+        if (a) r++;
+    }
+    return r;
+}
+
 StaticSpaceStorage::StaticSpaceStorage(std::vector<bool> &&bits)
     : n(countSetBits(&bits)),
       nb(bits.size()),
       rankSelect(Bitset<uint8_t>(std::move(bits))),
       storage((nb - n) / WORD_SIZE + 1) {}
-
-StaticSpaceStorage::StaticSpaceStorage(Graph const &g, uint8_t bitsPerEntry,
-                                       bool entryIsEdge)
-    : StaticSpaceStorage(makeBits(g, bitsPerEntry, entryIsEdge)) {}
 
 static std::vector<bool> makeBits(Sealib::Graph const &g, uint8_t b, bool e) {
     std::vector<bool> bits;
@@ -74,6 +78,10 @@ static std::vector<bool> makeBits(Sealib::Graph const &g, uint8_t b, bool e) {
     return bits;
 }
 
+StaticSpaceStorage::StaticSpaceStorage(Graph const &g, uint8_t bitsPerEntry,
+                                       bool entryIsEdge)
+    : StaticSpaceStorage(makeBits(g, bitsPerEntry, entryIsEdge)) {}
+
 uint64_t StaticSpaceStorage::get(uint64_t i) const {
     PRELUDE
     uint64_t r = 0;
@@ -109,14 +117,6 @@ std::vector<bool> StaticSpaceStorage::makeBitVector(
             index++;
         }
         index++;
-    }
-    return r;
-}
-
-static inline uint64_t countSetBits(const std::vector<bool> *v) {
-    uint64_t r = 0;
-    for (bool a : *v) {
-        if (a) r++;
     }
     return r;
 }
