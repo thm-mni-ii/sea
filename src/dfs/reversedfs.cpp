@@ -113,7 +113,7 @@ void ReverseDFS::nextInterval() {
     intervals.emplace_back(IntervalData());
     ip++;
     i = intervals.begin();
-    std::advance(i, ip);
+    std::advance(i, static_cast<int64_t>(ip));
     i->depth = s.size();
 }
 
