@@ -21,6 +21,11 @@ class TikzNode : public TikzElement {
           coordinate(_coordinate) {}
 
     TikzNode() = default;
+    TikzNode(const TikzNode &) = default;
+    TikzNode(TikzNode &&) noexcept = default;
+    TikzNode& operator=(const TikzNode &) = default;
+    // TikzNode& operator=(TikzNode &&) noexcept = default;
+    virtual ~TikzNode() = default;
 
     std::ostream &out(std::ostream &os) const override;
 
