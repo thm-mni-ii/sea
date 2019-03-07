@@ -35,7 +35,7 @@ script:
 
 after_success:
   - coveralls --root . --build-root src/ -E ".*CMakeFiles.*" -e test -e third-party -e src-view -e include
-  - 'if test $TRAVIS_PULL_REQUEST = false; then sonar-scanner; fi'
+  - 'if test $TRAVIS_PULL_REQUEST = false; then sonar-scanner; pwd; ls; ls -la /home/travis/build/thm-mni-ii/sea/.scannerwork; cat /home/travis/build/thm-mni-ii/sea/.scannerwork/report-task.txt; fi'
 
 before_deploy:
   # tar the header files and the library
