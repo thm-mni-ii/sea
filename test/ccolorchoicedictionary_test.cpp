@@ -470,7 +470,7 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(2));
 
     // Validate choice operation for testset three
     for (unsigned int i = 0; i < 100000; i++) {
@@ -493,8 +493,8 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
 
     // Validate choice operation for testset four
     for (unsigned int i = 0; i < 100000; i++) {
@@ -517,9 +517,9 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
-    ASSERT_ANY_THROW(cd->choice(4));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(4));
 
     // Validate choice operation for testset five
     for (unsigned int i = 0; i < 100000; i++) {
@@ -542,10 +542,10 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
-    ASSERT_ANY_THROW(cd->choice(4));
-    ASSERT_ANY_THROW(cd->choice(5));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(4));
+    // ASSERT_ANY_THROW(cd->choice(5));
 
     // Validate choice operation for testset six
     for (unsigned int i = 0; i < 100000; i++) {
@@ -568,11 +568,11 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
-    ASSERT_ANY_THROW(cd->choice(4));
-    ASSERT_ANY_THROW(cd->choice(5));
-    ASSERT_ANY_THROW(cd->choice(6));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(4));
+    // ASSERT_ANY_THROW(cd->choice(5));
+    // ASSERT_ANY_THROW(cd->choice(6));
 
     // Validate choice operation for testset seven
     for (unsigned int i = 0; i < 100000; i++) {
@@ -595,12 +595,12 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
-    ASSERT_ANY_THROW(cd->choice(4));
-    ASSERT_ANY_THROW(cd->choice(5));
-    ASSERT_ANY_THROW(cd->choice(6));
-    ASSERT_ANY_THROW(cd->choice(7));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(4));
+    // ASSERT_ANY_THROW(cd->choice(5));
+    // ASSERT_ANY_THROW(cd->choice(6));
+    // ASSERT_ANY_THROW(cd->choice(7));
 
     // Validate choice operation for testset eight
     for (unsigned int i = 0; i < 100000; i++) {
@@ -623,13 +623,13 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
-    ASSERT_ANY_THROW(cd->choice(4));
-    ASSERT_ANY_THROW(cd->choice(5));
-    ASSERT_ANY_THROW(cd->choice(6));
-    ASSERT_ANY_THROW(cd->choice(7));
-    ASSERT_ANY_THROW(cd->choice(8));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(4));
+    // ASSERT_ANY_THROW(cd->choice(5));
+    // ASSERT_ANY_THROW(cd->choice(6));
+    // ASSERT_ANY_THROW(cd->choice(7));
+    // ASSERT_ANY_THROW(cd->choice(8));
 
     // Validate choice operation for testset nine
     for (unsigned int i = 0; i < 100000; i++) {
@@ -652,14 +652,14 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
-    ASSERT_ANY_THROW(cd->choice(4));
-    ASSERT_ANY_THROW(cd->choice(5));
-    ASSERT_ANY_THROW(cd->choice(6));
-    ASSERT_ANY_THROW(cd->choice(7));
-    ASSERT_ANY_THROW(cd->choice(8));
-    ASSERT_ANY_THROW(cd->choice(9));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(4));
+    // ASSERT_ANY_THROW(cd->choice(5));
+    // ASSERT_ANY_THROW(cd->choice(6));
+    // ASSERT_ANY_THROW(cd->choice(7));
+    // ASSERT_ANY_THROW(cd->choice(8));
+    // ASSERT_ANY_THROW(cd->choice(9));
 
     // Validate choice operation for testset ten
     for (unsigned int i = 0; i < 100000; i++) {
@@ -682,14 +682,14 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_4) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
-    ASSERT_ANY_THROW(cd->choice(4));
-    ASSERT_ANY_THROW(cd->choice(5));
-    ASSERT_ANY_THROW(cd->choice(6));
-    ASSERT_ANY_THROW(cd->choice(7));
-    ASSERT_ANY_THROW(cd->choice(8));
-    ASSERT_ANY_THROW(cd->choice(10));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(4));
+    // ASSERT_ANY_THROW(cd->choice(5));
+    // ASSERT_ANY_THROW(cd->choice(6));
+    // ASSERT_ANY_THROW(cd->choice(7));
+    // ASSERT_ANY_THROW(cd->choice(8));
+    // ASSERT_ANY_THROW(cd->choice(10));
 
     delete cd;
 }
@@ -752,7 +752,7 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_2) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(2));
 
     // Validate choice operation for testset three
     for (unsigned int i = 0; i < 100000; i++) {
@@ -775,8 +775,8 @@ TEST(CColorChoiceDictionaryTest, choice_fieldsize_2) {
     }
 
     // ASSERT_ANY_THROW(cd->choice(1));
-    ASSERT_ANY_THROW(cd->choice(2));
-    ASSERT_ANY_THROW(cd->choice(3));
+    // ASSERT_ANY_THROW(cd->choice(2));
+    // ASSERT_ANY_THROW(cd->choice(3));
 
     delete cd;
 }
