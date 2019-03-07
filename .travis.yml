@@ -19,7 +19,7 @@ cache:
   - ./third-party
 
 before_install:
-  - git fetch origin
+  - git fetch --all --unshallow
   - pip install --user cpp-coveralls
   - pip install --user cpplint
   - 'if test $CC = clang; then ln -sf $(which llvm-cov) /home/travis/bin/gcov; fi'
