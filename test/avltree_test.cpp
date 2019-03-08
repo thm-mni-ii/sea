@@ -3,29 +3,58 @@
 
 using namespace Sealib;  // NOLINT
 
-TEST(AVLTreeTest, swapLeaves) {
+TEST(AVLTree, basicInsert) {
     AVLTree t;
-    t.insert(6, 12);
-    t.insert(4, 7);
-    t.insert(5, 40);
-    EXPECT_EQ(t.search(12), INVALID);
-    EXPECT_EQ(t.search(4), 7);
-    EXPECT_EQ(t.search(6), 12);
-    EXPECT_EQ(t.search(5), 40);
-    t.insert(6, 25);
-    EXPECT_EQ(t.search(25), INVALID);
-    EXPECT_EQ(t.search(6), 25);
+    t.insert(5, 1);
+    t.insert(0, 2);
+    t.insert(10, 3);
+    EXPECT_EQ(t.search(5), 1);
+    EXPECT_EQ(t.search(0), 2);
+    EXPECT_EQ(t.search(10), 3);
+    t.insert(0, 5);
+    EXPECT_EQ(t.search(0), 5);
 }
 
-TEST(AVLTree, rotateTree) {
+TEST(AVLTreeTest, swapLeavesR) {
     AVLTree t;
-    t.insert(10,1);
-    t.insert(8,2);
-    t.insert(12,0);
-    t.insert(6,0);
-    t.insert(9,0);
-    t.insert(4,3);
-    EXPECT_EQ(t.search(3),INVALID);
-    EXPECT_EQ(t.search(6),0);
-    EXPECT_EQ(t.search(9),0);
+    t.insert(6, 1);
+    t.insert(4, 2);
+    t.insert(5, 3);
+    EXPECT_EQ(t.search(5), 3);
+    EXPECT_EQ(t.search(4), 2);
+    EXPECT_EQ(t.search(6), 1);
+}
+
+TEST(AVLTree, swapLeavesL) {
+    AVLTree t;
+    t.insert(4, 1);
+    t.insert(6, 2);
+    t.insert(5, 3);
+    EXPECT_EQ(t.search(5), 3);
+    EXPECT_EQ(t.search(6), 2);
+    EXPECT_EQ(t.search(4), 1);
+}
+
+TEST(AVLTree, rotateTreeR) {
+    AVLTree t;
+    t.insert(10, 1);
+    t.insert(8, 2);
+    t.insert(12, 0);
+    t.insert(6, 0);
+    t.insert(9, 0);
+    t.insert(4, 3);
+    EXPECT_EQ(t.search(6), 0);
+    EXPECT_EQ(t.search(9), 0);
+}
+
+TEST(AVLTree, rotateTreeL) {
+    AVLTree t;
+    t.insert(10, 1);
+    t.insert(12, 2);
+    t.insert(8, 0);
+    t.insert(11, 0);
+    t.insert(14, 0);
+    t.insert(16, 3);
+    EXPECT_EQ(t.search(11), 0);
+    EXPECT_EQ(t.search(14), 0);
 }
