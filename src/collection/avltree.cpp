@@ -83,7 +83,12 @@ void AVLTree::swapLeaves(Cell *a) {
     Cell *x = a->bal == AVL_LEFT ? a->left : a->right;
     Cell *s = a->parent;
     x->parent = s->parent;
-    if (s == root) root = x;
+    if (x->parent == nullptr)
+        root = x;
+    else if (x->parent->left == s)
+        x->parent->left = x;
+    else
+        x->parent->right = x;
     s->parent = a->parent = x;
     s->left = s->right = nullptr;
     a->left = a->right = nullptr;
@@ -105,15 +110,21 @@ void AVLTree::rotateTree(Cell *a) {
         tx = a->right;
     }
     a->parent = s->parent;
-    if (s == root) root = a;
+    if (a->parent == nullptr)
+        root = a;
+    else if (a->parent->left == s)
+        a->parent->left = a;
+    else
+        a->parent->right = a;
+
     s->parent = a;
     if (t2 != nullptr) t2->parent = s;
     if (a->bal == AVL_LEFT) {
         s->left = t2;
         a->right = s;
     } else {
-        s->right = t2;
         a->left = s;
+        s->right = t2;
     }
     s->bal = a->bal = AVL_BALANCED;
 }
@@ -138,10 +149,15 @@ void AVLTree::spliceTree(Cell *a) {
         t3 = b->left;
     }
     b->parent = s->parent;
-    if (s == root) root = b;
+    if (b->parent == nullptr)
+        root = b;
+    else if (b->parent->left == s)
+        b->parent->left = b;
+    else
+        b->parent->right = b;
     a->parent = s->parent = b;
     tx->parent = a;
-    t3->parent = s;
+    if (t3 != nullptr) t3->parent = s;
     if (a->bal == AVL_RIGHT) {
         s->left = t3;
         a->right = tx;
@@ -150,8 +166,8 @@ void AVLTree::spliceTree(Cell *a) {
     } else {
         s->right = t3;
         a->left = tx;
-        b->right = a;
         b->left = s;
+        b->right = a;
     }
     if (b->bal == AVL_LEFT) {
         s->bal = AVL_RIGHT;

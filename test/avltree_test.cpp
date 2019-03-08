@@ -16,17 +16,36 @@ TEST(AVLTreeTest, basicInsert) {
     EXPECT_EQ(t.search(0), 5);
 }
 
-TEST(AVLTreeTest,randomInsert) {
+TEST(AVLTreeTest, insertList) {
     std::random_device rnd;
-    std::uniform_int_distribution<uint64_t> dist(0,1e9);
+    std::uniform_int_distribution<uint64_t> dist(0, 1e9);
+    AVLTree t;
+    std::vector<uint64_t> v;
+    for (uint64_t a = 0; a < 1e4; a++) {
+        v.push_back(dist(rnd));
+        t.insert(a, v.back());
+    }
+    for (uint64_t b = 0; b < v.size(); b++) {
+        EXPECT_EQ(t.search(b), v[b]) << b;
+    }
+}
+
+TEST(AVLTreeTest, random) {
+    std::random_device rnd;
+    std::uniform_int_distribution<uint64_t> dist(0, 1e9);
     AVLTree t;
     std::vector<uint64_t> i;
-    for(uint64_t a=0; a<1e4; a++) {
-        i.push_back(dist(rnd));
-        t.insert(a,i.back());
+    std::vector<uint64_t> v;
+    for (uint64_t a = 0; a < 1e4; a++) {
+        v.push_back(dist(rnd));
+        i.push_back(a);
     }
-    for(uint64_t b=0; b<i.size(); b++) {
-        EXPECT_EQ(t.search(b),i[b]) <<b;
+    std::shuffle(i.begin(),i.end(),rnd);
+    for(uint64_t a=0; a<i.size(); a++) {
+        t.insert(i[a],v[a]);
+    }
+    for(uint64_t a=0; a<i.size(); a++) {
+        EXPECT_EQ(t.search(i[a]),v[a]);
     }
 }
 
