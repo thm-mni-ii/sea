@@ -107,7 +107,7 @@ void AVLTree::rotateTree(Cell *a) {
     a->parent = s->parent;
     if (s == root) root = a;
     s->parent = a;
-    t2->parent = s;
+    if (t2 != nullptr) t2->parent = s;
     if (a->bal == AVL_LEFT) {
         s->left = t2;
         a->right = s;
@@ -117,6 +117,50 @@ void AVLTree::rotateTree(Cell *a) {
     }
     s->bal = a->bal = AVL_BALANCED;
 }
-void AVLTree::spliceTree(Cell *) {}
+
+void AVLTree::spliceTree(Cell *a) {
+    Cell *s = a->parent;
+    Cell *b, *t1, *t2, *t3, *tx;
+    if (a->bal == AVL_RIGHT) {
+        b = a->right;
+        t1 = s->right;
+        t2 = a->left;
+    } else {
+        b = a->left;
+        t1 = s->left;
+        t2 = a->right;
+    }
+    if (b->bal == AVL_LEFT) {
+        tx = b->left;
+        t3 = b->right;
+    } else {
+        tx = b->right;
+        t3 = b->left;
+    }
+    b->parent = s->parent;
+    if (s == root) root = b;
+    a->parent = s->parent = b;
+    tx->parent = a;
+    t3->parent = s;
+    if (a->bal == AVL_RIGHT) {
+        s->left = t3;
+        a->right = tx;
+        b->left = a;
+        b->right = s;
+    } else {
+        s->right = t3;
+        a->left = tx;
+        b->right = a;
+        b->left = s;
+    }
+    if (b->bal == AVL_LEFT) {
+        s->bal = AVL_RIGHT;
+        a->bal = AVL_BALANCED;
+    } else {
+        s->bal = AVL_BALANCED;
+        a->bal = AVL_LEFT;
+    }
+    b->bal = AVL_BALANCED;
+}
 
 }  // namespace Sealib
