@@ -51,7 +51,7 @@ void AVLTree::rebalanceParents(Cell *x, uint8_t xSide) {
     // correct 0 0 cells' balances
     while (head->bal == AVL_BALANCED && head->parent != nullptr) {
         head->bal = side;
-        side = head->key > head->parent->key ? AVL_RIGHT : AVL_LEFT;
+        side = head->parent->right == head ? AVL_RIGHT : AVL_LEFT;
         head = head->parent;
         // loop ends when chain head is reached
     }
@@ -75,6 +75,8 @@ void AVLTree::rebalanceParents(Cell *x, uint8_t xSide) {
             rotateTree(chainTop);
         } else if (chainTop->bal == !head->bal) {
             spliceTree(chainTop);
+        } else {
+            // ?
         }
     }
 }
@@ -130,16 +132,16 @@ void AVLTree::rotateTree(Cell *a) {
 }
 
 void AVLTree::spliceTree(Cell *a) {
-    Cell *s = a->parent;
+    Cell *s = a->parent, *p = s->parent;
     Cell *b, *t1, *t2, *t3, *tx;
-    if (a->bal == AVL_RIGHT) {
-        b = a->right;
-        t1 = s->right;
-        t2 = a->left;
-    } else {
+    if (a->bal == AVL_LEFT) {
         b = a->left;
         t1 = s->left;
         t2 = a->right;
+    } else {
+        b = a->right;
+        t1 = s->right;
+        t2 = a->left;
     }
     if (b->bal == AVL_LEFT) {
         tx = b->left;
@@ -148,34 +150,38 @@ void AVLTree::spliceTree(Cell *a) {
         tx = b->right;
         t3 = b->left;
     }
-    b->parent = s->parent;
-    if (b->parent == nullptr)
-        root = b;
-    else if (b->parent->left == s)
-        b->parent->left = b;
-    else
-        b->parent->right = b;
-    a->parent = s->parent = b;
-    tx->parent = a;
-    if (t3 != nullptr) t3->parent = s;
-    if (a->bal == AVL_RIGHT) {
-        s->left = t3;
-        a->right = tx;
-        b->left = a;
-        b->right = s;
-    } else {
+
+    s->parent = b;
+    if (a->bal == AVL_LEFT)
         s->right = t3;
+    else
+        s->left = t3;
+
+    a->parent = b;
+    if (a->bal == AVL_LEFT)
         a->left = tx;
-        b->left = s;
-        b->right = a;
-    }
-    if (b->bal == AVL_LEFT) {
-        s->bal = AVL_RIGHT;
-        a->bal = AVL_BALANCED;
-    } else {
-        s->bal = AVL_BALANCED;
-        a->bal = AVL_LEFT;
-    }
+    else
+        a->right = tx;
+
+    b->parent = p;
+    if (p == nullptr)
+        root = b;
+    else if (p->left == s)
+        p->left = b;
+    else
+        p->right = b;
+    if (a->bal == AVL_LEFT)
+        b->left = s, b->right = a;
+    else
+        b->left = a, b->right = s;
+
+    if (t3 != nullptr) t3->parent = s;
+    tx->parent = a;
+
+    if (b->bal == AVL_LEFT)
+        a->bal = AVL_BALANCED, s->bal = AVL_RIGHT;
+    else
+        a->bal = AVL_LEFT, s->bal = AVL_BALANCED;
     b->bal = AVL_BALANCED;
 }
 

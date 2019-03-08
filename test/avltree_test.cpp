@@ -1,6 +1,7 @@
 #include "sealib/collection/avltree.h"
 #include <gtest/gtest.h>
 #include <random>
+#include <cstdio>
 
 using namespace Sealib;  // NOLINT
 
@@ -36,17 +37,19 @@ TEST(AVLTreeTest, random) {
     AVLTree t;
     std::vector<uint64_t> i;
     std::vector<uint64_t> v;
-    for (uint64_t a = 0; a < 1e4; a++) {
+    for (uint64_t a = 0; a < 10; a++) {
         v.push_back(dist(rnd));
         i.push_back(a);
     }
-    std::shuffle(i.begin(),i.end(),rnd);
-    for(uint64_t a=0; a<i.size(); a++) {
-        t.insert(i[a],v[a]);
+    std::shuffle(i.begin(), i.end(), rnd);
+    for (uint64_t a = 0; a < i.size(); a++) {
+        printf(" %lu ",i[a]);
+        t.insert(i[a], v[a]);
     }
-    for(uint64_t a=0; a<i.size(); a++) {
-        EXPECT_EQ(t.search(i[a]),v[a]);
+    for (uint64_t a = 0; a < i.size(); a++) {
+        EXPECT_EQ(t.search(i[a]), v[a]);
     }
+    printf("\n");
 }
 
 TEST(AVLTreeTest, swapLeavesR) {
