@@ -22,7 +22,7 @@ void AVLTree::insert(uint64_t k, uint64_t v) {
             if (k < u->key) {
                 if (u->left == nullptr) {
                     u->left = new Cell(k, v, u);
-                    rebalanceParents(u, AVL_LEFT);
+                    rebalanceParents(u->left, AVL_LEFT);
                     done = true;
                 } else {
                     u = u->left;
@@ -30,7 +30,7 @@ void AVLTree::insert(uint64_t k, uint64_t v) {
             } else if (k > u->key) {
                 if (u->right == nullptr) {
                     u->right = new Cell(k, v, u);
-                    rebalanceParents(u, AVL_LEFT);
+                    rebalanceParents(u->right, AVL_RIGHT);
                     done = true;
                 } else {
                     u = u->right;
@@ -45,54 +45,78 @@ void AVLTree::insert(uint64_t k, uint64_t v) {
     }
 }  // namespace Sealib
 
-void AVLTree::rebalanceParents(Cell *p, uint8_t side) {
-    uint8_t other = side = AVL_LEFT ? AVL_RIGHT : AVL_LEFT;
-    if (p->bal == other) {
-        p->bal = AVL_BALANCED;
+void AVLTree::rebalanceParents(Cell *x, uint8_t xSide) {
+    Cell *head = x->parent;
+    uint8_t side = xSide;
+    // correct 0 0 cells' balances
+    while (head->bal == AVL_BALANCED && head->parent != nullptr) {
+        head->bal = side;
+        side = head->key > head->parent->key ? AVL_RIGHT : AVL_LEFT;
+        head = head->parent;
+        // loop ends when chain head is reached
+    }
+    if (head->parent == nullptr && head->bal == AVL_BALANCED) {
+        head->bal = side;
+    } else if (head->bal == !side) {
+        // inserted at short branch => already balanced
+        head->bal = AVL_BALANCED;
     } else {
-        // correct 0 0 chain to the side:
-        Cell *onChain = p;
-        while (onChain->bal == AVL_BALANCED && onChain->parent != nullptr) {
-            onChain->bal = side;
-            onChain = onChain->parent;
-            // loop ends when chain pivot is reached
-        }
-        Cell *chainPivot = onChain;
-        if (chainPivot->bal == other) {
-            // inserted at short branch => already balanced
-            chainPivot->bal = AVL_BALANCED;
+        // inserted at long branch => rebalance
+        Cell *chainTop;
+        if (head->right == nullptr ||
+            (head->left != nullptr && head->left->bal != AVL_BALANCED)) {
+            chainTop = head->left;
         } else {
-            // inserted at long branch => rebalance
-            if (chainPivot->bal == other &&
-                (chainPivot->left == nullptr || chainPivot->right == nullptr)) {
-                Cell *child = chainPivot->left != nullptr ? chainPivot->left
-                                                          : chainPivot->right;
-                if (child->left == nullptr || child->right == nullptr) {
-                    rebalanceLongLine(child);
-                }
-            } else if (chainPivot->parent != nullptr) {
-                Cell *root = chainPivot->parent;
-                if (root->bal == side) {
-                    rebalanceDoubleHeavy(chainPivot);
-                } else if (root->bal == other) {
-                    rebalanceSideSwitching(chainPivot);
-                }
-            }
+            chainTop = head->right;
+        }
+        if (x->parent == chainTop && chainTop->bal == !head->bal) {
+            swapLeaves(chainTop);
+        } else if (chainTop->bal == head->bal) {
+            rotateTree(chainTop);
+        } else if (chainTop->bal == !head->bal) {
+            spliceTree(chainTop);
         }
     }
 }
 
-void AVLTree::rebalanceLongLine(Cell *pivot) {
-    Cell *x = pivot->left == nullptr ? pivot->right : pivot->left;
-    Cell *s = pivot->parent;
+void AVLTree::swapLeaves(Cell *a) {
+    Cell *x = a->bal == AVL_LEFT ? a->left : a->right;
+    Cell *s = a->parent;
     x->parent = s->parent;
-    s->parent = pivot->parent = x;
+    if (s == root) root = x;
+    s->parent = a->parent = x;
     s->left = s->right = nullptr;
-    pivot->left = pivot->right = nullptr;
-    s->bal = pivot->bal = AVL_BALANCED;
+    a->left = a->right = nullptr;
+    x->left = a->bal == AVL_LEFT ? s : a;
+    x->right = a->bal == AVL_LEFT ? a : s;
+    x->bal = s->bal = a->bal = AVL_BALANCED;
 }
 
-void AVLTree::rebalanceDoubleHeavy(Cell *) {}
-void AVLTree::rebalanceSideSwitching(Cell *) {}
+void AVLTree::rotateTree(Cell *a) {
+    Cell *s = a->parent;
+    Cell *tx, *t1, *t2;
+    if (a->bal == AVL_LEFT) {
+        t1 = s->right;
+        t2 = a->right;
+        tx = a->left;
+    } else {
+        t1 = s->left;
+        t2 = a->left;
+        tx = a->right;
+    }
+    a->parent = s->parent;
+    if (s == root) root = a;
+    s->parent = a;
+    t2->parent = s;
+    if (a->bal == AVL_LEFT) {
+        s->left = t2;
+        a->right = s;
+    } else {
+        s->right = t2;
+        a->left = s;
+    }
+    s->bal = a->bal = AVL_BALANCED;
+}
+void AVLTree::spliceTree(Cell *) {}
 
 }  // namespace Sealib

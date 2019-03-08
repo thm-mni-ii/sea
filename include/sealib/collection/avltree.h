@@ -2,7 +2,7 @@
 #define SEALIB_COLLECTION_AVLTREE_H_
 #include "sealib/_types.h"
 namespace Sealib {
-const uint8_t AVL_BALANCED = 00, AVL_LEFT = 10, AVL_RIGHT = 01;
+const uint8_t AVL_BALANCED = 11, AVL_LEFT = 0, AVL_RIGHT = 1;
 
 class AVLTree {
  public:
@@ -26,10 +26,10 @@ class AVLTree {
 
     Cell *root;
 
-    void rebalanceParents(Cell *b, uint8_t side);
-    void rebalanceDoubleHeavy(Cell *p);
-    void rebalanceLongLine(Cell *p);
-    void rebalanceSideSwitching(Cell *p);
+    void rebalanceParents(Cell *x, uint8_t side);
+    void rotateTree(Cell *p);
+    void spliceTree(Cell *p);
+    void swapLeaves(Cell *p);
 };
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_AVLTREE_H_
