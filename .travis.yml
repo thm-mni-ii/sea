@@ -31,12 +31,12 @@ script:
   - cpplint --quiet test/*.*
   - cppcheck --std=c++11 --enable=performance,portability --error-exitcode=1 --quiet -Iinclude src/ src-view/
   - cmake -DCOVERAGE=1 .
-  - 'if test $TRAVIS_PULL_REQUEST = false; then build-wrapper-linux-x86-64 --out-dir bw-output make; else make; fi'
+  - 'if test $TRAVIS_PULL_REQUEST = false; then build-wrapper-linux-x86-64 --out-dir bw-output make; else make sealib; fi'
   #- ./bin/tests
 
 after_success:
   #- coveralls --root . --build-root src/ -E ".*CMakeFiles.*" -e test -e third-party -e src-view -e include
-  - 'if test $TRAVIS_PULL_REQUEST = false; then sonar-scanner; pwd; ls -la .scannerwork; cat .scannerwork/scanner-report; fi'
+  - 'if test $TRAVIS_PULL_REQUEST = false; then sonar-scanner; pwd; ls -la .scannerwork; find .scannerwork/scanner-report; cat .scannerwork/scanner-report/* fi'
 
 before_deploy:
   # tar the header files and the library
