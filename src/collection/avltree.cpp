@@ -152,16 +152,38 @@ void AVLTree::spliceTree(Cell *a) {
     }
 
     s->parent = b;
-    if (a->bal == AVL_LEFT)
-        s->right = t3;
-    else
-        s->left = t3;
+    if (a->bal == AVL_LEFT) {
+        if (b->bal == AVL_LEFT) {
+            s->right = tx, tx->parent = s;
+        } else {
+            s->right = t3;
+            if (t3 != nullptr) t3->parent = s;
+        }
+    } else {
+        if (b->bal == AVL_LEFT) {
+            s->left = t3;
+            if (t3 != nullptr) t3->parent = s;
+        } else {
+            s->left = tx, tx->parent = s;
+        }
+    }
 
     a->parent = b;
-    if (a->bal == AVL_LEFT)
-        a->left = tx;
-    else
-        a->right = tx;
+    if (a->bal == AVL_LEFT) {
+        if (b->bal == AVL_LEFT) {
+            a->left = t3;
+            if (t3 != nullptr) t3->parent = a;
+        } else {
+            a->left = tx, tx->parent = a;
+        }
+    } else {
+        if (b->bal == AVL_LEFT) {
+            a->right = tx, tx->parent = a;
+        } else {
+            a->right = t3;
+            if (t3 != nullptr) t3->parent = a;
+        }
+    }
 
     b->parent = p;
     if (p == nullptr)
@@ -175,13 +197,11 @@ void AVLTree::spliceTree(Cell *a) {
     else
         b->left = a, b->right = s;
 
-    if (t3 != nullptr) t3->parent = s;
-    tx->parent = a;
-
-    if (b->bal == AVL_LEFT)
-        a->bal = AVL_BALANCED, s->bal = AVL_RIGHT;
-    else
-        a->bal = AVL_LEFT, s->bal = AVL_BALANCED;
+    if (a->bal == b->bal) {
+        a->bal = !b->bal, s->bal = AVL_BALANCED;
+    } else {
+        a->bal = AVL_BALANCED, s->bal = !b->bal;
+    }
     b->bal = AVL_BALANCED;
 }
 

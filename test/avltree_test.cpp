@@ -37,7 +37,7 @@ TEST(AVLTreeTest, random) {
     AVLTree t;
     std::vector<uint64_t> i;
     std::vector<uint64_t> v;
-    for (uint64_t a = 0; a < 10; a++) {
+    for (uint64_t a = 0; a < 1e4; a++) {
         v.push_back(dist(rnd));
         i.push_back(a);
     }
