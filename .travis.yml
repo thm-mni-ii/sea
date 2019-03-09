@@ -19,6 +19,7 @@ cache:
   - ./third-party
 
 before_install:
+  - git fetch --unshallow
   - pip install --user cpplint
   - 'if test $CC = clang; then ln -sf $(which llvm-cov) /home/travis/bin/gcov; fi'
 
@@ -33,6 +34,7 @@ script:
   - ./bin/tests
 
 after_success:
+  - (cd CMakeFiles/tests.dir && for d in $(find src test -type d); do gcov $d/*.gcno >/dev/null; done)
   - 'if test $TRAVIS_PULL_REQUEST = false || test "$TRAVIS_PULL_REQUEST_SLUG" = thm-mni-ii/sea; then sonar-scanner; fi'
 
 before_deploy:
