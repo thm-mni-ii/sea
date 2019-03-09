@@ -52,6 +52,23 @@ TEST(AVLTreeTest, random) {
     printf("\n");
 }
 
+TEST(AVLTreeTest, samples) {
+    AVLTree t;
+    t.insert(2);
+    t.insert(6);
+    t.insert(9);
+    t.insert(1);
+    t.insert(3);
+    t.insert(5);
+    t.insert(0);
+    t.insert(8);
+    t.insert(4);
+    t.insert(7);
+    for(uint64_t a=0; a<10; a++) {
+        EXPECT_EQ(t.search(a),0) << a;
+    }
+}
+
 TEST(AVLTreeTest, swapLeavesR) {
     AVLTree t;
     t.insert(6, 1);

@@ -10,7 +10,7 @@ class AVLTree {
 
     uint64_t search(uint64_t key) const;
 
-    void insert(uint64_t key, uint64_t data);
+    void insert(uint64_t key, uint64_t data = 0);
 
     void remove(uint64_t key);
 
