@@ -43,40 +43,32 @@ void AVLTree::insert(uint64_t k, uint64_t v) {
     } else {
         root = new Cell(k, v);
     }
-}  // namespace Sealib
+}
 
 void AVLTree::rebalanceParents(Cell *x, uint8_t xSide) {
-    Cell *head = x->parent;
+    Cell *head = x->parent, *chainTop = x;
     uint8_t side = xSide;
     // correct 0 0 cells' balances
     while (head->bal == AVL_BALANCED && head->parent != nullptr) {
         head->bal = side;
         side = head->parent->right == head ? AVL_RIGHT : AVL_LEFT;
+        chainTop = head;
         head = head->parent;
         // loop ends when chain head is reached
     }
     if (head->parent == nullptr && head->bal == AVL_BALANCED) {
         head->bal = side;
     } else if (head->bal == !side) {
-        // inserted at short branch => already balanced
+        // x at short branch: already balanced
         head->bal = AVL_BALANCED;
-    } else {
-        // inserted at long branch => rebalance
-        Cell *chainTop;
-        if (head->right == nullptr ||
-            (head->left != nullptr && head->left->bal != AVL_BALANCED)) {
-            chainTop = head->left;
-        } else {
-            chainTop = head->right;
-        }
+    } else if (head->bal == side) {
+        // x at long branch
         if (x->parent == chainTop && chainTop->bal == !head->bal) {
             swapLeaves(chainTop);
         } else if (chainTop->bal == head->bal) {
             rotateTree(chainTop);
         } else if (chainTop->bal == !head->bal) {
             spliceTree(chainTop);
-        } else {
-            // ?
         }
     }
 }
