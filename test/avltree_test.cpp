@@ -17,6 +17,23 @@ TEST(AVLTreeTest, basicInsert) {
     EXPECT_EQ(t.search(0), 5);
 }
 
+TEST(AVLTreeTest, basicRemove) {
+    AVLTree t;
+    t.insert(5);
+    t.insert(7);
+    t.insert(3);
+    t.insert(6);
+    t.insert(1);
+    t.remove(3);
+    t.remove(5);
+    t.remove(7);
+    EXPECT_EQ(t.search(3), INVALID);
+    EXPECT_EQ(t.search(5), INVALID);
+    EXPECT_EQ(t.search(7), INVALID);
+    EXPECT_EQ(t.search(6), 0);
+    EXPECT_EQ(t.search(1), 0);
+}
+
 TEST(AVLTreeTest, insertList) {
     std::random_device rnd;
     std::uniform_int_distribution<uint64_t> dist(0, 1e9);
@@ -37,7 +54,7 @@ TEST(AVLTreeTest, random) {
     AVLTree t;
     std::vector<uint64_t> i;
     std::vector<uint64_t> v;
-    for (uint64_t a = 0; a < 1e4; a++) {
+    for (uint64_t a = 0; a < 10; a++) {
         v.push_back(dist(rnd));
         i.push_back(a);
     }
@@ -46,6 +63,13 @@ TEST(AVLTreeTest, random) {
         t.insert(i[a], v[a]);
     }
     for (uint64_t a = 0; a < i.size(); a++) {
+        EXPECT_EQ(t.search(i[a]), v[a]);
+    }
+    for (uint64_t a = i.size() / 4; a < i.size() / 2; a++) {
+        t.remove(i[a]);
+    }
+    for (uint64_t a = 0; a < i.size(); a++) {
+        if (a == i.size() / 4) a = i.size() / 2;
         EXPECT_EQ(t.search(i[a]), v[a]);
     }
 }

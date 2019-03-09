@@ -7,8 +7,8 @@ uint64_t AVLTree::search(uint64_t k) const {
     if (root != nullptr) {
         Cell *u = root;
         while (u != nullptr) {
-            u = k < u->key ? u->left
-                           : k > u->key ? u->right : (r = u->data, nullptr);
+            u = k < u->key ? u->left : k > u->key ? u->right
+                                                  : (r = u->data, nullptr);
         }
     }
     return r;
@@ -22,7 +22,7 @@ void AVLTree::insert(uint64_t k, uint64_t v) {
             if (k < u->key) {
                 if (u->left == nullptr) {
                     u->left = new Cell(k, v, u);
-                    rebalanceParents(u->left, AVL_LEFT);
+                    rebalanceChain(u, AVL_LEFT);
                     done = true;
                 } else {
                     u = u->left;
@@ -30,7 +30,7 @@ void AVLTree::insert(uint64_t k, uint64_t v) {
             } else if (k > u->key) {
                 if (u->right == nullptr) {
                     u->right = new Cell(k, v, u);
-                    rebalanceParents(u->right, AVL_RIGHT);
+                    rebalanceChain(u, AVL_RIGHT);
                     done = true;
                 } else {
                     u = u->right;
@@ -45,9 +45,68 @@ void AVLTree::insert(uint64_t k, uint64_t v) {
     }
 }
 
-void AVLTree::rebalanceParents(Cell *x, uint8_t xSide) {
-    Cell *head = x->parent, *chainTop = x;
-    uint8_t side = xSide;
+void AVLTree::remove(uint64_t k) {
+    if (root != nullptr) {
+        Cell *u = root;
+        bool done = false;
+        while (!done) {
+            if (k < u->key) {
+                if (u->left != nullptr) {
+                    u = u->left;
+                } else {
+                    done = true;
+                }
+            } else if (k > u->key) {
+                if (u->right != nullptr) {
+                    u = u->right;
+                } else {
+                    done = true;
+                }
+            } else {
+                Cell *p = u->parent;
+                // ins = where to hang new child
+                Cell **ins = u->parent == nullptr ? &root : p->left == u
+                                                                ? &((*p).left)
+                                                                : &((*p).right);
+                if (u->left == nullptr && u->right == nullptr) {
+                    if (p == nullptr) {
+                        root = nullptr;
+                    } else {
+                        *ins = nullptr;
+                        rebalanceChain(p, p->left == u ? AVL_RIGHT : AVL_LEFT);
+                    }
+                } else if (u->left == nullptr || u->right == nullptr) {
+                    Cell *v = u->bal == AVL_LEFT ? u->left : u->right;
+                    *ins = v;
+                    v->parent = p;
+                    if (p != nullptr) rebalanceChain(p, !u->bal);
+                } else {
+                    Cell *m = u->right;
+                    while (m->left != nullptr) {
+                        m = m->left;
+                    }
+                    Cell *l = m->parent;
+                    if (m->right != nullptr) {
+                        m->right->parent = m->parent;
+                    }
+                    m->parent->left = m->right;
+
+                    m->left = u->left, m->right = u->right;
+                    u->left->parent = u->right->parent = m;
+                    m->parent = p;
+                    *ins = m;
+                    rebalanceChain(l, AVL_RIGHT);
+                }
+                delete u;
+                done = true;
+            }
+        }
+    }
+}
+
+void AVLTree::rebalanceChain(Cell *p, uint8_t pSide) {
+    Cell *head = p, *chainTop = nullptr;
+    uint8_t side = pSide;
     // correct 0 0 cells' balances
     while (head->bal == AVL_BALANCED && head->parent != nullptr) {
         head->bal = side;
@@ -63,7 +122,8 @@ void AVLTree::rebalanceParents(Cell *x, uint8_t xSide) {
         head->bal = AVL_BALANCED;
     } else if (head->bal == side) {
         // x at long branch
-        if (x->parent == chainTop && chainTop->bal == !head->bal) {
+        if (p == chainTop && chainTop->bal == !head->bal &&
+            (p->left == nullptr || p->right == nullptr)) {
             swapLeaves(chainTop);
         } else if (chainTop->bal == head->bal) {
             rotateTree(chainTop);
@@ -84,8 +144,11 @@ void AVLTree::swapLeaves(Cell *a) {
     else
         x->parent->right = x;
     s->parent = a->parent = x;
-    s->left = s->right = nullptr;
-    a->left = a->right = nullptr;
+    if (a->bal == AVL_RIGHT)
+        a->left = s->right = nullptr;
+    else
+        s->left = a->right = nullptr;
+
     x->left = a->bal == AVL_LEFT ? s : a;
     x->right = a->bal == AVL_LEFT ? a : s;
     x->bal = s->bal = a->bal = AVL_BALANCED;
