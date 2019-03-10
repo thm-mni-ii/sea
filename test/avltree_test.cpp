@@ -70,11 +70,11 @@ TEST(AVLTreeTest, random) {
     }
     for (uint64_t a = 0; a < i.size(); a++) {
         if (a == i.size() / 4) a = i.size() / 2;
-        EXPECT_EQ(t.search(i[a]), v[a]);
+        EXPECT_EQ(t.search(i[a]), v[a]) << a;
     }
 }
 
-TEST(AVLTreeTest, samples) {
+TEST(AVLTreeTest, sample1) {
     AVLTree t;
     t.insert(2);
     t.insert(6);
@@ -88,6 +88,47 @@ TEST(AVLTreeTest, samples) {
     t.insert(7);
     for (uint64_t a = 0; a < 10; a++) {
         EXPECT_EQ(t.search(a), 0) << a;
+    }
+}
+TEST(AVLTreeTest, sample2) {
+    AVLTree t;
+    t.insert(8);
+    t.insert(9);
+    t.insert(4);
+    t.insert(2);
+    t.insert(6);
+    t.insert(1);
+    t.insert(0);
+    t.insert(5);
+    t.insert(7);
+    t.insert(3);
+    t.remove(4);
+    for (uint64_t a = 0; a < 10; a++) {
+        if (a == 4)
+            EXPECT_EQ(t.search(a), INVALID);
+        else
+            EXPECT_EQ(t.search(a), 0);
+    }
+}
+TEST(AVLTreeTest, sample3) {
+    AVLTree t;
+    t.insert(7);
+    t.insert(9);
+    t.insert(2);
+    t.insert(8);
+    t.insert(5);
+    t.insert(3);
+    t.insert(4);
+    t.insert(0);
+    t.insert(1);
+    t.insert(6);
+    t.remove(2);
+    t.remove(8);
+    for (uint64_t a = 0; a < 10; a++) {
+        if (a == 2 || a == 8)
+            EXPECT_EQ(t.search(a), INVALID);
+        else
+            EXPECT_EQ(t.search(a), 0);
     }
 }
 
