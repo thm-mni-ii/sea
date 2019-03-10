@@ -112,6 +112,27 @@ TEST(AVLTreeTest, sample2) {
 }
 TEST(AVLTreeTest, sample3) {
     AVLTree t;
+    t.insert(0);
+    t.insert(3);
+    t.insert(5);
+    t.insert(6);
+    t.insert(8);
+    t.insert(1);
+    t.insert(7);
+    t.insert(9);
+    t.insert(2);
+    t.insert(4);
+    t.remove(5);
+    t.remove(4);
+    for (uint64_t a = 0; a < 10; a++) {
+        if (a == 4 || a == 5)
+            EXPECT_EQ(t.search(a), INVALID);
+        else
+            EXPECT_EQ(t.search(a), 0);
+    }
+}
+TEST(AVLTreeTest, sample4) {
+    AVLTree t;
     t.insert(7);
     t.insert(9);
     t.insert(2);
@@ -124,8 +145,9 @@ TEST(AVLTreeTest, sample3) {
     t.insert(6);
     t.remove(2);
     t.remove(8);
+    t.remove(9);
     for (uint64_t a = 0; a < 10; a++) {
-        if (a == 2 || a == 8)
+        if (a == 2 || a == 8 || a == 9)
             EXPECT_EQ(t.search(a), INVALID);
         else
             EXPECT_EQ(t.search(a), 0);

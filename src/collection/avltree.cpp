@@ -65,7 +65,7 @@ void AVLTree::remove(uint64_t k) {
             } else {
                 Cell *p = u->parent;
                 // ins = where to hang new child
-                Cell **ins = u->parent == nullptr
+                Cell **ins = p == nullptr
                                  ? &root
                                  : p->left == u ? &((*p).left) : &((*p).right);
                 if (u->left == nullptr && u->right == nullptr) {
@@ -74,16 +74,30 @@ void AVLTree::remove(uint64_t k) {
                     } else {
                         *ins = nullptr;
                         if (p->parent != nullptr) {
-                            uint8_t side = p->left == u ? AVL_RIGHT : AVL_LEFT;
-                            p->parent->bal = !side;
-                            rebalanceChain(p, side);
+                            Cell *q = p->parent;
+                            if (q->bal == AVL_BALANCED) {
+                                q->bal = q->left == p ? AVL_RIGHT : AVL_LEFT;
+                                rebalanceChain(
+                                    p, p->left == u ? AVL_RIGHT : AVL_LEFT);
+                            } else {
+                                Cell *r = q->left == p ? q->right : q->left;
+                                r->bal = AVL_BALANCED;
+                                rebalanceChain(r, r->left->left != nullptr
+                                                      ? q->bal
+                                                      : !q->bal);
+                                r->bal = r->left == q ? AVL_LEFT : AVL_RIGHT;
+                            }
+                            // counter-balance
+                            q->bal = q->left == p ? AVL_RIGHT : AVL_LEFT;
                         }
                     }
                 } else if (u->left == nullptr || u->right == nullptr) {
                     Cell *v = u->bal == AVL_LEFT ? u->left : u->right;
                     *ins = v;
                     v->parent = p;
-                    if (p != nullptr) rebalanceChain(p, u->bal);
+                    if (p != nullptr) {
+                        rebalanceChain(p, p->left == v ? AVL_RIGHT : AVL_LEFT);
+                    }
                 } else {
                     Cell *m = u->right;
                     while (m->left != nullptr) {
