@@ -64,69 +64,48 @@ void AVLTree::remove(uint64_t k) {
                 }
             } else {
                 Cell *p = u->parent;
-                // ins = where to hang new child
-                Cell **ins = p == nullptr
-                                 ? &root
-                                 : p->left == u ? &((*p).left) : &((*p).right);
+                uint8_t side;
+                // remove cell u
                 if (u->left == nullptr && u->right == nullptr) {
                     if (p == nullptr) {
                         root = nullptr;
                     } else {
-                        *ins = nullptr;
-                        if (p->parent != nullptr) {
-                            Cell *q = p->parent;
-                            if (q->bal == AVL_BALANCED) {
-                                q->bal = q->left == p ? AVL_RIGHT : AVL_LEFT;
-                                rebalanceChain(
-                                    p, p->left == u ? AVL_RIGHT : AVL_LEFT);
-                            } else {
-                                Cell *r = q->left == p ? q->right : q->left;
-                                r->bal = AVL_BALANCED;
-                                rebalanceChain(r, r->left->left != nullptr
-                                                      ? q->bal
-                                                      : !q->bal);
-                                r->bal = r->left == q ? AVL_LEFT : AVL_RIGHT;
-                            }
-                            // counter-balance
-                            q->bal = q->left == p ? AVL_RIGHT : AVL_LEFT;
-                        }
+                        side = p->left == u ? AVL_RIGHT : AVL_LEFT;
+                        (p->left == u ? p->left : p->right) = nullptr;
                     }
+                    delete u;
                 } else if (u->left == nullptr || u->right == nullptr) {
-                    Cell *v = u->bal == AVL_LEFT ? u->left : u->right;
-                    *ins = v;
-                    v->parent = p;
-                    if (p != nullptr) {
-                        rebalanceChain(p, p->left == v ? AVL_RIGHT : AVL_LEFT);
-                    }
-                } else {
-                    Cell *m = u->right;
-                    while (m->left != nullptr) {
-                        m->bal = AVL_BALANCED;
-                        m = m->left;
-                    }
-                    if (m->parent != u) {
-                        // m is a successor of u
-                        Cell *l = m->parent;
-                        if (m->right != nullptr) {
-                            m->right->parent = m->parent;
-                        }
-                        m->parent->left = m->right;
-
-                        m->left = u->left, m->right = u->right;
-                        u->left->parent = u->right->parent = m;
-                        m->parent = p;
-                        *ins = m;
-                        rebalanceChain(l, AVL_RIGHT);
+                    Cell *v = (u->left == nullptr ? u->right : u->left);
+                    if (p == nullptr) {
+                        root = v;
+                        v->parent = nullptr;
                     } else {
-                        // m is the right child of u
-                        m->left = u->left;
-                        u->left->parent = m;
-                        *ins = m;
-                        rebalanceChain(m, AVL_LEFT);
+                        side = p->left == u ? AVL_RIGHT : AVL_LEFT;
+                        (p->left == u ? p->left : p->right) = v;
+                        v->parent = p;
                     }
+                    delete u;
+                } else {
+                    Cell *v = u->right;
+                    while (v->left != nullptr) {
+                        v = v->left;
+                    }
+                    p = v->parent;
+                    side = p->left == v ? AVL_RIGHT : AVL_LEFT;
+                    // remove successor v
+                    if (v->right == nullptr) {
+                        (p == u ? u->right : p->left) = nullptr;
+                    } else {
+                        (p == u ? u->right : p->left) = v->right;
+                        v->right->parent = p;
+                    }
+                    u->key = v->key;
+                    u->data = v->data;
+                    delete v;
                 }
-                delete u;
-                done = true;
+                if (p != nullptr) {
+                    rebalanceBranch(p, side);
+                }
             }
         }
     }
@@ -159,6 +138,30 @@ void AVLTree::rebalanceChain(Cell *p, uint8_t pSide) {
         } else if (chainTop->bal == !head->bal) {
             spliceTree(chainTop);
         }
+    }
+}
+
+void AVLTree::rebalanceBranch(Cell *p, uint8_t pSide) {
+    Cell *q = p;
+    uint8_t side = pSide;
+    while (q != nullptr && q->bal != AVL_BALANCED) {
+        if (q->bal == !side) {
+            q->bal = AVL_BALANCED;
+        } else if (q->bal == side) {
+            if (q->right->bal == !side) {
+                spliceTree(q->right);
+            } else if (q->right->bal == side) {
+                rotateTree(q->right);
+            } else {
+                stealChild(q->right);
+            }
+        }
+        if (q->parent != nullptr)
+            side = q->parent->left == q ? AVL_RIGHT : AVL_LEFT;
+        q = q->parent;
+    }
+    if (q != nullptr && q->bal == AVL_BALANCED) {
+        q->bal = side;
     }
 }
 
@@ -285,6 +288,24 @@ void AVLTree::spliceTree(Cell *a) {
         a->bal = AVL_BALANCED, s->bal = !b->bal;
     }
     b->bal = AVL_BALANCED;
+}
+
+void AVLTree::stealChild(Cell *a) {
+    Cell *s = a->parent;
+    Cell *b, *c;
+    if (a->bal == AVL_RIGHT) {
+        b = s->left;
+        c = a;
+        while (c->left != nullptr) {
+            c = c->left;
+        }
+        c->parent->left = c->right != nullptr ? c->right : nullptr;
+        if (c->right != nullptr) c->right->parent = c->parent;
+        while (b->right != nullptr) {
+            b = b->right;
+        }
+        b->right = c;
+    }
 }
 
 }  // namespace Sealib

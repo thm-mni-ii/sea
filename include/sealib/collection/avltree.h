@@ -28,9 +28,11 @@ class AVLTree {
     Cell *root;
 
     void rebalanceChain(Cell *p, uint8_t side);
+    void rebalanceBranch(Cell *p, uint8_t side);
     void rotateTree(Cell *a);
     void spliceTree(Cell *a);
     void swapLeaves(Cell *a);
+    void stealChild(Cell *a);
 };
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_AVLTREE_H_
