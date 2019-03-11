@@ -20,7 +20,7 @@ cache:
 
 before_install:
   - git fetch --unshallow
-  - pip install --user cpplint
+  - pip install --user cpplint cpp-coveralls
   - 'if test $CC = clang; then ln -sf $(which llvm-cov) /home/travis/bin/gcov; fi'
 
 script:
@@ -30,11 +30,12 @@ script:
   - cpplint --quiet test/*.*
   - cppcheck --std=c++11 --enable=performance,portability --error-exitcode=1 --quiet -Iinclude src/ src-view/
   - cmake -DCOVERAGE=1 .
-  - 'if test $TRAVIS_PULL_REQUEST = false || test "$TRAVIS_PULL_REQUEST_SLUG" = thm-mni-ii/sea; then build-wrapper-linux-x86-64 --out-dir bw-output make; else make; fi'
+  - 'if test $TRAVIS_PULL_REQUEST = false || test "$TRAVIS_PULL_REQUEST_SLUG" = thm-mni-ii/sea; then build-wrapper-linux-x86-64 --out-dir bw-output make -j$(nproc); else make -j$(nproc); fi'
   - ./bin/tests
 
 after_success:
-  - (cd CMakeFiles/tests.dir && for d in $(find src test -type d); do gcov $d/*.gcno >/dev/null; done)
+  - (cd CMakeFiles/tests.dir && for d in $(find src test -type d); do gcov $d/*.gcno >/dev/null; done); cp CMakeFiles/tests.dir/*.gcov .
+  - coveralls --no-gcov --root . -e src-view -e test -e include -e third-party -e CMakeFiles
   - 'if test $TRAVIS_PULL_REQUEST = false || test "$TRAVIS_PULL_REQUEST_SLUG" = thm-mni-ii/sea; then sonar-scanner; fi'
 
 before_deploy:
