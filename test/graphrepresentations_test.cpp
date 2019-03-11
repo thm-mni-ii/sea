@@ -5,7 +5,7 @@
 
 using Sealib::Graphrepresentations;
 
-TEST(CompactGraphRepresentationsTest, beginpointer) {
+TEST(GraphrepresentationsTest, beginpointer) {
     uint64_t *A = new uint64_t[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
 
     Graphrepresentations::standardToBeginpointer(A);
@@ -19,7 +19,7 @@ TEST(CompactGraphRepresentationsTest, beginpointer) {
     ASSERT_EQ(A[15], 11);
 }
 
-TEST(CompactGraphRepresentationsTest, swapped) {
+TEST(GraphrepresentationsTest, swapped) {
     uint64_t *A = new uint64_t[16] {5,  7, 9, 11, 13, 15,  9,  2, 4,  3, 4,  1, 2,  2, 3,  3};
 
     Graphrepresentations::standardToBeginpointer(A);
@@ -49,4 +49,11 @@ TEST(CompactGraphRepresentationsTest, swapped) {
     ASSERT_EQ(A[11], 1);
     ASSERT_EQ(A[13], 2);
     ASSERT_EQ(A[15], 3);
+}
+
+TEST(GraphrepresentationsTest, crosspointer) {
+    uint64_t *A = new uint64_t[16]{5, 7, 9, 11, 13, 15, 9, 2, 4, 3, 4, 1, 2, 2, 3, 3};
+
+    Graphrepresentations::standardToCrosspointer(A);
+    SUCCEED();
 }
