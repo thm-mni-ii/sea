@@ -10,7 +10,7 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedLong) {
     ASSERT_EQ(bs.size(), 0);
     ASSERT_EQ(bs.blocks(), 0);
 
-    bs = Bitset<block> (1);
+    bs = Bitset<block>(1);
     ASSERT_EQ(bs.size(), 1);
     ASSERT_EQ(bs.blocks(), 1);
 
@@ -64,12 +64,12 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedLong) {
     bs.setBlock(1, 0);
     ASSERT_EQ(bs[bs.size() - 1], 0);
 
-    bs.setBlock(0, (block) - 1);
+    bs.setBlock(0, (block)-1);
     for (uint32_t i = 0; i < bs.size() - 1; i++) {
         ASSERT_EQ(bs[i], 1);
     }
 
-    ASSERT_EQ(bs.getBlock(0), (block) - 1);
+    ASSERT_EQ(bs.getBlock(0), (block)-1);
 }
 
 TEST(BitsetTest, BitsetFunctionality_UnsignedInt) {
@@ -79,7 +79,7 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedInt) {
     ASSERT_EQ(bs.size(), 0);
     ASSERT_EQ(bs.blocks(), 0);
 
-    bs = Bitset<block> (1);
+    bs = Bitset<block>(1);
     ASSERT_EQ(bs.size(), 1);
     ASSERT_EQ(bs.blocks(), 1);
 
@@ -132,12 +132,12 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedInt) {
     bs.setBlock(1, 0);
     ASSERT_EQ(bs[32], 0);
 
-    bs.setBlock(0, (block) - 1);
+    bs.setBlock(0, (block)-1);
     for (uint32_t i = 0; i < 32; i++) {
         ASSERT_EQ(bs[i], 1);
     }
 
-    ASSERT_EQ(bs.getBlock(0), (block) - 1);
+    ASSERT_EQ(bs.getBlock(0), (block)-1);
 }
 
 TEST(BitsetTest, BitsetFunctionality_UnsignedShort) {
@@ -147,7 +147,7 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedShort) {
     ASSERT_EQ(bs.size(), 0);
     ASSERT_EQ(bs.blocks(), 0);
 
-    bs = Bitset<block> (1);
+    bs = Bitset<block>(1);
     ASSERT_EQ(bs.size(), 1);
     ASSERT_EQ(bs.blocks(), 1);
 
@@ -200,12 +200,12 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedShort) {
     bs.setBlock(1, 0);
     ASSERT_EQ(bs[16], 0);
 
-    bs.setBlock(0, (block) - 1);
+    bs.setBlock(0, (block)-1);
     for (uint32_t i = 0; i < 16; i++) {
         ASSERT_EQ(bs[i], 1);
     }
 
-    ASSERT_EQ(bs.getBlock(0), (block) - 1);
+    ASSERT_EQ(bs.getBlock(0), (block)-1);
 }
 
 TEST(BitsetTest, BitsetFunctionality_UnsignedChar) {
@@ -215,7 +215,7 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedChar) {
     ASSERT_EQ(bs.size(), 0);
     ASSERT_EQ(bs.blocks(), 0);
 
-    bs = Bitset<block> (1);
+    bs = Bitset<block>(1);
     ASSERT_EQ(bs.size(), 1);
     ASSERT_EQ(bs.blocks(), 1);
 
@@ -268,10 +268,35 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedChar) {
     bs.setBlock(1, 0);
     ASSERT_EQ(bs[8], 0);
 
-    bs.setBlock(0, (block) - 1);
+    bs.setBlock(0, (block)-1);
     for (uint32_t i = 0; i < 8; i++) {
         ASSERT_EQ(bs[i], 1);
     }
 
-    ASSERT_EQ(bs.getBlock(0), (block) - 1);
+    ASSERT_EQ(bs.getBlock(0), (block)-1);
+}
+
+TEST(BitsetTest, operators) {
+    Bitset<uint64_t> b(100);
+    Bitset<uint64_t> c(100);
+    c.flip();
+    for (uint64_t a = 0; a < c.size(); a++) {
+        EXPECT_EQ(b[a], ~c[a]);
+    }
+    b.insert(10, 1);
+    c &= b;
+    for (uint64_t a = 0; a < c.size(); a++) {
+        EXPECT_EQ(b[a], c[a]);
+    }
+    c ^= b;
+    for (uint64_t a = 0; a < c.size(); a++) {
+        EXPECT_EQ(c[a], 0);
+    }
+    b.insert(20, 1);
+    c |= b;
+    EXPECT_EQ(c[5], 0);
+    EXPECT_EQ(c[10] & c[20], 1);
+    c -= ~b;
+    EXPECT_EQ(c[10] & c[20], 1);
+    EXPECT_EQ(c[5], 0);
 }
