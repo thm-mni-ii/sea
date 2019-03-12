@@ -178,7 +178,7 @@ UndirectedGraph GraphCreator::kRegular(uint64_t order, uint64_t degreePerNode) {
         uint64_t b;
         if (!todo.empty()) {
             auto todoI = todo.begin();
-            std::advance(todoI, dist(rng) % todo.size());
+            std::advance(todoI, static_cast<int64_t>(dist(rng) % todo.size()));
             b = *todoI;
             todo.erase(b);
         } else {

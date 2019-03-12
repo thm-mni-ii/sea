@@ -26,6 +26,12 @@ class TikzArray : public TikzElement {
           name(_name),
           options(_options),
           showIndices(_showIndices) {}
+    TikzArray() = default;
+    TikzArray(const TikzArray &) = default;
+    TikzArray(TikzArray &&) noexcept = default;
+    TikzArray& operator=(const TikzArray &) = default;
+    // TikzArray& operator=(TikzArray &&) noexcept = default;
+    virtual ~TikzArray() = default;
 
     std::ostream &out(std::ostream &os) const override;
 
