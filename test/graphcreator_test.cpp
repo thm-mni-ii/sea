@@ -1,5 +1,6 @@
 #include "sealib/graph/graphcreator.h"
 #include <gtest/gtest.h>
+#include <cstdio>
 #include <cstdlib>
 #include <random>
 
@@ -12,7 +13,8 @@ static std::uniform_int_distribution<uint64_t> degR(0, deg - 1);
 
 TEST(GraphCreatorTest, adjMatrix) {
     std::uniform_int_distribution<uint64_t> edgeR(0, 2);
-    uint64_t **m = static_cast<uint64_t **>(std::malloc(n * sizeof(uint64_t *)));
+    uint64_t **m =
+        static_cast<uint64_t **>(std::malloc(n * sizeof(uint64_t *)));
     for (uint64_t u = 0; u < n; u++) {
         m[u] = static_cast<uint64_t *>(std::malloc(n * sizeof(uint64_t)));
     }
@@ -62,4 +64,19 @@ TEST(GraphCreatorTest, windmill) {
         EXPECT_EQ(g.deg(u), n - 1);
     }
     EXPECT_EQ(g.deg(n * m - m), n * m - m);
+}
+
+TEST(GraphCreatorTest, transpose) {
+    DirectedGraph g = GraphCreator::kOutdegree(n, deg);
+    DirectedGraph t = GraphCreator::transpose(g);
+    for (uint64_t u = 0; u < t.getOrder(); u++) {
+        for (uint64_t k = 0; k < t.deg(u); k++) {
+            uint64_t v = t.head(u, k);
+            bool hasAdj = false;
+            for (uint64_t j = 0; j < g.deg(u) && !hasAdj; j++) {
+                if (g.head(v, j) == u) hasAdj = true;
+            }
+            EXPECT_TRUE(hasAdj);
+        }
+    }
 }

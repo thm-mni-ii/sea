@@ -45,10 +45,10 @@ class SCCIterator : Iterator<uint64_t> {
      * @return the root vertex of the (now finished) SCC
      * 
      * Example (output all vertices in the first SCC):
-     * SCCIterator s(g,[](uint u){ printf("found vertex %lu\n",u); });
-     * s.init();
-     * s.more();
-     * s.next();
+     *   SCCIterator s(g,[](uint u){ printf("found vertex %lu\n",u); });
+     *   s.init();
+     *   s.more();
+     *   s.next();
      */
     uint64_t next() override;
 
@@ -64,7 +64,7 @@ class SCCIterator : Iterator<uint64_t> {
     BiConsumer postexplore;
     Consumer postprocess;
 
-    uint64_t nextRoot();
+    uint64_t nextFinished();
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_SCCITERATOR_H_

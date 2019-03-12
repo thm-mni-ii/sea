@@ -223,13 +223,14 @@ UndirectedGraph GraphCreator::windmill(uint64_t order, uint64_t count) {
 }
 
 DirectedGraph GraphCreator::transpose(DirectedGraph const &g) {
-    std::vector<SimpleNode> nodes(g.getOrder());
+    DirectedGraph t(g.getOrder());
     for (uint64_t u = 0; u < g.getOrder(); u++) {
         for (uint64_t k = 0; k < g.deg(u); k++) {
-            nodes[g.head(u, k)].addAdjacency(u);
+            uint64_t v = g.head(u, k);
+            t.getNode(v).addAdjacency(u);
         }
     }
-    return DirectedGraph(nodes);
+    return t;
 }
 
 static uint64_t *generateRawGilbertGraph(uint64_t order, double p,
