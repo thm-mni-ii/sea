@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <algorithm>
 #include <cassert>
+#include <deque>
+#include <set>
 #include <iostream>
 #include <limits>
 #include <random>
-#include <set>
-#include <unordered_set>
 
 using Sealib::CompactGraph;
 using Sealib::DirectedGraph;
@@ -167,32 +167,21 @@ UndirectedGraph GraphCreator::sparseUndirected(uint64_t order) {
 
 UndirectedGraph GraphCreator::kRegular(uint64_t order, uint64_t degreePerNode) {
     UndirectedGraph g(order);
-    std::uniform_int_distribution<uint64_t> dist(0, order - 1);
-    std::unordered_set<uint64_t> todo;
-    for (uint64_t a = 0; a < order; a++) {
-        todo.insert(a);
-    }
-    while (!todo.empty()) {
-        uint64_t a = *todo.begin();
-        todo.erase(a);
-        uint64_t b;
-        if (!todo.empty()) {
-            auto todoI = todo.begin();
-            std::advance(todoI, static_cast<int64_t>(dist(rng) % todo.size()));
-            b = *todoI;
-            todo.erase(b);
-        } else {
-            b = a;
+    for (uint64_t k = 0; k < degreePerNode; k++) {
+        std::deque<uint64_t> u;
+        for (uint64_t a = 0; a < order; a ++) {
+            u.emplace_back(a);
         }
-        ExtendedNode &n1 = g.getNode(a), &n2 = g.getNode(b);
-        uint64_t i1 = g.deg(a), i2 = g.deg(b);
-        n1.addAdjacency({b, i2});
-        n2.addAdjacency({a, i1});
-        if (g.deg(a) < degreePerNode) {
-            todo.insert(a);
-        }
-        if (g.deg(b) < degreePerNode) {
-            todo.insert(b);
+        std::shuffle(u.begin(), u.end(), rng);
+        while (!u.empty()) {
+            uint64_t u1=u.back();
+            u.pop_back();
+            uint64_t u2=u.back();
+            u.pop_back();
+            ExtendedNode &n1 = g.getNode(u1);
+            ExtendedNode &n2 = g.getNode(u2);
+            n1.addAdjacency({u2,k});
+            n2.addAdjacency({u1,k});
         }
     }
     return g;
