@@ -19,7 +19,6 @@ cache:
   - ./third-party
 
 before_install:
-  - pip install --user cpp-coveralls
   - pip install --user cpplint
   - 'if test $CC = clang; then ln -sf $(which llvm-cov) /home/travis/bin/gcov; fi'
 
@@ -30,12 +29,11 @@ script:
   - cpplint --quiet test/*.*
   - cppcheck --std=c++11 --enable=performance,portability --error-exitcode=1 --quiet -Iinclude src/ src-view/
   - cmake -DCOVERAGE=1 .
-  - 'if test $TRAVIS_PULL_REQUEST = false; then build-wrapper-linux-x86-64 --out-dir bw-output make; else make; fi'
+  - 'if test $TRAVIS_PULL_REQUEST = false || test "$TRAVIS_PULL_REQUEST_SLUG" = thm-mni-ii/sea; then build-wrapper-linux-x86-64 --out-dir bw-output make; else make; fi'
   - ./bin/tests
 
 after_success:
-  - coveralls --root . --build-root src/ -E ".*CMakeFiles.*" -e test -e third-party -e src-view -e include
-  - 'if test $TRAVIS_PULL_REQUEST = false; then sonar-scanner; fi'
+  - 'if test $TRAVIS_PULL_REQUEST = false || test "$TRAVIS_PULL_REQUEST_SLUG" = thm-mni-ii/sea; then sonar-scanner; fi'
 
 before_deploy:
   # tar the header files and the library

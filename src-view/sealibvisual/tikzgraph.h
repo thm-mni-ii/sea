@@ -20,6 +20,12 @@ class TikzGraph : public TikzElement {
 
  public:
     explicit TikzGraph(uint64_t nodes);
+    TikzGraph() = default;
+    TikzGraph(const TikzGraph &) = default;
+    TikzGraph(TikzGraph &&) noexcept = default;
+    TikzGraph& operator=(const TikzGraph &) = default;
+    // TikzGraph& operator=(TikzGraph &&) noexcept = default;
+    virtual ~TikzGraph() = default;
 
     std::ostream &out(std::ostream &os) const override;
 
