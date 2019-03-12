@@ -65,7 +65,7 @@ TEST(BCCIteratorTest, lineGraph) {
 }
 
 TEST(BCCIteratorTest, stability) {
-    UndirectedGraph g = GraphCreator::sparseUndirected(200);
+    UndirectedGraph g = GraphCreator::kRegular(2000, 3);
     BCCIterator b(g);
     b.init();
     b.start(10, g.head(10, 2));  // select an arbitrary edge
