@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <cassert>
 #include <deque>
-#include <set>
 #include <iostream>
 #include <limits>
 #include <random>
+#include <set>
 
 using Sealib::CompactGraph;
 using Sealib::DirectedGraph;
@@ -93,29 +93,26 @@ std::unique_ptr<Sealib::UndirectedGraph> Sealib::GraphCreator::randomBipartite(
 static std::random_device rng;
 
 Sealib::DirectedGraph GraphCreator::imbalanced(uint64_t order) {
-    std::vector<SimpleNode> n(order);
-    std::uniform_int_distribution<uint64_t> rnd(0, order - 1);
-    std::uniform_int_distribution<uint64_t> dist1(order * order,
-                                                  2 * order * order);
-    std::uniform_int_distribution<uint64_t> dist2(
-        0, static_cast<uint64_t>(ceil(log2(order))));
-    std::set<uint64_t> big;
-    for (uint64_t a = 0; a < ceil(order / (2 * log2(order))); a++)
-        big.insert(rnd(rng));
+    DirectedGraph g(order);
+    std::uniform_int_distribution<uint64_t> distN(0, order - 1);
+    std::uniform_int_distribution<uint64_t> distBig(2 * order, 4 * order);
+    std::uniform_int_distribution<uint64_t> distSmall(
+        0, static_cast<uint64_t>(ceil(log2(order) + 1)));
+    std::vector<bool> big(order);
+    for (uint64_t a = 0; a < ceil(order / (log2(order) + 1)); a++)
+        big[a] = distN(rng);
     for (uint64_t a = 0; a < order; a++) {
         uint64_t deg;
-        if (big.find(a) == big.end()) {
-            deg = dist2(rng);
+        if (big[a]) {
+            deg = distBig(rng);
         } else {
-            deg = dist1(rng);
+            deg = distSmall(rng);
         }
-        std::vector<uint64_t> ad(deg);
         for (uint64_t b = 0; b < deg; b++) {
-            ad[b] = rnd(rng);
+            g.getNode(a).addAdjacency(distN(rng));
         }
-        n[a] = SimpleNode(ad);
     }
-    return DirectedGraph(n);
+    return g;
 }
 
 Sealib::DirectedGraph Sealib::GraphCreator::kOutdegree(uint64_t order,
@@ -169,19 +166,19 @@ UndirectedGraph GraphCreator::kRegular(uint64_t order, uint64_t degreePerNode) {
     UndirectedGraph g(order);
     for (uint64_t k = 0; k < degreePerNode; k++) {
         std::deque<uint64_t> u;
-        for (uint64_t a = 0; a < order; a ++) {
+        for (uint64_t a = 0; a < order; a++) {
             u.emplace_back(a);
         }
         std::shuffle(u.begin(), u.end(), rng);
         while (!u.empty()) {
-            uint64_t u1=u.back();
+            uint64_t u1 = u.back();
             u.pop_back();
-            uint64_t u2=u.back();
+            uint64_t u2 = u.back();
             u.pop_back();
             ExtendedNode &n1 = g.getNode(u1);
             ExtendedNode &n2 = g.getNode(u2);
-            n1.addAdjacency({u2,k});
-            n2.addAdjacency({u1,k});
+            n1.addAdjacency({u2, k});
+            n2.addAdjacency({u1, k});
         }
     }
     return g;
