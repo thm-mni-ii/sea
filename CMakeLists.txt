@@ -64,8 +64,8 @@ target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")
-        target_compile_options(tests PRIVATE --coverage)
-        target_link_libraries(tests --coverage)
+        set(TEST_FLAGS "${TEST_FLAGS} --coverage")
+        set_target_properties(tests PROPERTIES LINK_FLAGS "--coverage")
 endif ()
 
 # --------------------------------------------------- #
