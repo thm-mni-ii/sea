@@ -32,7 +32,7 @@ class AVLTree {
     void rotateTree(Cell *a);
     void spliceTree(Cell *a);
     void swapLeaves(Cell *a);
-    void stealChild(Cell *a);
+    Cell * stealMaxLeaf(Cell *a);
 };
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_AVLTREE_H_

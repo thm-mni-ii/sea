@@ -142,22 +142,32 @@ void AVLTree::rebalanceChain(Cell *p, uint8_t pSide) {
 }
 
 void AVLTree::rebalanceBranch(Cell *p, uint8_t pSide) {
-    Cell *q = p;
+    Cell *q = p, *r = nullptr;
     uint8_t side = pSide;
     while (q != nullptr && q->bal != AVL_BALANCED) {
         if (q->bal == !side) {
             q->bal = AVL_BALANCED;
         } else if (q->bal == side) {
-            if (q->right->bal == !side) {
-                spliceTree(q->right);
-            } else if (q->right->bal == side) {
-                rotateTree(q->right);
+            Cell *a = q->left == r ? q->right : q->left;
+            if (a->bal == !side) {
+                spliceTree(a);
+            } else if (a->bal == side) {
+                rotateTree(a);
             } else {
-                stealChild(q->right);
+                Cell *t = stealMaxLeaf(a);
+                r->parent = q->parent;
+                if (q->left == r)
+                    q->right = p->right;
+                else
+                    q->left = p->left;
+                q->parent = r;
+                q->left = t;
+                std::swap(r, q);
             }
         }
         if (q->parent != nullptr)
             side = q->parent->left == q ? AVL_RIGHT : AVL_LEFT;
+        r = q;
         q = q->parent;
     }
     if (q != nullptr && q->bal == AVL_BALANCED) {
@@ -290,22 +300,15 @@ void AVLTree::spliceTree(Cell *a) {
     b->bal = AVL_BALANCED;
 }
 
-void AVLTree::stealChild(Cell *a) {
-    Cell *s = a->parent;
-    Cell *b, *c;
-    if (a->bal == AVL_RIGHT) {
-        b = s->left;
-        c = a;
-        while (c->left != nullptr) {
-            c = c->left;
-        }
-        c->parent->left = c->right != nullptr ? c->right : nullptr;
-        if (c->right != nullptr) c->right->parent = c->parent;
-        while (b->right != nullptr) {
-            b = b->right;
-        }
-        b->right = c;
+AVLTree::Cell *AVLTree::stealMaxLeaf(Cell *a) {
+    Cell *b = a;
+    while (b->right != nullptr || b->left != nullptr) {
+        b = b->right != nullptr ? b->right : b->left;
     }
+    if (b->parent->left == b) {
+        b->parent->left = nullptr;
+    }
+    b->parent = nullptr;
 }
 
 }  // namespace Sealib
