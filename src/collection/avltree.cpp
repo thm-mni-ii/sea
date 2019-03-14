@@ -64,7 +64,7 @@ void AVLTree::remove(uint64_t k) {
                 }
             } else {
                 Cell *p = u->parent;
-                uint8_t side;
+                uint8_t side = AVL_BALANCED;
                 // remove cell u
                 if (u->left == nullptr && u->right == nullptr) {
                     if (p == nullptr) {
@@ -103,9 +103,8 @@ void AVLTree::remove(uint64_t k) {
                     u->data = v->data;
                     delete v;
                 }
-                if (p != nullptr) {
-                    rebalanceBranch(p, side);
-                }
+                rebalanceBranch(p, side);
+                done = true;
             }
         }
     }
@@ -144,34 +143,39 @@ void AVLTree::rebalanceChain(Cell *p, uint8_t pSide) {
 void AVLTree::rebalanceBranch(Cell *p, uint8_t pSide) {
     Cell *q = p, *r = nullptr;
     uint8_t side = pSide;
-    while (q != nullptr && q->bal != AVL_BALANCED) {
-        if (q->bal == !side) {
+    bool foundBalanced = false;
+    while (q != nullptr && !foundBalanced) {
+        if (q->bal == AVL_BALANCED) {
+            q->bal = side;
+            foundBalanced = true;
+        } else if (q->bal == !side) {
             q->bal = AVL_BALANCED;
         } else if (q->bal == side) {
             Cell *a = q->left == r ? q->right : q->left;
             if (a->bal == !side) {
-                spliceTree(a);
+                if (r == nullptr &&
+                    (a->left == nullptr || a->right == nullptr)) {
+                    swapLeaves(a);
+                } else {
+                    spliceTree(a);
+                }
+                q = a->parent;
             } else if (a->bal == side) {
                 rotateTree(a);
+                q = a->left == q ? a->right : a->left;
             } else {
-                Cell *t = stealMaxLeaf(a);
-                r->parent = q->parent;
-                if (q->left == r)
-                    q->right = p->right;
-                else
-                    q->left = p->left;
-                q->parent = r;
-                q->left = t;
-                std::swap(r, q);
+                a->bal = !side;
+                Cell *b = a->bal == AVL_RIGHT ? a->right : a->left;
+                if (b->bal == AVL_BALANCED) b->bal = side;
+                spliceTree(a);
+                a->bal = side;  // q->bal=?
+                // q = b;   // wrong?
             }
         }
         if (q->parent != nullptr)
             side = q->parent->left == q ? AVL_RIGHT : AVL_LEFT;
         r = q;
         q = q->parent;
-    }
-    if (q != nullptr && q->bal == AVL_BALANCED) {
-        q->bal = side;
     }
 }
 
@@ -196,6 +200,7 @@ void AVLTree::swapLeaves(Cell *a) {
 
 void AVLTree::rotateTree(Cell *a) {
     Cell *s = a->parent;
+    // tx: normally never nullptr (except when called from rebalanceBranch)
     Cell *tx, *t1, *t2;
     if (a->bal == AVL_LEFT) {
         t1 = s->right;
@@ -249,7 +254,8 @@ void AVLTree::spliceTree(Cell *a) {
     s->parent = b;
     if (a->bal == AVL_LEFT) {
         if (b->bal == AVL_LEFT) {
-            s->right = tx, tx->parent = s;
+            s->right = tx;
+            if (tx != nullptr) tx->parent = s;
         } else {
             s->right = t3;
             if (t3 != nullptr) t3->parent = s;
@@ -259,7 +265,8 @@ void AVLTree::spliceTree(Cell *a) {
             s->left = t3;
             if (t3 != nullptr) t3->parent = s;
         } else {
-            s->left = tx, tx->parent = s;
+            s->left = tx;
+            if (tx != nullptr) tx->parent = s;
         }
     }
 
@@ -269,11 +276,13 @@ void AVLTree::spliceTree(Cell *a) {
             a->left = t3;
             if (t3 != nullptr) t3->parent = a;
         } else {
-            a->left = tx, tx->parent = a;
+            a->left = tx;
+            if (tx != nullptr) tx->parent = a;
         }
     } else {
         if (b->bal == AVL_LEFT) {
-            a->right = tx, tx->parent = a;
+            a->right = tx;
+            if (tx != nullptr) tx->parent = a;
         } else {
             a->right = t3;
             if (t3 != nullptr) t3->parent = a;
@@ -298,17 +307,6 @@ void AVLTree::spliceTree(Cell *a) {
         a->bal = AVL_BALANCED, s->bal = !b->bal;
     }
     b->bal = AVL_BALANCED;
-}
-
-AVLTree::Cell *AVLTree::stealMaxLeaf(Cell *a) {
-    Cell *b = a;
-    while (b->right != nullptr || b->left != nullptr) {
-        b = b->right != nullptr ? b->right : b->left;
-    }
-    if (b->parent->left == b) {
-        b->parent->left = nullptr;
-    }
-    b->parent = nullptr;
 }
 
 }  // namespace Sealib

@@ -153,6 +153,49 @@ TEST(AVLTreeTest, sample4) {
             EXPECT_EQ(t.search(a), 0);
     }
 }
+TEST(AVLTreeTest, sample5) {
+    AVLTree t;
+    t.insert(6);
+    t.insert(7);
+    t.insert(0);
+    t.insert(8);
+    t.insert(1);
+    t.insert(2);
+    t.insert(9);
+    t.insert(3);
+    t.insert(5);
+    t.insert(4);
+    t.remove(0);
+    t.remove(8);
+    t.remove(9);
+    for (uint64_t a = 0; a < 10; a++) {
+        if (a == 0 || a == 8 || a == 9)
+            EXPECT_EQ(t.search(a), INVALID);
+        else
+            EXPECT_EQ(t.search(a), 0);
+    }
+}
+TEST(AVLTreeTest, sample6) {
+    AVLTree t;
+    t.insert(3);
+    t.insert(5);
+    t.insert(9);
+    t.insert(8);
+    t.insert(0);
+    t.insert(2);
+    t.insert(4);
+    t.insert(6);
+    t.insert(7);
+    t.insert(1);
+    t.remove(9);
+    t.remove(8);
+    for (uint64_t a = 0; a < 10; a++) {
+        if (a == 8 || a == 9)
+            EXPECT_EQ(t.search(a), INVALID);
+        else
+            EXPECT_EQ(t.search(a), 0);
+    }
+}
 
 TEST(AVLTreeTest, swapLeavesR) {
     AVLTree t;
