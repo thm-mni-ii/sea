@@ -54,7 +54,8 @@ TEST(AVLTreeTest, random) {
     AVLTree t;
     std::vector<uint64_t> i;
     std::vector<uint64_t> v;
-    for (uint64_t a = 0; a < 10; a++) {
+    std::vector<bool> removed(20);
+    for (uint64_t a = 0; a < 20; a++) {
         v.push_back(dist(rnd));
         i.push_back(a);
     }
@@ -67,10 +68,13 @@ TEST(AVLTreeTest, random) {
     }
     for (uint64_t a = i.size() / 4; a < i.size() / 2; a++) {
         t.remove(i[a]);
+        removed[i[a]] = 1;
     }
     for (uint64_t a = 0; a < i.size(); a++) {
-        if (a == i.size() / 4) a = i.size() / 2;
-        EXPECT_EQ(t.search(i[a]), v[a]) << a;
+        if (removed[i[a]])
+            EXPECT_EQ(t.search(i[a]), INVALID);
+        else
+            EXPECT_EQ(t.search(i[a]), v[a]) << a;
     }
 }
 

@@ -141,40 +141,42 @@ void AVLTree::rebalanceChain(Cell *p, uint8_t pSide) {
 }
 
 void AVLTree::rebalanceBranch(Cell *p, uint8_t pSide) {
-    Cell *q = p, *r = nullptr;
+    Cell *head = p;
     uint8_t side = pSide;
-    bool foundBalanced = false;
-    while (q != nullptr && !foundBalanced) {
-        if (q->bal == AVL_BALANCED) {
-            q->bal = side;
-            foundBalanced = true;
-        } else if (q->bal == !side) {
-            q->bal = AVL_BALANCED;
-        } else if (q->bal == side) {
-            Cell *a = q->bal == AVL_LEFT ? q->left : q->right;
+    while (head != nullptr) {
+        if (head->bal == AVL_BALANCED) {
+            head->bal = side;
+            break;
+        } else if (head->bal == !side) {
+            head->bal = AVL_BALANCED;
+        } else if (head->bal == side) {
+            Cell *a = head->bal == AVL_LEFT ? head->left : head->right;
+            Cell *prev = head->bal == AVL_LEFT ? head->right : head->left;
             if (a->bal == !side) {
-                if (r == nullptr &&
+                if (prev == nullptr &&
                     (a->left == nullptr || a->right == nullptr)) {
                     swapLeaves(a);
                 } else {
                     spliceTree(a);
                 }
-                q = a->parent;
+                head = a->parent;
             } else if (a->bal == side) {
                 rotateTree(a);
-                q = a;
+                head = a;
             } else {
                 a->bal = side;
                 Cell *c = a->bal == AVL_RIGHT ? a->left : a->right;
                 rotateTree(a);
-                q->bal = q->left == c ? AVL_LEFT : AVL_RIGHT;
-                q = q->parent->left == q ? q->parent->right : q->parent->left;
+                head->bal = head->left == c ? AVL_LEFT : AVL_RIGHT;
+                head = head->parent->left == head ? head->parent->right
+                                                  : head->parent->left;
             }
         }
-        if (q->parent != nullptr)
-            side = q->parent->left == q ? AVL_RIGHT : AVL_LEFT;
-        r = q;
-        q = q->parent;
+        if (head != nullptr) {
+            if (head->parent != nullptr)
+                side = head->parent->left == head ? AVL_RIGHT : AVL_LEFT;
+            head = head->parent;
+        }
     }
 }
 
