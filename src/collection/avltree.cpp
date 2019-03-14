@@ -151,7 +151,7 @@ void AVLTree::rebalanceBranch(Cell *p, uint8_t pSide) {
         } else if (q->bal == !side) {
             q->bal = AVL_BALANCED;
         } else if (q->bal == side) {
-            Cell *a = q->left == r ? q->right : q->left;
+            Cell *a = q->bal == AVL_LEFT ? q->left : q->right;
             if (a->bal == !side) {
                 if (r == nullptr &&
                     (a->left == nullptr || a->right == nullptr)) {
@@ -162,14 +162,13 @@ void AVLTree::rebalanceBranch(Cell *p, uint8_t pSide) {
                 q = a->parent;
             } else if (a->bal == side) {
                 rotateTree(a);
-                q = a->left == q ? a->right : a->left;
+                q = a;
             } else {
-                a->bal = !side;
-                Cell *b = a->bal == AVL_RIGHT ? a->right : a->left;
-                if (b->bal == AVL_BALANCED) b->bal = side;
-                spliceTree(a);
-                a->bal = side;  // q->bal=?
-                // q = b;   // wrong?
+                a->bal = side;
+                Cell *c = a->bal == AVL_RIGHT ? a->left : a->right;
+                rotateTree(a);
+                q->bal = q->left == c ? AVL_LEFT : AVL_RIGHT;
+                q = q->parent->left == q ? q->parent->right : q->parent->left;
             }
         }
         if (q->parent != nullptr)
