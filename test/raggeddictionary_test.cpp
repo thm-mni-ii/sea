@@ -10,6 +10,8 @@ TEST(RaggedDictionaryTest, allOperations) {
     EXPECT_EQ(d.get(0), 17);
     EXPECT_EQ(d.get(1), INVALID);
     EXPECT_EQ(d.get(127), 500);
+    EXPECT_TRUE(d.member(127));
+    EXPECT_FALSE(d.member(126));
 
     uint64_t id = d.someId();
     EXPECT_TRUE(id == 0 || id == 127);

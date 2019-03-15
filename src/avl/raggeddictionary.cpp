@@ -36,6 +36,8 @@ void RaggedDictionary::remove(uint64_t i) {
     }
 }
 
+bool RaggedDictionary::member(uint64_t i) const { return present.get(i); }
+
 uint64_t RaggedDictionary::someId() const { return present.choice(); }
 
 ChoiceDictionaryIterator RaggedDictionary::allIds() const {

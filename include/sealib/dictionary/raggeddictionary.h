@@ -23,16 +23,53 @@ namespace Sealib {
  */
 class RaggedDictionary {
  public:
+    /**
+     * Create a new ragged dictionary with the given universe size n. (You will
+     * not be able to store more than n/log2(n) elements, so choose n
+     * accordingly.)
+     * @param universeSize Universe size of the dictionary
+     */
     explicit RaggedDictionary(uint64_t universeSize);
 
-    uint64_t get(uint64_t i) const;
+    /**
+     * Get the value stored for the given key.
+     * @param k Key to search for
+     * @return The stored value, or INVALID if the key is not present in the
+     * dictionary
+     */
+    uint64_t get(uint64_t k) const;
 
-    void insert(uint64_t i, uint64_t v);
+    /**
+     * Insert a tuple into the dictionary.
+     * @param k Key to insert (if the key is already present, it will be updated
+     * with the given value)
+     * @param v Value to store for the given key
+     */
+    void insert(uint64_t k, uint64_t v);
 
-    void remove(uint64_t i);
+    /**
+     * Remove a tuple from the dictionary.
+     * @param k Key to remove the tuple for (if present)
+     */
+    void remove(uint64_t k);
 
+    /**
+     * Check if the given key is present in the dictionary.
+     * @param k Key to check
+     * @return true if present, false otherwise
+     */
+    bool member(uint64_t k) const;
+
+    /**
+     * Get an arbitrary key held in the dictionary.
+     * @return Arbitrary key
+     */
     uint64_t someId() const;
 
+    /**
+     * Get all the keys held in the dictionary.
+     * @return Constant-time iterator over the keys
+     */
     ChoiceDictionaryIterator allIds() const;
 
  private:
