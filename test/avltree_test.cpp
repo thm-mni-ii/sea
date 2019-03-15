@@ -52,25 +52,26 @@ TEST(AVLTreeTest, random) {
     std::random_device rnd;
     std::uniform_int_distribution<uint64_t> dist(0, 1e9);
     AVLTree t;
+    uint64_t n = 1e5;
     std::vector<uint64_t> i;
     std::vector<uint64_t> v;
-    std::vector<bool> removed(20);
-    for (uint64_t a = 0; a < 20; a++) {
+    std::vector<bool> removed(n);
+    for (uint64_t a = 0; a < n; a++) {
         v.push_back(dist(rnd));
         i.push_back(a);
     }
     std::shuffle(i.begin(), i.end(), rnd);
-    for (uint64_t a = 0; a < i.size(); a++) {
+    for (uint64_t a = 0; a < n; a++) {
         t.insert(i[a], v[a]);
     }
-    for (uint64_t a = 0; a < i.size(); a++) {
+    for (uint64_t a = 0; a < n; a++) {
         EXPECT_EQ(t.search(i[a]), v[a]);
     }
-    for (uint64_t a = i.size() / 4; a < i.size() / 2; a++) {
+    for (uint64_t a = n / 4; a < n / 2; a++) {
         t.remove(i[a]);
         removed[i[a]] = 1;
     }
-    for (uint64_t a = 0; a < i.size(); a++) {
+    for (uint64_t a = 0; a < n; a++) {
         if (removed[i[a]])
             EXPECT_EQ(t.search(i[a]), INVALID);
         else
