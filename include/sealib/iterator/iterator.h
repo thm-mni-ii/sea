@@ -30,8 +30,9 @@ class Iterator {
     virtual T next() = 0;
 
     /**
-     * Step through the entire range of the iterator and execute a given function for each encountered element. 
-     * (init() before calling this method!)
+     * Step through the entire range of the iterator and execute a given
+     * function for each encountered element. (init() before calling this
+     * method!)
      * @param f function to execute for each element
      */
     virtual void forEach(std::function<void(T)> f) {
@@ -41,6 +42,11 @@ class Iterator {
     }
 
     virtual ~Iterator() = default;
+    Iterator() = default;
+    Iterator(Iterator const &) = default;
+    Iterator(Iterator &&) = default;
+    Iterator &operator=(Iterator const &) = default;
+    Iterator &operator=(Iterator &&) = default;
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_ITERATOR_H_

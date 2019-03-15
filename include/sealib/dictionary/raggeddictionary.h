@@ -4,13 +4,15 @@
 #include "sealib/_types.h"
 #include "sealib/collection/avltree.h"
 #include "sealib/dictionary/choicedictionary.h"
+#include "sealib/iterator/choicedictionaryiterator.h"
 
 namespace Sealib {
 /**
- * A dictionary that holds up to n/log(n) key-value pairs and supports the
+ * A dictionary that holds up to n/log2(n) key-value pairs and supports the
  * following operations. In O(1) time:
  * - membership test
  * - returning an arbitrary key present in the dictionary
+ * - iterating over all present keys
  * In O(log log n) time:
  * - inspecting the value stored for a key
  * - inserting a new tuple
@@ -31,6 +33,8 @@ class RaggedDictionary {
 
     uint64_t someId() const;
 
+    ChoiceDictionaryIterator allIds() const;
+
  private:
     uint64_t size, l, keys;
     uint64_t entryCount = 0;
@@ -40,7 +44,7 @@ class RaggedDictionary {
 
 class RaggedDictionaryFull : public std::exception {
     const char* what() const noexcept {
-        return "Ragged dictionary is full! (more than O(n/log(n)) "
+        return "Ragged dictionary is full! (more than n/log2(n) "
                "values present)";
     }
 };
