@@ -68,7 +68,7 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * @return Index of first bit of A_{k+1}
      */
     uint64_t getEnd(uint64_t k) const {
-        return (k < n - 1) ? rankSelect.select(k + 2) : pattern.size();
+        return (k < n - 1) ? rankSelect.select(k + 2) - 1 : pattern.size();
     }
 
     /**
@@ -77,7 +77,7 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      * @return Size of sequence A_k
      */
     uint64_t getSize(uint64_t k) const {
-        return getEnd(k) - rankSelect.select(k + 1) - 1;
+        return getEnd(k) - rankSelect.select(k + 1);
     }
 };
 }  // namespace Sealib
