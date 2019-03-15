@@ -318,9 +318,9 @@ void AVLTree::spliceTree(Cell *a) {
 AVLTree::~AVLTree() {
     Cell *u = root;
     while (u != nullptr) {
-        if (u->left != nullptr)
+        if (u->left != nullptr) {
             u = u->left;
-        else if (u->right != nullptr) {
+        } else if (u->right != nullptr) {
             u = u->right;
         } else {
             // u is leaf

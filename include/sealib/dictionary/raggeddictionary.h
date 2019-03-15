@@ -23,7 +23,7 @@ namespace Sealib {
  */
 class RaggedDictionary {
  public:
-    RaggedDictionary(uint64_t universeSize);
+    explicit RaggedDictionary(uint64_t universeSize);
 
     uint64_t get(uint64_t i) const;
 
