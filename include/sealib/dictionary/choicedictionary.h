@@ -35,13 +35,13 @@ class ChoiceDictionary {
      * Returns the bit at specified index.
      * @param index Index to read.
      */
-    bool get(uint64_t index);
+    bool get(uint64_t index) const;
 
     /**
      * Returns an arbitrary bit position that is set to 1.
      * @throws ChoiceDictionaryEmpty if empty
      */
-    uint64_t choice();
+    uint64_t choice() const;
 
     /**
      * Sets a bit at specified index to 0.
@@ -123,9 +123,9 @@ class ChoiceDictionary {
 
     void shrinkValidator(uint64_t startIndex);
 
-    bool isInitialized(uint64_t primaryIndex);
+    bool isInitialized(uint64_t primaryIndex) const;
 
-    bool hasColor(uint64_t primaryIndex);
+    bool hasColor(uint64_t primaryIndex) const;
 };
 
 class ChoiceDictionaryEmpty : public std::exception {

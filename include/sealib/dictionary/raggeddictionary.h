@@ -3,23 +3,38 @@
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/avltree.h"
+#include "sealib/dictionary/choicedictionary.h"
 
 namespace Sealib {
-
+/**
+ * A dictionary that holds up to n/log(n) key-value pairs and supports the
+ * following operations. In O(1) time:
+ * - membership test
+ * - returning an arbitrary key present in the dictionary
+ * In O(log log n) time:
+ * - inspecting the value stored for a key
+ * - inserting a new tuple
+ * - deleting a present tuple
+ * (Elmasry, Hagerup, Kammer; 2015)
+ *
+ * @author Simon Heuser
+ */
 class RaggedDictionary {
  public:
     RaggedDictionary(uint64_t universeSize);
 
-    uint64_t get(uint64_t i);
+    uint64_t get(uint64_t i) const;
 
     void insert(uint64_t i, uint64_t v);
 
     void remove(uint64_t i);
 
+    uint64_t someId() const;
+
  private:
-    const uint64_t WORD_SIZE = sizeof(uint64_t) * 8;
-    uint64_t size, keys;
+    uint64_t size, l, keys;
     uint64_t entryCount = 0;
+    ChoiceDictionary present;
     std::vector<AVLTree> t;
 };
 

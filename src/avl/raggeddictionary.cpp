@@ -4,21 +4,40 @@
 namespace Sealib {
 
 RaggedDictionary::RaggedDictionary(uint64_t n)
-    : size(n), keys(size / WORD_SIZE + 1), t(keys) {}
+    : size(n),
+      l(static_cast<uint64_t>(ceil(log2(size + 1)))),
+      keys(size / l + 1),
+      present(size),
+      t(keys) {}
 
-uint64_t RaggedDictionary::get(uint64_t i) {
-    return t[i / WORD_SIZE].search(i);
+uint64_t RaggedDictionary::get(uint64_t i) const {
+    if (present.get(i)) {
+        return t[i / l].search(i);
+    } else {
+        return INVALID;
+    }
 }
 
 void RaggedDictionary::insert(uint64_t i, uint64_t v) {
     if (entryCount < keys) {
-        t[i / WORD_SIZE].insert(i, v);
+        t[i / l].insert(i, v);
+        present.insert(i);
         entryCount++;
     } else {
         throw RaggedDictionaryFull();
     }
 }
 
-void RaggedDictionary::remove(uint64_t i) { t[i / WORD_SIZE].remove(i); }
+void RaggedDictionary::remove(uint64_t i) {
+    if (present.get(i)) {
+        t[i / l].remove(i);
+        present.remove(i);
+        entryCount--;
+    }
+}
+
+uint64_t RaggedDictionary::someId() const {
+    return present.choice();
+}
 
 }  // namespace Sealib
