@@ -315,4 +315,21 @@ void AVLTree::spliceTree(Cell *a) {
     b->bal = AVL_BALANCED;
 }
 
+AVLTree::~AVLTree() {
+    Cell *u = root;
+    while (u != nullptr) {
+        if (u->left != nullptr)
+            u = u->left;
+        else if (u->right != nullptr) {
+            u = u->right;
+        } else {
+            // u is leaf
+            Cell *v = u->parent;
+            if (v != nullptr) (v->left == u ? v->left : v->right) = nullptr;
+            delete u;
+            u = v;
+        }
+    }
+}
+
 }  // namespace Sealib
