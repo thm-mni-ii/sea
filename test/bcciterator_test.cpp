@@ -19,7 +19,7 @@ TEST(BCCIteratorTest, windmillGraph) {
     });
 
     EXPECT_EQ(nodes.size(), 5);
-    EXPECT_EQ(edges.size(), 7);
+    EXPECT_EQ(edges.size(), 10);
 
     EXPECT_NE(nodes.find(16), nodes.end());
     EXPECT_NE(nodes.find(3), nodes.end());
@@ -27,12 +27,11 @@ TEST(BCCIteratorTest, windmillGraph) {
     EXPECT_NE(nodes.find(1), nodes.end());
     EXPECT_NE(nodes.find(0), nodes.end());
 
-    // back edges should only be included when reaching a vertex via a
-    // full-marked edge (see paper, p. 8)
+    // Back edges to the BCC root are also output
     EXPECT_NE(edges.find({16, 3}), edges.end());
-    EXPECT_EQ(edges.find({16, 2}), edges.end());  // not-included back edge
-    EXPECT_EQ(edges.find({16, 1}), edges.end());  // not-included back edge
-    EXPECT_EQ(edges.find({16, 0}), edges.end());  // not-included back edge
+    EXPECT_EQ(edges.find({16, 2}), edges.end());  // back edge to root
+    EXPECT_EQ(edges.find({16, 1}), edges.end());  // back edge to root
+    EXPECT_EQ(edges.find({16, 0}), edges.end());  // back edge to root
     EXPECT_NE(edges.find({3, 2}), edges.end());
     EXPECT_NE(edges.find({3, 1}), edges.end());  // back edge
     EXPECT_NE(edges.find({3, 0}), edges.end());  // back edge

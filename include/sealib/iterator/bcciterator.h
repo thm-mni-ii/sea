@@ -40,17 +40,23 @@ class BCCIterator : Iterator<std::pair<uint64_t, uint64_t>> {
     void init(uint64_t v);
 
     /**
-     * Runs a DFS as long as there are more vertices in the BCC.
+     * Runs part of a DFS to check there are more vertices in the BCC.
      * @return true if there is another vertex in the BCC
      */
     bool more() override;
 
     /**
-     * @return the next vertex or edge in the BCC: vertices in the form
-     * (u,INVALID), edges in the form (u,v). The order of output is the
-     * following: 1) node u; 2) edge (u,v); 3) back edges to v (if any); 4)
-     * vertex v.
-     * (INVALID is a global constant defined in _types.h.)
+     * Gets the next vertex or edge of the BCC.
+     * - Vertices in the form (u,INVALID)
+     * - Edges in the form (u,v)
+     * Order of output:
+     *  1) vertex u
+     *  2) edge (u,v)
+     *  3) back edges to v (if any)
+     *  4) vertex v
+     * Note: The back edges to the start vertex of the BCC are output before the
+     * start vertex itself. (start vertex: set in init())
+     * @return next vertex or edge
      */
     std::pair<uint64_t, uint64_t> next() override;
 

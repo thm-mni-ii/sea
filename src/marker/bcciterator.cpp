@@ -12,7 +12,7 @@ BCCIterator::BCCIterator(std::shared_ptr<EdgeMarker> edges)
 
 void BCCIterator::init() {
     status = HAVE_NEXT;
-    action = OUTPUT_VERTEX;
+    action = OUTPUT_BACK_EDGES;
     color.insert(node, DFS_GRAY);
 }
 
@@ -56,8 +56,8 @@ bool BCCIterator::more() {
                 } else {
                     color.insert(node, DFS_BLACK);
                     if (node != startNode) {
-                        uint64_t bk = static_cast<uint64_t>(parent.get(node)),
-                                 pu = g.head(node, bk), pk = g.mate(node, bk);
+                        uint64_t bk = parent.get(node), pu = g.head(node, bk),
+                                 pk = g.mate(node, bk);
                         node = pu;
                         latestNode = node;
                         edge = pk + 1;
@@ -75,7 +75,7 @@ std::pair<uint64_t, uint64_t> BCCIterator::next() {
     std::pair<uint64_t, uint64_t> r(INVALID, INVALID);
 
     if (latestNode != node) {
-        r = std::pair<uint64_t, uint64_t>(latestNode, node);
+        r = {latestNode, node};
         latestNode = node;
         if (status == RETREAT) gotRetreat = true;
         status = HAVE_NEXT;
@@ -84,8 +84,7 @@ std::pair<uint64_t, uint64_t> BCCIterator::next() {
             case OUTPUT_BACK_EDGES:
                 while (tmp < g.deg(node)) {
                     if (e->isBackEdge(node, tmp) && !e->isParent(node, tmp)) {
-                        r = std::pair<uint64_t, uint64_t>(g.head(node, tmp),
-                                                          node);
+                        r = {g.head(node, tmp), node};
                         break;
                     }
                     tmp++;
@@ -96,10 +95,10 @@ std::pair<uint64_t, uint64_t> BCCIterator::next() {
                     break;
                 } else {
                     tmp = 0;
-                    [[clang::fallthrough]];
                 }
+                [[clang::fallthrough]];
             case OUTPUT_VERTEX:
-                r = std::pair<uint64_t, uint64_t>(node, INVALID);
+                r = {node, INVALID};
                 if (gotRetreat) {
                     gotRetreat = false;
                     status = RETREAT;
