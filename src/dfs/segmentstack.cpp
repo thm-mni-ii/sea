@@ -2,6 +2,7 @@
 #include <math.h>
 #include <sstream>
 #include <stack>
+#include "sealib/iterator/dfs.h"
 
 namespace Sealib {
 
@@ -204,6 +205,24 @@ int ExtendedSegmentStack::getTopTrailer(std::pair<uint64_t, uint64_t> *r) {
 
 void ExtendedSegmentStack::recolorLow(uint64_t v) {
     for (uint64_t a = 0; a < q; a++) color->insert(low[a].first, v);
+}
+
+std::pair<bool, uint64_t> ExtendedSegmentStack::findEdge(uint64_t u,
+                                                         uint64_t k) {
+    std::pair<bool, uint64_t> r = {false, INVALID};
+    for (uint64_t i = k; i < graph.deg(u); i++) {
+        uint64_t v = graph.head(u, i);
+        if (color->get(v) == DFS_GRAY && isInTopSegment(v, true)) {
+            r = {true, i};
+            break;
+        }
+    }
+    if (!r.first) {
+        std::pair<uint64_t, uint64_t> a;
+        getTopTrailer(&a);
+        r = {false, a.second - 1};
+    }
+    return r;
 }
 
 bool ExtendedSegmentStack::isAligned() {

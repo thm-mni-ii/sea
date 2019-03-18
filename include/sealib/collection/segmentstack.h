@@ -157,6 +157,16 @@ class ExtendedSegmentStack : public SegmentStack {
      * @param v Color to apply to the low segment
      */
     void recolorLow(uint64_t v);
+    /**
+     * Get the outgoing edge of u which leads to a gray, top-segment node.
+     * @param u node to check
+     * @param k starting edge to check
+     * @return (c,k) a result tuple with
+     *    c: are there more possible nodes to find?
+     *    k: outgoing edge that points to a gray, top-segment node (if c is
+     * false, k is an 'enclosing' edge)
+     */
+    std::pair<bool, uint64_t> findEdge(uint64_t u, uint64_t k);
 
     /**
      * Get the edge approximation for a tuple (u,k)
@@ -176,8 +186,8 @@ class ExtendedSegmentStack : public SegmentStack {
  private:
     /**
      * A Trailer struct additionally manages a sequence of big vertices.
-     * In detail: trailers[tp-1] manages all big vertices in its segment. The
-     * first managed vertex can be accessed via big[trailers[tp-1].bi].
+     * In detail: trailers[tp-1] manages all big vertices in its segment.
+     * The first managed vertex can be accessed via big[trailers[tp-1].bi].
      * bc is freely available to increment during restoration.
      */
     struct Trailer {
@@ -195,7 +205,6 @@ class ExtendedSegmentStack : public SegmentStack {
     uint64_t m, n;
     CompactArray *color;
 
-    static constexpr uint64_t INVALID = static_cast<uint64_t>(-1);
     /**
      * Store edge indices for the low segment at the appropriate places.
      * @throws BigStackFull if the big stack is full (should never happen)
