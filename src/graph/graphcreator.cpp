@@ -95,18 +95,16 @@ static std::random_device rng;
 Sealib::DirectedGraph GraphCreator::imbalanced(uint64_t order) {
     DirectedGraph g(order);
     std::uniform_int_distribution<uint64_t> distN(0, order - 1);
-    std::uniform_int_distribution<uint64_t> distBig(2 * order, 4 * order);
-    std::uniform_int_distribution<uint64_t> distSmall(
-        0, static_cast<uint64_t>(ceil(log2(order) + 1)));
     std::vector<bool> big(order);
-    for (uint64_t a = 0; a < ceil(order / (log2(order) + 1)); a++)
+    for (uint64_t a = 0; a < log2(order); a++) {
         big[a] = distN(rng);
+    }
     for (uint64_t a = 0; a < order; a++) {
         uint64_t deg;
         if (big[a]) {
-            deg = distBig(rng);
+            deg = 4 * order;
         } else {
-            deg = distSmall(rng);
+            deg = static_cast<uint64_t>(ceil(log2(order)));
         }
         for (uint64_t b = 0; b < deg; b++) {
             g.getNode(a).addAdjacency(distN(rng));
