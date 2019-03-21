@@ -176,8 +176,6 @@ std::string VisualEdgeMarker::getStyle(uint64_t u, uint64_t k) {
             break;
         case BACK:
             options << ",dotted";
-        case CROSS:
-            options << ",gray,thin";
         default:
             break;
     }

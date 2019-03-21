@@ -7,8 +7,7 @@ namespace Sealib {
 TEST(BCCIteratorTest, windmillGraph) {
     UndirectedGraph g = GraphCreator::windmill(5, 4);
     BCCIterator b(g);
-    b.init();
-    b.start(1, 16);
+    b.init(16);
     std::set<uint64_t> nodes;
     std::set<std::set<uint64_t>> edges;
     b.forEach([&](std::pair<uint64_t, uint64_t> n) {
@@ -20,7 +19,7 @@ TEST(BCCIteratorTest, windmillGraph) {
     });
 
     EXPECT_EQ(nodes.size(), 5);
-    EXPECT_EQ(edges.size(), 7);
+    EXPECT_EQ(edges.size(), 10);
 
     EXPECT_NE(nodes.find(16), nodes.end());
     EXPECT_NE(nodes.find(3), nodes.end());
@@ -28,12 +27,11 @@ TEST(BCCIteratorTest, windmillGraph) {
     EXPECT_NE(nodes.find(1), nodes.end());
     EXPECT_NE(nodes.find(0), nodes.end());
 
-    // back edges should only be included when reaching a vertex via a
-    // full-marked edge (see paper, p. 8)
+    // Back edges to the BCC root are also output
     EXPECT_NE(edges.find({16, 3}), edges.end());
-    EXPECT_EQ(edges.find({16, 2}), edges.end());  // not-included back edge
-    EXPECT_EQ(edges.find({16, 1}), edges.end());  // not-included back edge
-    EXPECT_EQ(edges.find({16, 0}), edges.end());  // not-included back edge
+    EXPECT_NE(edges.find({16, 2}), edges.end());  // back edge to root
+    EXPECT_NE(edges.find({16, 1}), edges.end());  // back edge to root
+    EXPECT_NE(edges.find({16, 0}), edges.end());  // back edge to root
     EXPECT_NE(edges.find({3, 2}), edges.end());
     EXPECT_NE(edges.find({3, 1}), edges.end());  // back edge
     EXPECT_NE(edges.find({3, 0}), edges.end());  // back edge
@@ -52,8 +50,7 @@ TEST(BCCIteratorTest, lineGraph) {
     }
 
     BCCIterator b(g);
-    b.init();
-    b.start(4, 5);
+    b.init(5);
 
     ASSERT_TRUE(b.more());
     EXPECT_EQ(b.next(), (std::pair<uint64_t, uint64_t>{5, INVALID}));
@@ -67,8 +64,7 @@ TEST(BCCIteratorTest, lineGraph) {
 TEST(BCCIteratorTest, stability) {
     UndirectedGraph g = GraphCreator::kRegular(2000, 3);
     BCCIterator b(g);
-    b.init();
-    b.start(10, g.head(10, 2));  // select an arbitrary edge
+    b.init(g.head(10, 2));  // select an arbitrary edge
     while (b.more()) b.next();
     SUCCEED();
 }

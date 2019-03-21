@@ -40,7 +40,7 @@ class Bitset final : Sequence<bool, uint64_t> {
 
     explicit Bitset(uint64_t bits_);
 
-    explicit Bitset(const std::vector<bool> &bitvector);
+    explicit Bitset(std::vector<bool> &&bitvector);
 
     Bitset();
 

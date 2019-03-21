@@ -56,9 +56,7 @@ void CutVertexIterator::init() {
 
 bool CutVertexIterator::more() { return cutI.more(); }
 
-uint64_t CutVertexIterator::next() {
-    return static_cast<uint64_t>(cutI.next());
-}
+uint64_t CutVertexIterator::next() { return cutI.next(); }
 
 bool CutVertexIterator::isCutVertex(uint64_t u) { return cut.get(u); }
 

@@ -10,9 +10,9 @@
 namespace Sealib {
 /**
  * Iterator used to output all vertices in a biconnected component (BCC) of an
- * undirected graph G. First, init() the iterator; then, call start(x,y) with an
- * edge {x,y} in G to set the starting point of the BCC iterator. After that,
- * call more() and next() alternately to retrieve all the vertices of the BCC.
+ * undirected graph G. First, call init(x) to set the starting point of the BCC
+ * iterator. After that, call more() and next() alternately to retrieve all the
+ * vertices of the BCC.
  */
 class BCCIterator : Iterator<std::pair<uint64_t, uint64_t>> {
  public:
@@ -29,30 +29,34 @@ class BCCIterator : Iterator<std::pair<uint64_t, uint64_t>> {
     explicit BCCIterator(std::shared_ptr<EdgeMarker> e);
 
     /**
-     * Initialize the iterator. If no external EdgeMarker was given, identifies
-     * tree edges and marks them.
+     * Initializes the iterator to start at vertex 0.
      */
     void init() override;
 
     /**
-     * Set the start edge for the iterator.
-     * @param u node in G (ancestor of v)
-     * @param v node in G (descendant of u)
+     * Initializes the iterator to start at the given vertex.
+     * @param v vertex in G
      */
-    void start(uint64_t u, uint64_t v);
+    void init(uint64_t v);
 
     /**
-     * Runs a DFS as long as there are more vertices in the BCC.
+     * Runs part of a DFS to check there are more vertices in the BCC.
      * @return true if there is another vertex in the BCC
      */
     bool more() override;
 
     /**
-     * @return the next vertex or edge in the BCC: vertices in the form
-     * (u,INVALID), edges in the form (u,v). The order of output is the
-     * following: 1) node u; 2) edge (u,v); 3) back edges to v (if any); 4)
-     * vertex v.
-     * (INVALID is a global constant defined in _types.h.)
+     * Gets the next vertex or edge of the BCC.
+     * - Vertices in the form (u,INVALID)
+     * - Edges in the form (u,v)
+     * Order of output:
+     *  1) vertex u
+     *  2) edge (u,v)
+     *  3) back edges to v (if any)
+     *  4) vertex v
+     * Note: The back edges to the start vertex of the BCC are output before the
+     * start vertex itself. (start vertex: set in init())
+     * @return next vertex or edge
      */
     std::pair<uint64_t, uint64_t> next() override;
 
@@ -73,15 +77,15 @@ class BCCIterator : Iterator<std::pair<uint64_t, uint64_t>> {
     CompactArray color;
     StaticSpaceStorage parent;
 
-    std::pair<uint64_t, uint64_t> startEdge;
-    uint64_t node, edge;
+    uint64_t startNode = 0;
+    uint64_t node = 0, edge = 0;
 
     enum Action { OUTPUT_VERTEX, OUTPUT_BACK_EDGES };
     enum Status { HAVE_NEXT, WAITING, RETREAT };
     Action action;
     Status status;
 
-    uint64_t latestNode;
+    uint64_t latestNode = 0;
     bool gotRetreat = false;
     uint64_t tmp = 0;
 };
