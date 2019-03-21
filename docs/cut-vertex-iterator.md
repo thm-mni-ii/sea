@@ -22,9 +22,9 @@ This space-efficient variant
 #include "sealib/graph/graphcreator.h"
 
 int main() {
-    UndirectedGraph g=GraphCreator::windmill(3,4);
+    Sealib::UndirectedGraph g = Sealib::GraphCreator::windmill(3,4);
 
-    CutVertexIterator c(g);
+    Sealib::CutVertexIterator c(g);
     c.init();
     while(c.more()) {
         std::cout << "found: " << c.next() << "\n";

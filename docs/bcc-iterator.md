@@ -26,9 +26,9 @@ This space-efficient variant
 #include "sealib/graph/graphcreator.h"
 
 int main() {
-    UndirectedGraph g=GraphCreator::windmill(3,4);
+    Sealib::UndirectedGraph g = Sealib::GraphCreator::windmill(3,4);
 
-    BCCIterator b(g);
+    Sealib::BCCIterator b(g);
     b.init();
     b.start(1,2);
     b.forEach([](std::pair<uint64_t,uint64_t> p) {

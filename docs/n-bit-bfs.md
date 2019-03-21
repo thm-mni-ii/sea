@@ -25,9 +25,9 @@ void preproc(uint64_t u) { printf("preprocess %u\n", u); }
 void preexp(uint64_t u, uint64_t v) { printf("preexplore %u,%u\n", u, v); }
 
 int main() {
-    DirectedGraph g=GraphCreator::kOutdegree(500,2);
+    Sealib::DirectedGraph g = Sealib::GraphCreator::kOutdegree(500,2);
 
-    BFS bfs(g, preproc, preexp);
+    Sealib::BFS bfs(g, preproc, preexp);
     bfs.init();		// don't forget initialization of the iterator
     bfs.forEach([&](std::pair<uint64_t, uint64_t>) { 
         uint64_t u=s.first, dist=s.second;

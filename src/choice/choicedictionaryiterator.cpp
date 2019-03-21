@@ -67,5 +67,3 @@ void ChoiceDictionaryIterator::setNextPrimaryWord() {
     secondaryWord = secondaryWord & ~targetBit;
     primaryWord = choicedictionary.getPrimaryWord(primaryIndex);
 }
-
-ChoiceDictionaryIterator::~ChoiceDictionaryIterator() {}
