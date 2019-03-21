@@ -1,4 +1,4 @@
-RankSelect
+Rank-Select
 ===
 A rank-select data structure is a data structure initialized for some bitset B={b_0,...,b_n} and supports the operations *rank(i)* and *select(i)* with 0 < i <= n.
 

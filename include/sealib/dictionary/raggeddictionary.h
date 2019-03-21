@@ -9,7 +9,8 @@
 namespace Sealib {
 /**
  * A dictionary that holds up to n/log2(n) key-value pairs and supports the
- * following operations. In O(1) time:
+ * following operations. (Elmasry, Hagerup, Kammer; 2015)
+ * In O(1) time:
  * - membership test
  * - returning an arbitrary key present in the dictionary
  * - iterating over all present keys
@@ -17,7 +18,6 @@ namespace Sealib {
  * - inspecting the value stored for a key
  * - inserting a new tuple
  * - deleting a present tuple
- * (Elmasry, Hagerup, Kammer; 2015)
  *
  * @author Simon Heuser
  */

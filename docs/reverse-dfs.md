@@ -20,9 +20,9 @@ This space-efficient reverse DFS
 #include "sealib/graph/graphcreator.h"
 
 int main() {
-    DirectedGraph g = Sealib::GraphCreator::createRandomFixed(1024, 16);
+    Sealib::DirectedGraph g = Sealib::GraphCreator::createRandomFixed(1024, 16);
 
-    ReverseDFS d(g);
+    Sealib::ReverseDFS d(g);
     d.init();
     while (d.more()) {
         UserCall c=d.next();

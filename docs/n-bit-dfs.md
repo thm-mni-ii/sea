@@ -17,6 +17,7 @@ This space-efficient variant
 #include <cstdio>
 #include "sealib/iterator/dfs.h"
 #include "sealib/graph/graphcreator.h"
+using Sealib::DFS;
 
 // example procedures:
 void preproc(uint64_t u) { printf("preprocess %u\n", u); }
@@ -25,7 +26,7 @@ void preexp(uint64_t u, uint64_t v) { printf("preexplore %u,%u\n", u, v); }
 void postexp(uint64_t u, uint64_t v) { printf("postexplore %u,%u\n", u, v); }
 
 int main() {
-    DirectedGraph g=GraphCreator::sparseDirected(50);
+    DirectedGraph g = Sealib::GraphCreator::sparseDirected(50);
     DFS::nBitDFS(g);  // quiet run
 
     DFS::nBitDFS(g, preproc, preexp, postexp, postproc);  // supply procedures to do something with the current node or edge

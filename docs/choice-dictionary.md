@@ -52,9 +52,9 @@ It supports the so-called *more* operation that returns true if the choice dicti
 #include "sealib/iterator/choicedictionaryiterator.h"
 
 int main() {
-    ChoiceDictionary cd(12);
-    ChoiceDictionaryIterator it(&cd);
-    cd.insert(0); // Indexing beginns with 0
+    Sealib::ChoiceDictionary cd(12);
+    Sealib::ChoiceDictionaryIterator it(&cd);
+    cd.insert(0); // Indexing begins with 0
     cd.insert(4);
     cd.insert(7);
     cd.insert(11);
