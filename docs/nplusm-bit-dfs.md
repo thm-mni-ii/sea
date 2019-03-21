@@ -17,6 +17,7 @@ This space-efficient variant *only works with undirected graphs*:
 #include <cstdio>
 #include "sealib/iterator/dfs.h"
 #include "sealib/graph/graphcreator.h"
+using Sealib::DFS;
 
 // example procedures:
 void preproc(uint64_t u) { printf("preprocess %u\n", u); }
@@ -26,7 +27,7 @@ void preexp(uint64_t u, uint64_t k) { printf("preexplore %u,%u\n", u, k); }
 void postexp(uint64_t u, uint64_t k) { printf("postexplore %u,%u\n", u, k); }
 
 int main() {
-    UndirectedGraph g=GraphCreator::kRegular(100,5);
+    Sealib::UndirectedGraph g = Sealib::GraphCreator::kRegular(100,5);
     DFS::nBitDFS(g);  // quiet run
 
     DFS::nBitDFS(g, preproc, preexp, postexp, postproc);  // supply procedures to do something with the current node or edge

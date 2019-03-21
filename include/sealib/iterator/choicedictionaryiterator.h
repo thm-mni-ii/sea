@@ -54,8 +54,6 @@ class ChoiceDictionaryIterator : Iterator<uint64_t> {
      * Returns the next index of a bit set to 1.
      */
     uint64_t next();
-
-    ~ChoiceDictionaryIterator();
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_CHOICEDICTIONARYITERATOR_H_

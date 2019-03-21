@@ -33,7 +33,7 @@ void ChoiceDictionary::insert(uint64_t index) {
     updateSecondary(primaryIndex);
 }
 
-bool ChoiceDictionary::get(uint64_t index) {
+bool ChoiceDictionary::get(uint64_t index) const {
     uint64_t primaryWord;
     uint64_t targetBit;
     uint64_t primaryInnerIndex;
@@ -51,7 +51,7 @@ bool ChoiceDictionary::get(uint64_t index) {
     return (primaryWord & targetBit) != 0;
 }
 
-uint64_t ChoiceDictionary::choice() {
+uint64_t ChoiceDictionary::choice() const {
     uint64_t colorIndex;
     uint64_t primaryWord;
     uint64_t primaryIndex;
@@ -170,7 +170,7 @@ void ChoiceDictionary::shrinkValidator(uint64_t validatorIndex) {
     pointer--;
 }
 
-bool ChoiceDictionary::isInitialized(uint64_t primaryIndex) {
+bool ChoiceDictionary::isInitialized(uint64_t primaryIndex) const {
     uint64_t secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
     uint64_t secondaryWord = secondary[secondaryIndex];
     uint64_t targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryIndex);
@@ -178,7 +178,7 @@ bool ChoiceDictionary::isInitialized(uint64_t primaryIndex) {
     return (secondaryWord & targetBit) != 0 && hasColor(primaryIndex) && pointer > 0;
 }
 
-bool ChoiceDictionary::hasColor(uint64_t primaryIndex) {
+bool ChoiceDictionary::hasColor(uint64_t primaryIndex) const {
     uint64_t secondaryIndex = (primaryIndex / wordSize) * TUPEL_FACTOR;
     uint64_t link = secondary[secondaryIndex + TUPEL_OFFSET];
 
