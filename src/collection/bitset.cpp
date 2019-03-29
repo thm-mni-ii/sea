@@ -9,7 +9,7 @@ Bitset<BlockType, AllocatorType>::Bitset(uint64_t bits_) :
     mbits(bits % bitsPerBlock == 0 ? bits / bitsPerBlock : bits / bitsPerBlock + 1) {}
 
 template<typename BlockType, typename AllocatorType>
-Bitset<BlockType, AllocatorType>::Bitset(const std::vector<bool> &bitvector) :
+Bitset<BlockType, AllocatorType>::Bitset(std::vector<bool> &&bitvector) :
     bits(static_cast<uint64_t>(bitvector.size())),
     mbits(bits % bitsPerBlock == 0 ? bits / bitsPerBlock : bits / bitsPerBlock + 1) {
     uint64_t index = 0;

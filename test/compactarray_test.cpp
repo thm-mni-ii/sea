@@ -6,7 +6,6 @@ using Sealib::CompactArray;
 
 TEST(CompactArrayTest, insertAndGet) {
     CompactArray a(1500, 6);
-    for (uint32_t b = 0; b < 1500; b++) a.insert(b, 0);
     for (uint32_t b = 0; b < 50; b++) a.insert(b, 5);
     for (uint32_t b = 0; b < 50; b++) EXPECT_EQ(a.get(b), 5);
     for (uint32_t b = 50; b < 1500; b++) EXPECT_EQ(a.get(b), 0);

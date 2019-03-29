@@ -11,9 +11,10 @@
 
 namespace Sealib {
 
-const uint64_t DFS_WHITE = 0, DFS_GRAY = 1, DFS_BLACK = 2, DFS_RESERVED = 3;
-const Consumer DFS_NOP_PROCESS = [](uint64_t) {};
-const BiConsumer DFS_NOP_EXPLORE = [](uint64_t, uint64_t) {};
+static const uint64_t DFS_WHITE = 0, DFS_GRAY = 1, DFS_BLACK = 2,
+                      DFS_RESERVED = 3;
+static Consumer DFS_NOP_PROCESS = [](uint64_t) {};
+static BiConsumer DFS_NOP_EXPLORE = [](uint64_t, uint64_t) {};
 
 /**
  * This class contains depth-first search algorithms.
@@ -136,7 +137,7 @@ class DFS {
         Consumer postprocess);
 
     static void visit_nplusm(uint64_t u0, UndirectedGraph const &g,
-                             CompactArray *color, Sequence<uint64_t> *back,
+                             CompactArray *color, Sequence<uint64_t> *parent,
                              Consumer preprocess, BiConsumer preexplore,
                              BiConsumer postexplore, Consumer postprocess);
 

@@ -23,8 +23,8 @@ namespace Sealib {
 class EdgeMarker {
  public:
     /**
-     * Create a new edge marker from a given undirected graph. On construction,
-     * it automatically identifies edge types and marks tree edges.
+     * Create a new edge marker from a given undirected graph. Call init() to
+     * identify edge types and mark tree edges.
      * @param g undirected graph
      */
     explicit EdgeMarker(UndirectedGraph const &g);
@@ -36,26 +36,26 @@ class EdgeMarker {
 
     /**
      * Get the graph that this edge marker is using.
-     * @return pointer to the undirected graph used
+     * @return reference to the undirected graph used
      */
-    CONSTEXPR_IF_CLANG UndirectedGraph const &getGraph() const { return g; }
+    UndirectedGraph const &getGraph() const { return g; }
 
-    CONSTEXPR_IF_CLANG bool isInitialized(uint64_t u, uint64_t k) const {
+    bool isInitialized(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) != NONE;
     }
-    CONSTEXPR_IF_CLANG bool isTreeEdge(uint64_t u, uint64_t k) const {
+    bool isTreeEdge(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) >= UNMARKED;
     }
-    CONSTEXPR_IF_CLANG bool isBackEdge(uint64_t u, uint64_t k) const {
+    bool isBackEdge(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) == BACK;
     }
     /**
      * @return true if u is closer to the root of the DFS tree
      */
-    CONSTEXPR_IF_CLANG bool isParent(uint64_t u, uint64_t k) const {
+    bool isParent(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & PARENT_MASK) == PARENT;
     }
-    CONSTEXPR_IF_CLANG bool isFullMarked(uint64_t u, uint64_t k) const {
+    bool isFullMarked(uint64_t u, uint64_t k) const {
         return (getEdgeData(u, k) & TYPE_MASK) == FULL;
     }
 
@@ -102,8 +102,8 @@ class EdgeMarker {
      */
     static const uint8_t TYPE_MASK = 0xe,  // 0b1110
         PARENT_MASK = 0x1;                 // 0b0001
-    static const uint8_t FULL = 0xa, HALF = 0x8, UNMARKED = 0x6, BACK = 0x4,
-                         CROSS = 0x2, NONE = 0x0;
+    static const uint8_t FULL = 0x8, HALF = 0x6, UNMARKED = 0x4, BACK = 0x2,
+                         NONE = 0x0;
     static const uint8_t PARENT = 0x1;
 
     UndirectedGraph const &g;
@@ -114,10 +114,10 @@ class EdgeMarker {
 
     void markParents(uint64_t w, uint64_t u);
 
-    CONSTEXPR_IF_CLANG uint64_t edgeIndex(uint64_t u) const {
-        return static_cast<uint64_t>(offset.select(u + 1) - u - 1U);
+    uint64_t edgeIndex(uint64_t u) const {
+        return offset.select(u + 1) - u - 1U;
     }
-    CONSTEXPR_IF_CLANG uint64_t getEdgeData(uint64_t u, uint64_t k) const {
+    uint64_t getEdgeData(uint64_t u, uint64_t k) const {
         return edges.get(edgeIndex(u) + k);
     }
 

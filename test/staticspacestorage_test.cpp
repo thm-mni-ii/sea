@@ -4,8 +4,8 @@
 #include <random>
 #include "../src/collection/simplesequence.h"
 
-using Sealib::StaticSpaceStorage;
 using Sealib::SimpleSequence;
+using Sealib::StaticSpaceStorage;
 
 TEST(StaticSpaceStorageTest, boundary) {
     std::vector<uint64_t> b = {59, 22, 55, 23, 3};
@@ -18,6 +18,31 @@ TEST(StaticSpaceStorageTest, boundary) {
     for (uint64_t a = 0; a < values.size(); a++) {
         EXPECT_EQ(s.get(a), values[a]);
     }
+}
+
+TEST(StaticSpaceStorageTest, twoWords) {
+    std::vector<bool> b;
+    b.push_back(1);
+    b.push_back(0);
+    b.push_back(1);
+    for (uint64_t a = 0; a < sizeof(uint64_t) * 8; a++) {
+        b.push_back(0);
+    }
+    b.push_back(1);
+    for (uint64_t a = 0; a < sizeof(uint64_t) * 8 - 3; a++) {
+        b.push_back(0);
+    }
+    b.push_back(1);
+    b.push_back(0);
+    b.push_back(0);
+
+    StaticSpaceStorage s(std::move(b));
+    s.insert(1, 1UL << (sizeof(uint64_t) * 8 - 1));
+    EXPECT_EQ(s.get(0), 0);
+    EXPECT_EQ(s.get(1), 1UL << (sizeof(uint64_t) * 8 - 1));
+    EXPECT_EQ(s.get(2), 0);
+    s.insert(3, 3);
+    EXPECT_EQ(s.get(3), 3);
 }
 
 TEST(StaticSpaceStorageTest, referenceTest) {

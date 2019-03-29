@@ -11,17 +11,14 @@ BCCIterator::BCCIterator(std::shared_ptr<EdgeMarker> edges)
     : e(edges), g(e->getGraph()), n(g.getOrder()), color(n, 3), parent(g) {}
 
 void BCCIterator::init() {
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
+    status = HAVE_NEXT;
+    action = OUTPUT_BACK_EDGES;
+    color.insert(node, DFS_GRAY);
 }
 
-void BCCIterator::start(uint64_t u, uint64_t v) {
-    startEdge = std::pair<uint64_t, uint64_t>(u, v);
-    node = v;
-    latestNode = node;
-    edge = 0;
-    status = HAVE_NEXT;
-    action = OUTPUT_VERTEX;
-    color.insert(node, DFS_GRAY);
+void BCCIterator::init(uint64_t v) {
+    startNode = node = latestNode = v;
+    init();
 }
 
 bool BCCIterator::more() {
@@ -31,7 +28,7 @@ bool BCCIterator::more() {
         case RETREAT:
             status = WAITING;
             edge = g.deg(node);
-        // FALL THROUGH
+            [[clang::fallthrough]];
         case WAITING:
             while (true) {
                 if (edge < g.deg(node)) {
@@ -58,9 +55,9 @@ bool BCCIterator::more() {
                     edge++;
                 } else {
                     color.insert(node, DFS_BLACK);
-                    if (node != startEdge.second) {
-                        uint64_t bk = static_cast<uint64_t>(parent.get(node)),
-                                 pu = g.head(node, bk), pk = g.mate(node, bk);
+                    if (node != startNode) {
+                        uint64_t bk = parent.get(node), pu = g.head(node, bk),
+                                 pk = g.mate(node, bk);
                         node = pu;
                         latestNode = node;
                         edge = pk + 1;
@@ -78,7 +75,7 @@ std::pair<uint64_t, uint64_t> BCCIterator::next() {
     std::pair<uint64_t, uint64_t> r(INVALID, INVALID);
 
     if (latestNode != node) {
-        r = std::pair<uint64_t, uint64_t>(latestNode, node);
+        r = {latestNode, node};
         latestNode = node;
         if (status == RETREAT) gotRetreat = true;
         status = HAVE_NEXT;
@@ -87,8 +84,7 @@ std::pair<uint64_t, uint64_t> BCCIterator::next() {
             case OUTPUT_BACK_EDGES:
                 while (tmp < g.deg(node)) {
                     if (e->isBackEdge(node, tmp) && !e->isParent(node, tmp)) {
-                        r = std::pair<uint64_t, uint64_t>(g.head(node, tmp),
-                                                          node);
+                        r = {g.head(node, tmp), node};
                         break;
                     }
                     tmp++;
@@ -99,10 +95,10 @@ std::pair<uint64_t, uint64_t> BCCIterator::next() {
                     break;
                 } else {
                     tmp = 0;
-                    // FALL THROUGH
                 }
+                [[clang::fallthrough]];
             case OUTPUT_VERTEX:
-                r = std::pair<uint64_t, uint64_t>(node, INVALID);
+                r = {node, INVALID};
                 if (gotRetreat) {
                     gotRetreat = false;
                     status = RETREAT;

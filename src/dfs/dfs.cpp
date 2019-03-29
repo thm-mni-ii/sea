@@ -47,7 +47,7 @@ void DFS::visit_nloglogn(
         restoration,
     Consumer preprocess, BiConsumer preexplore, BiConsumer postexplore,
     Consumer postprocess) {
-    s->push(std::pair<uint64_t, uint64_t>(u0, 0));
+    s->push({u0, 0});
     std::pair<uint64_t, uint64_t> x;
     while (!s->isEmpty()) {
         uint8_t sr = s->pop(&x);
@@ -65,11 +65,11 @@ void DFS::visit_nloglogn(
             color->insert(u, DFS_GRAY);
         }
         if (k < g.deg(u)) {
-            s->push(std::pair<uint64_t, uint64_t>(u, k + 1));
+            s->push({u, k + 1});
             uint64_t v = g.head(u, k);
             preexplore(u, k);
             if (color->get(v) == DFS_WHITE) {
-                s->push(std::pair<uint64_t, uint64_t>(v, 0));
+                s->push({v, 0});
             } else {
                 postexplore(u, k);
             }
@@ -100,49 +100,19 @@ void DFS::restore_full(uint64_t u0, Graph const &g, CompactArray *color,
             color->insert(a, DFS_WHITE);
         }
     }
-    s->push(std::pair<uint64_t, uint64_t>(u0, 0));
+    s->push({u0, 0});
     std::pair<uint64_t, uint64_t> x;
     while (!s->isAligned()) {
         s->pop(&x);
         uint64_t u = x.first, k = x.second;
         if (color->get(u) == DFS_WHITE) color->insert(u, DFS_GRAY);
         if (k < g.deg(u)) {
-            s->push(std::pair<uint64_t, uint64_t>(u, k + 1));
+            s->push({u, k + 1});
             if (s->isAligned()) break;
             uint64_t v = g.head(u, k);
-            if (color->get(v) == DFS_WHITE)
-                s->push(std::pair<uint64_t, uint64_t>(v, 0));
+            if (color->get(v) == DFS_WHITE) s->push({v, 0});
         }
     }
-}
-
-/**
- * Get the outgoing edge of u which leads to a gray, top-segment node.
- * @param u node to check
- * @param k starting edge to check
- * @return (c,k) a result tuple with
- *    c: are there more possible nodes to find?
- *    k: outgoing edge that points to a gray, top-segment node (if c is false, k
- * is an 'enclosing' edge)
- */
-static std::pair<bool, uint64_t> findEdge(const uint64_t u, const uint64_t k,
-                                          Graph const &g, CompactArray *c,
-                                          ExtendedSegmentStack *s) {
-    std::pair<bool, uint64_t> r =
-        std::make_pair(false, static_cast<uint64_t>(-1));
-    for (uint64_t i = k; i < g.deg(u); i++) {
-        uint64_t v = g.head(u, i);
-        if (c->get(v) == DFS_GRAY && s->isInTopSegment(v, true)) {
-            r = std::make_pair(true, i);
-            break;
-        }
-    }
-    if (!r.first) {
-        std::pair<uint64_t, uint64_t> a;
-        s->getTopTrailer(&a);
-        r = std::make_pair(false, a.second - 1);
-    }
-    return r;
 }
 
 void DFS::restore_top(uint64_t u0, Graph const &g, CompactArray *color,
@@ -158,16 +128,16 @@ void DFS::restore_top(uint64_t u0, Graph const &g, CompactArray *color,
         color->insert(u, DFS_WHITE);
     }
     while (!s->isAligned()) {
-        std::pair<bool, uint64_t> r = findEdge(u, k, g, color, s);
+        std::pair<bool, uint64_t> r = s->findEdge(u, k);
         uint64_t u1 = u, k1 = r.second;
         if (r.first) {
-            s->push(std::pair<uint64_t, uint64_t>(
-                u1, k1 + 1));  // k+1 to simulate the normal stack behaviour
+            s->push(
+                {u1, k1 + 1});  // k+1 to simulate the normal stack behaviour
             u = g.head(u1, k1);
             k = s->getOutgoingEdge(u);
             color->insert(u, DFS_WHITE);
         } else {
-            s->push(std::pair<uint64_t, uint64_t>(u1, k1 + 1));
+            s->push({u1, k1 + 1});
             // restoration loop must end now, the stack is aligned
         }
     }
@@ -175,7 +145,7 @@ void DFS::restore_top(uint64_t u0, Graph const &g, CompactArray *color,
 }
 
 void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g,
-                       CompactArray *color, Sequence<uint64_t> *back,
+                       CompactArray *color, Sequence<uint64_t> *parent,
                        Consumer preprocess, BiConsumer preexplore,
                        BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
@@ -188,7 +158,7 @@ void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g,
             if (color->get(v) == DFS_WHITE) {
                 preprocess(v);
                 color->insert(v, DFS_GRAY);
-                back->insert(v, g.mate(u, k));
+                parent->insert(v, g.mate(u, k));
                 u = v;
                 k = 0;
                 continue;
@@ -200,8 +170,8 @@ void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g,
             color->insert(u, DFS_BLACK);
             postprocess(u);
             if (u != u0) {
-                uint64_t pk = g.mate(u, static_cast<uint64_t>(back->get(u))),
-                         pu = g.head(u, static_cast<uint64_t>(back->get(u)));
+                uint64_t pk = g.mate(u, parent->get(u)),
+                         pu = g.head(u, parent->get(u));
                 postexplore(pu, pk);
                 u = pu;
                 k = pk + 1;
@@ -241,7 +211,6 @@ void DFS::nBitDFS(Graph const &g, Consumer preprocess, BiConsumer preexplore,
 
     BasicSegmentStack s(q);
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
             visit_nloglogn(a, g, &color, &s, restore_full, preprocess,
@@ -255,7 +224,6 @@ void DFS::nloglognBitDFS(Graph const &g, Consumer preprocess,
     uint64_t n = g.getOrder();
     CompactArray color(n, 3);
     ExtendedSegmentStack s(n, g, &color);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
             visit_nloglogn(a, g, &color, &s, restore_top, preprocess,
@@ -268,18 +236,10 @@ void DFS::nplusmBitDFS(UndirectedGraph const &g, Consumer preprocess,
                        Consumer postprocess) {
     uint64_t n = g.getOrder();
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
-    std::vector<bool> bits;
-    for (uint64_t u = 0; u < n; u++) {
-        bits.push_back(1);
-        for (uint64_t k = 0; k < ceil(log2(g.deg(u) + 1)); k++) {
-            bits.push_back(0);
-        }
-    }
-    StaticSpaceStorage back(bits);
+    StaticSpaceStorage parent(g);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE)
-            visit_nplusm(a, g, &color, &back, preprocess, preexplore,
+            visit_nplusm(a, g, &color, &parent, preprocess, preexplore,
                          postexplore, postprocess);
     }
 }

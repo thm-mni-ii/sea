@@ -46,8 +46,7 @@ class VisualTest {
             new VisualEdgeMarker(g, "out-bcc.tex", "beamer", true));
         e->init();
         VisualBCC b(e);
-        b.init();
-        b.start(42, 14);
+        b.init(42);
         while (b.more()) b.next();
     }
 

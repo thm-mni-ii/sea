@@ -18,7 +18,6 @@ ReverseDFS::ReverseDFS(Graph const &graph)
       sequence(),
       seqI(sequence.rend()) {
     for (uint64_t a = 0; a < n; a++) {
-        c.insert(a, 0);
         d.insert(a, iCount);
     }
 }

@@ -37,7 +37,7 @@ For some data structures and algorithms we also provide a folklore implementatio
 * AVL tree: A self-balancing binary tree with O(log(n)) time for search, insertion and removal of a node.
 * [Choice Dictionary](docs/choice-dictionary.md): A bitset that supports a *choice* operation in O(1) time that returns the position of a bit set to 1. The choice dictionary occupies O(n) bits.
 * [Rank-Select](docs/rank-select.md): A bit sequence that supports the operations *rank(k)* and *select(k)* in O(1) time and occupies O(n) bits. *rank(k)* returns the number of set bits up to index k, and *select(k)* returns the index of the k-th set bit.
-* [Ragged Dictionary](docs/ragged-dictionary): A set of n/log(n) key-value tuples with O(log(log(n))) time for *get*, *insert* and *remove* operations. The ragged dictionary occupies O(n) bits.
+* [Ragged Dictionary](docs/ragged-dictionary.md): A set of n/log(n) key-value tuples with O(log(log(n))) time for *get*, *insert* and *remove* operations. The ragged dictionary occupies O(n) bits.
 * Static-Space Storage: A sequence of n bit packs of variable size that can be accessed in O(1) time and occupies O(n + N) bits. N is the total usable size of the static-space storage.
 
 ## Build

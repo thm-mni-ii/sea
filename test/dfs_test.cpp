@@ -7,8 +7,8 @@
 #include "sealib/graph/graphcreator.h"
 #include "sealib/graph/undirectedgraph.h"
 
-using std::vector;
 using std::stack;
+using std::vector;
 
 namespace Sealib {
 
@@ -22,76 +22,94 @@ static void incr2(uint64_t, uint64_t) { c2++; }
 
 static void incr3(uint64_t, uint64_t) { c3++; }
 
-/*void p0(uint64_t u) { printf("preprocess %u\n", u); }
-void p1(uint64_t u) { printf("postprocess %u\n", u); }
-void e0(uint64_t u, uint64_t v) { printf("preexplore %u,%u\n", u, v); }
-void e1(uint64_t u, uint64_t v) { printf("postexplore %u,%u\n", u, v); }*/
-
 static std::random_device rnd;
 static const uint64_t GRAPHCOUNT = 4;  // how many random graphs to generate?
 static const uint64_t DEGREE = 15;     // how many outneighbours per node?
-static const uint64_t order = 200;
+static const uint64_t ORDER = 2000;
 
-static std::vector<DirectedGraph> makeGraphs() {
+static std::vector<DirectedGraph> makeDGraphs() {
     std::vector<DirectedGraph> g;
     for (uint64_t c = 0; c < GRAPHCOUNT; c++) {
-        g.push_back(Sealib::GraphCreator::kOutdegree(order, DEGREE));
+        g.push_back(Sealib::GraphCreator::kOutdegree(ORDER, DEGREE));
+    }
+    return g;
+}
+
+static std::vector<UndirectedGraph> makeUGraphs() {
+    std::vector<UndirectedGraph> g;
+    for (uint64_t c = 0; c < 2 * GRAPHCOUNT; c++) {
+        g.push_back(Sealib::GraphCreator::kRegular(5 * ORDER, DEGREE));
     }
     return g;
 }
 
 class DFSTest : public ::testing::TestWithParam<DirectedGraph> {
  protected:
-    virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }  // executed before each
-    // TEST_P
+    virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }
 };
 
-INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeGraphs()),
+class DFSTest2 : public ::testing::TestWithParam<UndirectedGraph> {
+ protected:
+    virtual void SetUp() { c1 = c2 = c3 = c4 = 0; }
+};
+
+INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest, ::testing::ValuesIn(makeDGraphs()),
+                        /**/);
+
+INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest2,
+                        ::testing::ValuesIn(makeUGraphs()),
                         /**/);
 
 TEST_P(DFSTest, stdUserproc) {
     DirectedGraph g = GetParam();
     DFS::standardDFS(g, incr1, incr2, incr3, incr4);
-    EXPECT_EQ(c1, order);
-    EXPECT_EQ(c2, DEGREE * order);
-    EXPECT_EQ(c3, DEGREE * order);
-    EXPECT_EQ(c4, order);
+    EXPECT_EQ(c1, ORDER);
+    EXPECT_EQ(c2, DEGREE * ORDER);
+    EXPECT_EQ(c3, DEGREE * ORDER);
+    EXPECT_EQ(c4, ORDER);
 }
 
 TEST_P(DFSTest, nBitUserproc) {
     DirectedGraph g = GetParam();
     DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
-    EXPECT_EQ(c1, order);
-    EXPECT_EQ(c2, DEGREE * order);
-    EXPECT_EQ(c3, DEGREE * order);
-    EXPECT_EQ(c4, order);
+    EXPECT_EQ(c1, ORDER);
+    EXPECT_EQ(c2, DEGREE * ORDER);
+    EXPECT_EQ(c3, DEGREE * ORDER);
+    EXPECT_EQ(c4, ORDER);
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
     DirectedGraph g = GetParam();
     DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
-    EXPECT_EQ(c1, order);
-    EXPECT_EQ(c2, DEGREE * order);
-    EXPECT_EQ(c3, DEGREE * order);
-    EXPECT_EQ(c4, order);
+    EXPECT_EQ(c1, ORDER);
+    EXPECT_EQ(c2, DEGREE * ORDER);
+    EXPECT_EQ(c3, DEGREE * ORDER);
+    EXPECT_EQ(c4, ORDER);
 }
 
-TEST(DFSTest, nplusmBitUserproc) {
-    c1 = c2 = c3 = c4 = 0;
-    uint64_t n = 4000;
-    UndirectedGraph g = GraphCreator::kRegular(n, 20);
+TEST_P(DFSTest2, nplusmBitUserproc) {
+    UndirectedGraph g = GetParam();
     DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);
-    EXPECT_EQ(c1, n);
-    EXPECT_EQ(c2, n * 20);
-    EXPECT_EQ(c3, n * 20);
-    EXPECT_EQ(c4, n);
+    EXPECT_EQ(c1, 5 * ORDER);
+    EXPECT_EQ(c2, 5 * ORDER * DEGREE);
+    EXPECT_EQ(c3, 5 * ORDER * DEGREE);
+    EXPECT_EQ(c4, 5 * ORDER);
 }
 
 TEST(DFSTest, nloglognImbalanced) {
-    DirectedGraph g = Sealib::GraphCreator::imbalanced(order);
-    DFS::nloglognBitDFS(g, DFS_NOP_PROCESS, DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                        DFS_NOP_PROCESS);
-    SUCCEED();
+    c1 = c2 = c3 = c4 = 0;
+    DirectedGraph g = Sealib::GraphCreator::imbalanced(200);
+    uint64_t m = 0;
+    for (uint64_t u = 0; u < g.getOrder(); u++) {
+        for (uint64_t k = 0; k < g.deg(u); k++) {
+            m++;
+        }
+    }
+    DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
+    EXPECT_EQ(c1, 200);
+    EXPECT_EQ(c2, m);
+    EXPECT_EQ(c3, m);
+    EXPECT_EQ(c4, 200);
 }
 
 auto *graph = new uint64_t[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,

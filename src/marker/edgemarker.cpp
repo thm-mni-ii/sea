@@ -2,28 +2,7 @@
 
 namespace Sealib {
 
-static std::vector<bool> makeEdges(UndirectedGraph const &g) {
-    std::vector<bool> bits;
-    uint64_t m = 0;
-    for (uint64_t u = 0; u < g.getOrder(); u++) {
-        if (g.deg(u) == 0) {
-            bits.push_back(1);
-            m++;
-        } else {
-            for (uint64_t k = 0; k < g.deg(u); k++) {
-                bits.push_back(1);
-                m++;
-                bits.push_back(0);
-                bits.push_back(0);
-                bits.push_back(0);
-                bits.push_back(0);
-            }
-        }
-    }
-    return bits;
-}
-
-static Bitset<uint8_t> makeOffset(UndirectedGraph const &g) {
+static std::vector<bool> makeOffset(UndirectedGraph const &g) {
     std::vector<bool> bits;
     for (uint64_t u = 0; u < g.getOrder(); u++) {
         bits.push_back(1);
@@ -31,19 +10,18 @@ static Bitset<uint8_t> makeOffset(UndirectedGraph const &g) {
             bits.push_back(0);
         }
     }
-    return Bitset<uint8_t>(bits);
+    return bits;
 }
 
 EdgeMarker::EdgeMarker(UndirectedGraph const &graph)
     : g(graph),
       n(g.getOrder()),
       parent(g),
-      edges(makeEdges(g)),
-      offset(makeOffset(g)) {}
+      edges(g, 4, true),
+      offset(Bitset<uint8_t>(makeOffset(g))) {}
 
 void EdgeMarker::identifyEdges() {
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             DFS::visit_nplusm(a, g, &color, &parent, DFS_NOP_PROCESS,
@@ -61,7 +39,8 @@ void EdgeMarker::identifyEdges() {
                                           uint64_t pk = g.mate(u, k);
                                           initEdge(g.head(u, k), pk, BACK);
                                       } else {
-                                          initEdge(u, k, CROSS);
+                                          // cannot happen (no cross/fwd edges
+                                          // in undirected graphs)
                                       }
                                   }
                               },
@@ -72,14 +51,12 @@ void EdgeMarker::identifyEdges() {
 
 void EdgeMarker::markTreeEdges() {
     CompactArray color(n, 3);
-    for (uint64_t a = 0; a < n; a++) color.insert(a, DFS_WHITE);
     for (uint64_t a = 0; a < n; a++) {
         if (color.get(a) == DFS_WHITE) {
             DFS::visit_nplusm(
                 a, g, &color, &parent,
                 [this, &a](uint64_t u) {
-                    if (u == a /*?*/ ||
-                        isTreeEdge(u, static_cast<uint64_t>(parent.get(u)))) {
+                    if (u == a /*?*/ || isTreeEdge(u, parent.get(u))) {
                         for (uint64_t k = 0; k < g.deg(u); k++) {
                             uint64_t v = g.head(u, k);
                             if (isBackEdge(u, k) && isParent(u, k)) {
@@ -95,13 +72,13 @@ void EdgeMarker::markTreeEdges() {
 }
 
 void EdgeMarker::markParents(uint64_t w, uint64_t u) {
-    uint64_t k = static_cast<uint64_t>(parent.get(w));
+    uint64_t k = parent.get(w);
     uint64_t v = w;
     // if k>=deg(w), then w is already root (?)
     while (g.head(v, k) != u && !isFullMarked(v, k)) {
         setMark(v, k, FULL);
         v = g.head(v, k);
-        k = static_cast<uint64_t>(parent.get(v));
+        k = parent.get(v);
     }
     if (g.head(v, k) == u && !isFullMarked(v, k)) setMark(v, k, HALF);
 }

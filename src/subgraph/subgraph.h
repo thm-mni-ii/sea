@@ -51,6 +51,11 @@ class SubGraph {
           qSelect(nullptr),
           pSelect(nullptr) {}
 
+    SubGraph(SubGraph const &) = default;
+    SubGraph & operator=(SubGraph const &) = default;
+    SubGraph(SubGraph &&) = default;
+    SubGraph & operator=(SubGraph &&) = default;
+
     inline uint64_t select_q(uint64_t i) const {
         return qSelect->select(i);
     }
@@ -68,6 +73,11 @@ class SubGraph {
     }
 
  public:
+    virtual ~SubGraph() {
+        delete pSelect;
+        delete qSelect;
+    }
+
     inline uint64_t getSidx() const {
         return sidx;
     }
@@ -162,11 +172,6 @@ class SubGraph {
     virtual uint64_t phiInv(uint64_t u) const = 0;
 
     virtual uint64_t psiInv(uint64_t a) const = 0;
-    virtual ~SubGraph() {
-        delete pSelect;
-        delete qSelect;
-    }
-    SubGraph() = delete;
 };
 }  // namespace Sealib
 #endif  // SRC_SUBGRAPH_SUBGRAPH_H_

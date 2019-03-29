@@ -10,21 +10,17 @@ SCCIterator::SCCIterator(DirectedGraph const &graph, Consumer p1, BiConsumer p2,
       t(GraphCreator::transpose(g)),
       d(g),
       c(n, 3),
-      s(n, g, &c),
+      s(n, t, &c),
       preprocess(p1),
       preexplore(p2),
       postexplore(p3),
-      postprocess(p4) {
-    for (uint64_t u = 0; u < n; u++) {
-        c.insert(u, 0);
-    }
-}
+      postprocess(p4) {}
 
 void SCCIterator::init() { d.init(); }
 
 bool SCCIterator::more() {
     uint64_t u;
-    while ((u = nextRoot()) != INVALID) {
+    while ((u = nextFinished()) != INVALID) {
         if (c.get(u) == DFS_WHITE) {
             u0 = u;
             return true;
@@ -39,7 +35,7 @@ uint64_t SCCIterator::next() {
     return u0;
 }
 
-uint64_t SCCIterator::nextRoot() {
+uint64_t SCCIterator::nextFinished() {
     while (d.more()) {
         UserCall a = d.next();
         if (a.type == UserCall::postprocess) {
