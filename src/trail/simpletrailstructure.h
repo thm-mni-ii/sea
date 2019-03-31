@@ -68,8 +68,8 @@ class SimpleTrailStructure {
     /**
      * Leaves the node, gets arbitrary element from unused,
      * moves it to InAndOut and returns it.
-     * If the TrailStructure is black, it returns uint64_t max value.
-     * @return 
+     * @return arbitrary unused element; if the TrailStructure is black, returns
+     * uint64_t max value.
      */
     uint64_t leave();
 
@@ -84,9 +84,9 @@ class SimpleTrailStructure {
     bool hasStartingArc() const;
 
     /**
-     * Enters the node at the specified edge/arc, and if there is an unused arc left, 
-     * leaves it at the next arc and matches the entering and exiting arcs.
-     * Otherwise the entering arc is left unmatched.
+     * Enters the node at the specified edge/arc, and if there is an unused arc
+     * left, leaves it at the next arc and matches the entering and exiting
+     * arcs. Otherwise the entering arc is left unmatched.
      * @param i arc to enter
      * @return arc that was left, or unsiged int max value if no arc.
      */
@@ -95,8 +95,8 @@ class SimpleTrailStructure {
     /**
      * Gets the match for a given matched arc.
      * The inAndOut bit array is interpreted as a dyckword.
-     * @param idx 
-     * @return 
+     * @param idx arc
+     * @return match
      */
     uint64_t getMatched(uint64_t idx) const;
 

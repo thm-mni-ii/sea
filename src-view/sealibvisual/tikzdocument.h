@@ -22,7 +22,7 @@ class TikzDocument {
      * @param _gdLibraries Tikz graph drawing libraries to use (generates
      * \usegdlibrary statement)
      * @param _lualatex Compile with LuaLaTex? (needed for graph layouts)
-     * @param mode output format to generate ("standalone": a freestanding
+     * @param _mode output format to generate ("standalone": a freestanding
      * (lua)latex document, to animate the resulting document, use 'convert' on
      * the PDF; "beamer": (lua)latex code to include in a beamer presentation)
      */

@@ -5,7 +5,7 @@
 namespace Sealib {
 /**
  * An iterator interface to be used by several classes in this library.
- * @param T the element type that this iterator iterates over
+ * @tparam T the element type that this iterator iterates over
  * @author Simon Heuser
  */
 template <class T>

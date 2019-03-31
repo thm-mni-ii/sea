@@ -18,7 +18,7 @@ class UndirectedGraph : public Graph {
  public:
     /**
      * Creates a new graph object from a given node vector.
-     * @param nodes_ vector of nodes
+     * @param _nodes vector of nodes
      */
     explicit UndirectedGraph(std::vector<ExtendedNode> _nodes) : nodes(std::move(_nodes)) {}
 
@@ -30,7 +30,7 @@ class UndirectedGraph : public Graph {
 
     /**
      * Adds a new node to the graph
-     * @param const ref of node to be added
+     * @param node node to be added
      */
     void addNode(ExtendedNode const &node) { nodes.emplace_back(node); }
 

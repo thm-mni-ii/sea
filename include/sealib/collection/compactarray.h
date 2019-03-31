@@ -26,7 +26,7 @@ class CompactArray : public Sequence<uint64_t> {
      * For maximum performance, let v be a power of 2 (to avoid access over word
      * boundaries)
      */
-    explicit CompactArray(uint64_t count, uint64_t v = 3);
+    explicit CompactArray(uint64_t size, uint64_t v = 3);
 
     /**
      * Insert a value to the given index.

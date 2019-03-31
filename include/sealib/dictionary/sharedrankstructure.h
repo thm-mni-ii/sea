@@ -35,7 +35,7 @@ class SharedRankStructure {
     uint64_t rank(uint64_t k) const;
 
     /**
-     * @param shared_ptr managing the Sealib::Bitset used for Rank
+     * @param bitset shared_ptr managing the Sealib::Bitset used for Rank
      */
     explicit SharedRankStructure(std::shared_ptr<const Sealib::Bitset<uint8_t> > bitset);
 

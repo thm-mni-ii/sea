@@ -15,16 +15,13 @@ namespace Sealib {
  */
 class ChoiceDictionaryIterator : Iterator<uint64_t> {
  private:
-    /**
-     * @param primaryWord Value of the currently used word in primary.
-     * @param secondaryWord Value of the currently used word in secondary.
-     * @param primaryIndex Index of the currently used word in primary.
-     * @param secondaryIndex Index of the currently used word in secondary.
-     * @param pointer currently used pointer Position.
-     * @param choicedictionary Pointer to an existing choice dictionary.
-     */
-    uint64_t primaryWord, secondaryWord, pointer, primaryIndex, secondaryIndex;
-    ChoiceDictionary const &choicedictionary;
+    uint64_t primaryWord,  ///< Value of the currently used word in primary
+        secondaryWord,     ///< Value of the currently used word in secondary
+        pointer,           ///< currently used pointer Position
+        primaryIndex,      ///< Index of the currently used word in primary
+        secondaryIndex;    ///< Index of the currently used word in secondary
+    ChoiceDictionary const
+        &choicedictionary;  ///< Pointer to an existing choice dictionary
 
     bool hasNextSecondary();
 
@@ -35,7 +32,7 @@ class ChoiceDictionaryIterator : Iterator<uint64_t> {
  public:
     /**
      * Creates an Iterator for a choice dictionary.
-     * @param _choicedictionary Pointer to an existing choice dictionary.
+     * @param choicedictionary Pointer to an existing choice dictionary.
      */
     explicit ChoiceDictionaryIterator(ChoiceDictionary const &choicedictionary);
 
