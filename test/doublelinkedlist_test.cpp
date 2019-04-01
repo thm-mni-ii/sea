@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/trail/largedoublelinkedlist.h"
+#include "../src/collection/largedoublelinkedlist.h"
 
 using namespace Sealib;  // NOLINT
 

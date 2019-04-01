@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <sealib/dictionary/simplerankselect.h>
-#include <sealib/dictionary/sharedrankselect.h>
+#include "../src/rankselect/simplerankselect.h"
+#include "../src/rankselect/sharedrankselect.h"
 
 using Sealib::INVALID;
 

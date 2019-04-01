@@ -1,4 +1,4 @@
-#include <sealib/dictionary/sharedrankselect.h>
+#include "sharedrankselect.h"
 #include "localselecttable.h"
 #include <iostream>
 #include <utility>
