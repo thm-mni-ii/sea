@@ -1,4 +1,4 @@
-#include "sealib/dictionary/simplerankselect.h"
+#include "simplerankselect.h"
 
 uint64_t Sealib::SimpleRankSelect::select(uint64_t k) const {
     if (k == 0 || k > selects.size()) return INVALID;

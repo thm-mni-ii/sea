@@ -2,10 +2,10 @@
 #define SRC_TRAIL_TRAILSTRUCTURE_H_
 
 #include <sealib/dictionary/rankselect.h>
-#include <sealib/dictionary/simplerankselect.h>
-#include <vector>
+#include "../rankselect/simplerankselect.h"
 #include "../dyck/dyckmatchingstructure.h"
-#include "doublelinkedlist.h"
+#include "../collection/doublelinkedlist.h"
+#include <vector>
 
 namespace Sealib {
 class DoubleLinkedList;
