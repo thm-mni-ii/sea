@@ -1,5 +1,5 @@
 #include "localranktable.h"
-#include <sealib/dictionary/sharedrankstructure.h>
+#include <sealib/dictionary/rankstructure.h>
 
 Sealib::LocalRankTable::LocalRankTable() : localRankLookupTable(256) {
     for (uint32_t i = 0; i <= (uint8_t) -1; i++) {

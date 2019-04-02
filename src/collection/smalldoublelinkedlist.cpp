@@ -1,4 +1,4 @@
-#include "../trail/smalldoublelinkedlist.h"
+#include "./smalldoublelinkedlist.h"
 
 Sealib::SmallDoubleLinkedList::SmallDoubleLinkedList(uint8_t size) :
     links(size * 2, 1),

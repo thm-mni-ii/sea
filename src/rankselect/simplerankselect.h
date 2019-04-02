@@ -1,5 +1,5 @@
-#ifndef SEALIB_DICTIONARY_SIMPLERANKSELECT_H_
-#define SEALIB_DICTIONARY_SIMPLERANKSELECT_H_
+#ifndef SRC_RANKSELECT_SIMPLERANKSELECT_H_
+#define SRC_RANKSELECT_SIMPLERANKSELECT_H_
 
 #include <sealib/collection/bitset.h>
 #include <memory>
@@ -34,4 +34,4 @@ class SimpleRankSelect {
     explicit SimpleRankSelect(std::shared_ptr<const Bitset<uint8_t>> bitset);
 };
 }  // namespace Sealib
-#endif  // SEALIB_DICTIONARY_SIMPLERANKSELECT_H_
+#endif  // SRC_RANKSELECT_SIMPLERANKSELECT_H_

@@ -1,31 +1,36 @@
 #ifndef SEALIB_DICTIONARY_RANKSTRUCTURE_H_
 #define SEALIB_DICTIONARY_RANKSTRUCTURE_H_
-#define CHECK_BIT(var, pos) (((var)>>(pos)) & 1)
+#define CHECK_BIT(var, pos) (((var) >> (pos)) & 1)
 
-#include <sealib/collection/bitset.h>
 #include <memory>
 #include <vector>
+#include "sealib/collection/bitset.h"
+#include "sealib/collection/variantbitset.h"
+
+namespace Sealib {
+
+template <class B>
+class RankStructureBase;
+typedef RankStructureBase<Bitset<uint8_t>> RankStructure;
+typedef RankStructureBase<VariantBitset> VariantRankStructure;
 
 /**
  * Space efficient RankStructure implementation.
+ * @param B Bitset type to use
  * @author Johannes Meintrup
  */
-namespace Sealib {
-class RankStructure {
- protected:
-    static constexpr const uint8_t segmentLength = 8;
-    const Sealib::Bitset<uint8_t> bitset;
-    uint32_t segmentCount;
-    uint32_t maxRank;
-
-    std::vector<uint32_t> setCountTable;
-    std::vector<uint32_t> nonEmptySegments;
-
+template <class B>
+class RankStructureBase {
  public:
-    uint64_t size() const;
-    uint32_t getMaxRank() const;
-    const std::vector<uint32_t> &getSetCountTable() const;
-    const std::vector<uint32_t> &getNonEmptySegments() const;
+    /**
+     * @param _bitset bitset used for rank-select
+     */
+    template <class BR>
+    explicit RankStructureBase(BR &&_bitset)
+        : bitset(std::forward<BR>(_bitset)),
+          segmentCount(static_cast<uint32_t>(bitset.size() / segmentLength)) {
+        initialize();
+    }
 
     /**
      * Rank of the k-th idx
@@ -34,35 +39,49 @@ class RankStructure {
      */
     uint64_t rank(uint64_t k) const;
 
-    /**
-     * @param bitset used for Rank
-     */
-    explicit RankStructure(const Sealib::Bitset<uint8_t> &bitset);
+    const std::vector<uint32_t> &getSetCountTable() const {
+        return setCountTable;
+    }
+    const std::vector<uint32_t> &getNonEmptySegments() const {
+        return nonEmptySegments;
+    }
 
-    explicit RankStructure(Sealib::Bitset<uint8_t> &&bitset);
-
     /**
-     * default empty constructor
+     * @return size of the bitset
      */
-    RankStructure();
+    uint64_t size() const { return bitset.size(); }
+
+    uint32_t getMaxRank() const { return maxRank; }
 
     /**
      * @return segment length
      */
-    uint8_t getSegmentLength() const;
+    uint8_t getSegmentLength() const { return segmentLength; }
 
     /**
      * @return segment count
      */
-    uint32_t getSegmentCount() const;
+    uint32_t getSegmentCount() const { return segmentCount; }
 
     /**
-     * @return segment of the bitset
+     * @return the bitset
      */
-    const Sealib::Bitset<uint8_t>& getBitset() const;
+    B const &getBitset() const { return bitset; }
 
-    ~RankStructure();
-    uint32_t setBefore(uint64_t segment) const;
+    uint32_t setBefore(uint64_t segment) const {
+        return segment == 0 ? 0 : setCountTable[segment - 1];
+    }
+
+ protected:
+    static constexpr const uint8_t segmentLength = 8;
+    B const bitset;
+    uint32_t segmentCount;
+    uint32_t maxRank;
+
+    std::vector<uint32_t> setCountTable;
+    std::vector<uint32_t> nonEmptySegments;
+
+    void initialize();
 };
 }  // namespace Sealib
 #endif  // SEALIB_DICTIONARY_RANKSTRUCTURE_H_

@@ -1,5 +1,5 @@
-#ifndef SRC_TRAIL_DOUBLELINKEDLIST_H_
-#define SRC_TRAIL_DOUBLELINKEDLIST_H_
+#ifndef SRC_COLLECTION_DOUBLELINKEDLIST_H_
+#define SRC_COLLECTION_DOUBLELINKEDLIST_H_
 #include "sealib/_types.h"
 
 namespace Sealib {
@@ -29,4 +29,4 @@ class DoubleLinkedList {
     virtual bool isEmpty() = 0;
 };
 }  // namespace Sealib
-#endif  // SRC_TRAIL_DOUBLELINKEDLIST_H_
+#endif  // SRC_COLLECTION_DOUBLELINKEDLIST_H_

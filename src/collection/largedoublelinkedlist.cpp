@@ -1,4 +1,4 @@
-#include "../trail/largedoublelinkedlist.h"
+#include "./largedoublelinkedlist.h"
 #include <iostream>
 
 Sealib::LargeDoubleLinkedList::LargeDoubleLinkedList(uint64_t size) :

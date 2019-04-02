@@ -1,6 +1,5 @@
 #include "localselecttable.h"
-#include <sealib/dictionary/sharedrankstructure.h>
-#include <iostream>
+#include <sealib/dictionary/rankstructure.h>
 
 Sealib::LocalSelectTable::LocalSelectTable() : localSelectLookupTable(256) {
     for (uint32_t i = 0; i <= (uint8_t) -1; i++) {
