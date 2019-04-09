@@ -19,7 +19,7 @@ class DoubleLinkedList {
      */
     virtual uint64_t get() = 0;
     /**
-    * @param element to be removed
+    * @param idx element to be removed
     * @return the removed element, or error value if the element was not present.
     */
     virtual uint64_t remove(uint64_t idx) = 0;

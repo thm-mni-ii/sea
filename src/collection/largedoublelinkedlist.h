@@ -23,7 +23,7 @@ class LargeDoubleLinkedList : public DoubleLinkedList {
     uint64_t get() override;
 
     /**
-    * @param element to be removed
+    * @param idx element to be removed
     * @return the removed element, or (uint64_t)-1 if the element was not present.
     */
     uint64_t remove(uint64_t idx) override;

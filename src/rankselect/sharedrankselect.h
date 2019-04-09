@@ -19,7 +19,7 @@ class SharedRankSelect {
 
  public:
     /**
-     * @param shared_ptr managing the Sealib::Bitset used for RankSelect
+     * @param bitset shared_ptr managing the Sealib::Bitset used for RankSelect
      */
     explicit SharedRankSelect(std::shared_ptr<const Bitset<uint8_t> > bitset);
     SharedRankSelect();

@@ -22,7 +22,7 @@ class CompactGraph : public Graph {
 	public:
 		/**
 		 * Creates a compactgraph object out of a pointer to an uint64_t array
-		 * @param A pointer to a graph array in standard representation
+		 * @param _A pointer to a graph array in standard representation
 		 */
 		explicit CompactGraph(uint64_t _A[]);
 

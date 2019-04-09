@@ -30,12 +30,12 @@ class VisualBFS {
  public:
     /**
      * Creates a new BFS visualisation.
-     * @param Graph Graph to use
-     * @param CompactArray Color array to use
+     * @param g Graph to use
+     * @param c CompactArray Color array to use
      * @param filename Output file name
      * @param mode Output mode: "standalone" or "beamer"
      */
-    VisualBFS(Sealib::Graph const &, Sealib::CompactArray,
+    VisualBFS(Sealib::Graph const &g, Sealib::CompactArray c,
               std::string filename = "example.tex",
               std::string mode = "standalone");
     /**
@@ -57,12 +57,12 @@ class VisualDFS : Sealib::ExtendedSegmentStack, Sealib::DFS {
  public:
     /**
      * Creates a new DFS visualisation.
-     * @param Graph Graph to use
-     * @param CompactArray Color array to use
+     * @param g Graph Graph to use
+     * @param c CompactArray Color array to use
      * @param filename Output file name
      * @param mode Output mode: "standalone" or "beamer"
      */
-    VisualDFS(Sealib::Graph const &, Sealib::CompactArray *,
+    VisualDFS(Sealib::Graph const &g, Sealib::CompactArray *c,
               std::string filename = "example.tex",
               std::string mode = "standalone");
     /**

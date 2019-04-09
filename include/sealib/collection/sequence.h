@@ -5,7 +5,7 @@
 namespace Sealib {
 /**
  * An sequence interface to be used by several classes in this library.
- * @param T the element type that this sequence holds
+ * @tparam T the element type that this sequence holds
  * @author Simon Heuser
  */
 template <class T, class I = uint64_t>

@@ -14,14 +14,14 @@ typedef RankSelectBase<VariantBitset> VariantRankSelect;
 
 /**
 * Space efficient RankSelect implementation.
-* @param B Bitset type to use
+* @tparam B Bitset type to use
 * @author Johannes Meintrup
 */
 template <class B>
 class RankSelectBase {
  public:
     /**
-     * @param Sealib::Bitset used for RankSelect
+     * @param bitset Bitset used for RankSelect
      */
     template <class BR>
     explicit RankSelectBase(BR &&bitset)

@@ -34,9 +34,9 @@ class BFS : Iterator<std::pair<uint64_t, uint64_t>> {
     * @param preprocess to be executed before processing a node u
     * @param preexplore to be executed before exploring an edge (u,v)
     */
-    BFS(Graph const &g, Consumer pp, BiConsumer pe);
+    BFS(Graph const &g, Consumer preprocess, BiConsumer preexplore);
 
-    BFS(Graph const &g, CompactArray color, Consumer pp, BiConsumer pe);
+    BFS(Graph const &g, CompactArray color, Consumer preprocess, BiConsumer preexplore);
 
     /**
      * Initialize or reset the BFS to the beginning.

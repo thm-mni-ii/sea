@@ -21,7 +21,7 @@ class ChoiceDictionary {
  public:
     /**
      * Creates choice dictionary with given size
-     * @param length Length of the choice dictionary
+     * @param size Length of the choice dictionary
      */
     explicit ChoiceDictionary(uint64_t size);
 
