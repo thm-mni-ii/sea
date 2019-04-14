@@ -1,7 +1,6 @@
 #ifndef SEA_VSEPERATOR_H
 #define SEA_VSEPERATOR_H
 
-#include <sealib/flow/seperator.h>
 #include <sealib/graph/graph.h>
 #include <sealib/collection/bitset.h>
 
@@ -11,7 +10,7 @@ namespace Sealib {
  * trough a minimum number of vertices.
  * @Author Vytautas Hermann
  */
-    class VSeperator: public Seperator{
+    class VSeperator{
     public:
         /**
         * Returns a Set of Nodes that are part of the Seperator.
