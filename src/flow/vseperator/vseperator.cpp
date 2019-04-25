@@ -8,8 +8,22 @@
 using Sealib::VSeperator;
 
 void VSeperator::found_t(uint64_t n){
-    if(n == tnode) ispath = true;
-    // DFS beenden
+    if(n == tnode){
+        ispath = true;
+        while(1) {
+            path = (uint64_t *) realloc(path, sizeof(path) + sizeof(uint64_t));
+            std::pair<uint64_t, uint64_t> r;
+            uint8_t sr = segmentStack->pop(&r);
+            if (sr == DFS_DO_RESTORE) {
+                Sealib::DFS::restore_top(snode, graph, color, segmentStack);
+                segmentStack->pop(&r);
+
+            } else if (sr == DFS_NO_MORE_NODES) {
+                return;
+            }
+            path[sizeof(path) / sizeof(uint64_t) - 1] = r.second;
+        }
+    }
 }
 
 void VSeperator::reached(uint64_t n){
@@ -24,7 +38,9 @@ Sealib::Bitset<> VSeperator::seperate(
         Sealib::Graph g) {
     // create a directed graph g' with in- and output vertices from g
     // sum up the sets s and t to single vertices
-    uint64_t snode = -1, tnode = -1, s_deg;
+    uint64_t s_deg;
+    snode = -1;
+    tnode = -1;
     std::vector<SimpleNode> nodes;
     nodes.reserve(sizeof(SimpleNode*) * g.getOrder() * 2);
 
@@ -56,12 +72,21 @@ Sealib::Bitset<> VSeperator::seperate(
     ispath = true;
     while(ispath) {
         ispath = false;
-        Sealib::DFS::nloglognBitDFS(graph, found_t, NULL, NULL, NULL);
+        //---
+        CompactArray c(graph.getOrder(), 3);
+        color = &c;
+        ExtendedSegmentStack stack(graph.getOrder(), graph, color);
+        segmentStack = &stack;
+        path = (uint64_t*)malloc(0);
+        Sealib::DFS::visit_nloglogn(snode, graph, color, segmentStack,
+                Sealib::DFS::restore_top, found_t, NULL, NULL, NULL);
+        //---
         if(ispath) graph.revertpath(path);
     }
 
     // compute a set of edges in the minimum cut
-    Sealib::DFS::nloglognBitDFS(graph, reached, NULL, NULL, NULL);
+    Sealib::DFS::visit_nloglogn(snode, graph, color, segmentStack,
+                                Sealib::DFS::restore_top, reached, NULL, NULL, NULL);
     Sealib::Bitset<> vs;
     for(int i = g.getOrder(); i < 2 * g.getOrder(); i++){
         for(int j = 0; j < graph.deg(i); j++){

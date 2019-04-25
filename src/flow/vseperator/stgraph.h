@@ -50,13 +50,13 @@ class STGraph: public Graph{
      * @param path is the list of position of the next edge of a node
      */
     void revertpath(uint64_t* path){
-        uint64_t pos = g[s_pos].getAdj()[path[0]];
-        g[s_pos].getAdj()[path[0]] = g[s_pos].getAdj()[s_deg - 1];
-        uint64_t mem = g[pos].getAdj()[path[1]];
+        uint64_t pos = g[s_pos].getAdj()[path[sizeof(path) / sizeof(uint64_t) - 1]];
+        g[s_pos].getAdj()[path[sizeof(path) / sizeof(uint64_t) - 1]] = g[s_pos].getAdj()[s_deg - 1];
+        uint64_t mem = g[pos].getAdj()[path[sizeof(path) / sizeof(uint64_t) - 2]];
         uint64_t memnext;
-        g[pos].getAdj()[path[1]] = s_pos;
+        g[pos].getAdj()[path[sizeof(path) / sizeof(uint64_t) - 2]] = s_pos;
         s_deg--;
-        for(int i = 1; i < sizeof(path) / sizeof(uint64_t); i++){
+        for(int i = sizeof(path) / sizeof(uint64_t) - 2; i > 0; i--){
             memnext = g[mem].getAdj()[path[i]+1];
             g[g[pos].getAdj()[path[i]]].getAdj()[path[i]+1] = pos;
             pos = mem;

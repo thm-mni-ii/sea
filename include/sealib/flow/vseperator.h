@@ -3,6 +3,7 @@
 
 #include <sealib/graph/graph.h>
 #include <sealib/collection/bitset.h>
+#include <sealib/collection/segmentstack.h>
 #include "../../../src/flow/vseperator/stgraph.h"
 
 namespace Sealib {
@@ -26,6 +27,9 @@ class VSeperator{
     static bool ispath;
     static uint64_t* path;
     static uint64_t tnode;
+    static uint64_t snode;
+    static CompactArray *color;
+    static SegmentStack *segmentStack;
     static Sealib::Bitset<> s_reachable;
     static void found_t(uint64_t n);
     static void reached(uint64_t n);
