@@ -1,10 +1,10 @@
 #ifndef SEA_VSEPERATOR_H
 #define SEA_VSEPERATOR_H
 
-#include <sealib/graph/graph.h>
 #include <sealib/collection/bitset.h>
 #include <sealib/collection/segmentstack.h>
-#include "../../../src/flow/vseperator/stgraph.h"
+#include "sealib/graph/directedgraph.h"
+#include "sealib/graph/undirectedgraph.h"
 
 namespace Sealib {
 /**
@@ -21,19 +21,9 @@ class VSeperator{
     * @param g the Graph
     * @return Set of vertices, wich disjoin s and t.
     */
-    Bitset<> seperate(Bitset<> s, Bitset<> t, Graph g);
- private:
-    static Sealib::STGraph graph;
-    static bool ispath;
-    static uint64_t* path;
-    static uint64_t tnode;
-    static uint64_t snode;
-    static CompactArray *color;
-    static SegmentStack *segmentStack;
-    static Sealib::Bitset<> s_reachable;
-    static void found_t(uint64_t n);
-    static void reached(uint64_t n);
+    static Sealib::Bitset<> seperate(Sealib::Bitset<> s, Sealib::Bitset<> t, Sealib::Graph const &g, uint64_t k);
 };
-}
+
+} // end of Sealib
 
 #endif //VSEA_SEPERATOR_H
