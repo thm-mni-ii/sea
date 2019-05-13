@@ -26,7 +26,7 @@ static BiConsumer BFS_NOP_EXPLORE = [](uint64_t, uint64_t) {};
  * To get the next result, call next().
  * To move the search to a possible next component, call nextComponent().
  */
-class BFS : Iterator<std::pair<uint64_t, uint64_t>> {
+class BFS : public Iterator<std::pair<uint64_t, uint64_t>> {
  public:
     /**
     * Create a new BFS iterator.
@@ -34,9 +34,10 @@ class BFS : Iterator<std::pair<uint64_t, uint64_t>> {
     * @param preprocess to be executed before processing a node u
     * @param preexplore to be executed before exploring an edge (u,v)
     */
-    BFS(Graph const &g, Consumer pp, BiConsumer pe);
+    BFS(Graph const &g, Consumer preprocess, BiConsumer preexplore);
 
-    BFS(Graph const &g, CompactArray color, Consumer pp, BiConsumer pe);
+    BFS(Graph const &g, CompactArray color, Consumer preprocess,
+        BiConsumer preexplore);
 
     /**
      * Initialize or reset the BFS to the beginning.
@@ -67,14 +68,18 @@ class BFS : Iterator<std::pair<uint64_t, uint64_t>> {
 
     /**
      * Execute a given operation for each found pair (u,dist).
-     * (init() before calling this method!)
      * @param f function to execute for each element
      */
     void forEach(
         std::function<void(std::pair<uint64_t, uint64_t>)> f) override {
+        init();
         do {
             while (more()) f(next());
         } while (nextComponent());
+    }
+
+    uint64_t byteSize() const {
+        return color.byteSize() + isInner.byteSize() + isOuter.byteSize();
     }
 
  private:

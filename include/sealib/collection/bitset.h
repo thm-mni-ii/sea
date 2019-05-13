@@ -97,6 +97,10 @@ class Bitset final : Sequence<bool, uint64_t> {
      */
     uint64_t blocks() const { return (uint64_t)mbits.size(); }
 
+    uint64_t byteSize() const {
+        return mbits.capacity()*sizeof(BlockType);
+    }
+
     /**
      * Proxy class to simulate lvalues of bit type.
      * Implementation taken from boost dynamic_bitset.

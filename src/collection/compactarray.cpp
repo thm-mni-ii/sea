@@ -52,4 +52,10 @@ uint64_t CompactArray::get(uint64_t i) const {
     END return r;
 }
 
+void CompactArray::reset() {
+    for (uint64_t &a : data) {
+        a = 0;
+    }
+}
+
 }  // namespace Sealib

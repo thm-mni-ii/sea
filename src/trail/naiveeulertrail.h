@@ -13,7 +13,6 @@ namespace Sealib {
  * Space efficient Euler Trail class. Initialized with an undirected graph object G_0,
  * creates a set of euler partitions for G_0 during construction.
  * Uses O(n+m) time for the construction and occupies O(n) space after construction.
- * @tparam TrailStructureType
  */
 class NaiveEulerTrail {
  private:

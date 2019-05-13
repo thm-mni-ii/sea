@@ -23,8 +23,8 @@ class LocalRankTable {
     /**
     * Values are stored in a lookup table.
     * The lookup table is a static instance in this function that is initialized on the first call.
-    * @param segment - unsinged char representing a bit vector of size 8
-    * @param index in the segment
+    * @param segment unsigned char representing a bit vector of size 8
+    * @param i index in the segment
     * @return bits set up to and including the i-th bit
     */
     static uint8_t getLocalRank(uint8_t segment, uint8_t i);

@@ -49,7 +49,7 @@ int Sealib_ChoiceDictionary_get(void *self, uint64_t index);
 /**
  * Get index of a random set bit.
  * @param self Choice dictionary instance
- * @param Index of a set bit
+ * @return Index of a set bit
  */
 uint64_t Sealib_ChoiceDictionary_choice(void *self);
 
@@ -101,7 +101,7 @@ int Sealib_Bitset_get(void *self, uint64_t index);
 
 /**
  * Create a new rank-select structure
- * @param size Number of entries
+ * @param bitset bitset to use
  * @return Pointer to the rank-select structure
  */
 void *Sealib_RankSelect_new(void *bitset);

@@ -4,6 +4,18 @@
 
 namespace Sealib {
 
+BFS::BFS(Graph const &graph, Consumer pp, BiConsumer pe)
+    : BFS(graph, CompactArray(graph.getOrder(), 4), pp, pe) {}
+
+BFS::BFS(Graph const &graph, CompactArray c, Consumer pp, BiConsumer pe)
+    : g(graph),
+      n(g.getOrder()),
+      color(std::move(c)),
+      isInner(n),
+      isOuter(n),
+      preprocess(pp),
+      preexplore(pe) {}
+
 void BFS::init() {
     u = 0;
     dist = 0;
@@ -80,17 +92,5 @@ std::pair<uint64_t, uint64_t> BFS::next() {
     color.insert(u, BFS_BLACK);
     return std::pair<uint64_t, uint64_t>(u, dist);
 }
-
-BFS::BFS(Graph const &graph, Consumer pp, BiConsumer pe)
-    : BFS(graph, CompactArray(graph.getOrder(), 4), pp, pe) {}
-
-BFS::BFS(Graph const &graph, CompactArray c, Consumer pp, BiConsumer pe)
-    : g(graph),
-      n(g.getOrder()),
-      color(std::move(c)),
-      isInner(n),
-      isOuter(n),
-      preprocess(pp),
-      preexplore(pe) {}
 
 }  // namespace Sealib

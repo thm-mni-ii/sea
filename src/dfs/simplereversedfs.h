@@ -1,5 +1,6 @@
 #ifndef SRC_DFS_SIMPLEREVERSEDFS_H_
 #define SRC_DFS_SIMPLEREVERSEDFS_H_
+#include <queue>
 #include "sealib/iterator/reversedfs.h"
 
 namespace Sealib {
@@ -8,7 +9,7 @@ namespace Sealib {
  * normal DFS in reverse order, with an optional filter to select only one type
  * of user call.
  */
-class SimpleReverseDFS : Iterator<UserCall> {
+class SimpleReverseDFS : public Iterator<UserCall> {
  public:
     /**
      * Create a new reverse DFS iterator.
@@ -25,19 +26,20 @@ class SimpleReverseDFS : Iterator<UserCall> {
     /**
      * @return true if there are more user calls that can be retrieved
      */
-    bool more() override { return resultI != result.rend(); }
+    bool more() override;
 
     /**
      * Get the next user call object.
-     * If a filter is given, only the selected type can appear as output.
-     * @return representation of the reverse sequence's next user call
+     * @return next user call from the reverse sequence
      */
-    UserCall next() override { return *resultI++; }
+    UserCall next() override;
+
+    uint64_t byteSize() const { return rmax * sizeof(UserCall); }
 
  private:
     Graph const &g;
-    std::vector<UserCall> result;
-    std::vector<UserCall>::reverse_iterator resultI;
+    uint64_t rmax = 0;
+    std::queue<UserCall> result;
 };
 }  // namespace Sealib
 #endif  // SRC_DFS_SIMPLEREVERSEDFS_H_

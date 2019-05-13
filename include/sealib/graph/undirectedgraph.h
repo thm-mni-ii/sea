@@ -18,7 +18,7 @@ class UndirectedGraph : public Graph {
  public:
     /**
      * Creates a new graph object from a given node vector.
-     * @param nodes_ vector of nodes
+     * @param _nodes vector of nodes
      */
     explicit UndirectedGraph(std::vector<ExtendedNode> _nodes) : nodes(std::move(_nodes)) {}
 
@@ -30,7 +30,7 @@ class UndirectedGraph : public Graph {
 
     /**
      * Adds a new node to the graph
-     * @param const ref of node to be added
+     * @param node node to be added
      */
     void addNode(ExtendedNode const &node) { nodes.emplace_back(node); }
 
@@ -68,7 +68,7 @@ class UndirectedGraph : public Graph {
      * @param k outgoing edge
      * @return index of the edge k' in v that points back to u
      */
-    uint64_t mate(uint64_t u, uint64_t k) const { return nodes[u].getAdj()[k].second; }
+    virtual uint64_t mate(uint64_t u, uint64_t k) const { return nodes[u].getAdj()[k].second; }
 
  private:
     std::vector<ExtendedNode> nodes;

@@ -30,7 +30,7 @@ class TrackingAllocator {
     /**
      * Needed to rebind a TrackingAllocator<U> to TrackingAllocator<U'>,
      * if needed by the container using TrackingAllocator.
-     * @tparam U
+     * @tparam U element type
      */
     template<class U>
     struct rebind {
@@ -42,12 +42,10 @@ class TrackingAllocator {
     /**
      * Needed to rebind a TrackingAllocator<U> to TrackingAllocator<U'>,
      * if needed by the container using TrackingAllocator.
-     * @tparam U
+     * @tparam U element type
      */
     template<class U>
-    TrackingAllocator(const TrackingAllocator<U> &other) {
-        (void) other;
-    }
+    TrackingAllocator(const TrackingAllocator<U> &) {}
 
     /**
      * Allocates numObjects *sizeof(T) * bytes space and writes that

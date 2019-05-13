@@ -21,7 +21,7 @@ class ChoiceDictionary {
  public:
     /**
      * Creates choice dictionary with given size
-     * @param length Length of the choice dictionary
+     * @param size Length of the choice dictionary
      */
     explicit ChoiceDictionary(uint64_t size);
 
@@ -68,6 +68,10 @@ class ChoiceDictionary {
 
     uint64_t getSecondarySize() {
         return wordCount / wordSize + 1;
+    }
+
+    uint64_t byteSize() const {
+        return (primary.capacity()+secondary.capacity()+validator.capacity())*sizeof(uint64_t);
     }
 
  private:
@@ -123,7 +127,7 @@ class ChoiceDictionary {
 
     void shrinkValidator(uint64_t startIndex);
 
-    bool isInitialized(uint64_t primaryIndex) const;
+    [[gnu::hot]] bool isInitialized(uint64_t primaryIndex) const;
 
     bool hasColor(uint64_t primaryIndex) const;
 };

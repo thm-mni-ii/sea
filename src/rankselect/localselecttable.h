@@ -22,8 +22,8 @@ class LocalSelectTable {
     /**
     * Values are stored in a lookup table.
     * The lookup table is a static instance in this function that is initialized on the first call.
-    * @param segment - unsinged char representing a bit vector of size 8
-    * @param i-th set bit to be selected
+    * @param segment unsigned char representing a bit vector of size 8
+    * @param i set bit to be selected
     * @return index of the i-th bit, or (unsinged char) - 1 if there is none
     */
     static uint8_t getLocalSelect(uint8_t segment, uint8_t i);

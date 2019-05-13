@@ -43,23 +43,21 @@ union VariantBitset {
      */
     std::vector<uint64_t> word;
 
-    std::vector<bool>::reference operator[](uint64_t i) {
-        return bit[i];
-    }
+    std::vector<bool>::reference operator[](uint64_t i) { return bit[i]; }
     bool operator[](uint64_t i) const { return bit[i]; }
 
     size_t size() const { return bit.size(); }
 
-    uint8_t getBlock(uint64_t i) const {
-        return byte[i];
-    }
+    uint8_t getBlock(uint64_t i) const { return byte[i]; }
     uint8_t getShiftedBlock(uint64_t i) const {
         uint8_t len = 32;
-        uint8_t b1 = bit[i/len];
-        uint8_t b2 = bit[(i+len-1)/len];
+        uint8_t b1 = bit[i / len];
+        uint8_t b2 = bit[(i + len - 1) / len];
         uint8_t bitIdx = static_cast<uint8_t>(i % len);
         return static_cast<uint8_t>((b1 >> bitIdx) | (b2 << (len - bitIdx)));
     }
+
+    uint64_t byteSize() const { return bit.capacity() / 8; }
 };
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_VARIANTBITSET_H_

@@ -16,20 +16,20 @@ class DirectedGraph : public Graph {
  public:
     /**
      * Creates a new graph object with the nodes provided by the nodes_ vector
-     * @param nodes_ vector of nodes
+     * @param _nodes vector of nodes
      */
     explicit DirectedGraph(std::vector<SimpleNode> _nodes)
         : nodes(std::move(_nodes)) {}
 
     /**
      * Created a graph with the specified order and without any edges.
-     * @param order - order of the graph
+     * @param order order of the graph
      */
     explicit DirectedGraph(uint64_t order) : nodes(order) {}
 
     /**
      * Adds a new node to the graph
-     * @param const ref of node to be added
+     * @param node node to be added
      */
     void addNode(SimpleNode const &node) { nodes.emplace_back(node); }
 

@@ -57,6 +57,10 @@ class StaticSpaceStorage : public Sequence<uint64_t> {
      */
     static std::vector<bool> makeBitVector(std::vector<uint64_t> const &sizes);
 
+    uint64_t byteSize() const {
+        return rankSelect.byteSize() + storage.capacity() * sizeof(uint64_t);
+    }
+
  private:
     uint64_t n, nb;
     RankSelect rankSelect;
