@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
+#include "../src/marker/simplecutvertexiterator.h"
 #include "sealib/graph/graphcreator.h"
 #include "sealib/iterator/cutvertexiterator.h"
 
@@ -22,6 +23,15 @@ TEST(CutVertexIteratorTest, windmillGraph) {
     EXPECT_TRUE(c.isCutVertex(g.getOrder() - 1));
 }
 
+TEST(SimpleCutVertexIteratorTest, windmillGraph) {
+    UndirectedGraph g = GraphCreator::windmill(3, 4);
+    SimpleCutVertexIterator c(g);
+    c.init();
+    ASSERT_TRUE(c.more());
+    EXPECT_EQ(c.next(), g.getOrder() - 1);
+    EXPECT_FALSE(c.more());
+}
+
 TEST(CutVertexIteratorTest, lineGraph) {
     uint64_t n = 20;
     UndirectedGraph g(n);
@@ -41,12 +51,24 @@ TEST(CutVertexIteratorTest, lineGraph) {
     EXPECT_FALSE(c.isCutVertex(n - 1));
 }
 
-TEST(CutVertexIteratorTest, stability) {
-    UndirectedGraph g = GraphCreator::sparseUndirected(2000);
-    CutVertexIterator c(g);
-    c.init();
-    while (c.more()) c.next();
-    SUCCEED();
+TEST(CutVertexIteratorTest, cycle) {
+    SimpleCutVertexIterator(GraphCreator::kRegular(100000, 20)).init();
+    return;
+    for (uint64_t k = 0; k < 100; k++) {
+        UndirectedGraph g = GraphCreator::cycle(500, k);
+        CutVertexIterator c(g);
+        c.init();
+        EXPECT_FALSE(c.more());
+    }
+}
+
+TEST(SimpleCutVertexIteratorTest, cycle) {
+    for (uint64_t k = 0; k < 100; k++) {
+        UndirectedGraph g = GraphCreator::cycle(500, k);
+        SimpleCutVertexIterator c(g);
+        c.init();
+        EXPECT_FALSE(c.more());
+    }
 }
 
 }  // namespace Sealib
