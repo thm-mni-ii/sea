@@ -13,15 +13,15 @@ typedef RankSelectBase<Bitset<uint8_t>> RankSelect;
 typedef RankSelectBase<VariantBitset> VariantRankSelect;
 
 /**
- * Space efficient RankSelect implementation.
- * @author Johannes Meintrup
- * @tparam B Bitset type to use
- */
+* Space efficient RankSelect implementation.
+* @tparam B Bitset type to use
+* @author Johannes Meintrup
+*/
 template <class B>
 class RankSelectBase {
  public:
     /**
-     * @param bitset Sealib::Bitset used for RankSelect
+     * @param bitset Bitset used for RankSelect
      */
     template <class BR>
     explicit RankSelectBase(BR &&bitset)

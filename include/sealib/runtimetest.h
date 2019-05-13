@@ -78,7 +78,7 @@ void RuntimeTest::addLine(uint64_t order, uint64_t size, uint64_t result) {
 void RuntimeTest::addLine(uint64_t order, uint64_t size, double result) {
     std::cout << "Adding result: " << parameters.size() << " n: " << order
               << " m: " << size << std::endl;
-    parameters.push_back({order, size});
+    parameters.push_back(std::tuple<uint64_t, uint64_t>{order, size});
     runtimes.push_back(result);
 }
 

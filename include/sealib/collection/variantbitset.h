@@ -22,15 +22,6 @@ namespace Sealib {
  */
 union VariantBitset {
     /**
-     * Creates a bitset of the given size.
-     * @param size Number of bits in the bitset
-     */
-    VariantBitset(uint64_t size) : bit(size) {}
-    VariantBitset(VariantBitset const &p) : bit(p.bit) {}
-    VariantBitset(std::vector<bool> const &v) : bit(v) {}
-    ~VariantBitset() { bit.~vector(); }
-
-    /**
      * Member that allows reading and writing specific bits.
      */
     std::vector<bool> bit;
@@ -43,21 +34,33 @@ union VariantBitset {
      */
     std::vector<uint64_t> word;
 
+    /**
+     * Creates a bitset of the given size.
+     * @param size Number of bits in the bitset
+     */
+    VariantBitset(uint64_t size) : bit(size) {}
+
+    /**
+     * Creates a bitset from the given bit vector.
+     * @param v bit vector to use
+     */
+    VariantBitset(std::vector<bool> &&v) : bit(std::move(v)) {}
+
     std::vector<bool>::reference operator[](uint64_t i) { return bit[i]; }
     bool operator[](uint64_t i) const { return bit[i]; }
 
     size_t size() const { return bit.size(); }
 
     uint8_t getBlock(uint64_t i) const { return byte[i]; }
-    uint8_t getShiftedBlock(uint64_t i) const {
-        uint8_t len = 32;
-        uint8_t b1 = bit[i / len];
-        uint8_t b2 = bit[(i + len - 1) / len];
-        uint8_t bitIdx = static_cast<uint8_t>(i % len);
-        return static_cast<uint8_t>((b1 >> bitIdx) | (b2 << (len - bitIdx)));
-    }
+    uint8_t getShiftedBlock(uint64_t i) const;
 
     uint64_t byteSize() const { return bit.capacity() / 8; }
+
+    VariantBitset(VariantBitset const &);
+    VariantBitset(VariantBitset &&);
+    VariantBitset &operator=(VariantBitset const &);
+    VariantBitset &operator=(VariantBitset &&);
+    ~VariantBitset();
 };
 }  // namespace Sealib
 #endif  // SEALIB_COLLECTION_VARIANTBITSET_H_
