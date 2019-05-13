@@ -4,7 +4,7 @@
 
 ScriptHome=$(dirname $(readlink -e "$0"))
 
-Title="Runtime test"
+Title=""
 Files=""
 Outfile="runtime-plot.jpg"
 XLabel="order"
@@ -13,24 +13,24 @@ Logscale=F
 Ratio=F
 
 printHelp() {
-	printf "plot.sh [options] <file basename(s)>\n"
+	printf "plot.sh [options] <file(s)>\n"
 	printf "Options:\n"
 	printf "\t-t <name>		Title for your plot\n"
 	printf "\t-o <file>		Output filename (default: $Outfile)\n"
 	printf "\t-x <text>		Label for the x axis (default: '$XLabel')\n"
 	printf "\t-y <text>		Label for the y axis (default: '$YLabel')\n"
     printf "\t-l <axes>     Enable logarithmic scale for 'x'/'y'/'xy' axis\n"
-	printf "\t-r			Enable ratio plotting of two data files\n"
+	printf "\t-r			Add ratio label\n"
 	printf "\n"
 	printf "Example:\nPlot data from standard.csv and efficient.csv in one plot\n"
-	printf " -> plot.sh -t 'Algorithm comparison' -o comparison.jpg standard efficient\n"
+	printf " -> plot.sh -t 'Algorithm comparison' -o comparison.jpg standard.csv efficient.csv\n"
 	exit 0
 }
 if test $# -eq 0; then
 	printHelp
 fi
 
-while getopts "t:o:s:l:x:y:rh" opt; do
+while getopts "t:o:l:x:y:rh" opt; do
 	case $opt in
 	t) 
 		Title="$OPTARG" 
@@ -64,8 +64,13 @@ shift $((OPTIND-1))
 
 printf "Output file: $Outfile\n"
 
+if test $# -lt 1; then
+	printf "Error: no input file(s) given.\n(see -h for help)\n"
+	exit 1
+fi
+
 ExtraOptions=""
-if test $Logscale = F; then
+if test $Logscale != F; then
     if test $Logscale = x; then
         ExtraOptions="$ExtraOptions; logx='yes'"
     elif test $Logscale = y; then

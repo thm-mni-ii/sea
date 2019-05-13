@@ -10,7 +10,11 @@ set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated bina
 set(CMAKE_INCLUDE_PATH include/)
 
 set(CMAKE_INCLUDE_CURRENT_DIR OFF)
-set(WARNING_FLAGS "-Werror -Wall -Wextra -Wpedantic -Wconversion -Wdeprecated")
+set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wconversion -Wdeprecated")
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(WARNING_FLAGS "${WARNING_FLAGS} -Werror -Wdocumentation")
+endif()
 set(BUILD_FLAGS "-std=c++11 -O3 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
 set(TEST_FLAGS "-std=c++11 -g -O0 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
 
@@ -59,13 +63,16 @@ add_library(sealib SHARED ${LIB_SOURCES})
 file(GLOB TESTS "test/*.cpp")                                   # all test files
 add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
-find_package(Threads)
-target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
+set(TEST_LINK_FLAGS "")
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")
         set(TEST_FLAGS "${TEST_FLAGS} --coverage")
-        set_target_properties(tests PROPERTIES LINK_FLAGS "--coverage")
+        set(TEST_LINK_FLAGS "--coverage")
+elseif (PROFILING AND ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"))
+        MESSAGE(STATUS "Profiling: ENABLED")
+        set(TEST_FLAGS "${TEST_FLAGS} -pg -no-pie")
+        set(TEST_LINK_FLAGS "-pg -no-pie")
 endif ()
 
 # --------------------------------------------------- #
@@ -73,7 +80,11 @@ endif ()
 # --------------------------------------------------- #
 file(GLOB MAIN "src-view/*.cpp")                                   # all test files
 add_executable(main ${LIB_SOURCES} ${MAIN})
+
 find_package(Threads)
+set_target_properties(main PROPERTIES LINK_FLAGS "${CMAKE_THREAD_LIBS_INIT}")
+set_target_properties(tests PROPERTIES LINK_FLAGS "${TEST_LINK_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+target_link_libraries(tests gtest)
 
 set_target_properties(sealib main PROPERTIES COMPILE_FLAGS ${BUILD_FLAGS})
 set_target_properties(tests PROPERTIES COMPILE_FLAGS ${TEST_FLAGS})

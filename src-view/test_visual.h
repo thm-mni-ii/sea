@@ -40,8 +40,7 @@ class VisualTest {
     }
 
     static void testBCC() {
-        Sealib::UndirectedGraph g =
-            Sealib::GraphCreator::kRegular(20, 2);
+        Sealib::UndirectedGraph g = Sealib::GraphCreator::kRegular(20, 2);
         std::shared_ptr<VisualEdgeMarker> e(
             new VisualEdgeMarker(g, "out-bcc.tex", "beamer", true));
         e->init();
