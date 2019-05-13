@@ -10,26 +10,16 @@ CutVertexIterator::CutVertexIterator(UndirectedGraph const &graph)
 }
 
 CutVertexIterator::CutVertexIterator(std::shared_ptr<EdgeMarker> edges)
-    : e(edges), g(e->getGraph()), n(g.getOrder()), cc(n), cut(n), cutI(cut) {}
-
-void CutVertexIterator::findCCs() {
-    CompactArray color(n, 3);
-    StaticSpaceStorage parent(g);
-    for (uint64_t a = 0; a < n; a++) {
-        if (color.get(a) == DFS_WHITE) {
-            cc.insert(a);
-            DFS::visit_nplusm(a, g, &color, &parent, DFS_NOP_PROCESS,
-                              DFS_NOP_EXPLORE, DFS_NOP_EXPLORE,
-                              DFS_NOP_PROCESS);
-        }
-    }
-}
+    : e(edges),
+      g(e->getGraph()),
+      n(g.getOrder()),
+      cc(e->getCCs()),
+      cut(n),
+      cutI(cut) {}
 
 void CutVertexIterator::init() {
-    findCCs();
-
     for (uint64_t u = 0; u < n; u++) {
-        if (cc.get(u)) {
+        if (cc[u]) {
             // u is root of a DFS tree
             uint64_t num = 0;
             for (uint64_t k = 0; k < g.deg(u); k++) {
