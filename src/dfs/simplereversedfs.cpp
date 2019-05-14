@@ -21,7 +21,7 @@ void SimpleReverseDFS::init() {
     rmax = result.size();
 }
 
-bool SimpleReverseDFS::more() { return result.empty(); }
+bool SimpleReverseDFS::more() { return !result.empty(); }
 
 UserCall SimpleReverseDFS::next() {
     UserCall a = result.front();

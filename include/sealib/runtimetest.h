@@ -57,7 +57,7 @@ class RuntimeTest {
 void RuntimeTest::runTest(std::function<void(void)> testfunction,
                           uint64_t order, uint64_t size) {
     struct tms t1, t2;
-    parameters.push_back({order, size});
+    parameters.push_back(std::tuple<uint64_t, uint64_t>{order, size});
     std::cout << "Running test: " << parameters.size() << " n: " << order
               << " m: " << size << std::endl;
 

@@ -67,6 +67,8 @@ class EdgeMarker {
         return parent.byteSize() + edges.byteSize() + offset.byteSize();
     }
 
+    virtual ~EdgeMarker() = default;
+
  protected:
     /**
      * Set the marking on the kth edge of u (and on the jth edge of the mate v).

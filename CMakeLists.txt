@@ -30,7 +30,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # --------------------------------------------------- #
 ExternalProject_Add(GTEST_PROJECT
         GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG 440527a61e1c91188195f7de212c63c77e8f0a45
+        GIT_TAG dea0216d0c6bc5e63cf5f6c8651cd268668032ec
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS -DINSTALL_GTEST=OFF -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++
         INSTALL_COMMAND ""
