@@ -1,6 +1,7 @@
 #ifndef SEALIB_ITERATOR_DFS_H_
 #define SEALIB_ITERATOR_DFS_H_
 #include <functional>
+#include <stack>
 #include <vector>
 #include "sealib/_types.h"
 #include "sealib/collection/compactarray.h"
@@ -50,6 +51,11 @@ class DFS {
      * @author Simon Heuser
      */
     static void standardDFS(Graph const &g,
+                            Consumer preprocess = DFS_NOP_PROCESS,
+                            BiConsumer preexplore = DFS_NOP_EXPLORE,
+                            BiConsumer postexplore = DFS_NOP_EXPLORE,
+                            Consumer postprocess = DFS_NOP_PROCESS);
+    static void standardDFS(UndirectedGraph const &g,
                             Consumer preprocess = DFS_NOP_PROCESS,
                             BiConsumer preexplore = DFS_NOP_EXPLORE,
                             BiConsumer postexplore = DFS_NOP_EXPLORE,
@@ -123,8 +129,8 @@ class DFS {
      */
 
     static void visit_standard(uint64_t u0, Graph const &g,
-                               std::vector<uint64_t> *color,
-                               std::vector<std::pair<uint64_t, uint64_t>> *s,
+                               std::vector<uint8_t> *color,
+                               std::stack<std::pair<uint64_t, uint64_t>> *s,
                                Consumer preProcess, BiConsumer preExplore,
                                BiConsumer postExplore, Consumer postProcess);
 
@@ -137,9 +143,10 @@ class DFS {
         Consumer postprocess);
 
     static void visit_nplusm(uint64_t u0, UndirectedGraph const &g,
-                             CompactArray *color, Sequence<uint64_t> *parent,
-                             Consumer preprocess, BiConsumer preexplore,
-                             BiConsumer postexplore, Consumer postprocess);
+                             Sequence<uint64_t> *color,
+                             Sequence<uint64_t> *parent, Consumer preprocess,
+                             BiConsumer preexplore, BiConsumer postexplore,
+                             Consumer postprocess);
 
     static void restore_full(uint64_t u0, Graph const &g, CompactArray *color,
                              /*Basic*/ SegmentStack *s);

@@ -44,9 +44,10 @@ class GraphCreator {
     /**
      * Create a random k-regular graph.
      * Complexity: O(n*k) time
-     * @param order number of nodes to generate
+     * @param order number of nodes to generate (should be an even number!)
      * @param k the degree of each node
      * @return the resulting undirected graph G (n = order, m = k*order)
+     * (Note: if order is an odd number, G will have order+1 vertices)
      * @author Simon Heuser
      */
     static UndirectedGraph kRegular(uint64_t order, uint64_t k);
@@ -126,6 +127,23 @@ class GraphCreator {
      * @return transposed input graph
      */
     static DirectedGraph transpose(DirectedGraph const &g);
+
+    /**
+     * Create a triangulated graph with the given number of vertices. A number
+     * of triangles is joined together so that the resulting graph is
+     * biconnected and maximally outerplanar.
+     * @param order number of vertices
+     * @return triangulated graph (n=order, m=2*n-3)
+     */
+    static UndirectedGraph triangulated(uint64_t order);
+
+    /**
+     * Create the cycle graph C^n.
+     * @param order number of vertices
+     * @param chords number of chords inside the cycle
+     * @return outerplanar cycle graph G (n=order, m=order+chords)
+     */
+    static UndirectedGraph cycle(uint64_t order, uint64_t chords = 0);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPHCREATOR_H_

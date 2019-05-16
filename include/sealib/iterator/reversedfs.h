@@ -47,7 +47,7 @@ struct UserCall {
  *
  * EFFICIENCY: O(n+m) time, O(n log(log(n))) bits
  */
-class ReverseDFS : Iterator<UserCall>, DFS {
+class ReverseDFS : public Iterator<UserCall>, DFS {
  public:
     explicit ReverseDFS(Graph const &);
 
@@ -68,6 +68,12 @@ class ReverseDFS : Iterator<UserCall>, DFS {
      * @return next user call
      */
     UserCall next() override;
+
+    uint64_t byteSize() const {
+        return c.byteSize() + d.byteSize() + f.byteSize() + s.byteSize() +
+               intervals.capacity() * sizeof(IntervalData) +
+               iWidth * sizeof(UserCall);
+    }
 
  private:
     static const std::pair<uint64_t, uint64_t> NIL;
@@ -123,18 +129,8 @@ class ReverseDFS : Iterator<UserCall>, DFS {
      */
     std::vector<UserCall> simulate(
         std::stack<std::pair<uint64_t, uint64_t>> *sj);
-};
 
-class IntervalStackEmpty : public std::exception {
-    const char *what() const noexcept {
-        return "Reverse DFS (internal error): interval stack is empty";
-    }
-};
-class StackReconstructionFailed : public std::exception {
-    const char *what() const noexcept {
-        return "Reverse DFS (internal error): could not reconstruct stack, no "
-               "node with i < j && f == j found";
-    }
+    uint64_t getColor(uint64_t u);
 };
 
 }  // namespace Sealib

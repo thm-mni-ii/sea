@@ -14,7 +14,7 @@ namespace Sealib {
  * order. There is also the possibility to check if a specific vertex is a cut
  * vertex.
  */
-class CutVertexIterator : Iterator<uint64_t> {
+class CutVertexIterator : public Iterator<uint64_t> {
  public:
     /**
      * Create a new cut-vertex iterator for an undirected graph G.
@@ -55,11 +55,13 @@ class CutVertexIterator : Iterator<uint64_t> {
      */
     bool isCutVertex(uint64_t u);
 
+    uint64_t byteSize() const { return e->byteSize() + cut.byteSize(); }
+
  private:
     std::shared_ptr<EdgeMarker> e;
     UndirectedGraph const &g;
     uint64_t n;
-    ChoiceDictionary cc;
+    std::vector<bool> const &cc;
     ChoiceDictionary cut;
     ChoiceDictionaryIterator cutI;
 

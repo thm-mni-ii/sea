@@ -70,6 +70,10 @@ class ChoiceDictionary {
         return wordCount / wordSize + 1;
     }
 
+    uint64_t byteSize() const {
+        return (primary.capacity()+secondary.capacity()+validator.capacity())*sizeof(uint64_t);
+    }
+
  private:
     /**
      * 64 for uint64_t
@@ -123,7 +127,7 @@ class ChoiceDictionary {
 
     void shrinkValidator(uint64_t startIndex);
 
-    bool isInitialized(uint64_t primaryIndex) const;
+    [[gnu::hot]] bool isInitialized(uint64_t primaryIndex) const;
 
     bool hasColor(uint64_t primaryIndex) const;
 };

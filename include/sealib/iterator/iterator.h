@@ -29,18 +29,20 @@ class Iterator {
      */
     virtual T next() = 0;
 
+ public:
     /**
      * Step through the entire range of the iterator and execute a given
-     * function for each encountered element. (init() before calling this
-     * method!)
+     * function for each encountered element.
      * @param f function to execute for each element
      */
     virtual void forEach(std::function<void(T)> f) {
+        init();
         while (more()) {
             f(next());
         }
     }
 
+ protected:
     virtual ~Iterator() = default;
     Iterator() = default;
     Iterator(Iterator const &) = default;

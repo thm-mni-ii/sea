@@ -161,9 +161,11 @@ UndirectedGraph GraphCreator::sparseUndirected(uint64_t order) {
 }
 
 UndirectedGraph GraphCreator::kRegular(uint64_t order, uint64_t degreePerNode) {
+    assert("Cannot create a k-regular graph with an odd number of vertices" &&
+           order % 2 == 0);
     UndirectedGraph g(order);
     for (uint64_t k = 0; k < degreePerNode; k++) {
-        std::deque<uint64_t> u;
+        std::vector<uint64_t> u;
         for (uint64_t a = 0; a < order; a++) {
             u.emplace_back(a);
         }
@@ -215,6 +217,43 @@ DirectedGraph GraphCreator::transpose(DirectedGraph const &g) {
         }
     }
     return t;
+}
+
+UndirectedGraph GraphCreator::triangulated(uint64_t order) {
+    assert("Cannot create a triangle graph with less than 3 vertices" &&
+           order >= 3);
+    std::vector<ExtendedNode> nodes;
+    nodes.emplace_back(ExtendedNode({{1, 0}, {2, 0}}));
+    nodes.emplace_back(ExtendedNode({{0, 0}, {2, 1}}));
+    nodes.emplace_back(ExtendedNode({{0, 1}, {1, 1}}));
+    uint64_t n = 3;
+    while (n < order) {
+        uint64_t d = nodes.back().getDegree();
+        nodes[n - 2].addAdjacency({n, 0});
+        nodes[n - 1].addAdjacency({n, 1});
+        nodes.emplace_back(ExtendedNode({{n - 2, d - 1}, {n - 1, d - 1}}));
+        n++;
+    }
+    return UndirectedGraph(nodes);
+}
+
+UndirectedGraph GraphCreator::cycle(uint64_t order, uint64_t chords) {
+    std::vector<ExtendedNode> nodes;
+    uint64_t n = 0;
+    while (nodes.size() < order) {
+        nodes.emplace_back(ExtendedNode({{n == 0 ? order - 1 : n - 1, 1},
+                                         {n == order - 1 ? 0 : n + 1, 0}}));
+        n++;
+    }
+    if (chords > 0) {
+        uint64_t l = n / chords, u = 0;
+        while (u + l / 2 < n) {
+            nodes[u].addAdjacency({u + l / 2, 2});
+            nodes[u + l / 2].addAdjacency({u, 2});
+            u += l;
+        }
+    }
+    return UndirectedGraph(nodes);
 }
 
 static uint64_t *generateRawGilbertGraph(uint64_t order, double p,

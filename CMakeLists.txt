@@ -30,7 +30,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # --------------------------------------------------- #
 ExternalProject_Add(GTEST_PROJECT
         GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG 440527a61e1c91188195f7de212c63c77e8f0a45
+        GIT_TAG dea0216d0c6bc5e63cf5f6c8651cd268668032ec
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
         CMAKE_ARGS -DINSTALL_GTEST=OFF -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++
         INSTALL_COMMAND ""
@@ -63,13 +63,16 @@ add_library(sealib SHARED ${LIB_SOURCES})
 file(GLOB TESTS "test/*.cpp")                                   # all test files
 add_executable(tests ${LIB_SOURCES} ${TESTS})
 add_dependencies(tests gtest)
-find_package(Threads)
-target_link_libraries(tests gtest ${CMAKE_THREAD_LIBS_INIT})
+set(TEST_LINK_FLAGS "")
 
 if (COVERAGE)
         MESSAGE(STATUS "Link Coverage")
         set(TEST_FLAGS "${TEST_FLAGS} --coverage")
-        set_target_properties(tests PROPERTIES LINK_FLAGS "--coverage")
+        set(TEST_LINK_FLAGS "--coverage")
+elseif (PROFILING AND ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"))
+        MESSAGE(STATUS "Profiling: ENABLED")
+        set(TEST_FLAGS "${TEST_FLAGS} -pg -no-pie")
+        set(TEST_LINK_FLAGS "-pg -no-pie")
 endif ()
 
 # --------------------------------------------------- #
@@ -77,7 +80,11 @@ endif ()
 # --------------------------------------------------- #
 file(GLOB MAIN "src-view/*.cpp")                                   # all test files
 add_executable(main ${LIB_SOURCES} ${MAIN})
+
 find_package(Threads)
+set_target_properties(main PROPERTIES LINK_FLAGS "${CMAKE_THREAD_LIBS_INIT}")
+set_target_properties(tests PROPERTIES LINK_FLAGS "${TEST_LINK_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+target_link_libraries(tests gtest)
 
 set_target_properties(sealib main PROPERTIES COMPILE_FLAGS ${BUILD_FLAGS})
 set_target_properties(tests PROPERTIES COMPILE_FLAGS ${TEST_FLAGS})

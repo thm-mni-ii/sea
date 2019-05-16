@@ -229,6 +229,8 @@ uint64_t VisualCutVertex::next() {
 }
 
 // --- VISUAL BICONNECTED-COMPONENT ITERATOR ---
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 
 VisualBCC::VisualBCC(std::shared_ptr<VisualEdgeMarker> edges)
     : BCCIterator(edges), e(edges) {
@@ -260,5 +262,7 @@ std::pair<uint64_t, uint64_t> VisualBCC::next() {
     emit();
     return r;
 }
+
+#pragma clang diagnostic pop
 
 }  // namespace SealibVisual

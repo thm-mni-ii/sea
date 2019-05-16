@@ -5,25 +5,33 @@
 namespace Sealib {
 const uint8_t AVL_BALANCED = 11, AVL_LEFT = 0, AVL_RIGHT = 1;
 
+template <class T>
+class AVLTreeBase;
+typedef AVLTreeBase<uint64_t> AVLTree;
+typedef AVLTreeBase<std::pair<uint64_t, uint64_t>> AVLPairTree;
+
 /**
  * A self-balancing binary tree with O(log(n)) time for search, insertion and
  * deletion. (Adel'son-Vel'skii, Landis; 1962)
  *
  * @author Simon Heuser
+ * @tparam T value type
  */
-class AVLTree {
+template <class T>
+class AVLTreeBase {
  public:
     /**
      * Construct an empty AVL tree.
      */
-    AVLTree() : root(nullptr) {}
+    AVLTreeBase() : root(nullptr) {}
 
     /**
      * Search for data stored at the given node.
      * @param key The key to search for
-     * @return Data stored at the node, or INVALID if the node was not found
+     * @return Data stored at the node, or invalidValue() if the node was not
+     * found
      */
-    uint64_t search(uint64_t key) const;
+    T search(uint64_t key) const;
 
     /**
      * Insert a new node with the given key and data.
@@ -31,7 +39,7 @@ class AVLTree {
      * @param key Key of the node to be inserted
      * @param data Data to insert for the node
      */
-    void insert(uint64_t key, uint64_t data = 0);
+    void insert(uint64_t key, T data = T());
 
     /**
      * Remove a node from the tree.
@@ -39,19 +47,24 @@ class AVLTree {
      */
     void remove(uint64_t key);
 
-    // The AVLTree class may be moved, but not copied.
-    AVLTree(AVLTree const &) = delete;
-    AVLTree &operator=(AVLTree const &) = delete;
-    AVLTree(AVLTree &&) = default;
-    AVLTree &operator=(AVLTree &&) = default;
-    ~AVLTree();
+    // The AVLTreeBase class may be moved, but not copied.
+    AVLTreeBase(AVLTreeBase const &) = delete;
+    AVLTreeBase &operator=(AVLTreeBase const &) = delete;
+    AVLTreeBase(AVLTreeBase &&) = default;
+    AVLTreeBase &operator=(AVLTreeBase &&) = default;
+    ~AVLTreeBase();
+
+    /**
+     * Gets the "invalid" value used by the search function.
+     * @return Value indicating invalid state (= not found)
+     */
+    static T invalidValue();
 
  private:
     struct Cell {
-        Cell(uint64_t k, uint64_t v, Cell *p = nullptr)
-            : key(k), data(v), parent(p) {}
+        Cell(uint64_t k, T v, Cell *p = nullptr) : key(k), data(v), parent(p) {}
         uint64_t key;
-        uint64_t data;
+        T data;
         Cell *parent = nullptr, *left = nullptr, *right = nullptr;
         uint8_t bal = AVL_BALANCED;
     };

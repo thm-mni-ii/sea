@@ -68,7 +68,7 @@ class UndirectedGraph : public Graph {
      * @param k outgoing edge
      * @return index of the edge k' in v that points back to u
      */
-    uint64_t mate(uint64_t u, uint64_t k) const { return nodes[u].getAdj()[k].second; }
+    virtual uint64_t mate(uint64_t u, uint64_t k) const { return nodes[u].getAdj()[k].second; }
 
  private:
     std::vector<ExtendedNode> nodes;

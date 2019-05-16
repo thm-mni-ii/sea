@@ -7,6 +7,13 @@
 #include "sealib/iterator/choicedictionaryiterator.h"
 
 namespace Sealib {
+
+template <class T>
+class RaggedDictionaryBase;
+typedef RaggedDictionaryBase<uint64_t> RaggedDictionary;
+typedef RaggedDictionaryBase<std::pair<uint64_t, uint64_t>>
+    RaggedPairDictionary;
+
 /**
  * A dictionary that holds up to n/log2(n) key-value pairs and supports the
  * following operations. (Elmasry, Hagerup, Kammer; 2015)
@@ -20,8 +27,10 @@ namespace Sealib {
  * - deleting a present tuple
  *
  * @author Simon Heuser
+ * @tparam T value type
  */
-class RaggedDictionary {
+template <class T>
+class RaggedDictionaryBase {
  public:
     /**
      * Create a new ragged dictionary with the given universe size n. (You will
@@ -29,7 +38,7 @@ class RaggedDictionary {
      * accordingly.)
      * @param universeSize Universe size of the dictionary
      */
-    explicit RaggedDictionary(uint64_t universeSize);
+    explicit RaggedDictionaryBase(uint64_t universeSize);
 
     /**
      * Get the value stored for the given key.
@@ -37,7 +46,7 @@ class RaggedDictionary {
      * @return The stored value, or INVALID if the key is not present in the
      * dictionary
      */
-    uint64_t get(uint64_t k) const;
+    T get(uint64_t k) const;
 
     /**
      * Insert a tuple into the dictionary.
@@ -45,11 +54,11 @@ class RaggedDictionary {
      * with the given value)
      * @param v Value to store for the given key
      */
-    void insert(uint64_t k, uint64_t v);
+    void insert(uint64_t k, T v);
 
     /**
      * Remove a tuple from the dictionary.
-     * @param k Key to remove the tuple for (if present)
+     * @param k Key to remove the node for (if present)
      */
     void remove(uint64_t k);
 
@@ -72,11 +81,15 @@ class RaggedDictionary {
      */
     ChoiceDictionaryIterator allIds() const;
 
+    uint64_t byteSize() const {
+        return present.byteSize() + keys * sizeof(T);
+    }
+
  private:
     uint64_t size, l, keys;
     uint64_t entryCount = 0;
     ChoiceDictionary present;
-    std::vector<AVLTree> t;
+    std::vector<AVLTreeBase<T>> t;
 };
 
 class RaggedDictionaryFull : public std::exception {

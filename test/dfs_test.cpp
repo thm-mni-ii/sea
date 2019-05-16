@@ -61,7 +61,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest2,
                         /**/);
 
 TEST_P(DFSTest, stdUserproc) {
-    DirectedGraph g = GetParam();
+    DirectedGraph const& g = GetParam();
     DFS::standardDFS(g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, ORDER);
     EXPECT_EQ(c2, DEGREE * ORDER);
@@ -70,7 +70,7 @@ TEST_P(DFSTest, stdUserproc) {
 }
 
 TEST_P(DFSTest, nBitUserproc) {
-    DirectedGraph g = GetParam();
+    DirectedGraph const& g = GetParam();
     DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, ORDER);
     EXPECT_EQ(c2, DEGREE * ORDER);
@@ -79,7 +79,7 @@ TEST_P(DFSTest, nBitUserproc) {
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
-    DirectedGraph g = GetParam();
+    DirectedGraph const& g = GetParam();
     DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, ORDER);
     EXPECT_EQ(c2, DEGREE * ORDER);
@@ -88,7 +88,7 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 }
 
 TEST_P(DFSTest2, nplusmBitUserproc) {
-    UndirectedGraph g = GetParam();
+    UndirectedGraph const& g = GetParam();
     DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);
     EXPECT_EQ(c1, 5 * ORDER);
     EXPECT_EQ(c2, 5 * ORDER * DEGREE);
@@ -112,7 +112,7 @@ TEST(DFSTest, nloglognImbalanced) {
     EXPECT_EQ(c4, 200);
 }
 
-auto *graph = new uint64_t[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
+auto* graph = new uint64_t[19]{5,  9,  7, 9,  9, 7,  12, 1, 17, 2,
                                12, 14, 3, 14, 4, 12, 17, 5, 14};
 uint64_t controllSum = (2 * (1 + 2 + 3 + 4 + 5));
 stack<uint64_t> controllStack;

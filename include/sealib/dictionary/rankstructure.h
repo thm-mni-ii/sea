@@ -16,8 +16,8 @@ typedef RankStructureBase<VariantBitset> VariantRankStructure;
 
 /**
  * Space efficient RankStructure implementation.
- * @tparam B Bitset type to use
  * @author Johannes Meintrup
+ * @tparam B Bitset type to use
  */
 template <class B>
 class RankStructureBase {
@@ -70,6 +70,12 @@ class RankStructureBase {
 
     uint32_t setBefore(uint64_t segment) const {
         return segment == 0 ? 0 : setCountTable[segment - 1];
+    }
+
+    uint64_t byteSize() const {
+        return bitset.byteSize() +
+               (setCountTable.capacity() + nonEmptySegments.capacity()) *
+                   sizeof(uint32_t);
     }
 
  protected:

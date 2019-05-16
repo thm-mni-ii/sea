@@ -11,7 +11,7 @@ namespace Sealib {
  *
  * EFFICIENCY: O(n+m) time, O(n log(log(n))) bits
  */
-class SCCIterator : Iterator<uint64_t> {
+class SCCIterator : public Iterator<uint64_t> {
  public:
     /**
      * Creates a new SCC iterator.

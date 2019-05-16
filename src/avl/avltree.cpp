@@ -2,8 +2,9 @@
 
 namespace Sealib {
 
-uint64_t AVLTree::search(uint64_t k) const {
-    uint64_t r = INVALID;
+template <class T>
+T AVLTreeBase<T>::search(uint64_t k) const {
+    T r = invalidValue();
     if (root != nullptr) {
         Cell *u = root;
         while (u != nullptr) {
@@ -14,7 +15,8 @@ uint64_t AVLTree::search(uint64_t k) const {
     return r;
 }
 
-void AVLTree::insert(uint64_t k, uint64_t v) {
+template <class T>
+void AVLTreeBase<T>::insert(uint64_t k, T v) {
     if (root != nullptr) {
         Cell *u = root;
         bool done = false;
@@ -45,7 +47,8 @@ void AVLTree::insert(uint64_t k, uint64_t v) {
     }
 }
 
-void AVLTree::remove(uint64_t k) {
+template <class T>
+void AVLTreeBase<T>::remove(uint64_t k) {
     if (root != nullptr) {
         Cell *u = root;
         bool done = false;
@@ -110,7 +113,8 @@ void AVLTree::remove(uint64_t k) {
     }
 }
 
-void AVLTree::rebalanceChain(Cell *p, uint8_t pSide) {
+template <class T>
+void AVLTreeBase<T>::rebalanceChain(Cell *p, uint8_t pSide) {
     Cell *head = p, *chainTop = nullptr;
     uint8_t side = pSide;
     // correct 0 0 cells' balances
@@ -140,7 +144,8 @@ void AVLTree::rebalanceChain(Cell *p, uint8_t pSide) {
     }
 }
 
-void AVLTree::rebalanceBranch(Cell *p, uint8_t pSide) {
+template <class T>
+void AVLTreeBase<T>::rebalanceBranch(Cell *p, uint8_t pSide) {
     Cell *head = p;
     uint8_t side = pSide;
     while (head != nullptr) {
@@ -190,7 +195,8 @@ void AVLTree::rebalanceBranch(Cell *p, uint8_t pSide) {
     }
 }
 
-void AVLTree::swapLeaves(Cell *a) {
+template <class T>
+void AVLTreeBase<T>::swapLeaves(Cell *a) {
     Cell *x = a->bal == AVL_LEFT ? a->left : a->right;
     Cell *s = a->parent;
     x->parent = s->parent;
@@ -209,7 +215,8 @@ void AVLTree::swapLeaves(Cell *a) {
     x->bal = s->bal = a->bal = AVL_BALANCED;
 }
 
-void AVLTree::rotateTree(Cell *a) {
+template <class T>
+void AVLTreeBase<T>::rotateTree(Cell *a) {
     Cell *s = a->parent;
     Cell *tx, *t1, *t2;
     if (a->bal == AVL_LEFT) {
@@ -241,7 +248,8 @@ void AVLTree::rotateTree(Cell *a) {
     s->bal = a->bal = AVL_BALANCED;
 }
 
-void AVLTree::spliceTree(Cell *a) {
+template <class T>
+void AVLTreeBase<T>::spliceTree(Cell *a) {
     Cell *s = a->parent, *p = s->parent;
     Cell *b, *t1, *t2, *t3, *tx;
     if (a->bal == AVL_LEFT) {
@@ -315,7 +323,8 @@ void AVLTree::spliceTree(Cell *a) {
     b->bal = AVL_BALANCED;
 }
 
-AVLTree::~AVLTree() {
+template <class T>
+AVLTreeBase<T>::~AVLTreeBase() {
     Cell *u = root;
     while (u != nullptr) {
         if (u->left != nullptr) {
@@ -331,5 +340,19 @@ AVLTree::~AVLTree() {
         }
     }
 }
+
+template <>
+uint64_t AVLTreeBase<uint64_t>::invalidValue() {
+    return INVALID;
+}
+
+template <>
+std::pair<uint64_t, uint64_t>
+AVLTreeBase<std::pair<uint64_t, uint64_t>>::invalidValue() {
+    return {INVALID, INVALID};
+}
+
+template class AVLTreeBase<uint64_t>;
+template class AVLTreeBase<std::pair<uint64_t, uint64_t>>;
 
 }  // namespace Sealib

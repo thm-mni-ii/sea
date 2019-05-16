@@ -24,7 +24,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, ReverseDFSTest,
                         /**/);
 
 TEST_P(ReverseDFSTest, comparison) {
-    DirectedGraph g = GetParam();
+    DirectedGraph const& g = GetParam();
     ReverseDFS r(g);
     SimpleReverseDFS s(g);
     r.init();

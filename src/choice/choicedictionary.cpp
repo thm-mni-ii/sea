@@ -4,16 +4,13 @@
 
 using Sealib::ChoiceDictionary;
 
-
-
 ChoiceDictionary::ChoiceDictionary(uint64_t size)
-    :   wordSize(sizeof(uint64_t) * 8),
-        wordCount(size / wordSize + 1),
-        pointer(0),
-        primary(wordCount),
-        secondary((wordCount/wordSize+1)*TUPEL_FACTOR),
-        validator(wordCount/wordSize+1)
-    {}
+    : wordSize(sizeof(uint64_t) * 8),
+      wordCount(size / wordSize + 1),
+      pointer(0),
+      primary(wordCount),
+      secondary((wordCount / wordSize + 1) * TUPEL_FACTOR),
+      validator(wordCount / wordSize + 1) {}
 
 void ChoiceDictionary::insert(uint64_t index) {
     uint64_t primaryWord;
@@ -40,8 +37,7 @@ bool ChoiceDictionary::get(uint64_t index) const {
 
     uint64_t primaryIndex = index / wordSize;
 
-    if (!isInitialized(primaryIndex))
-        return 0;
+    if (!isInitialized(primaryIndex)) return 0;
 
     primaryInnerIndex = index % wordSize;
 
@@ -60,7 +56,8 @@ uint64_t ChoiceDictionary::choice() const {
 
     if (pointer == 0) throw ChoiceDictionaryEmpty();
 
-    uint64_t secondaryIndex = validator[pointer - POINTER_OFFSET] - TUPEL_OFFSET;
+    uint64_t secondaryIndex =
+        validator[pointer - POINTER_OFFSET] - TUPEL_OFFSET;
     secondaryWord = secondary[secondaryIndex];
 
     primaryIndex = (secondaryIndex / TUPEL_FACTOR) * wordSize +
@@ -102,7 +99,8 @@ bool ChoiceDictionary::pointerIsValid(uint64_t nextPointer) const {
     if (nextPointer >= pointer) return false;
 
     uint64_t secondaryIndex = validator[nextPointer];
-    if (secondaryIndex > (wordCount / wordSize + 1) * TUPEL_FACTOR) return false;
+    if (secondaryIndex > (wordCount / wordSize + 1) * TUPEL_FACTOR)
+        return false;
 
     if (nextPointer == secondary[secondaryIndex])
         return true;
@@ -175,7 +173,8 @@ bool ChoiceDictionary::isInitialized(uint64_t primaryIndex) const {
     uint64_t secondaryWord = secondary[secondaryIndex];
     uint64_t targetBit = 1UL << (wordSize - SHIFT_OFFSET - primaryIndex);
 
-    return (secondaryWord & targetBit) != 0 && hasColor(primaryIndex) && pointer > 0;
+    return pointer > 0 && (secondaryWord & targetBit) != 0 &&
+           hasColor(primaryIndex);
 }
 
 bool ChoiceDictionary::hasColor(uint64_t primaryIndex) const {
@@ -190,4 +189,3 @@ bool ChoiceDictionary::hasColor(uint64_t primaryIndex) const {
         return true;
     }
 }
-
