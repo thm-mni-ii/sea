@@ -1,13 +1,14 @@
 O(n)-Bit Breadth-First Search
 ===
-The breadth-first search over a graph G=(V,E) will find all *connected components* of G and output the tuple (u,dist) for each node, which is shows the distance of u to the starting node of the current component. Two *user-defined procedures* are available: `preprocess` and `preexplore`.
+The breadth-first search over a graph G=(V,E) will find all *connected components* of G and output the tuple (u,dist) for each vertex, which is shows the distance of u to the starting vertex of the current component. Two *user-defined procedures* are available: `preprocess` and `preexplore`.
 
 This space-efficient variant
-- uses a compact bitset to store the *node colors*
+- uses a compact bitset to store the *vertex colors*
+- uses two [choice dictionaries](./choice-dictionary.md) to manage color swapping
 - is built as an iterator which *streams* the results to the user:
 	- *init()*: initializes the BFS
 	- *more()*: returns true if there is more to do in this connected component
-	- *next()*: gets the next node and distance from the component
+	- *next()*: gets the next vertex and distance from the component
 	- *nextComponent()*: advances to the next component, or returns false if the graph is completely explored
 
 ## Efficiency
