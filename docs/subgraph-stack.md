@@ -47,7 +47,7 @@ Pushes 10 new subgraphs on the stack, with each new subgraph containing 3/4 of t
 
 void main() {
 	std::shared_ptr<Sealib::Graph> bg = ;
-		Sealib::GraphCreator::generateRandomBipartiteBasicGraph(1000, 1000, 0.1, 1);
+		Sealib::GraphCreator::randomBipartite(1000, 1000, 0.1, 1);
 
 	Sealib::SubgraphStack stack(bg);
 	
