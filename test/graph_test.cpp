@@ -84,14 +84,21 @@ TEST(VirtualGraphTest, basicOperations) {
     EXPECT_EQ(g.head(33, deg), 3);
     g.removeEdge(3, 33);
     ASSERT_EQ(g.deg(3), deg);
-    g.removeVertex(g.head(3, 7));
-    for (uint a = 0; a < 7; a++) {
-        EXPECT_EQ(g.head(3, a), baseGraph.head(3, a)) << "failed at " << a;
+    uint64_t removed = g.head(3, 7);
+    std::vector<uint64_t> adj;
+    for (uint64_t k = 0; k < g.deg(3); k++) {
+        if (g.head(3, k) != removed) {
+            adj.emplace_back(g.head(3, k));
+        }
     }
-    for (uint a = 7; a < deg - 1; a++) {
-        EXPECT_EQ(g.head(3, a), baseGraph.head(3, a + 1)) << "failed at " << a;
+    g.removeVertex(removed);
+
+    for (uint64_t a = 0; a < adj.size(); a++) {
+        EXPECT_EQ(g.head(3, a), adj[a]) << "failed at " << a;
     }
-    EXPECT_EQ(g.head(3, deg - 1), INVALID);
+    for (uint64_t a = adj.size(); a < deg; a++) {
+        EXPECT_EQ(g.head(3, a), INVALID);
+    }
 }
 
 TEST(VirtualGraphTest, mate) {
