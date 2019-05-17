@@ -14,10 +14,41 @@ namespace Sealib{
 class STGraph: public Graph{
  public:
     /**
-     * @param g is the graph stgraph works on
+     * @param graph is the graph stgraph works on
      */
-    explicit STGraph(std::vector<SimpleNode> graph, uint64_t s, uint64_t degree):
-        g(std::move(graph)), s_pos(s), s_deg(degree) {}
+    explicit STGraph(Graph const &graph, Bitset<> s, Bitset<> t) {
+        uint64_t s_degree = 0;
+        std::vector<std::tuple<uint64_t, uint64_t>> s_edges;
+        std::vector<SimpleNode> nodes(graph.getOrder() + 1);
+
+        for (uint64_t i = 0; i < graph.getOrder(); i++) {
+            if (t.get(i)) {
+                // Edges in t aren't important, because we won't use edges wich are
+                // leading away from t. After we reached a vertice in t we stop.
+            } else {
+                if (s.get(i)) {
+                    s_edges.push_back({graph.deg(i) + 1, i});
+                    s_degree += graph.deg(i) + 1;
+                }
+                std::vector<uint64_t> out(graph.deg(i));
+                for (uint64_t j = 0; j < graph.deg(i); j++)
+                    out[j] = graph.head(i, j);
+                nodes[i] = SimpleNode(out);
+            }
+        }
+        
+        std::vector<uint64_t> s_out(s_degree);
+        uint64_t k = 0;
+        for(uint64_t i = 0; i < s_edges.size(); i++){
+            for(uint64_t j = 0; j < std::get<0>(s_edges[i]); j++){
+                s_out[k] = std::get<1>(s_edges[i]);
+            }
+        }
+        nodes[graph.getOrder()] = SimpleNode(s_out);
+        g = nodes;
+        s_pos = graph.getOrder();
+        s_deg = s_degree;
+    }
 
     /**
     * Returns the degree of the node that u points at.
@@ -49,16 +80,15 @@ class STGraph: public Graph{
      * t to another node won't be used, we're not going to add an edge to t;
      * @param path is the list of position of the next edge of a node
      */
-    void revertpath(uint64_t* path){
-        uint64_t pos = g[s_pos].getAdj()[path[sizeof(path) / sizeof(uint64_t) - 1]];
-        g[s_pos].getAdj()[path[sizeof(path) / sizeof(uint64_t) - 1]] = g[s_pos].getAdj()[s_deg - 1];
-        uint64_t mem = g[pos].getAdj()[path[sizeof(path) / sizeof(uint64_t) - 2]];
+    void revertpath(std::vector<uint64_t> path){
+        uint64_t pos = s_pos;
+        uint64_t mem = g[pos].getAdj()[path[1]];
+        g[pos].getAdj()[path[1]] = g[pos].getAdj()[s_deg - 1];
         uint64_t memnext;
-        g[pos].getAdj()[path[sizeof(path) / sizeof(uint64_t) - 2]] = s_pos;
         s_deg--;
-        for(int i = sizeof(path) / sizeof(uint64_t) - 2; i > 0; i--){
-            memnext = g[mem].getAdj()[path[i]+1];
-            g[g[pos].getAdj()[path[i]]].getAdj()[path[i]+1] = pos;
+        for(uint64_t i = 2; i < path.size() - 1; i++){
+            memnext = g[mem].getAdj()[path[i]];
+            g[mem].getAdj()[path[i]] = pos;
             pos = mem;
             mem = memnext;
         }
@@ -66,8 +96,8 @@ class STGraph: public Graph{
 
  private:
     std::vector<SimpleNode> g;
-    uint64_t s_deg;
     uint64_t s_pos;
+    uint64_t s_deg;
 };
 }
 #endif //SEA_STGRAPH_H
