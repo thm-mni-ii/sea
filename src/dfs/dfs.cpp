@@ -3,6 +3,9 @@
 #include <memory>
 #include <sstream>
 #include "./inplacerunner.h"
+#include "standarddfsiterator.h"
+#include "restoredfsiterator.h"
+#include "nplusmbitdfsiterator.h"
 
 namespace Sealib {
 
@@ -157,6 +160,7 @@ void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g,
             preexplore(u, k);
             if (color->get(v) == DFS_WHITE) {
                 preprocess(v);
+                if(color->get(v) == DFS_BLACK) break;
                 color->insert(v, DFS_GRAY);
                 parent->insert(v, g.mate(u, k));
                 u = v;
@@ -195,6 +199,10 @@ void DFS::standardDFS(Graph const &g, Consumer preprocess,
     }
 }
 
+Iterator<UserCall>* DFS::getStandardDFSIterator(const Sealib::Graph &g, uint64_t u0) {
+    return new StandardDFSIterator(g, u0);
+}
+
 void DFS::nBitDFS(Graph const &g, Consumer preprocess, BiConsumer preexplore,
                   BiConsumer postexplore, Consumer postprocess) {
     uint64_t n = g.getOrder();
@@ -218,6 +226,10 @@ void DFS::nBitDFS(Graph const &g, Consumer preprocess, BiConsumer preexplore,
     }
 }
 
+Iterator<UserCall>* DFS::getnBitDFSIterator(Graph const &g, uint64_t u0){
+    return new RestoreDFSIterator(g, u0, restore_full, true);
+}
+
 void DFS::nloglognBitDFS(Graph const &g, Consumer preprocess,
                          BiConsumer preexplore, BiConsumer postexplore,
                          Consumer postprocess) {
@@ -231,6 +243,10 @@ void DFS::nloglognBitDFS(Graph const &g, Consumer preprocess,
     }
 }
 
+Iterator<UserCall>* DFS::getnloglognDFSIterator(Graph const &g, uint64_t u0){
+    return new RestoreDFSIterator(g, u0, restore_top, false);
+}
+
 void DFS::nplusmBitDFS(UndirectedGraph const &g, Consumer preprocess,
                        BiConsumer preexplore, BiConsumer postexplore,
                        Consumer postprocess) {
@@ -242,6 +258,10 @@ void DFS::nplusmBitDFS(UndirectedGraph const &g, Consumer preprocess,
             visit_nplusm(a, g, &color, &parent, preprocess, preexplore,
                          postexplore, postprocess);
     }
+}
+
+Iterator<UserCall>* DFS::getnplusmBitDFSIterator(UndirectedGraph const &g, uint64_t u0){
+    return new NplusMBitDFSIterator(g, u0);
 }
 
 void DFS::runLinearTimeInplaceDFS(uint64_t *graph, Consumer preprocess,

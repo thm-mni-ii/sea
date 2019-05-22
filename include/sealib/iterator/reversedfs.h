@@ -10,31 +10,7 @@
 #include "sealib/iterator/iterator.h"
 
 namespace Sealib {
-/**
- * Representation of a user call. A sequence of these can be retrieved from
- * the ReverseDFS iterator.
- */
-struct UserCall {
-    enum Type { nop = 0, preprocess, preexplore, postexplore, postprocess };
 
-    /**
-     * Create a UserCall object of the given type.
-     * @param t Type of the user call
-     * @param p1 first number
-     * @param p2 second number (optional, depending on user call type)
-     */
-    UserCall(uint8_t t, uint64_t p1, uint64_t p2 = 0) : type(t), u(p1), k(p2) {}
-
-    constexpr UserCall() : type(nop), u(0), k(0) {}
-
-    bool operator==(UserCall p) const {
-        return type == p.type && u == p.u && k == p.k;
-    }
-    bool operator!=(UserCall p) const { return !(*this == p); }
-
-    uint8_t type;
-    uint64_t u, k;
-};
 
 /**
  * Reverse DFS iterator which returns a the user calls of a normal DFS in
@@ -48,7 +24,7 @@ struct UserCall {
  * EFFICIENCY: O(n+m) time, O(n log(log(n))) bits
  */
 class ReverseDFS : Iterator<UserCall>, DFS {
- public:
+  public:
     explicit ReverseDFS(Graph const &);
 
     /**
@@ -69,7 +45,7 @@ class ReverseDFS : Iterator<UserCall>, DFS {
      */
     UserCall next() override;
 
- private:
+  private:
     static const std::pair<uint64_t, uint64_t> NIL;
     struct IntervalData {
         std::pair<uint64_t, uint64_t> top =
