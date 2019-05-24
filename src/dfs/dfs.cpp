@@ -1,7 +1,6 @@
 #include "sealib/iterator/dfs.h"
 #include <math.h>
-#include <memory>
-#include <sstream>
+#include "../collection/simplesequence.h"
 #include "./inplacerunner.h"
 #include "standarddfsiterator.h"
 #include "restoredfsiterator.h"
@@ -10,14 +9,14 @@
 namespace Sealib {
 
 void DFS::visit_standard(uint64_t u0, Graph const &g,
-                         std::vector<uint64_t> *color,
-                         std::vector<std::pair<uint64_t, uint64_t>> *s,
+                         std::vector<uint8_t> *color,
+                         std::stack<std::pair<uint64_t, uint64_t>> *s,
                          Consumer preprocess, BiConsumer preexplore,
                          BiConsumer postexplore, Consumer postprocess) {
-    s->push_back({u0, 0});
+    s->push({u0, 0});
     while (!s->empty()) {
-        std::pair<uint64_t, uint64_t> x = s->back();
-        s->pop_back();
+        std::pair<uint64_t, uint64_t> x = s->top();
+        s->pop();
         uint64_t u = x.first;
         uint64_t k = x.second;
         if (color->operator[](u) == DFS_WHITE) {
@@ -25,11 +24,11 @@ void DFS::visit_standard(uint64_t u0, Graph const &g,
             color->operator[](u) = DFS_GRAY;
         }
         if (k < g.deg(u)) {
-            s->push_back({u, k + 1});
+            s->push({u, k + 1});
             uint64_t v = g.head(u, k);
             preexplore(u, k);
             if (color->operator[](v) == DFS_WHITE) {
-                s->push_back({v, 0});
+                s->push({v, 0});
             } else {
                 postexplore(u, k);
             }
@@ -37,7 +36,7 @@ void DFS::visit_standard(uint64_t u0, Graph const &g,
             color->operator[](u) = DFS_BLACK;
             postprocess(u);
             if (u != u0) {
-                std::pair<uint64_t, uint64_t> p = s->back();
+                std::pair<uint64_t, uint64_t> p = s->top();
                 postexplore(p.first, p.second - 1);
             }
         }
@@ -148,7 +147,7 @@ void DFS::restore_top(uint64_t u0, Graph const &g, CompactArray *color,
 }
 
 void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g,
-                       CompactArray *color, Sequence<uint64_t> *parent,
+                       Sequence<uint64_t> *color, Sequence<uint64_t> *parent,
                        Consumer preprocess, BiConsumer preexplore,
                        BiConsumer postexplore, Consumer postprocess) {
     color->insert(u0, DFS_GRAY);
@@ -189,12 +188,24 @@ void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g,
 void DFS::standardDFS(Graph const &g, Consumer preprocess,
                       BiConsumer preexplore, BiConsumer postexplore,
                       Consumer postprocess) {
-    std::vector<uint64_t> color(g.getOrder());
-    std::vector<std::pair<uint64_t, uint64_t>> s;
+    std::vector<uint8_t> color(g.getOrder());
+    std::stack<std::pair<uint64_t, uint64_t>> s;
     for (uint64_t u = 0; u < g.getOrder(); u++) {
         if (color[u] == DFS_WHITE) {
             visit_standard(u, g, &color, &s, preprocess, preexplore,
                            postexplore, postprocess);
+        }
+    }
+}
+void DFS::standardDFS(UndirectedGraph const &g, Consumer preprocess,
+                      BiConsumer preexplore, BiConsumer postexplore,
+                      Consumer postprocess) {
+    SimpleSequence<uint8_t> color(g.getOrder());
+    SimpleSequence<uint64_t> parent(g.getOrder());
+    for (uint64_t u = 0; u < g.getOrder(); u++) {
+        if (color.get(u) == DFS_WHITE) {
+            visit_nplusm(u, g, &color, &parent, preprocess, preexplore,
+                         postexplore, postprocess);
         }
     }
 }

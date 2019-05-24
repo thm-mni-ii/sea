@@ -30,6 +30,7 @@ For some data structures and algorithms we also provide a folklore implementatio
 | Breadth First Search  | O(n+m)         | O(n)                    | [here](docs/n-bit-bfs.md)           |
 | Cut-Vertex            | O(n+m)         | O(n+m)                  | [here](docs/cut-vertex-iterator.md) |
 | Biconnected-Component | O(n+m)         | O(n+m)                  | [here](docs/bcc-iterator.md)        |
+| Outerplanar Detection | O(n log(log n))| O(n)                    | [here](docs/outerplanar.md)         |
 
 ### Data Structures
 * Graph(G = {V, E}): A adjacency list graph representation that occupies O((n + m) log n) bits.

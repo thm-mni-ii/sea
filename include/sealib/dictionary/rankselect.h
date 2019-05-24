@@ -44,6 +44,10 @@ class RankSelectBase {
 
     uint64_t size() const { return rankStructure.size(); }
 
+    uint64_t byteSize() const {
+        return rankStructure.byteSize() + firstInSegment.byteSize();
+    }
+
     B const &getBitset() const { return rankStructure.getBitset(); }
 
  private:

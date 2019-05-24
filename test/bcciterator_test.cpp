@@ -4,20 +4,10 @@
 
 namespace Sealib {
 
-TEST(BCCIteratorTest, windmillGraph) {
-    UndirectedGraph g = GraphCreator::windmill(5, 4);
-    BCCIterator b(g);
-    b.init(16);
-    std::set<uint64_t> nodes;
-    std::set<std::set<uint64_t>> edges;
-    b.forEach([&](std::pair<uint64_t, uint64_t> n) {
-        if (n.second == INVALID) {
-            nodes.insert(n.first);
-        } else {
-            edges.insert({n.first, n.second});
-        }
-    });
+static std::set<uint64_t> nodes;
+static std::set<std::set<uint64_t>> edges;
 
+static void compareWindmill() {
     EXPECT_EQ(nodes.size(), 5);
     EXPECT_EQ(edges.size(), 10);
 
@@ -38,6 +28,25 @@ TEST(BCCIteratorTest, windmillGraph) {
     EXPECT_NE(edges.find({2, 1}), edges.end());
     EXPECT_NE(edges.find({2, 0}), edges.end());  // back edge
     EXPECT_NE(edges.find({1, 0}), edges.end());  // half marked
+}
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+
+TEST(BCCIteratorTest, windmillGraph) {
+    UndirectedGraph g = GraphCreator::windmill(5, 4);
+    BCCIterator b(g);
+    b.init(16);
+    nodes.clear();
+    edges.clear();
+    b.forEach([&](std::pair<uint64_t, uint64_t> n) {
+        if (n.second == INVALID) {
+            nodes.insert(n.first);
+        } else {
+            edges.insert({n.first, n.second});
+        }
+    });
+    compareWindmill();
 }
 
 TEST(BCCIteratorTest, lineGraph) {
@@ -67,6 +76,31 @@ TEST(BCCIteratorTest, stability) {
     b.init(g.head(10, 2));  // select an arbitrary edge
     while (b.more()) b.next();
     SUCCEED();
+}
+
+#pragma clang diagnostic pop
+
+TEST(BCCOutputTest, windmillGraph) {
+    UndirectedGraph g = GraphCreator::windmill(5, 4);
+    BCCOutput b(g);
+    nodes.clear();
+    edges.clear();
+    b.traverse(16, [](uint64_t u) { nodes.insert(u); },
+               [](uint64_t u, uint64_t v) {
+                   edges.insert({u, v});
+               });
+    compareWindmill();
+}
+
+TEST(BCCOutput, cycle) {
+    for (uint64_t k = 0; k < 20; k++) {
+        UndirectedGraph g = GraphCreator::cycle(1000, k);
+        uint64_t n = 0, m = 0;
+        BCCOutput(g).traverse(1, [&n](uint64_t) { n++; },
+                              [&m](uint64_t, uint64_t) { m++; });
+        EXPECT_EQ(n, 1000);
+        EXPECT_EQ(m, 1000 + k);
+    }
 }
 
 }  // namespace Sealib

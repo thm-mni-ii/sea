@@ -3,13 +3,14 @@
 
 #include <utility>
 #include <stdexcept>
+#include <sstream>
 
 #define GRADE_ZERO 0
 #define GRADE_ONE 1
 #define GRADE_AT_LEAST_TWO 2
 
 namespace Sealib {
-/* @author Simon Schniedenharn */
+/* @author Andrej Sajenko */
 class LinearTimeInplaceDFSRunner {
  private:
   uint64_t *A;

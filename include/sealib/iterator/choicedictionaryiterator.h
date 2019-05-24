@@ -13,22 +13,7 @@ namespace Sealib {
  *
  * @author Dennis Appel
  */
-class ChoiceDictionaryIterator : Iterator<uint64_t> {
- private:
-    uint64_t primaryWord,  ///< Value of the currently used word in primary
-        secondaryWord,     ///< Value of the currently used word in secondary
-        pointer,           ///< currently used pointer Position
-        primaryIndex,      ///< Index of the currently used word in primary
-        secondaryIndex;    ///< Index of the currently used word in secondary
-    ChoiceDictionary const
-        &choicedictionary;  ///< Pointer to an existing choice dictionary
-
-    bool hasNextSecondary();
-
-    void setNextSecondaryWord();
-
-    void setNextPrimaryWord();
-
+class ChoiceDictionaryIterator : public Iterator<uint64_t> {
  public:
     /**
      * Creates an Iterator for a choice dictionary.
@@ -51,6 +36,21 @@ class ChoiceDictionaryIterator : Iterator<uint64_t> {
      * Returns the next index of a bit set to 1.
      */
     uint64_t next();
+
+ private:
+    uint64_t primaryWord,  ///< Value of the currently used word in primary
+        secondaryWord,     ///< Value of the currently used word in secondary
+        pointer,           ///< currently used pointer Position
+        primaryIndex,      ///< Index of the currently used word in primary
+        secondaryIndex;    ///< Index of the currently used word in secondary
+    ChoiceDictionary const
+        &choicedictionary;  ///< Pointer to an existing choice dictionary
+
+    bool hasNextSecondary();
+
+    void setNextSecondaryWord();
+
+    void setNextPrimaryWord();
 };
 }  // namespace Sealib
 #endif  // SEALIB_ITERATOR_CHOICEDICTIONARYITERATOR_H_

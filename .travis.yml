@@ -1,6 +1,5 @@
-dist: trusty
-sudo: false
 language: cpp
+dist: xenial
 
 compiler:
   - clang
@@ -14,9 +13,9 @@ addons:
     token:
       secure: $SONAR_TOKEN
 
-cache:
-  directories:
-  - ./third-party
+#cache:
+#  directories:
+#  - ./third-party
 
 before_install:
   - git fetch --unshallow
@@ -34,7 +33,7 @@ script:
   - ./bin/tests
 
 after_success:
-  - (cd CMakeFiles/tests.dir && for d in $(find src test -type d); do gcov $d/*.gcno >/dev/null; done); cp CMakeFiles/tests.dir/*.gcov .
+  - (cd CMakeFiles/tests.dir && for d in $(find src -type d); do gcov $d/*.gcno >/dev/null; done); cp CMakeFiles/tests.dir/*.gcov .
   - coveralls --no-gcov --root . -e src-view -e test -e include -e third-party -e CMakeFiles
   - 'if test $TRAVIS_PULL_REQUEST = false || test "$TRAVIS_PULL_REQUEST_SLUG" = thm-mni-ii/sea; then sonar-scanner; fi'
 

@@ -160,15 +160,7 @@ UserCall ReverseDFS::next() {
             return r;
         }
     } else {  // build new sequence
-        for (uint64_t a = 0; a < n; a++) {
-            if (f.get(a) < ip) {
-                c.insert(a, DFS_BLACK);
-            } else if (d.get(a) < ip) {
-                c.insert(a, DFS_GRAY);
-            } else {
-                c.insert(a, DFS_WHITE);
-            }
-        }
+        c.reset();
         std::stack<std::pair<uint64_t, uint64_t>> sj = reconstructStack();
         sequence = simulate(&sj);
         seqI = sequence.rbegin();
@@ -212,10 +204,9 @@ std::stack<std::pair<uint64_t, uint64_t>> ReverseDFS::reconstructStack() {
                     break;
                 }
             }
-            if (a.second == INVALID)
-                r.push(a);
-            else
-                throw StackReconstructionFailed();
+            assert(a.second == INVALID &&
+                   "### stack reconstruction failed ###");
+            r.push(a);
         }  // loop only ends when top has been pushed
         r.top() = i->top;
     }
@@ -244,14 +235,14 @@ std::vector<UserCall> ReverseDFS::simulate(
             std::pair<uint64_t, uint64_t> x = sj->top();
             sj->pop();
             uint64_t u = x.first, k = x.second;
-            if (c.get(u) == DFS_WHITE) {
+            if (getColor(u) == DFS_WHITE) {
                 r.emplace_back(UserCall(UserCall::preprocess, u));
                 c.insert(u, DFS_GRAY);
             }
             if (k < g.deg(u) && r.size() < i->width) {
                 sj->push({u, k + 1});
                 uint64_t v = g.head(u, k);
-                if (c.get(v) == DFS_WHITE && r.size() < i->width) {
+                if (getColor(v) == DFS_WHITE && r.size() < i->width) {
                     r.emplace_back(UserCall(UserCall::preexplore, u, k));
                     sj->push({v, 0});
                 }
@@ -267,7 +258,7 @@ std::vector<UserCall> ReverseDFS::simulate(
         }
         if (sj->empty() && r.size() < i->width) {
             for (uint64_t u = 0; u < n; u++) {
-                if (c.get(u) == DFS_WHITE) {
+                if (getColor(u) == DFS_WHITE) {
                     sj->push({u, 0});
                     break;
                 }
@@ -275,6 +266,21 @@ std::vector<UserCall> ReverseDFS::simulate(
         }
     } while (!sj->empty() && r.size() < i->width);
     return r;
+}
+
+uint64_t ReverseDFS::getColor(uint64_t u) {
+    uint64_t a = c.get(u);
+    if (a == 0) {
+        if (f.get(u) < ip) {
+            return DFS_BLACK;
+        } else if (d.get(u) < ip) {
+            return DFS_GRAY;
+        } else {
+            return DFS_WHITE;
+        }
+    } else {
+        return a;
+    }
 }
 
 }  // namespace Sealib

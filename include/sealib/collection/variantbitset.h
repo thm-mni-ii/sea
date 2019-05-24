@@ -54,6 +54,8 @@ union VariantBitset {
     uint8_t getBlock(uint64_t i) const { return byte[i]; }
     uint8_t getShiftedBlock(uint64_t i) const;
 
+    uint64_t byteSize() const { return bit.capacity() / 8; }
+
     VariantBitset(VariantBitset const &);
     VariantBitset(VariantBitset &&);
     VariantBitset &operator=(VariantBitset const &);

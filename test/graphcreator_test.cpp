@@ -80,3 +80,13 @@ TEST(GraphCreatorTest, transpose) {
         }
     }
 }
+
+TEST(GraphCreatorTest, cycle) {
+    UndirectedGraph g = GraphCreator::cycle(1e6, 100);
+    EXPECT_EQ(g.getOrder(), 1e6);
+    uint64_t m = 0;
+    for (uint64_t u = 0; u < g.getOrder(); u++) {
+        m += g.deg(u);
+    }
+    EXPECT_EQ(m / 2, 1e6+100);
+}
