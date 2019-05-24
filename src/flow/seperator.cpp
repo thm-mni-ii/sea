@@ -4,6 +4,7 @@
 #include <sealib/graph/node.h>
 #include <sealib/flow/seperator.h>
 #include "stgraph.h"
+#include "inoutgraph.h"
 
 namespace Sealib {
 
@@ -53,6 +54,7 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::e_seperate(Sealib::Bitset<
         }
         x = it->next();
     }
+    free(it);
     for (uint64_t i = 0; i < g.getOrder(); i++) {
         for (uint64_t j = 0; j < g.deg(i); j++) {
             if (s_reachable.get(i) == !s_reachable.get(g.head(i, j))) {
@@ -72,45 +74,6 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::e_seperate(Sealib::Bitset<
 Sealib::Bitset<> Seperator::v_seperate(Sealib::Bitset<> s, Sealib::Bitset<> t,
         Sealib::Graph const &g, int64_t k,
         Iterator<UserCall> *iter(Graph const &, uint64_t)){
-    // create a directed graph g' with in- and output vertices from g
-    uint64_t s_deg = 0;
-    int64_t snode = -1;
-    Sealib::Bitset<> s_reach = Sealib::Bitset<uint64_t>(g.getOrder());
-    std::vector<SimpleNode> nodes(g.getOrder() * 2);
-
-    for (uint64_t i = 0; i < g.getOrder(); i++) {
-        if (s.get(i)) { // sum up the vertices in s
-            if (snode == -1) snode = i + g.getOrder();
-            for (uint64_t j = 0; j < g.deg(i); j++) {
-                // no double edges and no edges to vertices in s
-                if(!s_reach.get(g.head(i, j)) && !s.get(g.head(i, j))){
-                    s_deg++;
-                    s_reach[g.head(i, j)] = 1;
-                }
-            }
-        } else if (t.get(i)) {
-            // Edges in t aren't important, because we won't use edges wich are
-            // leading away from t. After we reached a vertice in t we stop.
-        } else {
-            std::vector<uint64_t> out(g.deg(i));
-            for (uint64_t j = 0; j < g.deg(i); j++)
-                out[j] = g.head(i, j);
-            nodes[i + g.getOrder()] = SimpleNode(out);
-        }
-        std::vector<uint64_t> in(1);
-        in[0] = i + g.getOrder();
-        nodes[i] = SimpleNode(in);
-    }
-
-    std::vector<uint64_t> s_out(s_deg);
-    for(uint64_t i = 0, s_pos = 0; i < g.getOrder(); i++){
-        if(s_reach.get(i)){
-            s_out[s_pos] = i;
-            s_pos++;
-        }
-    }
-    nodes[snode] = SimpleNode(s_out);
-    Graph* graph = new Sealib::DirectedGraph(nodes);
 
     // compute a minimum edge seperator
     std::vector<std::pair<uint64_t, uint64_t>> es;
@@ -122,7 +85,7 @@ Sealib::Bitset<> Seperator::v_seperate(Sealib::Bitset<> s, Sealib::Bitset<> t,
         t2[i] = t[i];
         t2[t.size()+i] = t[i];
     }
-    try {es = Seperator::e_seperate(s2, t2, *graph, k, iter);}
+    try {es = Seperator::e_seperate(s2, t2, InOutGraph(g), k, iter);}
     catch (std::string e){
         if(e.compare("no seperator with max k edges") == 0) {
             throw "no seperator with max k vertices";

@@ -8,7 +8,7 @@
 namespace Sealib{
 /**
  * The class STGraph should provide a customized graph for the
- * algorithem vseperator to run on.
+ * seperator algorithms to run on.
  * @author Vytautas Hermann
  */
 class STGraph: public Graph{
@@ -36,7 +36,7 @@ class STGraph: public Graph{
                 nodes[i] = SimpleNode(out);
             }
         }
-        
+
         std::vector<uint64_t> s_out(s_degree);
         uint64_t k = 0;
         for(uint64_t i = 0; i < s_edges.size(); i++){
