@@ -1,4 +1,4 @@
-# Space Efficient Algorithms 
+# Space-Efficient (Graph) Algorithms
 [![Build Status](https://travis-ci.org/thm-mni-ii/sea.svg?branch=master)](https://travis-ci.org/thm-mni-ii/sea) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Coverage Status](https://coveralls.io/repos/github/thm-mni-ii/sea/badge.svg?branch=master)](https://coveralls.io/github/thm-mni-ii/sea?branch=master) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=thm-mni-ii_sea&metric=alert_status)](https://sonarcloud.io/dashboard?id=thm-mni-ii_sea) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=thm-mni-ii_sea&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=thm-mni-ii_sea)
 
 SEA is a project to research and implement an open C++ library for Space-Efficient (Graph) Algorithms (SEA).
@@ -40,6 +40,7 @@ For some data structures and algorithms we also provide a folklore implementatio
 * [Rank-Select](docs/rank-select.md): A bit sequence that supports the operations *rank(k)* and *select(k)* in O(1) time and occupies O(n) bits. *rank(k)* returns the number of set bits up to index k, and *select(k)* returns the index of the k-th set bit.
 * [Ragged Dictionary](docs/ragged-dictionary.md): A set of n/log(n) key-value tuples with O(log(log(n))) time for *get*, *insert* and *remove* operations. The ragged dictionary occupies O(n) bits.
 * Static-Space Storage: A sequence of n bit packs of variable size that can be accessed in O(1) time and occupies O(n + N) bits. N is the total usable size of the static-space storage.
+* [Subraph Stack](docs/subgraph-stack.md): Initialized with a n-vertex, m-edge graph the stack allows to remove vertices and edges and provides a resulting graph using O(n + m) bits.
 
 ## Build
 1. Install CMake and a C++ compiler for your specific operating system.
