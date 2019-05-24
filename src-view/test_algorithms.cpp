@@ -1,5 +1,19 @@
-#include "./test_algorithms.h"
+#include <sys/time.h>
 #include <sys/resource.h>
+#ifndef RUSAGE_SELF
+    #define RUSAGE_SELF 0
+#endif
+#ifndef RUSAGE_CHILDREN
+    #define RUSAGE_CHILDREN -1
+#endif
+#ifndef RUSAGE_BOTH
+    #define RUSAGE_BOTH -2
+#endif
+#ifndef RUSAGE_THREAD
+    #define RUSAGE_THREAD -2
+#endif
+#include "./test_algorithms.h"
+
 #include <cstdio>
 #include <random>
 #include <sstream>

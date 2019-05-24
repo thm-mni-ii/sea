@@ -185,7 +185,7 @@ class ExtendedSegmentStack : public SegmentStack {
 
     uint64_t byteSize() const {
         return (low.capacity() + high.capacity() + big.capacity()) *
-                   sizeof(std::pair<uint, uint>) +
+                   sizeof(std::pair<uint64_t, uint64_t>) +
                trailers.capacity() * sizeof(Trailer) + table.byteSize() +
                edges.byteSize();
     }

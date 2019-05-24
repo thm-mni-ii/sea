@@ -47,7 +47,7 @@ class CompactArray : public Sequence<uint64_t> {
      */
     void reset();
 
-    uint64_t byteSize() const { return data.capacity() * sizeof(uint); }
+    uint64_t byteSize() const { return data.capacity() * sizeof(uint64_t); }
 
  private:
     uint64_t valueWidth, singleMask;
