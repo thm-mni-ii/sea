@@ -1,4 +1,4 @@
-# Space Efficient Algorithms 
+# Space-Efficient (Graph) Algorithms
 [![Build Status](https://travis-ci.org/thm-mni-ii/sea.svg?branch=master)](https://travis-ci.org/thm-mni-ii/sea) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Coverage Status](https://coveralls.io/repos/github/thm-mni-ii/sea/badge.svg?branch=master)](https://coveralls.io/github/thm-mni-ii/sea?branch=master) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=thm-mni-ii_sea&metric=alert_status)](https://sonarcloud.io/dashboard?id=thm-mni-ii_sea) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=thm-mni-ii_sea&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=thm-mni-ii_sea)
 
 SEA is a project to research and implement an open C++ library for Space-Efficient (Graph) Algorithms (SEA).
@@ -40,6 +40,7 @@ For some data structures and algorithms we also provide a folklore implementatio
 * [Rank-Select](docs/rank-select.md): A bit sequence that supports the operations *rank(k)* and *select(k)* in O(1) time and occupies O(n) bits. *rank(k)* returns the number of set bits up to index k, and *select(k)* returns the index of the k-th set bit.
 * [Ragged Dictionary](docs/ragged-dictionary.md): A set of n/log(n) key-value tuples with O(log(log(n))) time for *get*, *insert* and *remove* operations. The ragged dictionary occupies O(n) bits.
 * Static-Space Storage: A sequence of n bit packs of variable size that can be accessed in O(1) time and occupies O(n + N) bits. N is the total usable size of the static-space storage.
+* [Subraph Stack](docs/subgraph-stack.md): Initialized with an n-vertex m-edge graph the stack allows to remove vertices and edges and provides a resulting graph using O(n + m) bits.
 
 ## Build
 1. Install CMake and a C++ compiler for your specific operating system.
@@ -115,7 +116,7 @@ export LD_LIBRARY_PATH=<library-path>
 We publish most of our research on [arXiv.org](https://tinyurl.com/ybxbb77z).
 
 * Extra Space during Initialization of Succinct Data Structures and Dynamical Initializable Arrays. [MFCS 2018](https://dblp.uni-trier.de/db/conf/mfcs/mfcs2018.html): 65:1-65:16 | [Full Version](https://arxiv.org/abs/1803.09675)
-* Linear-Time In-Place DFS and BFS in the Restore Model [Full Version](https://arxiv.org/abs/1803.04282)
+* Linear-Time In-Place DFS and BFS on the Word RAM [CIAC 2019](http://easyconferences.eu/ciac2019/accepted.html) (to appear) | [Full Version](https://arxiv.org/abs/1803.04282)
 * A Space-Optimal c-Color Choice Dictionary [ISAAC 2018](http://isaac2018.ie.nthu.edu.tw/wp-content/uploads/2018/09/isaac2018_accepted.html): 66:1-66:12 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2018/10014/)
 * Space-Efficient Biconnected Components and Recognition of Outerplanar Graphs [MFCS 2016](http://mfcs.ki.agh.edu.pl/accepted.shtml): 56:1-56:14 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2016/6468/)
 * Space-Efficient Basic Graph Algorithms [STACS 2015](http://wwwmayr.in.tum.de/konferenzen/STACS2015/): 288-301 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2015/4921/)
@@ -124,5 +125,4 @@ We publish most of our research on [arXiv.org](https://tinyurl.com/ybxbb77z).
 Licensed under the GNU General Public License version 3. For detailed license information look inside the [LICENSE](LICENSE) file.
 
 ## Acknowledgments
-Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – 379157101.
-For more details visit [http://gepris.dfg.de/gepris/projekt/379157101?language=en]
+Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – [379157101](http://gepris.dfg.de/gepris/projekt/379157101?language=en).
