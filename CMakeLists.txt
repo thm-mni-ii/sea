@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(sea)
+SET(CMAKE_CXX_FLAGS -pthread)
 set(PROJECT_SOURCE_DIR .)
 
 set(COVERAGE OFF CACHE BOOL "Coverage")
