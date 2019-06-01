@@ -1,5 +1,16 @@
-# Space-Efficient (Graph) Algorithms
+<h1 align="center">
+  <br>
+  Space-Efficient
+  <br>
+  Algorithms
+  <br>
+</h1>
+
+<div align="center">
+
 [![Build Status](https://travis-ci.org/thm-mni-ii/sea.svg?branch=master)](https://travis-ci.org/thm-mni-ii/sea) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Coverage Status](https://coveralls.io/repos/github/thm-mni-ii/sea/badge.svg?branch=master)](https://coveralls.io/github/thm-mni-ii/sea?branch=master) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=thm-mni-ii_sea&metric=alert_status)](https://sonarcloud.io/dashboard?id=thm-mni-ii_sea) [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=thm-mni-ii_sea&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=thm-mni-ii_sea)
+
+</div>
 
 SEA is a project to research and implement an open C++ library for Space-Efficient (Graph) Algorithms (SEA).
 Besides the running time of algorithms, their space requirements cause a problem if dealing with huge
