@@ -1,5 +1,5 @@
-#ifndef SEALIB_COLLECTION_STATICSPACESTORAGE_H_
-#define SEALIB_COLLECTION_STATICSPACESTORAGE_H_
+#ifndef SEALIB_COLLECTION_CONSTANTTIMEDYNAMICARRAY_H_
+#define SEALIB_COLLECTION_CONSTANTTIMEDYNAMICARRAY_H_
 
 #include "sealib/_types.h"
 #include "sealib/collection/sequence.h"
@@ -27,7 +27,7 @@ class ConstantTimeDynamicArray {
      * Fills the array with the specified value in constant time.
      * @param _init new value
      */
-    void fill(uint64_t _init = 0) { init = _init, border = 0; };
+    void fill(uint64_t _init = 0) { init = _init, border = 0; }
 
     uint64_t size() const { return _size; }
 
@@ -49,13 +49,13 @@ class ConstantTimeDynamicArray {
      public:
         proxy(ConstantTimeDynamicArray* ref, uint64_t i) : ref(ref), i(i) {}
 
-        operator uint64_t() const { return ref->get(i); };
+        operator uint64_t() const { return ref->get(i); }
 
         // for a[i] = x
         proxy& operator=(uint64_t x) {
             ref->insert(i, x);
             return *this;
-        };
+        }
 
         proxy& operator|=(uint64_t x) {
             ref->insert(i, ref->get(i) | x);
@@ -70,22 +70,22 @@ class ConstantTimeDynamicArray {
         proxy& operator^=(uint64_t x) {
             ref->insert(i, ref->get(i) ^ x);
             return *this;
-        };
+        }
 
         proxy& operator-=(uint64_t x) {
             ref->insert(i, ref->get(i) - x);
             return *this;
-        };
+        }
 
         proxy& operator+=(uint64_t x) {
             ref->insert(i, ref->get(i) + x);
             return *this;
-        };
+        }
 
         proxy& operator*=(uint64_t x) {
             ref->insert(i, ref->get(i) * x);
             return *this;
-        };
+        }
 
         // for a[i] = b[j]
         proxy& operator=(const proxy& rhs) {
@@ -94,27 +94,27 @@ class ConstantTimeDynamicArray {
 
         proxy& operator|=(const proxy& rhs) {
             return operator|=(rhs.ref->get(rhs.i));
-        };
+        }
 
         proxy& operator&=(const proxy& rhs) {
             return operator&=(rhs.ref->get(rhs.i));
-        };
+        }
 
         proxy& operator^=(const proxy& rhs) {
             return operator^=(rhs.ref->get(rhs.i));
-        };
+        }
 
         proxy& operator-=(const proxy& rhs) {
             return operator-=(rhs.ref->get(rhs.i));
-        };
+        }
 
         proxy& operator+=(const proxy& rhs) {
             return operator+=(rhs.ref->get(rhs.i));
-        };
+        }
 
         proxy& operator*=(const proxy& rhs) {
             return operator*=(rhs.ref->get(rhs.i));
-        };
+        }
 
      private:
         friend class ConstantTimeDynamicArray;
@@ -255,4 +255,4 @@ bool ConstantTimeDynamicArray::isChain(uint64_t i) const {
             ((i < border && border <= k) || (k < border && border <= i)));
 }
 }  // namespace Sealib
-#endif  // SEALIB_COLLECTION_STATICSPACESTORAGE_H_
+#endif  // SEALIB_COLLECTION_CONSTANTTIMEDYNAMICARRAY_H_
