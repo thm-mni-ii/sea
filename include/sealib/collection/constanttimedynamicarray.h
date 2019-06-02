@@ -87,35 +87,6 @@ class ConstantTimeDynamicArray {
             return *this;
         }
 
-        // for a[i] = b[j]
-        proxy& operator=(const proxy& rhs) {
-            return operator=(rhs.ref->get(rhs.i));
-        }
-
-        proxy& operator|=(const proxy& rhs) {
-            return operator|=(rhs.ref->get(rhs.i));
-        }
-
-        proxy& operator&=(const proxy& rhs) {
-            return operator&=(rhs.ref->get(rhs.i));
-        }
-
-        proxy& operator^=(const proxy& rhs) {
-            return operator^=(rhs.ref->get(rhs.i));
-        }
-
-        proxy& operator-=(const proxy& rhs) {
-            return operator-=(rhs.ref->get(rhs.i));
-        }
-
-        proxy& operator+=(const proxy& rhs) {
-            return operator+=(rhs.ref->get(rhs.i));
-        }
-
-        proxy& operator*=(const proxy& rhs) {
-            return operator*=(rhs.ref->get(rhs.i));
-        }
-
      private:
         friend class ConstantTimeDynamicArray;
         ConstantTimeDynamicArray* ref;
