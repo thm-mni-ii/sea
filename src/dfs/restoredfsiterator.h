@@ -3,30 +3,32 @@
 
 #include "sealib/iterator/iterator.h"
 
-namespace Sealib{
+namespace Sealib {
 
-class RestoreDFSIterator : public Iterator<UserCall>{
-public:
-    explicit RestoreDFSIterator(Graph const &graph, uint64_t u0,
-            std::function<void(uint64_t, Graph const &, CompactArray *, SegmentStack *)> rest,
-            bool nBit):
-            g(graph),
-            root(u0),
-            state(0),
-            finished(false),
-            restore(rest),
-            color(g.getOrder(), 3),
-            nextposRoot(0){
-        if(nBit){
+class RestoreDFSIterator : public Iterator<UserCall> {
+ public:
+    explicit RestoreDFSIterator(
+        Graph const &graph, uint64_t u0,
+        std::function<void(uint64_t, Graph const &, CompactArray *,
+                           SegmentStack *)>
+            rest,
+        bool nBit)
+        : g(graph),
+          root(u0),
+          state(0),
+          finished(false),
+          restore(rest),
+          color(g.getOrder(), 3),
+          nextposRoot(0) {
+        if (nBit) {
             uint64_t n = g.getOrder();
             uint64_t q = static_cast<uint64_t>(
-                    ceil(ceil(0.2f / 6 * n) /
-                         (8 * sizeof(std::pair<uint64_t, uint64_t>))));
+                ceil(ceil(0.2f / 6 * n) /
+                     (8 * sizeof(std::pair<uint64_t, uint64_t>))));
             uint64_t qs = 3;
             if (q < qs) q = qs;
             s = new BasicSegmentStack(q);
-        }
-        else{
+        } else {
             s = new ExtendedSegmentStack(g.getOrder(), g, &color);
         }
         s->push({u0, 0});
@@ -34,12 +36,10 @@ public:
 
     void init() override {}
 
-    bool more() override {
-        return !finished;
-    }
+    bool more() override { return !finished; }
 
     UserCall next() override {
-        if(!s->isEmpty() || state != 0) {
+        if (!s->isEmpty() || state != 0) {
             if (state == 0) {
                 state = 1;
                 sr = s->pop(&x);
@@ -112,21 +112,22 @@ public:
         return r;
     }
 
-private:
+ private:
     Graph const &g;
     uint64_t root;
     uint64_t state;
     uint64_t nextposRoot;
     uint64_t v;
-    std::function<void(uint64_t, Graph const &, CompactArray *, SegmentStack *)> restore;
+    std::function<void(uint64_t, Graph const &, CompactArray *, SegmentStack *)>
+        restore;
     std::pair<uint64_t, uint64_t> x;
-    SegmentStack* s;
+    SegmentStack *s;
     CompactArray color;
     UserCall r;
     uint8_t sr;
     bool finished;
 };
 
-}
+}  // namespace Sealib
 
-#endif //SEA_RESTOREDFSITERATOR_H
+#endif  // SEA_RESTOREDFSITERATOR_H

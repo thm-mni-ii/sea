@@ -3,29 +3,27 @@
 
 #include "sealib/iterator/iterator.h"
 
-namespace Sealib{
+namespace Sealib {
 
-class StandardDFSIterator : public Iterator<UserCall>{
-public:
-    explicit StandardDFSIterator(Graph const &graph, uint64_t u0):
-            g(graph),
-            root(u0),
-            color(g.getOrder()),
-            finished(false),
-            state(0),
-            nextposRoot(0){
+class StandardDFSIterator : public Iterator<UserCall> {
+ public:
+    explicit StandardDFSIterator(Graph const &graph, uint64_t u0)
+        : g(graph),
+          root(u0),
+          color(g.getOrder()),
+          finished(false),
+          state(0),
+          nextposRoot(0) {
         s.push_back({root, 0});
     }
 
     void init() {}
 
-    bool more() {
-        return !finished;
-    }
+    bool more() { return !finished; }
 
     UserCall next() {
-        if(!s.empty() || state != 0) {
-            if(state == 0) {
+        if (!s.empty() || state != 0) {
+            if (state == 0) {
                 state = 1;
                 std::pair<uint64_t, uint64_t> x = s.back();
                 s.pop_back();
@@ -38,14 +36,13 @@ public:
                 }
             }
             if (r.k < g.deg(r.u)) {
-                if(state == 1) {
+                if (state == 1) {
                     state = 2;
                     s.push_back({r.u, r.k + 1});
                     v = g.head(r.u, r.k);
                     r.type = UserCall::preexplore;
                     return r;
-                }
-                else {
+                } else {
                     if (color.operator[](v) == DFS_WHITE) {
                         s.push_back({v, 0});
                     } else {
@@ -55,7 +52,7 @@ public:
                     }
                 }
             } else {
-                if(state == 1) {
+                if (state == 1) {
                     state = 2;
                     color.operator[](r.u) = DFS_BLACK;
                     r.type = UserCall::postprocess;
@@ -85,7 +82,7 @@ public:
         return r;
     }
 
-private:
+ private:
     Graph const &g;
     uint64_t root;
     uint64_t state;
@@ -97,6 +94,6 @@ private:
     bool finished;
 };
 
-}
+}  // namespace Sealib
 
-#endif //SEA_STANDARDDFSITERATOR_H
+#endif  // SEA_STANDARDDFSITERATOR_H

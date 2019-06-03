@@ -3,43 +3,41 @@
 
 #include "sealib/iterator/iterator.h"
 
-namespace Sealib{
+namespace Sealib {
 
-class NplusMBitDFSIterator : public Iterator<UserCall>{
-public:
-    explicit NplusMBitDFSIterator(UndirectedGraph const &graph, uint64_t u0):
-            g(graph),
-            root(u0),
-            color(g.getOrder(), 3),
-            finished(false),
-            state(0),
-            parent(g),
-            nextposRoot(0){}
+class NplusMBitDFSIterator : public Iterator<UserCall> {
+ public:
+    explicit NplusMBitDFSIterator(UndirectedGraph const &graph, uint64_t u0)
+        : g(graph),
+          root(u0),
+          color(g.getOrder(), 3),
+          finished(false),
+          state(0),
+          parent(g),
+          nextposRoot(0) {}
 
     void init() {}
 
-    bool more() {
-        return !finished;
-    }
+    bool more() { return !finished; }
 
     UserCall next() {
-        if(state == 0){
+        if (state == 0) {
             state = 1;
             color.insert(root, DFS_GRAY);
             r.u = root, r.k = 0;
             r.type = UserCall::preprocess;
             return r;
         }
-        if(state != 5) {
+        if (state != 5) {
             if (r.k < g.deg(r.u)) {
-                if(state == 1) {
+                if (state == 1) {
                     state = 2;
                     v = g.head(r.u, r.k);
                     r.type = UserCall::preexplore;
                     return r;
                 }
                 if (color.get(v) == DFS_WHITE) {
-                    if(state == 2){
+                    if (state == 2) {
                         state = 3;
                         UserCall vcall;
                         vcall.type = UserCall::preprocess;
@@ -56,7 +54,7 @@ public:
                     r.k = 0;
                     state = 1;
                 } else {
-                    if(state == 2){
+                    if (state == 2) {
                         state = 3;
                         r.type = UserCall::postexplore;
                         return r;
@@ -65,14 +63,14 @@ public:
                     state = 1;
                 }
             } else {
-                if(state == 1) {
+                if (state == 1) {
                     state = 2;
                     color.insert(r.u, DFS_BLACK);
                     r.type = UserCall::postprocess;
                     return r;
                 }
                 if (r.u != root) {
-                    if(state == 2) {
+                    if (state == 2) {
                         state = 3;
                         uint64_t pk = g.mate(r.u, parent.get(r.u));
                         uint64_t pu = g.head(r.u, parent.get(r.u));
@@ -101,7 +99,7 @@ public:
         return r;
     }
 
-private:
+ private:
     UndirectedGraph const &g;
     uint64_t root;
     uint64_t state;
@@ -113,6 +111,6 @@ private:
     bool finished;
 };
 
-}
+}  // namespace Sealib
 
-#endif //SEA_NPLUSMBITDFSITERATOR_H
+#endif  // SEA_NPLUSMBITDFSITERATOR_H
