@@ -1,5 +1,5 @@
-#ifndef SEA_RESTOREDFSITERATOR_H
-#define SEA_RESTOREDFSITERATOR_H
+#ifndef SRC_DFS_RESTOREDFSITERATOR_H_
+#define SRC_DFS_RESTOREDFSITERATOR_H_
 
 #include "sealib/iterator/iterator.h"
 
@@ -16,10 +16,10 @@ class RestoreDFSIterator : public Iterator<UserCall> {
         : g(graph),
           root(u0),
           state(0),
-          finished(false),
-          restore(rest),
+          nextposRoot(0),
+          restore(std::move(rest)),
           color(g.getOrder(), 3),
-          nextposRoot(0) {
+          finished(false) {
         if (nBit) {
             uint64_t n = g.getOrder();
             uint64_t q = static_cast<uint64_t>(
@@ -130,4 +130,4 @@ class RestoreDFSIterator : public Iterator<UserCall> {
 
 }  // namespace Sealib
 
-#endif  // SEA_RESTOREDFSITERATOR_H
+#endif  // SRC_DFS_RESTOREDFSITERATOR_H_

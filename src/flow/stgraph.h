@@ -1,6 +1,7 @@
-#ifndef SEA_STGRAPH_H
-#define SEA_STGRAPH_H
+#ifndef SRC_FLOW_STGRAPH_H_
+#define SRC_FLOW_STGRAPH_H_
 
+#include <sealib/collection/bitset.h>
 #include <sealib/graph/graph.h>
 #include <sealib/graph/node.h>
 #include <vector>
@@ -28,7 +29,7 @@ class STGraph : public Graph {
                 // stop.
             } else {
                 if (s.get(i)) {
-                    s_edges.push_back({graph.deg(i) + 1, i});
+                    s_edges.emplace_back(graph.deg(i) + 1, i);
                     s_degree += graph.deg(i) + 1;
                 }
                 std::vector<uint64_t> out(graph.deg(i));
@@ -104,4 +105,4 @@ class STGraph : public Graph {
     uint64_t s_deg;
 };
 }  // namespace Sealib
-#endif  // SEA_STGRAPH_H
+#endif  // SRC_FLOW_STGRAPH_H_

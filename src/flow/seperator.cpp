@@ -72,7 +72,7 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
         return Seperator::standardESeperate(s, t, g, k,
                                             DFS::getStandardDFSIterator);
     } catch (std::string e) {
-        throw e;
+        throw std::move(e);
     }
 }
 
@@ -80,14 +80,14 @@ Sealib::Bitset<> Seperator::standardVSeperate(
     Sealib::Bitset<> s, Sealib::Bitset<> t, Sealib::Graph const &g, int64_t k,
     Iterator<UserCall> *iter(Graph const &, uint64_t)) {
     std::vector<SimpleNode> nodes;
-    for (int i = 0; i < g.getOrder(); i++) {
+    for (uint64_t i = 0; i < g.getOrder(); i++) {
         SimpleNode x;
         x.addAdjacency(i + g.getOrder());
         nodes.push_back(x);
     }
-    for (int i = 0; i < g.getOrder(); i++) {
+    for (uint64_t i = 0; i < g.getOrder(); i++) {
         SimpleNode x;
-        for (int j = 0; j < g.deg(i); j++) {
+        for (uint64_t j = 0; j < g.deg(i); j++) {
             x.addAdjacency(g.head(i, j));
         }
         nodes.push_back(x);
@@ -108,8 +108,9 @@ Sealib::Bitset<> Seperator::standardVSeperate(
     } catch (std::string e) {
         if (e.compare("no seperator with max k edges") == 0) {
             throw "no seperator with max k vertices";
-        } else
-            throw e;
+        } else {
+            throw std::move(e);
+        }
     }
 
     // get the minimum vertice seperator
@@ -140,7 +141,7 @@ Sealib::Bitset<> Seperator::standardVSeperate(Sealib::Bitset<> s,
         return Seperator::standardVSeperate(s, t, g, k,
                                             DFS::getStandardDFSIterator);
     } catch (std::string e) {
-        throw e;
+        throw std::move(e);
     }
 }
 

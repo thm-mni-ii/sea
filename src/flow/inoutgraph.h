@@ -1,5 +1,5 @@
-#ifndef SEA_INOUTGRAPH_H
-#define SEA_INOUTGRAPH_H
+#ifndef SRC_FLOW_INOUTGRAPH_H_
+#define SRC_FLOW_INOUTGRAPH_H_
 
 #include <sealib/graph/graph.h>
 
@@ -32,4 +32,4 @@ class InOutGraph : public Graph {
 
 }  // namespace Sealib
 
-#endif  // SEA_INOUTGRAPH_H
+#endif  // SRC_FLOW_INOUTGRAPH_H_

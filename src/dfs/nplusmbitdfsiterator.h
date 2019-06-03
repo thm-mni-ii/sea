@@ -1,5 +1,5 @@
-#ifndef SEA_NPLUSMBITDFSITERATOR_H
-#define SEA_NPLUSMBITDFSITERATOR_H
+#ifndef SRC_DFS_NPLUSMBITDFSITERATOR_H_
+#define SRC_DFS_NPLUSMBITDFSITERATOR_H_
 
 #include "sealib/iterator/iterator.h"
 
@@ -10,11 +10,11 @@ class NplusMBitDFSIterator : public Iterator<UserCall> {
     explicit NplusMBitDFSIterator(UndirectedGraph const &graph, uint64_t u0)
         : g(graph),
           root(u0),
-          color(g.getOrder(), 3),
-          finished(false),
           state(0),
+          nextposRoot(0),
+          color(g.getOrder(), 3),
           parent(g),
-          nextposRoot(0) {}
+          finished(false) {}
 
     void init() {}
 
@@ -113,4 +113,4 @@ class NplusMBitDFSIterator : public Iterator<UserCall> {
 
 }  // namespace Sealib
 
-#endif  // SEA_NPLUSMBITDFSITERATOR_H
+#endif  // SRC_DFS_NPLUSMBITDFSITERATOR_H_
