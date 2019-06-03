@@ -4,9 +4,9 @@
 
 namespace Sealib {
 /**
-* Representation of a user call. A sequence of these can be retrieved from
-* the ReverseDFS iterator.
-*/
+ * Representation of a user call. A sequence of these can be retrieved from
+ * the ReverseDFS iterator.
+ */
 struct UserCall {
     enum Type { nop = 0, preprocess, preexplore, postexplore, postprocess };
 
@@ -35,7 +35,7 @@ struct UserCall {
  */
 template <class T>
 class Iterator {
-  public:
+ public:
     /**
      * Initialize the iterator.
      */

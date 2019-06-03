@@ -2,9 +2,9 @@
 #include <math.h>
 #include "../collection/simplesequence.h"
 #include "./inplacerunner.h"
-#include "standarddfsiterator.h"
-#include "restoredfsiterator.h"
 #include "nplusmbitdfsiterator.h"
+#include "restoredfsiterator.h"
+#include "standarddfsiterator.h"
 
 namespace Sealib {
 
@@ -159,7 +159,7 @@ void DFS::visit_nplusm(uint64_t u0, UndirectedGraph const &g,
             preexplore(u, k);
             if (color->get(v) == DFS_WHITE) {
                 preprocess(v);
-                if(color->get(v) == DFS_BLACK) break;
+                if (color->get(v) == DFS_BLACK) break;
                 color->insert(v, DFS_GRAY);
                 parent->insert(v, g.mate(u, k));
                 u = v;
@@ -210,7 +210,8 @@ void DFS::standardDFS(UndirectedGraph const &g, Consumer preprocess,
     }
 }
 
-Iterator<UserCall>* DFS::getStandardDFSIterator(const Sealib::Graph &g, uint64_t u0) {
+Iterator<UserCall> *DFS::getStandardDFSIterator(const Sealib::Graph &g,
+                                                uint64_t u0) {
     return new StandardDFSIterator(g, u0);
 }
 
@@ -237,7 +238,7 @@ void DFS::nBitDFS(Graph const &g, Consumer preprocess, BiConsumer preexplore,
     }
 }
 
-Iterator<UserCall>* DFS::getnBitDFSIterator(Graph const &g, uint64_t u0){
+Iterator<UserCall> *DFS::getnBitDFSIterator(Graph const &g, uint64_t u0) {
     return new RestoreDFSIterator(g, u0, restore_full, true);
 }
 
@@ -254,7 +255,7 @@ void DFS::nloglognBitDFS(Graph const &g, Consumer preprocess,
     }
 }
 
-Iterator<UserCall>* DFS::getnloglognDFSIterator(Graph const &g, uint64_t u0){
+Iterator<UserCall> *DFS::getnloglognDFSIterator(Graph const &g, uint64_t u0) {
     return new RestoreDFSIterator(g, u0, restore_top, false);
 }
 
@@ -271,7 +272,8 @@ void DFS::nplusmBitDFS(UndirectedGraph const &g, Consumer preprocess,
     }
 }
 
-Iterator<UserCall>* DFS::getnplusmBitDFSIterator(UndirectedGraph const &g, uint64_t u0){
+Iterator<UserCall> *DFS::getnplusmBitDFSIterator(UndirectedGraph const &g,
+                                                 uint64_t u0) {
     return new NplusMBitDFSIterator(g, u0);
 }
 

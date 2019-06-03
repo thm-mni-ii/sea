@@ -11,7 +11,6 @@
 
 namespace Sealib {
 
-
 /**
  * Reverse DFS iterator which returns a the user calls of a normal DFS in
  * reverse order.

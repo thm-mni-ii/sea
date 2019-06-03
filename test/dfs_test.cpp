@@ -73,9 +73,9 @@ TEST_P(DFSTest, stdUserproc) {
 TEST_P(DFSTest, stditerator) {
     DirectedGraph g = GetParam();
     Iterator<UserCall>* iter = DFS::getStandardDFSIterator(g, 0);
-    while(iter->more()){
+    while (iter->more()) {
         UserCall x = iter->next();
-        switch (x.type){
+        switch (x.type) {
             case UserCall::preprocess:
                 incr1(x.u);
                 break;
@@ -100,21 +100,25 @@ TEST_P(DFSTest, stditerator) {
 TEST_P(DFSTest, cmpstdDFS) {
     DirectedGraph g = GetParam();
     Iterator<UserCall>* iter = DFS::getStandardDFSIterator(g, 0);
-    DFS::standardDFS(g,[iter](uint64_t n){
-                UserCall x = iter->next();
-                EXPECT_EQ(n, x.u);
-            },[iter](uint64_t n, uint64_t m) {
-                UserCall x = iter->next();
-                EXPECT_EQ(n, x.u);
-                EXPECT_EQ(m, x.k);
-            },[iter](uint64_t n, uint64_t m) {
-                UserCall x = iter->next();
-                EXPECT_EQ(n, x.u);
-                EXPECT_EQ(m, x.k);
-            },[iter](uint64_t n) {
-                UserCall x = iter->next();
-                EXPECT_EQ(n, x.u);
-    });
+    DFS::standardDFS(g,
+                     [iter](uint64_t n) {
+                         UserCall x = iter->next();
+                         EXPECT_EQ(n, x.u);
+                     },
+                     [iter](uint64_t n, uint64_t m) {
+                         UserCall x = iter->next();
+                         EXPECT_EQ(n, x.u);
+                         EXPECT_EQ(m, x.k);
+                     },
+                     [iter](uint64_t n, uint64_t m) {
+                         UserCall x = iter->next();
+                         EXPECT_EQ(n, x.u);
+                         EXPECT_EQ(m, x.k);
+                     },
+                     [iter](uint64_t n) {
+                         UserCall x = iter->next();
+                         EXPECT_EQ(n, x.u);
+                     });
 }
 
 TEST_P(DFSTest, nBitUserproc) {
@@ -127,12 +131,12 @@ TEST_P(DFSTest, nBitUserproc) {
 }
 
 TEST_P(DFSTest, nBititerator) {
-    //srand(time(NULL));
+    // srand(time(NULL));
     DirectedGraph g = GetParam();
     Iterator<UserCall>* iter = DFS::getnBitDFSIterator(g, 0);
-    while(iter->more()){
+    while (iter->more()) {
         UserCall x = iter->next();
-        switch (x.type){
+        switch (x.type) {
             case UserCall::preprocess:
                 incr1(x.u);
                 break;
@@ -157,21 +161,25 @@ TEST_P(DFSTest, nBititerator) {
 TEST_P(DFSTest, cmpnBitDFS) {
     DirectedGraph g = GetParam();
     Iterator<UserCall>* iter = DFS::getnBitDFSIterator(g, 0);
-    DFS::nBitDFS(g,[iter](uint64_t n){
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-    },[iter](uint64_t n, uint64_t m) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-        EXPECT_EQ(m, x.k);
-    },[iter](uint64_t n, uint64_t m) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-        EXPECT_EQ(m, x.k);
-    },[iter](uint64_t n) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-    });
+    DFS::nBitDFS(g,
+                 [iter](uint64_t n) {
+                     UserCall x = iter->next();
+                     EXPECT_EQ(n, x.u);
+                 },
+                 [iter](uint64_t n, uint64_t m) {
+                     UserCall x = iter->next();
+                     EXPECT_EQ(n, x.u);
+                     EXPECT_EQ(m, x.k);
+                 },
+                 [iter](uint64_t n, uint64_t m) {
+                     UserCall x = iter->next();
+                     EXPECT_EQ(n, x.u);
+                     EXPECT_EQ(m, x.k);
+                 },
+                 [iter](uint64_t n) {
+                     UserCall x = iter->next();
+                     EXPECT_EQ(n, x.u);
+                 });
 }
 
 TEST_P(DFSTest, nloglognBitUserproc) {
@@ -186,9 +194,9 @@ TEST_P(DFSTest, nloglognBitUserproc) {
 TEST_P(DFSTest, nloglogniterator) {
     DirectedGraph g = GetParam();
     Iterator<UserCall>* iter = DFS::getnloglognDFSIterator(g, 0);
-    while(iter->more()){
+    while (iter->more()) {
         UserCall x = iter->next();
-        switch (x.type){
+        switch (x.type) {
             case UserCall::preprocess:
                 incr1(x.u);
                 break;
@@ -213,21 +221,25 @@ TEST_P(DFSTest, nloglogniterator) {
 TEST_P(DFSTest, cmpnloglognDFS) {
     DirectedGraph g = GetParam();
     Iterator<UserCall>* iter = DFS::getnloglognDFSIterator(g, 0);
-    DFS::nloglognBitDFS(g,[iter](uint64_t n){
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-    },[iter](uint64_t n, uint64_t m) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-        EXPECT_EQ(m, x.k);
-    },[iter](uint64_t n, uint64_t m) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-        EXPECT_EQ(m, x.k);
-    },[iter](uint64_t n) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-    });
+    DFS::nloglognBitDFS(g,
+                        [iter](uint64_t n) {
+                            UserCall x = iter->next();
+                            EXPECT_EQ(n, x.u);
+                        },
+                        [iter](uint64_t n, uint64_t m) {
+                            UserCall x = iter->next();
+                            EXPECT_EQ(n, x.u);
+                            EXPECT_EQ(m, x.k);
+                        },
+                        [iter](uint64_t n, uint64_t m) {
+                            UserCall x = iter->next();
+                            EXPECT_EQ(n, x.u);
+                            EXPECT_EQ(m, x.k);
+                        },
+                        [iter](uint64_t n) {
+                            UserCall x = iter->next();
+                            EXPECT_EQ(n, x.u);
+                        });
 }
 
 TEST_P(DFSTest2, nplusmBitUserproc) {
@@ -242,9 +254,9 @@ TEST_P(DFSTest2, nplusmBitUserproc) {
 TEST_P(DFSTest2, nplusmiterator) {
     UndirectedGraph g = GetParam();
     Iterator<UserCall>* iter = DFS::getnplusmBitDFSIterator(g, 0);
-    while(iter->more()){
+    while (iter->more()) {
         UserCall x = iter->next();
-        switch (x.type){
+        switch (x.type) {
             case UserCall::preprocess:
                 incr1(x.u);
                 break;
@@ -269,21 +281,25 @@ TEST_P(DFSTest2, nplusmiterator) {
 TEST_P(DFSTest2, cmpnplusmBitDFS) {
     UndirectedGraph g = GetParam();
     Iterator<UserCall>* iter = DFS::getnplusmBitDFSIterator(g, 0);
-    DFS::nplusmBitDFS(g,[iter](uint64_t n){
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-    },[iter](uint64_t n, uint64_t m) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-        EXPECT_EQ(m, x.k);
-    },[iter](uint64_t n, uint64_t m) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-        EXPECT_EQ(m, x.k);
-    },[iter](uint64_t n) {
-        UserCall x = iter->next();
-        EXPECT_EQ(n, x.u);
-    });
+    DFS::nplusmBitDFS(g,
+                      [iter](uint64_t n) {
+                          UserCall x = iter->next();
+                          EXPECT_EQ(n, x.u);
+                      },
+                      [iter](uint64_t n, uint64_t m) {
+                          UserCall x = iter->next();
+                          EXPECT_EQ(n, x.u);
+                          EXPECT_EQ(m, x.k);
+                      },
+                      [iter](uint64_t n, uint64_t m) {
+                          UserCall x = iter->next();
+                          EXPECT_EQ(n, x.u);
+                          EXPECT_EQ(m, x.k);
+                      },
+                      [iter](uint64_t n) {
+                          UserCall x = iter->next();
+                          EXPECT_EQ(n, x.u);
+                      });
 }
 
 TEST(DFSTest, nloglognImbalanced) {

@@ -1,13 +1,13 @@
-#include "sealib/graph/graphcreator.h"
-#include "sealib/collection/bitset.h"
+#include "sealib/flow/seperator.h"
 #include <gtest/gtest.h>
+#include <sealib/iterator/dfs.h>
 #include <cstdio>
 #include <cstdlib>
 #include <random>
-#include <sealib/iterator/dfs.h>
-#include "sealib/flow/seperator.h"
+#include "sealib/collection/bitset.h"
+#include "sealib/graph/graphcreator.h"
 
-namespace Sealib{
+namespace Sealib {
 
 static uint64_t n = 50;
 static uint64_t deg = 4;
@@ -24,38 +24,42 @@ TEST(SeperatorTest, VSeperator) {
     for (uint64_t i = 5; i < n; i++) {
         bool align = false;
         for (uint64_t j = 0; j < 5; j++) {
-            for(uint64_t k = 0; k < g.deg(j); k++){
-                if(g.head(j, k) == i) align = true;
+            for (uint64_t k = 0; k < g.deg(j); k++) {
+                if (g.head(j, k) == i) align = true;
             }
         }
         if (!align && nt > 0) {
             t.insert(i, true);
             nt--;
-        } else t.insert(i, false);
-
+        } else
+            t.insert(i, false);
     }
     Bitset<> vs = Bitset<>(n);
-    vs = Seperator::v_seperate(s, t, g, 50, DFS::getStandardDFSIterator);
+    vs = Seperator::standardVSeperate(s, t, g, 50, DFS::getStandardDFSIterator);
 
     // erase connections from other vertices to vertices in vs
     for (uint64_t i = 0; i < n; i++) {
-        if(vs.get(i)){
-            for(uint64_t j = 0; j < g.getNode(i).getDegree(); j++) {
-                g.getNode(g.getNode(i).getAdj()[j].first).getAdj()[g.getNode(i).getAdj()[j].second].first = g.getNode(i).getAdj()[j].first;
-                g.getNode(g.getNode(i).getAdj()[j].first).getAdj()[g.getNode(i).getAdj()[j].second].second = g.getNode(i).getAdj()[j].second;
+        if (vs.get(i)) {
+            for (uint64_t j = 0; j < g.getNode(i).getDegree(); j++) {
+                g.getNode(g.getNode(i).getAdj()[j].first)
+                    .getAdj()[g.getNode(i).getAdj()[j].second]
+                    .first = g.getNode(i).getAdj()[j].first;
+                g.getNode(g.getNode(i).getAdj()[j].first)
+                    .getAdj()[g.getNode(i).getAdj()[j].second]
+                    .second = g.getNode(i).getAdj()[j].second;
             }
         }
     }
 
     // searching t vertices starting at all vertices in s
-    for(uint64_t i = 0; i < n; i++) {
-        if(s.get(i)) {
+    for (uint64_t i = 0; i < n; i++) {
+        if (s.get(i)) {
             Iterator<UserCall> *iter = DFS::getStandardDFSIterator(g, i);
             UserCall x = iter->next();
-            while(x.type != UserCall::postexplore || x.u != i){
-                switch (x.type){
+            while (x.type != UserCall::postexplore || x.u != i) {
+                switch (x.type) {
                     case UserCall::preexplore:
-                        if(t.get(x.u)) FAIL();
+                        if (t.get(x.u)) FAIL();
                         break;
                 }
                 x = iter->next();
@@ -78,37 +82,37 @@ TEST(SeperatorTest, ESeperator) {
     for (uint64_t i = 5; i < n; i++) {
         bool align = false;
         for (uint64_t j = 0; j < 5; j++) {
-            for(uint64_t k = 0; k < g.deg(j); k++){
-                if(g.head(j, k) == i) align = true;
+            for (uint64_t k = 0; k < g.deg(j); k++) {
+                if (g.head(j, k) == i) align = true;
             }
         }
         if (!align && nt > 0) {
             t.insert(i, true);
             nt--;
-        } else t.insert(i, false);
-
+        } else
+            t.insert(i, false);
     }
     std::vector<std::pair<uint64_t, uint64_t>> es;
-    es = Seperator::e_seperate(s, t, g, 50, DFS::getStandardDFSIterator);
+    es = Seperator::standardESeperate(s, t, g, 50, DFS::getStandardDFSIterator);
 
     // erase edges (make u = k)
     for (uint64_t i = 0; i < es.size(); i++) {
-        for(uint64_t j = 0; j < g.getNode(es[i].first).getDegree(); j++) {
-            if(g.head(es[i].first, j) == es[i].second) {
+        for (uint64_t j = 0; j < g.getNode(es[i].first).getDegree(); j++) {
+            if (g.head(es[i].first, j) == es[i].second) {
                 g.getNode(es[i].first).getAdj()[j].first = es[i].first;
             }
         }
     }
 
     // searching t vertices starting at all vertices in s
-    for(uint64_t i = 0; i < n; i++) {
-        if(s.get(i)) {
+    for (uint64_t i = 0; i < n; i++) {
+        if (s.get(i)) {
             Iterator<UserCall> *iter = DFS::getStandardDFSIterator(g, i);
             UserCall x = iter->next();
-            while(x.type != UserCall::postexplore || x.u != i){
-                switch (x.type){
+            while (x.type != UserCall::postexplore || x.u != i) {
+                switch (x.type) {
                     case UserCall::preexplore:
-                        if(t.get(x.u)) FAIL();
+                        if (t.get(x.u)) FAIL();
                         break;
                 }
                 x = iter->next();
@@ -119,4 +123,4 @@ TEST(SeperatorTest, ESeperator) {
     SUCCEED();
 }
 
-} // using sealib namespace
+}  // namespace Sealib

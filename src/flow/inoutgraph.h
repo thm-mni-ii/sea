@@ -10,24 +10,26 @@ namespace Sealib {
  * @author Vytautas Hermann
  */
 class InOutGraph : public Graph {
-public:
-    explicit InOutGraph(Graph const &graph):
-            g(graph){}
-    uint64_t deg(uint64_t v)const override{
-        if(v < g.getOrder()) return 1;
-        else return g.deg(v - g.getOrder());
+ public:
+    explicit InOutGraph(Graph const &graph) : g(graph) {}
+    uint64_t deg(uint64_t v) const override {
+        if (v < g.getOrder())
+            return 1;
+        else
+            return g.deg(v - g.getOrder());
     }
-    uint64_t head(uint64_t u, uint64_t k)const override{
-        if(u < g.getOrder()) return u + g.getOrder();
-        else return g.head(u - g.getOrder(), k);
+    uint64_t head(uint64_t u, uint64_t k) const override {
+        if (u < g.getOrder())
+            return u + g.getOrder();
+        else
+            return g.head(u - g.getOrder(), k);
     }
-    uint64_t getOrder()const override{
-        return g.getOrder() * 2;
-    }
-private:
+    uint64_t getOrder() const override { return g.getOrder() * 2; }
+
+ private:
     Graph const &g;
 };
 
-}
+}  // namespace Sealib
 
-#endif //SEA_INOUTGRAPH_H
+#endif  // SEA_INOUTGRAPH_H

@@ -68,7 +68,8 @@ class DFS {
      * @param u0 start vertice
      * @author Vytautas Hermann
      */
-    static Iterator<UserCall>* getStandardDFSIterator(Graph const &g, uint64_t u0);
+    static Iterator<UserCall> *getStandardDFSIterator(Graph const &g,
+                                                      uint64_t u0);
 
     /**
      * Run a space-efficient depth-first search over a given graph. (Elmasry,
@@ -93,7 +94,7 @@ class DFS {
      * @param u0 start vertice
      * @author Vytautas Hermann
      */
-    static Iterator<UserCall>* getnBitDFSIterator(Graph const &g, uint64_t u0);
+    static Iterator<UserCall> *getnBitDFSIterator(Graph const &g, uint64_t u0);
 
     /**
      * Run a linear-time space-efficient depth-first search. (Elmasry, Hagerup
@@ -119,7 +120,8 @@ class DFS {
      * @param u0 start vertice
      * @author Vytautas Hermann
      */
-    static Iterator<UserCall>* getnloglognDFSIterator(Graph const &g, uint64_t u0);
+    static Iterator<UserCall> *getnloglognDFSIterator(Graph const &g,
+                                                      uint64_t u0);
 
     /**
      * Run a linear-time and linear-space depth-first search over an undirected
@@ -147,7 +149,8 @@ class DFS {
      * @param u0 start vertice
      * @author Vytautas Hermann
      */
-    static Iterator<UserCall>* getnplusmBitDFSIterator(UndirectedGraph const &g, uint64_t u0);
+    static Iterator<UserCall> *getnplusmBitDFSIterator(UndirectedGraph const &g,
+                                                       uint64_t u0);
 
     /**
      * Runs an inplace DFS in linear time over a graph that is given in a
