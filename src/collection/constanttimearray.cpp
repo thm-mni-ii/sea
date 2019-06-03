@@ -1,12 +1,12 @@
-#include <sealib/collection/constanttimedynamicarray.h>
+#include <sealib/collection/constanttimearray.h>
 
-using Sealib::ConstantTimeDynamicArray;
+using Sealib::ConstantTimeArray;
 
 struct NotChained : public std::exception {
     const char* what() const noexcept override { return "NotChained"; }
 };
 
-void ConstantTimeDynamicArray::insert(uint64_t i, uint64_t value) {
+void ConstantTimeArray::insert(uint64_t i, uint64_t value) {
     if (i >= _size) throw std::out_of_range("Index out of bounds.");
     uint64_t _i = i / 2;
     if (_i < border) {
@@ -55,7 +55,7 @@ void ConstantTimeDynamicArray::insert(uint64_t i, uint64_t value) {
     }
 }
 
-uint64_t ConstantTimeDynamicArray::get(uint64_t i) const {
+uint64_t ConstantTimeArray::get(uint64_t i) const {
     if (i >= _size) throw std::out_of_range("Index out of bounds.");
     uint64_t _i = i / 2;
     if (isChain(_i)) {
@@ -73,7 +73,7 @@ uint64_t ConstantTimeDynamicArray::get(uint64_t i) const {
     }
 }
 
-uint64_t ConstantTimeDynamicArray::chainWith(uint64_t i) {
+uint64_t ConstantTimeArray::chainWith(uint64_t i) {
     uint64_t _k = A[2 * i];
     uint64_t k = _k / 2;
     if (isChain(i)) {
@@ -83,12 +83,12 @@ uint64_t ConstantTimeDynamicArray::chainWith(uint64_t i) {
     }
 }
 
-void ConstantTimeDynamicArray::makeChain(uint64_t i, uint64_t j) {
+void ConstantTimeArray::makeChain(uint64_t i, uint64_t j) {
     A[2 * i] = 2 * j;
     A[2 * j] = 2 * i;
 }
 
-void ConstantTimeDynamicArray::breakChain(uint64_t i) {
+void ConstantTimeArray::breakChain(uint64_t i) {
     try {
         uint64_t k = chainWith(i);
         A[2 * k] = 2 * k;
@@ -97,11 +97,11 @@ void ConstantTimeDynamicArray::breakChain(uint64_t i) {
     }
 }
 
-void ConstantTimeDynamicArray::initBlock(uint64_t i) {
+void ConstantTimeArray::initBlock(uint64_t i) {
     A[2 * i] = A[2 * i + 1] = init;
 }
 
-uint64_t ConstantTimeDynamicArray::extend() {
+uint64_t ConstantTimeArray::extend() {
     uint64_t k;
     try {
         k = chainWith(border);
@@ -116,13 +116,13 @@ uint64_t ConstantTimeDynamicArray::extend() {
     return k;
 }
 
-bool ConstantTimeDynamicArray::isChain(uint64_t i) const {
+bool ConstantTimeArray::isChain(uint64_t i) const {
     uint64_t _k = A[2 * i];
     uint64_t k = _k / 2;
     return (_k % 2 == 0 && _k < _sizeA && A[_k] == 2 * i &&
             ((i < border && border <= k) || (k < border && border <= i)));
 }
-Sealib::ConstantTimeDynamicArray::ConstantTimeDynamicArray(uint64_t size,
+Sealib::ConstantTimeArray::ConstantTimeArray(uint64_t size,
                                                            uint64_t init)
     : _size(size),
       init(init),

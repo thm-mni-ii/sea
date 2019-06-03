@@ -1,5 +1,5 @@
-#ifndef SEALIB_COLLECTION_CONSTANTTIMEDYNAMICARRAY_H_
-#define SEALIB_COLLECTION_CONSTANTTIMEDYNAMICARRAY_H_
+#ifndef SEALIB_COLLECTION_CONSTANTTIMEARRAY_H_
+#define SEALIB_COLLECTION_CONSTANTTIMEARRAY_H_
 
 #include <memory>
 #include "sealib/_types.h"
@@ -10,7 +10,7 @@ namespace Sealib {
 /**
  * Dynamic Array with constant Time initialization using O(1) bytes extra space
  */
-class ConstantTimeDynamicArray {
+class ConstantTimeArray {
  public:
     class proxy;
     class iterator;
@@ -18,7 +18,7 @@ class ConstantTimeDynamicArray {
      * Create a new ConstantTimeArray with N elements.
      * @param init initial value of all N entries
      */
-    explicit ConstantTimeDynamicArray(uint64_t size = 0, uint64_t init = 0);
+    explicit ConstantTimeArray(uint64_t size = 0, uint64_t init = 0);
 
     /**
      * Fills the array with the specified value in constant time.
@@ -41,7 +41,7 @@ class ConstantTimeDynamicArray {
 
     class proxy {
      public:
-        proxy(ConstantTimeDynamicArray* ref, uint64_t i) : ref(ref), i(i) {}
+        proxy(ConstantTimeArray* ref, uint64_t i) : ref(ref), i(i) {}
 
         operator uint64_t() const { return ref->get(i); }
 
@@ -81,13 +81,13 @@ class ConstantTimeDynamicArray {
         }
 
      private:
-        friend class ConstantTimeDynamicArray;
-        ConstantTimeDynamicArray* ref;
+        friend class ConstantTimeArray;
+        ConstantTimeArray* ref;
         uint64_t i;
     };
 
  private:
-    friend class ConstantTimeDynamicArray::proxy;
+    friend class ConstantTimeArray::proxy;
 
     uint64_t _size;
     uint64_t init;
@@ -106,4 +106,4 @@ class ConstantTimeDynamicArray {
     uint64_t get(uint64_t i) const;
 };
 }  // namespace Sealib
-#endif  // SEALIB_COLLECTION_CONSTANTTIMEDYNAMICARRAY_H_
+#endif  // SEALIB_COLLECTION_CONSTANTTIMEARRAY_H_
