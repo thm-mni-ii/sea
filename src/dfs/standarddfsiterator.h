@@ -1,5 +1,5 @@
-#ifndef SEA_STANDARDDFSITERATOR_H
-#define SEA_STANDARDDFSITERATOR_H
+#ifndef SRC_DFS_STANDARDDFSITERATOR_H_
+#define SRC_DFS_STANDARDDFSITERATOR_H_
 
 #include "sealib/iterator/iterator.h"
 
@@ -10,18 +10,18 @@ class StandardDFSIterator : public Iterator<UserCall> {
     explicit StandardDFSIterator(Graph const &graph, uint64_t u0)
         : g(graph),
           root(u0),
-          color(g.getOrder()),
-          finished(false),
           state(0),
-          nextposRoot(0) {
+          nextposRoot(0),
+          color(g.getOrder()),
+          finished(false) {
         s.push_back({root, 0});
     }
 
-    void init() {}
+    void init() override {}
 
-    bool more() { return !finished; }
+    bool more() override { return !finished; }
 
-    UserCall next() {
+    UserCall next() override {
         if (!s.empty() || state != 0) {
             if (state == 0) {
                 state = 1;
@@ -96,4 +96,4 @@ class StandardDFSIterator : public Iterator<UserCall> {
 
 }  // namespace Sealib
 
-#endif  // SEA_STANDARDDFSITERATOR_H
+#endif  // SRC_DFS_STANDARDDFSITERATOR_H_

@@ -1,5 +1,5 @@
-#ifndef SEA_STGRAPH_H
-#define SEA_STGRAPH_H
+#ifndef SRC_FLOW_STGRAPH_H_
+#define SRC_FLOW_STGRAPH_H_
 
 #include <sealib/graph/graph.h>
 #include <sealib/graph/node.h>
@@ -104,4 +104,4 @@ class STGraph : public Graph {
     uint64_t s_deg;
 };
 }  // namespace Sealib
-#endif  // SEA_STGRAPH_H
+#endif  // SRC_FLOW_STGRAPH_H_

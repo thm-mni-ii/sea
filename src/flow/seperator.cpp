@@ -108,8 +108,9 @@ Sealib::Bitset<> Seperator::standardVSeperate(
     } catch (std::string e) {
         if (e.compare("no seperator with max k edges") == 0) {
             throw "no seperator with max k vertices";
-        } else
+        } else {
             throw e;
+        }
     }
 
     // get the minimum vertice seperator
