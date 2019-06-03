@@ -9,7 +9,7 @@
 namespace Sealib {
 
 std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
-    Sealib::Bitset<> s, Sealib::Bitset<> t, Sealib::Graph const &g, int64_t k,
+    Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g, int64_t k,
     Iterator<UserCall> *iter(Graph const &, uint64_t)) {
     STGraph graph = Sealib::STGraph(g, s, t);
 
@@ -40,7 +40,7 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
         free(it);
         if (ispath) graph.revertpath(path);
     }
-    if (k < 0) throw "no seperator with max k edges";  // interrupt
+    if (k < 0) throw std::exception();  // interrupt
 
     // compute a set of edges in the minimum cut
     std::vector<std::pair<uint64_t, uint64_t>> es;
@@ -50,7 +50,7 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
     while (x.type != UserCall::postexplore || x.u != graph.getOrder() - 1) {
         switch (x.type) {
             case UserCall::preexplore:
-                s_reachable[x.u] = 1;
+                s_reachable[x.u] = true;
                 break;
         }
         x = it->next();
@@ -59,7 +59,7 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
     for (uint64_t i = 0; i < g.getOrder(); i++) {
         for (uint64_t j = 0; j < g.deg(i); j++) {
             if (s_reachable.get(i) == !s_reachable.get(g.head(i, j))) {
-                es.push_back({i, g.head(i, j)});
+                es.emplace_back(i, g.head(i, j));
             }
         }
     }
@@ -67,17 +67,18 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
 }
 
 std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
-    Sealib::Bitset<> s, Sealib::Bitset<> t, Sealib::Graph const &g, int64_t k) {
+    Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g,
+    int64_t k) {
     try {
         return Seperator::standardESeperate(s, t, g, k,
                                             DFS::getStandardDFSIterator);
-    } catch (std::string e) {
-        throw std::move(e);
+    } catch (std::exception &e) {
+        throw e;
     }
 }
 
 Sealib::Bitset<> Seperator::standardVSeperate(
-    Sealib::Bitset<> s, Sealib::Bitset<> t, Sealib::Graph const &g, int64_t k,
+    Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g, int64_t k,
     Iterator<UserCall> *iter(Graph const &, uint64_t)) {
     std::vector<SimpleNode> nodes;
     for (uint64_t i = 0; i < g.getOrder(); i++) {
@@ -105,12 +106,8 @@ Sealib::Bitset<> Seperator::standardVSeperate(
     try {
         es =
             Seperator::standardESeperate(s2, t2, DirectedGraph(nodes), k, iter);
-    } catch (std::string e) {
-        if (e.compare("no seperator with max k edges") == 0) {
-            throw "no seperator with max k vertices";
-        } else {
-            throw std::move(e);
-        }
+    } catch (std::exception &e) {
+        throw e;
     }
 
     // get the minimum vertice seperator
@@ -118,30 +115,30 @@ Sealib::Bitset<> Seperator::standardVSeperate(
     for (uint64_t i = 0; i < es.size(); i++) {
         if (!(s2[es[i].first] || s2[es[i].second])) {
             if (es[i].first < vs.size()) {
-                vs[es[i].first] = 1;
+                vs[es[i].first] = true;
             } else {
-                vs[es[i].second] = 1;
+                vs[es[i].second] = true;
             }
         } else {
             if (es[i].first < vs.size()) {
-                vs[es[i].second - g.getOrder()] = 1;
+                vs[es[i].second - g.getOrder()] = true;
             } else {
-                vs[es[i].first - g.getOrder()] = 1;
+                vs[es[i].first - g.getOrder()] = true;
             }
         }
     }
     return vs;
 }
 
-Sealib::Bitset<> Seperator::standardVSeperate(Sealib::Bitset<> s,
-                                              Sealib::Bitset<> t,
+Sealib::Bitset<> Seperator::standardVSeperate(Sealib::Bitset<> &s,
+                                              Sealib::Bitset<> &t,
                                               Sealib::Graph const &g,
                                               int64_t k) {
     try {
         return Seperator::standardVSeperate(s, t, g, k,
                                             DFS::getStandardDFSIterator);
-    } catch (std::string e) {
-        throw std::move(e);
+    } catch (std::exception &e) {
+        throw e;
     }
 }
 
