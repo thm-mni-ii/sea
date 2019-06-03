@@ -31,8 +31,9 @@ TEST(SeperatorTest, VSeperator) {
         if (!align && nt > 0) {
             t.insert(i, true);
             nt--;
-        } else
+        } else {
             t.insert(i, false);
+        }
     }
     Bitset<> vs = Bitset<>(n);
     vs = Seperator::standardVSeperate(s, t, g, 50, DFS::getStandardDFSIterator);
@@ -89,8 +90,9 @@ TEST(SeperatorTest, ESeperator) {
         if (!align && nt > 0) {
             t.insert(i, true);
             nt--;
-        } else
+        } else {
             t.insert(i, false);
+        }
     }
     std::vector<std::pair<uint64_t, uint64_t>> es;
     es = Seperator::standardESeperate(s, t, g, 50, DFS::getStandardDFSIterator);

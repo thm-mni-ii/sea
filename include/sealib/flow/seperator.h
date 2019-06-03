@@ -1,5 +1,5 @@
-#ifndef SEA_SEPERATOR_H
-#define SEA_SEPERATOR_H
+#ifndef SEALIB_FLOW_SEPERATOR_H_
+#define SEALIB_FLOW_SEPERATOR_H_
 
 #include <sealib/collection/bitset.h>
 #include <sealib/collection/segmentstack.h>
@@ -66,4 +66,4 @@ class Seperator {
 
 }  // namespace Sealib
 
-#endif  // VSEA_SEPERATOR_H
+#endif  // SEALIB_FLOW_SEPERATOR_H_
