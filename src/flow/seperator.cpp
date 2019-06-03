@@ -9,7 +9,8 @@
 namespace Sealib {
 
 std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
-    Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g, int64_t k,
+    Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
+    Sealib::Graph const &g, int64_t k,
     Iterator<UserCall> *iter(Graph const &, uint64_t)) {
     STGraph graph = Sealib::STGraph(g, s, t);
 
@@ -67,8 +68,8 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
 }
 
 std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
-    Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g,
-    int64_t k) {
+    Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
+    Sealib::Graph const &g, int64_t k) {
     try {
         return Seperator::standardESeperate(s, t, g, k,
                                             DFS::getStandardDFSIterator);
@@ -78,7 +79,8 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
 }
 
 Sealib::Bitset<> Seperator::standardVSeperate(
-    Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g, int64_t k,
+    Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
+    Sealib::Graph const &g, int64_t k,
     Iterator<UserCall> *iter(Graph const &, uint64_t)) {
     std::vector<SimpleNode> nodes;
     for (uint64_t i = 0; i < g.getOrder(); i++) {
@@ -130,8 +132,8 @@ Sealib::Bitset<> Seperator::standardVSeperate(
     return vs;
 }
 
-Sealib::Bitset<> Seperator::standardVSeperate(Sealib::Bitset<> &s,
-                                              Sealib::Bitset<> &t,
+Sealib::Bitset<> Seperator::standardVSeperate(Sealib::Bitset<> const &s,
+                                              Sealib::Bitset<> const &t,
                                               Sealib::Graph const &g,
                                               int64_t k) {
     try {

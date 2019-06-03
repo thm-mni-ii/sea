@@ -23,8 +23,8 @@ class Seperator {
      * @param k max vertices the seperator is allowed to have
      * @return Set of vertices, wich disjoin s and t.
      */
-    static Sealib::Bitset<> standardVSeperate(Sealib::Bitset<> &s,
-                                              Sealib::Bitset<> &t,
+    static Sealib::Bitset<> standardVSeperate(Sealib::Bitset<> const &s,
+                                              Sealib::Bitset<> const &t,
                                               Sealib::Graph const &g,
                                               int64_t k);
     /**
@@ -37,8 +37,9 @@ class Seperator {
      * @return Set of vertices, wich disjoin s and t.
      */
     static Sealib::Bitset<> standardVSeperate(
-        Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g,
-        int64_t k, Iterator<UserCall> *iter(Graph const &, uint64_t));
+        Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
+        Sealib::Graph const &g, int64_t k,
+        Iterator<UserCall> *iter(Graph const &, uint64_t));
     /**
      * Returns a vector of edges that are part of the Seperator.
      * @param s first set of vertices
@@ -48,8 +49,8 @@ class Seperator {
      * @return Set of vertices, wich disjoin s and t.
      */
     static std::vector<std::pair<uint64_t, uint64_t>> standardESeperate(
-        Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g,
-        int64_t k);
+        Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
+        Sealib::Graph const &g, int64_t k);
     /**
      * Returns a vector of edges that are part of the Seperator.
      * @param s first set of vertices
@@ -60,8 +61,9 @@ class Seperator {
      * @return Set of vertices, wich disjoin s and t.
      */
     static std::vector<std::pair<uint64_t, uint64_t>> standardESeperate(
-        Sealib::Bitset<> &s, Sealib::Bitset<> &t, Sealib::Graph const &g,
-        int64_t k, Iterator<UserCall> *iter(Graph const &, uint64_t));
+        Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
+        Sealib::Graph const &g, int64_t k,
+        Iterator<UserCall> *iter(Graph const &, uint64_t));
 };
 
 }  // namespace Sealib
