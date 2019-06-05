@@ -5,8 +5,9 @@
 
 namespace Sealib {
 /**
- * The class InOutGraph class is a wrapper so that the vseperator
- * funktion can provide the Graph for the eseperate funktion.
+ * The class InOutGraph class is a wrapper that
+ * transforms a given graph into a network flow graph
+ * for the computation of a separator.
  * @author Vytautas Hermann
  */
 class InOutGraph : public Graph {

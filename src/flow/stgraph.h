@@ -9,7 +9,7 @@
 namespace Sealib {
 /**
  * The class STGraph should provide a customized graph for the
- * seperator algorithms to run on.
+ * separator algorithms to run on.
  * @author Vytautas Hermann
  */
 class STGraph : public Graph {
@@ -24,8 +24,8 @@ class STGraph : public Graph {
 
         for (uint64_t i = 0; i < graph.getOrder(); i++) {
             if (t.get(i)) {
-                // Edges in t aren't important, because we won't use edges wich
-                // are leading away from t. After we reached a vertice in t we
+                // Edges in t aren't important, because we won't use edges which
+                // are leading away from t. After we reached a vertex in t we
                 // stop.
             } else {
                 if (s.get(i)) {

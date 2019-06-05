@@ -1,4 +1,4 @@
-#include <sealib/flow/seperator.h>
+#include <sealib/flow/separator.h>
 #include <sealib/graph/directedgraph.h>
 #include <sealib/graph/graphcreator.h>
 #include <sealib/graph/node.h>
@@ -8,13 +8,13 @@
 
 namespace Sealib {
 
-std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
+std::vector<std::pair<uint64_t, uint64_t>> Separator::standardESeparate(
     Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
     Sealib::Graph const &g, int64_t k,
     Iterator<UserCall> *iter(Graph const &, uint64_t)) {
     STGraph graph = Sealib::STGraph(g, s, t);
 
-    // compute a residental network
+    // compute a residual network
     bool ispath = true;
     while (ispath && k >= 0) {
         k--;
@@ -67,18 +67,18 @@ std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
     return es;
 }
 
-std::vector<std::pair<uint64_t, uint64_t>> Seperator::standardESeperate(
+std::vector<std::pair<uint64_t, uint64_t>> Separator::standardESeparate(
     Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
     Sealib::Graph const &g, int64_t k) {
     try {
-        return Seperator::standardESeperate(s, t, g, k,
+        return Separator::standardESeparate(s, t, g, k,
                                             DFS::getStandardDFSIterator);
     } catch (std::exception &e) {
         throw e;
     }
 }
 
-Sealib::Bitset<> Seperator::standardVSeperate(
+Sealib::Bitset<> Separator::standardVSeparate(
     Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
     Sealib::Graph const &g, int64_t k,
     Iterator<UserCall> *iter(Graph const &, uint64_t)) {
@@ -107,12 +107,12 @@ Sealib::Bitset<> Seperator::standardVSeperate(
     }
     try {
         es =
-            Seperator::standardESeperate(s2, t2, DirectedGraph(nodes), k, iter);
+            Separator::standardESeparate(s2, t2, DirectedGraph(nodes), k, iter);
     } catch (std::exception &e) {
         throw e;
     }
 
-    // get the minimum vertice seperator
+    // get the minimum vertex separator
     Sealib::Bitset<> vs = Sealib::Bitset<uint64_t>(g.getOrder());
     for (uint64_t i = 0; i < es.size(); i++) {
         if (!(s2[es[i].first] || s2[es[i].second])) {
@@ -132,12 +132,12 @@ Sealib::Bitset<> Seperator::standardVSeperate(
     return vs;
 }
 
-Sealib::Bitset<> Seperator::standardVSeperate(Sealib::Bitset<> const &s,
+Sealib::Bitset<> Separator::standardVSeparate(Sealib::Bitset<> const &s,
                                               Sealib::Bitset<> const &t,
                                               Sealib::Graph const &g,
                                               int64_t k) {
     try {
-        return Seperator::standardVSeperate(s, t, g, k,
+        return Separator::standardVSeparate(s, t, g, k,
                                             DFS::getStandardDFSIterator);
     } catch (std::exception &e) {
         throw e;

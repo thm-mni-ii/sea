@@ -1,25 +1,25 @@
-#include "sealib/flow/seperator.h"
+#include <sealib/flow/separator.h>
 #include <gtest/gtest.h>
 #include <sealib/iterator/dfs.h>
 #include <cstdio>
 #include <cstdlib>
 #include <random>
-#include "sealib/collection/bitset.h"
-#include "sealib/graph/graphcreator.h"
+#include <sealib/collection/bitset.h>
+#include <sealib/graph/graphcreator.h>
 
 namespace Sealib {
 
 static uint64_t n = 50;
 static uint64_t deg = 4;
 
-TEST(SeperatorTest, VSeperator) {
+TEST(SeparatorTest, VSeparator) {
     Bitset<> s = Bitset<>(n);
     Bitset<> t = Bitset<>(n);
     UndirectedGraph g = GraphCreator::kRegular(n, deg);
     for (uint64_t i = 0; i < 5; i++) {
         s.insert(i, true);
     }
-    // finding 5 seperate vertices from all s vertices
+    // finding 5 separate vertices from all s vertices
     uint64_t nt = 5;
     for (uint64_t i = 5; i < n; i++) {
         bool align = false;
@@ -36,7 +36,7 @@ TEST(SeperatorTest, VSeperator) {
         }
     }
     Bitset<> vs = Bitset<>(n);
-    vs = Seperator::standardVSeperate(s, t, g, 50, DFS::getStandardDFSIterator);
+    vs = Separator::standardVSeparate(s, t, g, 50, DFS::getStandardDFSIterator);
 
     // erase connections from other vertices to vertices in vs
     for (uint64_t i = 0; i < n; i++) {
@@ -71,14 +71,14 @@ TEST(SeperatorTest, VSeperator) {
     SUCCEED();
 }
 
-TEST(SeperatorTest, ESeperator) {
+TEST(SeparatorTest, ESeparator) {
     Bitset<> s = Bitset<>(n);
     Bitset<> t = Bitset<>(n);
     UndirectedGraph g = GraphCreator::kRegular(n, deg);
     for (uint64_t i = 0; i < 5; i++) {
         s.insert(i, true);
     }
-    // finding 5 seperate vertices from all s vertices
+    // finding 5 separate vertices from all s vertices
     uint64_t nt = 5;
     for (uint64_t i = 5; i < n; i++) {
         bool align = false;
@@ -95,7 +95,7 @@ TEST(SeperatorTest, ESeperator) {
         }
     }
     std::vector<std::pair<uint64_t, uint64_t>> es;
-    es = Seperator::standardESeperate(s, t, g, 50, DFS::getStandardDFSIterator);
+    es = Separator::standardESeparate(s, t, g, 50, DFS::getStandardDFSIterator);
 
     // erase edges (make u = k)
     for (uint64_t i = 0; i < es.size(); i++) {
