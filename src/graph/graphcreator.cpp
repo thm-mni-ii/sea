@@ -356,3 +356,29 @@ CompactGraph GraphCreator::generateGilbertGraph(uint64_t order, double p,
                                                 std::mt19937_64 *gen) {
     return CompactGraph(generateRawGilbertGraph(order, p, gen));
 }
+
+UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order, uint64_t maxTreeWidth, double p) {
+    std::vector<ExtendedNode> nodes(order);
+    std::vector<uint64_t> connect;
+    UndirectedGraph g = UndirectedGraph(nodes);
+    srand(time(NULL));
+    for(uint64_t i = 0; i < order && i < maxTreeWidth; i++){
+        connect.emplace_back(i);
+        for(uint64_t j = i + 1; j < order && j < maxTreeWidth; j++){
+            if(rand()/(double)RAND_MAX > p){
+                nodes[i].addAdjacency({j, nodes[j].getDegree()});
+                nodes[j].addAdjacency({i, nodes[i].getDegree() - 1});
+            }
+        }
+    }
+    for(uint64_t i = maxTreeWidth; i < order; i++){
+        connect[rand()%maxTreeWidth] = i;
+        for(uint64_t j = 0; j < maxTreeWidth; j++){
+            if(rand()/(double)RAND_MAX > p){
+                nodes[i].addAdjacency({j, nodes[j].getDegree()});
+                nodes[j].addAdjacency({i, nodes[i].getDegree() - 1});
+            }
+        }
+    }
+    return UndirectedGraph(nodes);
+}

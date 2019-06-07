@@ -144,6 +144,16 @@ class GraphCreator {
      * @return outerplanar cycle graph G (n=order, m=order+chords)
      */
     static UndirectedGraph cycle(uint64_t order, uint64_t chords = 0);
+
+    /**
+     * Creates an undirected graph with maximal treewidth k
+     * @param order number of vertices
+     * @param maxTreeWidth maximal treewidth the Graph can posses
+     * @param p edge propability
+     * @return undirectedgraph with maximal k treewidth
+     * @author Vytautas Hermann
+     */
+    static UndirectedGraph treeWidthGraph(uint64_t order, uint64_t maxTreeWidth, double p);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPHCREATOR_H_
