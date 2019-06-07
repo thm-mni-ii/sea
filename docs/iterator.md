@@ -1,6 +1,6 @@
 Iterator
 ===
-*Iterator* is an interface that defines the piecewise traversal over a result set. When using an iterator, we need no additional space to hold the results of an algorithm: instead, the results are *streamed* to the user one by one.
+*Iterator* is an interface that defines the piecewise traversal over a result set. When using an iterator, we need no additional space to hold the results of an algorithm: instead, the results are *streamed* to the user one by one. See also [Traversator](traversator.md).
 
 Any class that implements this interface has the following methods:
 - *init()*: initializes the iterator
@@ -14,3 +14,8 @@ Any class that implements this interface has the following methods:
 - ChoiceDictionaryIterator
 - CutVertexIterator
 - ReverseDFS
+- DFS
+ - standard
+ - nBit
+ - nloglognBit
+ - nplusmBit
