@@ -359,24 +359,44 @@ CompactGraph GraphCreator::generateGilbertGraph(uint64_t order, double p,
 
 UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order, uint64_t maxTreeWidth, double p) {
     std::vector<ExtendedNode> nodes(order);
-    std::vector<uint64_t> connect;
     UndirectedGraph g = UndirectedGraph(nodes);
     srand(time(NULL));
+    // create starting clique
     for(uint64_t i = 0; i < order && i < maxTreeWidth; i++){
-        connect.emplace_back(i);
         for(uint64_t j = i + 1; j < order && j < maxTreeWidth; j++){
-            if(rand()/(double)RAND_MAX > p){
-                nodes[i].addAdjacency({j, nodes[j].getDegree()});
-                nodes[j].addAdjacency({i, nodes[i].getDegree() - 1});
-            }
+            nodes[i].addAdjacency({j, nodes[j].getDegree()});
+            nodes[j].addAdjacency({i, nodes[i].getDegree() - 1});
         }
     }
+    // for the next clique we only need the information wich previouse clique
+    // will be used and what number will be replaced trough our current
     for(uint64_t i = maxTreeWidth; i < order; i++){
-        connect[rand()%maxTreeWidth] = i;
-        for(uint64_t j = 0; j < maxTreeWidth; j++){
-            if(rand()/(double)RAND_MAX > p){
-                nodes[i].addAdjacency({j, nodes[j].getDegree()});
-                nodes[j].addAdjacency({i, nodes[i].getDegree() - 1});
+        uint64_t r_clique = rand() % (i - maxTreeWidth + 1) + maxTreeWidth - 1;
+        uint64_t r_index = rand() % maxTreeWidth;
+        for (uint64_t j = 0; j < maxTreeWidth - 1; j++) {
+            if (j != r_index) {
+                nodes[i].addAdjacency(
+                    {nodes[r_clique].getAdj().at(j).first,
+                     nodes[nodes[r_clique].getAdj().at(j).first].getDegree()});
+                nodes[nodes[r_clique].getAdj().at(j).first].addAdjacency(
+                    {i, nodes[i].getDegree() - 1});
+            }
+        }
+        if (r_index != maxTreeWidth - 1) {
+            nodes[i].addAdjacency({r_clique, nodes[r_clique].getDegree()});
+            nodes[r_clique].addAdjacency({i, nodes[i].getDegree() - 1});
+        }
+    }
+    // remove (1-p)*100% of the edges
+    for (int i = 0; i < order; i++) {
+        for (int j = 0; j < nodes[i].getDegree(); j++) {
+            if (i < nodes[i].getAdj().at(j).first && rand() % 1001 > p * 1000) {
+                nodes[nodes[i].getAdj().at(j).first].getAdj().at(
+                    nodes[i].getAdj().at(j).second) =
+                    nodes[nodes[i].getAdj().at(j).first].getAdj().back();
+                nodes[nodes[i].getAdj().at(j).first].getAdj().pop_back();
+                nodes[i].getAdj().at(j) = nodes[i].getAdj().back();
+                nodes[i].getAdj().pop_back();
             }
         }
     }
