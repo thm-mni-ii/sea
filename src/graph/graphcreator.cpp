@@ -360,19 +360,20 @@ CompactGraph GraphCreator::generateGilbertGraph(uint64_t order, double p,
 UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order, uint64_t maxTreeWidth, double p) {
     std::vector<ExtendedNode> nodes(order);
     UndirectedGraph g = UndirectedGraph(nodes);
-    srand(time(NULL));
+    unsigned int seed = time(NULL);
     // create starting clique
-    for(uint64_t i = 0; i < order && i < maxTreeWidth; i++){
-        for(uint64_t j = i + 1; j < order && j < maxTreeWidth; j++){
+    for (uint64_t i = 0; i < order && i < maxTreeWidth; i++) {
+        for (uint64_t j = i + 1; j < order && j < maxTreeWidth; j++) {
             nodes[i].addAdjacency({j, nodes[j].getDegree()});
             nodes[j].addAdjacency({i, nodes[i].getDegree() - 1});
         }
     }
     // for the next clique we only need the information wich previouse clique
     // will be used and what number will be replaced trough our current
-    for(uint64_t i = maxTreeWidth; i < order; i++){
-        uint64_t r_clique = rand() % (i - maxTreeWidth + 1) + maxTreeWidth - 1;
-        uint64_t r_index = rand() % maxTreeWidth;
+    for (uint64_t i = maxTreeWidth; i < order; i++) {
+        uint64_t r_clique =
+            (uint64_t)rand_r(&seed) % (i - maxTreeWidth + 1) + maxTreeWidth - 1;
+        uint64_t r_index = (uint64_t)rand_r(&seed) % maxTreeWidth;
         for (uint64_t j = 0; j < maxTreeWidth - 1; j++) {
             if (j != r_index) {
                 nodes[i].addAdjacency(
@@ -388,9 +389,10 @@ UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order, uint64_t maxTreeWid
         }
     }
     // remove (1-p)*100% of the edges
-    for (int i = 0; i < order; i++) {
-        for (int j = 0; j < nodes[i].getDegree(); j++) {
-            if (i < nodes[i].getAdj().at(j).first && rand() % 1001 > p * 1000) {
+    for (uint64_t i = 0; i < order; i++) {
+        for (uint64_t j = 0; j < nodes[i].getDegree(); j++) {
+            if (i < nodes[i].getAdj().at(j).first &&
+                rand_r(&seed) % 1001 > p * 1000) {
                 nodes[nodes[i].getAdj().at(j).first].getAdj().at(
                     nodes[i].getAdj().at(j).second) =
                     nodes[nodes[i].getAdj().at(j).first].getAdj().back();
