@@ -360,7 +360,8 @@ CompactGraph GraphCreator::generateGilbertGraph(uint64_t order, double p,
 UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order, uint64_t maxTreeWidth, double p) {
     std::vector<ExtendedNode> nodes(order);
     UndirectedGraph g = UndirectedGraph(nodes);
-    unsigned int seed = time(NULL);
+    unsigned int seed;
+    seed = (unsigned int)time(nullptr);
     // create starting clique
     for (uint64_t i = 0; i < order && i < maxTreeWidth; i++) {
         for (uint64_t j = i + 1; j < order && j < maxTreeWidth; j++) {
