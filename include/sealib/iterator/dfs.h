@@ -9,6 +9,7 @@
 #include "sealib/collection/staticspacestorage.h"
 #include "sealib/graph/directedgraph.h"
 #include "sealib/graph/undirectedgraph.h"
+#include "sealib/iterator/iterator.h"
 
 namespace Sealib {
 
@@ -61,6 +62,16 @@ class DFS {
                             BiConsumer postexplore = DFS_NOP_EXPLORE,
                             Consumer postprocess = DFS_NOP_PROCESS);
     /**
+     * Run a standard depth-first search over a given graph.
+     * EFFICIENCY: O(n+m) time, O(n log n) bits
+     * @param g graph G=(V,E) to iterate over
+     * @param u0 start vertice
+     * @author Vytautas Hermann
+     */
+    static Iterator<UserCall> *getStandardDFSIterator(Graph const &g,
+                                                      uint64_t u0);
+
+    /**
      * Run a space-efficient depth-first search over a given graph. (Elmasry,
      * Hagerup and Kammer; 2015)
      * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) bits
@@ -75,6 +86,15 @@ class DFS {
                         BiConsumer preexplore = DFS_NOP_EXPLORE,
                         BiConsumer postexplore = DFS_NOP_EXPLORE,
                         Consumer postprocess = DFS_NOP_PROCESS);
+    /**
+     * Run a space-efficient depth-first search over a given graph. (Elmasry,
+     * Hagerup and Kammer; 2015)
+     * EFFICIENCY: O((n+m) log n) time, O((log3 + ε) n) bits
+     * @param g graph G=(V,E) to iterate over
+     * @param u0 start vertice
+     * @author Vytautas Hermann
+     */
+    static Iterator<UserCall> *getnBitDFSIterator(Graph const &g, uint64_t u0);
 
     /**
      * Run a linear-time space-efficient depth-first search. (Elmasry, Hagerup
@@ -92,6 +112,16 @@ class DFS {
                                BiConsumer preexplore = DFS_NOP_EXPLORE,
                                BiConsumer postexplore = DFS_NOP_EXPLORE,
                                Consumer postprocess = DFS_NOP_PROCESS);
+    /**
+     * Run a linear-time space-efficient depth-first search. (Elmasry, Hagerup
+     * and Kammer; 2015)
+     * EFFICIENCY: O(n+m) time, O(n log log n) bits
+     * @param g graph G=(V,E) to iterate over
+     * @param u0 start vertice
+     * @author Vytautas Hermann
+     */
+    static Iterator<UserCall> *getnloglognDFSIterator(Graph const &g,
+                                                      uint64_t u0);
 
     /**
      * Run a linear-time and linear-space depth-first search over an undirected
@@ -110,6 +140,17 @@ class DFS {
                              BiConsumer preexplore = DFS_NOP_EXPLORE,
                              BiConsumer postexplore = DFS_NOP_EXPLORE,
                              Consumer postprocess = DFS_NOP_PROCESS);
+    /**
+     * Run a linear-time and linear-space depth-first search over an undirected
+     * graph. The preexplore and postexplore calls can take (u,k) as argument
+     * due to the nature of an undirected graph.
+     * EFFICIENCY: O(n+m) time, O(n+m) bits
+     * @param g graph G=(V,E) to iterate over
+     * @param u0 start vertice
+     * @author Vytautas Hermann
+     */
+    static Iterator<UserCall> *getnplusmBitDFSIterator(UndirectedGraph const &g,
+                                                       uint64_t u0);
 
     /**
      * Runs an inplace DFS in linear time over a graph that is given in a
