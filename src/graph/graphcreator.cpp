@@ -362,15 +362,15 @@ UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order, uint64_t maxTreeWid
     UndirectedGraph g = UndirectedGraph(nodes);
     srand(time(NULL));
     // create starting clique
-    for(uint64_t i = 0; i < order && i < maxTreeWidth; i++){
-        for(uint64_t j = i + 1; j < order && j < maxTreeWidth; j++){
+    for (uint64_t i = 0; i < order && i < maxTreeWidth; i++) {
+        for (uint64_t j = i + 1; j < order && j < maxTreeWidth; j++) {
             nodes[i].addAdjacency({j, nodes[j].getDegree()});
             nodes[j].addAdjacency({i, nodes[i].getDegree() - 1});
         }
     }
     // for the next clique we only need the information wich previouse clique
     // will be used and what number will be replaced trough our current
-    for(uint64_t i = maxTreeWidth; i < order; i++){
+    for (uint64_t i = maxTreeWidth; i < order; i++) {
         uint64_t r_clique = rand() % (i - maxTreeWidth + 1) + maxTreeWidth - 1;
         uint64_t r_index = rand() % maxTreeWidth;
         for (uint64_t j = 0; j < maxTreeWidth - 1; j++) {

@@ -91,7 +91,7 @@ TEST(GraphCreatorTest, cycle) {
     EXPECT_EQ(m / 2, 1e6+100);
 }
 
-TEST(GraphCreatorTest, treewidth){
+TEST(GraphCreatorTest, treewidth) {
     uint64_t k = 5;
     UndirectedGraph g = GraphCreator::treeWidthGraph(n, k, 1.0);
     EXPECT_EQ(g.getOrder(), n);
