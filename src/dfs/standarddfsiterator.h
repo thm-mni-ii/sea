@@ -2,19 +2,21 @@
 #define SRC_DFS_STANDARDDFSITERATOR_H_
 
 #include "sealib/iterator/iterator.h"
+#include "skipableiterator.h"
 
 namespace Sealib {
 
-class StandardDFSIterator : public Iterator<UserCall> {
+class StandardDFSIterator : public Iterator<UserCall>, public SkipableIterator {
  public:
     explicit StandardDFSIterator(Graph const &graph, uint64_t u0)
         : g(graph),
           root(u0),
           state(0),
           nextposRoot(0),
+          v(0),
           color(g.getOrder()),
           finished(false) {
-        s.push_back({root, 0});
+        s.emplace_back(root, 0);
     }
 
     void init() override {}
@@ -38,13 +40,13 @@ class StandardDFSIterator : public Iterator<UserCall> {
             if (r.k < g.deg(r.u)) {
                 if (state == 1) {
                     state = 2;
-                    s.push_back({r.u, r.k + 1});
+                    s.emplace_back(r.u, r.k + 1);
                     v = g.head(r.u, r.k);
                     r.type = UserCall::preexplore;
                     return r;
                 } else {
                     if (color.operator[](v) == DFS_WHITE) {
-                        s.push_back({v, 0});
+                        s.emplace_back(v, 0);
                     } else {
                         state = 0;
                         r.type = UserCall::postexplore;
@@ -73,13 +75,27 @@ class StandardDFSIterator : public Iterator<UserCall> {
         for (; nextposRoot < g.getOrder(); nextposRoot++) {
             if (color[nextposRoot] == DFS_WHITE) {
                 root = nextposRoot;
-                s.push_back({root, 0});
+                s.emplace_back(root, 0);
                 return next();
             }
         }
         finished = true;
         r.type = UserCall::nop;
         return r;
+    }
+
+    // only works in preexplore and preprocess, the node will be able to be visited again from an other edge
+    void skip() override {
+        switch(r.type) {
+            case UserCall::preexplore:
+                state = 2;
+                r.k = g.deg(r.u);
+                s.pop_back();
+                break;
+            case UserCall::preprocess:
+                r.k = g.deg(r.u);
+                break;
+        }
     }
 
  private:

@@ -40,6 +40,10 @@ class Separator {
         Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
         Sealib::Graph const &g, int64_t k,
         Iterator<UserCall> *iter(Graph const &, uint64_t));
+    static Sealib::Bitset<> vSeparate(
+            Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
+            Sealib::Graph const &g, int64_t k,
+            Iterator<UserCall> *iter(Graph const &, uint64_t));
     /**
      * Returns a vector of edges that are part of the separator.
      * @param s first set of vertices
@@ -64,6 +68,10 @@ class Separator {
         Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
         Sealib::Graph const &g, int64_t k,
         Iterator<UserCall> *iter(Graph const &, uint64_t));
+    static std::vector<std::pair<uint64_t, uint64_t>> eSeparate(
+            Sealib::Bitset<> const &s, Sealib::Bitset<> const &t,
+            Sealib::Graph const &g, int64_t k,
+            Iterator<UserCall> *iter(Graph const &, uint64_t));
 };
 
 }  // namespace Sealib

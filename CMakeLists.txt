@@ -80,7 +80,7 @@ endif ()
 #                   build main
 # --------------------------------------------------- #
 file(GLOB MAIN "src-view/*.cpp")                                   # all test files
-add_executable(main ${LIB_SOURCES} ${MAIN})
+add_executable(main ${LIB_SOURCES} ${MAIN} src/dfs/skipableiterator.h)
 
 find_package(Threads)
 set_target_properties(main PROPERTIES LINK_FLAGS "${CMAKE_THREAD_LIBS_INIT}")

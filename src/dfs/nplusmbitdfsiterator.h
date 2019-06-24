@@ -16,11 +16,11 @@ class NplusMBitDFSIterator : public Iterator<UserCall> {
           parent(g),
           finished(false) {}
 
-    void init() {}
+    void init() override {}
 
-    bool more() { return !finished; }
+    bool more() override { return !finished; }
 
-    UserCall next() {
+    UserCall next() override {
         if (state == 0) {
             state = 1;
             color.insert(root, DFS_GRAY);

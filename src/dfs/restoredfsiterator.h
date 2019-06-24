@@ -2,10 +2,11 @@
 #define SRC_DFS_RESTOREDFSITERATOR_H_
 
 #include "sealib/iterator/iterator.h"
+#include "skipableiterator.h"
 
 namespace Sealib {
 
-class RestoreDFSIterator : public Iterator<UserCall> {
+class RestoreDFSIterator : public Iterator<UserCall>, public SkipableIterator {
  public:
     explicit RestoreDFSIterator(
         Graph const &graph, uint64_t u0,
@@ -17,8 +18,11 @@ class RestoreDFSIterator : public Iterator<UserCall> {
           root(u0),
           state(0),
           nextposRoot(0),
+          v(0),
+          isSkip(false),
           restore(std::move(rest)),
           color(g.getOrder(), 3),
+          sr(0),
           finished(false) {
         if (nBit) {
             uint64_t n = g.getOrder();
@@ -67,10 +71,11 @@ class RestoreDFSIterator : public Iterator<UserCall> {
                     return r;
                 }
                 state = 0;
-                if (color.get(v) == DFS_WHITE) {
+                if (color.get(v) == DFS_WHITE && !isSkip) {
                     s->push({v, 0});
                     return next();
                 } else {
+                    isSkip = false;
                     r.type = UserCall::postexplore;
                     return r;
                 }
@@ -112,12 +117,25 @@ class RestoreDFSIterator : public Iterator<UserCall> {
         return r;
     }
 
+    // only works in preexplore and preprocess, the node will be able to be visited again from an other edge
+    void skip() override {
+        switch(r.type){
+            case UserCall::preexplore:
+                isSkip = true;
+                break;
+            case UserCall::preprocess:
+                r.k = g.deg(r.u);
+                break;
+        }
+    }
+
  private:
     Graph const &g;
     uint64_t root;
     uint64_t state;
     uint64_t nextposRoot;
     uint64_t v;
+    bool isSkip;
     std::function<void(uint64_t, Graph const &, CompactArray *, SegmentStack *)>
         restore;
     std::pair<uint64_t, uint64_t> x;
