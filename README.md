@@ -17,6 +17,7 @@ Besides the running time of algorithms, their space requirements cause a problem
 data sets or executing them on tiny devices where memory is heavily limited. Therefore, we want to provide algorithms and data structures to tackle this problem by treating space as a scarce resource.
 
 ## Table of Contents
+* [Motivation](#motivation)
 * [Algorithms and Data Structures](#algorithms-and-data-structures)
     * [Algorithms](#algorithms)
     * [Data Structures](#data-structures)
@@ -26,6 +27,60 @@ data sets or executing them on tiny devices where memory is heavily limited. The
 * [Research](#research)
 * [License](#license)
 * [Acknowledgments](#acknowledgments)
+
+## Motivation
+Space-efficient algorithms in practice are justified by two main arguments.
+The first one is that due to memory limitation of a real computer a space-efficient algorithm
+runs on instances where a non space-efficient algorithm would crash due to out of memory errors.
+This is especially interesting where all cores of a computer should be used
+and multiple algorithms compete for the available memory.
+The second reason is that space-efficient algorithms can run faster on huge instances
+because they use less memory and therefore cause less cache faults.
+(A cache fault occurs when a system must 
+move some of the data stored in the memory to a slower one, i.e., 
+from the L1/L2/L3 cache of the CPU to the RAM or from the RAM to the disc drive.)
+
+We now show these two points on an example.
+Assume we need to compute an Eulerian tour in an outerplanar graph.
+Without going into detail, we use the Hierholzer algorithm where
+one key step of the algorithm is the creation of
+ recursive graph instances.
+The first step to make the algorithm space-efficient is to handle the recursive
+graph instances with a subgraph stack.
+We have implemented a folklore algorithm and a space-efficient version of it and
+run tests to measure the running time and the space requirements of both algorithms.
+
+The next image shows the space requirements of the creation of subgraph instances
+using a space-efficient subgraph stack (blue line) and a naive subgraph stack, which
+creates subgraphs instances by copying vertices and edges of the original graph that
+remain in the subgraph. We run the test on a machine with 4gb of RAM and a small swap memory.
+Note that the naive subgraph stack did not run on large instances because
+it crashed after running out of memory, while the space-efficient subgraph stack
+could still run.
+
+<div align="center">
+
+![](docs/img/sgspace.png)
+
+</div>
+
+Next we show the runtime results of the computation of Eulerian tours mentioned above.
+The green line shows the runtime of just the creation of the recursive graph instances
+without even running Hierholzer algorithm on them.
+The red line shows the runtime of a naive Hierholzer algorithm that uses a space-efficient subgraph stack,
+i.e., a space-efficient version to create subgraphs.
+The blue line shows the runtime of a space-efficient Hierholzer algorithm that uses
+a space-efficient subgraphs stack.
+
+<div align="center">
+
+![](docs/img/hruntime.png)
+
+</div>
+
+Note that space-efficient algorithms neither guarantee better time performance in general
+nor does over optimization of memory requirements leads to better running times.
+As often in life, a reasonable mix does the trick.
 
 ## Algorithms and Data Structures
 This section gives you a brief overview over the implemented algorithms and data structures. For a detailed documentation click on an algorithm.
@@ -126,8 +181,9 @@ export LD_LIBRARY_PATH=<library-path>
 ## Research
 We publish most of our research on [arXiv.org](https://tinyurl.com/ybxbb77z).
 
-* Extra Space during Initialization of Succinct Data Structures and Dynamical Initializable Arrays. [MFCS 2018](https://dblp.uni-trier.de/db/conf/mfcs/mfcs2018.html): 65:1-65:16 | [Full Version](https://arxiv.org/abs/1803.09675)
-* Linear-Time In-Place DFS and BFS on the Word RAM [CIAC 2019](http://easyconferences.eu/ciac2019/accepted.html) (to appear) | [Full Version](https://arxiv.org/abs/1803.04282)
+* Space-Efficient Vertex Separators for Treewidth [Full Version](https://arxiv.org/abs/1907.00676)
+* Extra Space during Initialization of Succinct Data Structures and Dynamical Initializable Arrays [MFCS 2018](https://dblp.uni-trier.de/db/conf/mfcs/mfcs2018.html): 65:1-65:16 | [Full Version](https://arxiv.org/abs/1803.09675)
+* Linear-Time In-Place DFS and BFS on the Word RAM [CIAC 2019](http://easyconferences.eu/ciac2019/accepted.html) | [Full Version](https://arxiv.org/abs/1803.04282)
 * A Space-Optimal c-Color Choice Dictionary [ISAAC 2018](http://isaac2018.ie.nthu.edu.tw/wp-content/uploads/2018/09/isaac2018_accepted.html): 66:1-66:12 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2018/10014/)
 * Space-Efficient Biconnected Components and Recognition of Outerplanar Graphs [MFCS 2016](http://mfcs.ki.agh.edu.pl/accepted.shtml): 56:1-56:14 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2016/6468/)
 * Space-Efficient Basic Graph Algorithms [STACS 2015](http://wwwmayr.in.tum.de/konferenzen/STACS2015/): 288-301 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2015/4921/)
