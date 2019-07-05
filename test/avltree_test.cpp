@@ -5,6 +5,7 @@
 
 using namespace Sealib;  // NOLINT
 
+// Insert some nodes and search for them
 TEST(AVLTreeTest, basicInsert) {
     AVLTree t;
     t.insert(5, 1);
@@ -17,6 +18,7 @@ TEST(AVLTreeTest, basicInsert) {
     EXPECT_EQ(t.search(0), 5);
 }
 
+// Remove some nodes and check they are gone
 TEST(AVLTreeTest, basicRemove) {
     AVLTree t;
     t.insert(5);
@@ -34,6 +36,8 @@ TEST(AVLTreeTest, basicRemove) {
     EXPECT_EQ(t.search(1), 0);
 }
 
+// Insert nodes 0..999 with random payloads, then search for them and verify
+// their payload
 TEST(AVLTreeTest, insertList) {
     std::random_device rnd;
     std::uniform_int_distribution<uint64_t> dist(0, 1e9);
@@ -48,6 +52,8 @@ TEST(AVLTreeTest, insertList) {
     }
 }
 
+// Insert 10^5 nodes with random payloads, then randomly remove 1/4 of them
+// Then check that exactly the 1/4 of nodes is gone from the tree
 TEST(AVLTreeTest, random) {
     std::random_device rnd;
     std::uniform_int_distribution<uint64_t> dist(0, 1e9);
@@ -79,6 +85,7 @@ TEST(AVLTreeTest, random) {
     }
 }
 
+// The following sample trees were collected during debugging
 TEST(AVLTreeTest, sample1) {
     AVLTree t;
     t.insert(2);
@@ -244,6 +251,7 @@ TEST(AVLTreeTest, sample8) {
     }
 }
 
+// Check that the right leaf swap reorders the tree correctly
 TEST(AVLTreeTest, swapLeavesR) {
     AVLTree t;
     t.insert(6, 1);
@@ -253,6 +261,8 @@ TEST(AVLTreeTest, swapLeavesR) {
     EXPECT_EQ(t.search(4), 2);
     EXPECT_EQ(t.search(6), 1);
 }
+
+// Check that the left leaf swap reorders the tree correctly
 TEST(AVLTreeTest, swapLeavesL) {
     AVLTree t;
     t.insert(4, 1);
@@ -263,6 +273,7 @@ TEST(AVLTreeTest, swapLeavesL) {
     EXPECT_EQ(t.search(4), 1);
 }
 
+// Check that the right tree rotation reorders the tree correctly
 TEST(AVLTreeTest, rotateTreeR) {
     AVLTree t;
     t.insert(10, 1);
@@ -274,6 +285,8 @@ TEST(AVLTreeTest, rotateTreeR) {
     EXPECT_EQ(t.search(6), 0);
     EXPECT_EQ(t.search(9), 0);
 }
+
+// Check that the left tree rotation reorders the tree correctly
 TEST(AVLTreeTest, rotateTreeL) {
     AVLTree t;
     t.insert(10, 1);
@@ -286,6 +299,7 @@ TEST(AVLTreeTest, rotateTreeL) {
     EXPECT_EQ(t.search(14), 0);
 }
 
+// Check that the right tree splice reorders the tree correctly
 TEST(AVLTreeTest, spliceTreeR) {
     AVLTree t;
     t.insert(10, 1);
@@ -303,6 +317,8 @@ TEST(AVLTreeTest, spliceTreeR) {
     EXPECT_EQ(t.search(5), 0);
     EXPECT_EQ(t.search(9), 0);
 }
+
+// Check that the left tree splice reorders the tree correctly
 TEST(AVLTreeTest, spliceTreeL) {
     AVLTree t;
     t.insert(5, 1);

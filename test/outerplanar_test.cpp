@@ -8,6 +8,9 @@
 
 namespace Sealib {
 
+// Generate a random graph and verify that Wiegers' and our algorithm give the
+// same result For this purpose, we split the graph into blocks and run the
+// algorithms on each block
 TEST(OuterplanarCheckerTest, random) {
     for (uint64_t a = 0; a < 100; a++) {
         UndirectedGraph f = GraphCreator::kRegular(1000, 4);
@@ -32,6 +35,8 @@ TEST(OuterplanarCheckerTest, random) {
     }
 }
 
+// Check that a triangulated graph is recognized as BOP, but a triangulated
+// graph with one edge too many is not
 TEST(OuterplanarCheckerTest, triangulated) {
     UndirectedGraph g = GraphCreator::triangulated(5000);
 
@@ -46,6 +51,8 @@ TEST(OuterplanarCheckerTest, triangulated) {
     EXPECT_FALSE(OuterplanarChecker(g).isOuterplanar());
 }
 
+// Check that a cycle graph is recognized as BOP, but not with an extraneous
+// chord which intersects others
 TEST(OuterplanarCheckerTest, cycle) {
     for (uint64_t k = 0; k < 20; k++) {
         UndirectedGraph g = GraphCreator::cycle(1000, k);
@@ -67,6 +74,7 @@ TEST(OuterplanarCheckerTest, cycle) {
     }
 }
 
+// The following samples were collected during debugging
 TEST(OuterplanarCheckerTest, sample1) {
     std::vector<ExtendedNode> nodes(4);
     nodes[0].addAdjacency({1, 0}), nodes[0].addAdjacency({3, 1});
