@@ -7,6 +7,8 @@
 using Sealib::SimpleSequence;
 using Sealib::StaticSpaceStorage;
 
+// Insert random values (collected during debugging) into the SSA and check that
+// nothing is overwritten
 TEST(StaticSpaceStorageTest, boundary) {
     std::vector<uint64_t> b = {59, 22, 55, 23, 3};
     std::vector<uint64_t> values = {576646035, 3360686, 193508993, 3833501, 3};
@@ -20,6 +22,7 @@ TEST(StaticSpaceStorageTest, boundary) {
     }
 }
 
+// Check the allocation and insertion of the SSA
 TEST(StaticSpaceStorageTest, twoWords) {
     std::vector<bool> b;
     b.push_back(1);
@@ -45,6 +48,7 @@ TEST(StaticSpaceStorageTest, twoWords) {
     EXPECT_EQ(s.get(3), 3);
 }
 
+// Compare SSA and a simple vector and verify that they behave similarly
 TEST(StaticSpaceStorageTest, referenceTest) {
     uint64_t n = 100, d = sizeof(uint64_t) * 8;
     std::random_device rnd;

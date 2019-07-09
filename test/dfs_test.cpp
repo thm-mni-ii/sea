@@ -61,6 +61,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, DFSTest2,
                         ::testing::ValuesIn(makeUGraphs()),
                         /**/);
 
+// Check that the user-defined procedures are called exactly n resp. m times
 TEST_P(DFSTest, stdUserproc) {
     DirectedGraph const& g = GetParam();
     DFS::standardDFS(g, incr1, incr2, incr3, incr4);
@@ -121,6 +122,7 @@ TEST_P(DFSTest, cmpstdDFS) {
                      });
 }
 
+// Check that the user-defined procedures are called exactly n resp. m times
 TEST_P(DFSTest, nBitUserproc) {
     DirectedGraph const& g = GetParam();
     DFS::nBitDFS(g, incr1, incr2, incr3, incr4);
@@ -182,6 +184,7 @@ TEST_P(DFSTest, cmpnBitDFS) {
                  });
 }
 
+// Check that the user-defined procedures are called exactly n resp. m times
 TEST_P(DFSTest, nloglognBitUserproc) {
     DirectedGraph const& g = GetParam();
     DFS::nloglognBitDFS(g, incr1, incr2, incr3, incr4);
@@ -242,6 +245,7 @@ TEST_P(DFSTest, cmpnloglognDFS) {
                         });
 }
 
+// Check that the user-defined procedures are called exactly n resp. m times
 TEST_P(DFSTest2, nplusmBitUserproc) {
     UndirectedGraph const& g = GetParam();
     DFS::nplusmBitDFS(g, incr1, incr2, incr3, incr4);
@@ -302,6 +306,8 @@ TEST_P(DFSTest2, cmpnplusmBitDFS) {
                       });
 }
 
+// Check that the user-defined procedures are called exactly n resp. m times
+// For this test, we generate a graph with some "big" vertices
 TEST(DFSTest, nloglognImbalanced) {
     c1 = c2 = c3 = c4 = 0;
     DirectedGraph g = Sealib::GraphCreator::imbalanced(200);

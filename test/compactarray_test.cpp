@@ -4,6 +4,8 @@
 
 using Sealib::CompactArray;
 
+// Do some inserts and verify that the values are present
+// Also checks that the array is zero-initialized
 TEST(CompactArrayTest, insertAndGet) {
     CompactArray a(1500, 6);
     for (uint32_t b = 0; b < 50; b++) a.insert(b, 5);
@@ -15,6 +17,10 @@ TEST(CompactArrayTest, insertAndGet) {
     EXPECT_EQ(a.get(1499), 1);
 }
 
+// Insert 1 and MAX into the elements of an array in alternating order and
+// verify that the values are present
+// (where MAX is the maximum value possible for the current element)
+// This test checks that no writes occur across the boundaries of an element
 TEST(CompactArrayTest, alternate) {
     for (uint64_t b = 2;
          b < static_cast<uint64_t>(1UL << (sizeof(uint64_t) * 8 - 1)); b *= 2) {

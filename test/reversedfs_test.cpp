@@ -23,6 +23,7 @@ INSTANTIATE_TEST_CASE_P(ParamTests, ReverseDFSTest,
                         ::testing::ValuesIn(makeGraphs()),
                         /**/);
 
+// Compare the simple and our reverse DFS and verify they give the same results
 TEST_P(ReverseDFSTest, comparison) {
     DirectedGraph const& g = GetParam();
     ReverseDFS r(g);

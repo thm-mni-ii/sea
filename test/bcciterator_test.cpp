@@ -33,6 +33,7 @@ static void compareWindmill() {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 
+// Check that the blocks are detected correctly in a windmill graph
 TEST(BCCIteratorTest, windmillGraph) {
     UndirectedGraph g = GraphCreator::windmill(5, 4);
     BCCIterator b(g);
@@ -49,6 +50,7 @@ TEST(BCCIteratorTest, windmillGraph) {
     compareWindmill();
 }
 
+// Check that the blocks are detected correctly in a line graph
 TEST(BCCIteratorTest, lineGraph) {
     uint64_t size = 10;
     UndirectedGraph g(size);
@@ -70,6 +72,7 @@ TEST(BCCIteratorTest, lineGraph) {
     ASSERT_FALSE(b.more());
 }
 
+// Check that the BCCIterator does not crash on a random graph
 TEST(BCCIteratorTest, stability) {
     UndirectedGraph g = GraphCreator::kRegular(2000, 3);
     BCCIterator b(g);
@@ -80,6 +83,7 @@ TEST(BCCIteratorTest, stability) {
 
 #pragma clang diagnostic pop
 
+// Check that the blocks are detected correctly in a windmill graph
 TEST(BCCOutputTest, windmillGraph) {
     UndirectedGraph g = GraphCreator::windmill(5, 4);
     BCCOutput b(g);
@@ -92,6 +96,8 @@ TEST(BCCOutputTest, windmillGraph) {
     compareWindmill();
 }
 
+// Check that the blocks are detected correctly in a cycle graph with 0..20
+// chords
 TEST(BCCOutput, cycle) {
     for (uint64_t k = 0; k < 20; k++) {
         UndirectedGraph g = GraphCreator::cycle(1000, k);

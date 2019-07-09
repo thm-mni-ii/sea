@@ -3,6 +3,7 @@
 
 using namespace Sealib;  // NOLINT
 
+// Check that all the operations modify the ragged dictionary as expected
 TEST(RaggedDictionaryTest, allOperations) {
     RaggedDictionary d(128);
     d.insert(0, 17);
@@ -23,6 +24,7 @@ TEST(RaggedDictionaryTest, allOperations) {
     EXPECT_FALSE(c.more());
 }
 
+// Check that an error is generated when there are too many keys
 TEST(RaggedDictionaryTest, limit) {
     RaggedDictionary d(512);
     // log2(512)=9 => max. keys: 512/9=56
