@@ -2,16 +2,36 @@
 #include <sealib/graph/graphcreator.h>
 #include <cstdio>
 #include <cstring>
-#include "./test_algorithms.h"
-#include "./test_visual.h"
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <vector>
 
-int main(int argc, char **argv) {
-    if (argc < 6) {
-        printf("Usage: bin/main <program> <file1> <file2> <from> <to>\n");
-        return 1;
+int main() {
+    Sealib::UndirectedGraph g = Sealib::GraphCreator::kRegular(20, 4);
+    std::vector<bool> visited(g.getOrder());
+    std::stack<std::pair<uint64_t, uint64_t>> stack;
+
+    stack.emplace(0, 0);
+    std::cout << "Vertex: " << 0 << std::endl;
+
+    while (!stack.empty()) {
+        auto entry = stack.top();
+        stack.pop();
+        stack.emplace(entry.first, entry.second + 1);
+        visited[entry.first] = true;
+
+        if (entry.second < g.deg(entry.first)) {
+            stack.pop();
+            continue;
+        }
+        if (visited[g.head(entry.first, entry.second)]) {
+            continue;
+        }
+        stack.emplace(g.head(entry.first, entry.second), 0);
+        std::cout << "Vertex: " << g.head(entry.first, entry.second)
+                  << std::endl;
     }
-    return Sealib::AlgorithmComparison::launch(
-        argv[1], argv[2], argv[3],
-        static_cast<uint64_t>(strtod(argv[4], nullptr)),
-        static_cast<uint64_t>(strtod(argv[5], nullptr)));
+
+    return 0;
 }

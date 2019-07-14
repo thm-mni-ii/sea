@@ -19,34 +19,31 @@ class STGraph : public Graph {
      */
     explicit STGraph(Graph const &graph, Bitset<> s, Bitset<> t) {
         uint64_t s_degree = 0;
-        std::vector<std::tuple<uint64_t, uint64_t>> s_edges;
-        std::vector<SimpleNode> nodes(graph.getOrder() + 1);
+        std::vector<std::pair<uint64_t, uint64_t>> s_edges;
+        std::vector<SimpleNode> nodes;
 
         for (uint64_t i = 0; i < graph.getOrder(); i++) {
             if (t.get(i)) {
-                // Edges in t aren't important, because we won't use edges which
-                // are leading away from t. After we reached a vertex in t we
-                // stop.
+                nodes.emplace_back();
             } else {
                 if (s.get(i)) {
                     s_edges.emplace_back(graph.deg(i) + 1, i);
                     s_degree += graph.deg(i) + 1;
                 }
-                std::vector<uint64_t> out(graph.deg(i));
+                std::vector<uint64_t> out;
                 for (uint64_t j = 0; j < graph.deg(i); j++)
-                    out[j] = graph.head(i, j);
-                nodes[i] = SimpleNode(out);
+                    out.emplace_back(graph.head(i, j));
+                nodes.emplace_back(SimpleNode(out));
             }
         }
 
-        std::vector<uint64_t> s_out(s_degree);
-        uint64_t k = 0;
+        std::vector<uint64_t> s_out;
         for (uint64_t i = 0; i < s_edges.size(); i++) {
-            for (uint64_t j = 0; j < std::get<0>(s_edges[i]); j++) {
-                s_out[k] = std::get<1>(s_edges[i]);
+            for (uint64_t j = 0; j < s_edges[i].first; j++) {
+                s_out.emplace_back(s_edges[i].second);
             }
         }
-        nodes[graph.getOrder()] = SimpleNode(s_out);
+        nodes.emplace_back(SimpleNode(s_out));
         g = nodes;
         s_pos = graph.getOrder();
         s_deg = s_degree;
@@ -87,11 +84,11 @@ class STGraph : public Graph {
      */
     void revertpath(std::vector<uint64_t> path) {
         uint64_t pos = s_pos;
-        uint64_t mem = g[pos].getAdj()[path[1]];
-        g[pos].getAdj()[path[1]] = g[pos].getAdj()[s_deg - 1];
+        uint64_t mem = g[pos].getAdj()[path[0]];
+        g[pos].getAdj()[path[0]] = g[pos].getAdj()[s_deg - 1];
         uint64_t memnext;
         s_deg--;
-        for (uint64_t i = 2; i < path.size() - 1; i++) {
+        for (uint64_t i = 1; i < path.size(); i++) {
             memnext = g[mem].getAdj()[path[i]];
             g[mem].getAdj()[path[i]] = pos;
             pos = mem;

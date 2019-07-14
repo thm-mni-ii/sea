@@ -15,6 +15,7 @@ class StandardDFSIterator : public Iterator<UserCall>, public SkipableIterator {
           nextposRoot(0),
           v(0),
           color(g.getOrder()),
+          skiping(false),
           finished(false) {
         s.emplace_back(root, 0);
     }
@@ -45,9 +46,10 @@ class StandardDFSIterator : public Iterator<UserCall>, public SkipableIterator {
                     r.type = UserCall::preexplore;
                     return r;
                 } else {
-                    if (color.operator[](v) == DFS_WHITE) {
+                    if (color.operator[](v) == DFS_WHITE && !skiping) {
                         s.emplace_back(v, 0);
                     } else {
+                        skiping = false;
                         state = 0;
                         r.type = UserCall::postexplore;
                         return r;
@@ -88,12 +90,11 @@ class StandardDFSIterator : public Iterator<UserCall>, public SkipableIterator {
     void skip() override {
         switch(r.type) {
             case UserCall::preexplore:
-                state = 2;
-                r.k = g.deg(r.u);
-                s.pop_back();
+                skiping = true;
                 break;
             case UserCall::preprocess:
                 r.k = g.deg(r.u);
+                state = 2;
                 break;
         }
     }
@@ -107,6 +108,7 @@ class StandardDFSIterator : public Iterator<UserCall>, public SkipableIterator {
     std::vector<uint64_t> color;
     std::vector<std::pair<uint64_t, uint64_t>> s;
     UserCall r;
+    bool skiping;
     bool finished;
 };
 
