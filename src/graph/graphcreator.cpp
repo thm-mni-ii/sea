@@ -356,3 +356,52 @@ CompactGraph GraphCreator::generateGilbertGraph(uint64_t order, double p,
                                                 std::mt19937_64 *gen) {
     return CompactGraph(generateRawGilbertGraph(order, p, gen));
 }
+
+UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order, uint64_t maxTreeWidth, double p) {
+    std::vector<ExtendedNode> nodes(order);
+    UndirectedGraph g = UndirectedGraph(nodes);
+    unsigned int seed;
+    seed = (unsigned int)time(nullptr);
+    // create starting clique
+    for (uint64_t i = 0; i < order && i < maxTreeWidth; i++) {
+        for (uint64_t j = i + 1; j < order && j < maxTreeWidth; j++) {
+            nodes[i].addAdjacency({j, nodes[j].getDegree()});
+            nodes[j].addAdjacency({i, nodes[i].getDegree() - 1});
+        }
+    }
+    // for the next clique we only need the information wich previouse clique
+    // will be used and what number will be replaced trough our current
+    for (uint64_t i = maxTreeWidth; i < order; i++) {
+        uint64_t r_clique =
+            (uint64_t)rand_r(&seed) % (i - maxTreeWidth + 1) + maxTreeWidth - 1;
+        uint64_t r_index = (uint64_t)rand_r(&seed) % maxTreeWidth;
+        for (uint64_t j = 0; j < maxTreeWidth - 1; j++) {
+            if (j != r_index) {
+                nodes[i].addAdjacency(
+                    {nodes[r_clique].getAdj().at(j).first,
+                     nodes[nodes[r_clique].getAdj().at(j).first].getDegree()});
+                nodes[nodes[r_clique].getAdj().at(j).first].addAdjacency(
+                    {i, nodes[i].getDegree() - 1});
+            }
+        }
+        if (r_index != maxTreeWidth - 1) {
+            nodes[i].addAdjacency({r_clique, nodes[r_clique].getDegree()});
+            nodes[r_clique].addAdjacency({i, nodes[i].getDegree() - 1});
+        }
+    }
+    // remove (1-p)*100% of the edges
+    for (uint64_t i = 0; i < order; i++) {
+        for (uint64_t j = 0; j < nodes[i].getDegree(); j++) {
+            if (i < nodes[i].getAdj().at(j).first &&
+                rand_r(&seed) % 1001 > p * 1000) {
+                nodes[nodes[i].getAdj().at(j).first].getAdj().at(
+                    nodes[i].getAdj().at(j).second) =
+                    nodes[nodes[i].getAdj().at(j).first].getAdj().back();
+                nodes[nodes[i].getAdj().at(j).first].getAdj().pop_back();
+                nodes[i].getAdj().at(j) = nodes[i].getAdj().back();
+                nodes[i].getAdj().pop_back();
+            }
+        }
+    }
+    return UndirectedGraph(nodes);
+}
