@@ -630,3 +630,5 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+# WSL Build files
+cmake-build-wsl_profile
