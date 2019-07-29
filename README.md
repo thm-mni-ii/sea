@@ -99,7 +99,8 @@ For some data structures and algorithms we also provide a folklore implementatio
 | Outerplanar Detection | O(n log(log n))| O(n)                    | [here](docs/outerplanar.md)         |
 
 ### Data Structures
-* Graph(G = {V, E}): A adjacency list graph representation that occupies O((n + m) log n) bits.
+* InitializedArray: An array consisting of fields that in total can be initialized with an user defined value in constant time by using O(1) computer words. The array provides constant time access (read/write) to fields.
+* Graph(G = {V, E}): An adjacency list graph representation that occupies O((n + m) log n) bits.
 * Bitset: A bitset of n bits that supports access in O(1) time and occupies O(n) bits.
 * AVL tree: A self-balancing binary tree with O(log(n)) time for search, insertion and removal of a node.
 * [Choice Dictionary](docs/choice-dictionary.md): A bitset that supports a *choice* operation in O(1) time that returns the position of a bit set to 1. The choice dictionary occupies O(n) bits.

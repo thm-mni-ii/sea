@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include <sealib/collection/constanttimearray.h>
+#include <sealib/collection/initializedarray.h>
 
-using Sealib::ConstantTimeArray;
+using Sealib::InitializedArray;
 
 void testVariableLength(uint64_t N);
 void testFill(uint64_t N, uint64_t fVal);
@@ -9,8 +9,8 @@ void setAllFromLeft(uint64_t N);
 void setAllFromRight(uint64_t N);
 
 void testVariableLength(uint64_t N) {
-    ConstantTimeArray arr(N, 0);
-    arr.fill(777);
+    InitializedArray arr(N, 0);
+    arr.reset(777);
 
     for (uint64_t i = 0; i < arr.size(); i++) {
         arr[i] = i;
@@ -20,7 +20,7 @@ void testVariableLength(uint64_t N) {
         ASSERT_EQ(arr[i], i);
     }
 
-    arr.fill(777);
+    arr.reset(777);
 
     for (uint64_t i = arr.size(); i > 0; i--) {
         arr[i - 1] = i - 1;
@@ -30,7 +30,7 @@ void testVariableLength(uint64_t N) {
         ASSERT_EQ(arr[i - 1], i - 1);
     }
 
-    arr.fill(777);
+    arr.reset(777);
 
     for (uint64_t i = arr.size() / 2; i < arr.size(); i++) {
         arr[i] = i;
