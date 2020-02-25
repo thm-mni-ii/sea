@@ -182,6 +182,7 @@ export LD_LIBRARY_PATH=<library-path>
 ## Research
 We publish most of our research on [arXiv.org](https://tinyurl.com/ybxbb77z).
 
+* Sorting and Ranking of Self-Delimiting Numbers with Applications to Tree Isomorphism [Full Version](https://arxiv.org/abs/2002.07287)
 * Space-Efficient Vertex Separators for Treewidth [Full Version](https://arxiv.org/abs/1907.00676)
 * Extra Space during Initialization of Succinct Data Structures and Dynamical Initializable Arrays [MFCS 2018](https://dblp.uni-trier.de/db/conf/mfcs/mfcs2018.html): 65:1-65:16 | [Full Version](https://arxiv.org/abs/1803.09675)
 * Linear-Time In-Place DFS and BFS on the Word RAM [CIAC 2019](http://easyconferences.eu/ciac2019/accepted.html) | [Full Version](https://arxiv.org/abs/1803.04282)
