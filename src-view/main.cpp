@@ -1,7 +1,10 @@
 #include <sealib/_types.h>
 #include <sealib/graph/graphcreator.h>
+
 #include <cstdio>
 #include <cstring>
+
+#include "../extern/sux/sux/bits/Rank9Sel.hpp"
 #include "./test_algorithms.h"
 #include "./test_visual.h"
 

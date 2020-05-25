@@ -38,8 +38,8 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
         }
         degRSum += degR;
     }
-    pSelect = new RankSelect(std::move(p));
-    qSelect = new RankSelect(std::move(q));
+    pSelect = new SuxRankSelect(std::move(p));
+    qSelect = new SuxRankSelect(std::move(q));
 }
 
 Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
@@ -73,29 +73,29 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
         }
         degRSum += degR;
     }
-    pSelect = new RankSelect(std::move(p));
-    qSelect = new RankSelect(std::move(q));
+    pSelect = new SuxRankSelect(std::move(p));
+    qSelect = new SuxRankSelect(std::move(q));
 }
 
-uint64_t Sealib::RecursiveSubGraph::head(uint64_t u, uint64_t k) const {
+uint64_t Sealib::RecursiveSubGraph::head(uint64_t u, uint64_t k) {
     SubGraph *r = stack->clientList[stack_t::refs[ridx]];
     return phiInv(r->head(r->gInv(psi(g(u, k)))));
 }
 
 std::tuple<uint64_t, uint64_t>
-Sealib::RecursiveSubGraph::mate(uint64_t u, uint64_t k) const {
+Sealib::RecursiveSubGraph::mate(uint64_t u, uint64_t k) {
     SubGraph *r = stack->clientList[stack_t::refs[ridx]];
     return gInv(psiInv(r->g(r->mate(r->gInv(psi(g(u, k)))))));
 }
 
-uint64_t Sealib::RecursiveSubGraph::phi(uint64_t u) const {
+uint64_t Sealib::RecursiveSubGraph::phi(uint64_t u) {
     if (u == 0) {
         throw ZeroArgumentGiven();
     }
     return select_v(u);
 }
 
-uint64_t Sealib::RecursiveSubGraph::phiInv(uint64_t u) const {
+uint64_t Sealib::RecursiveSubGraph::phiInv(uint64_t u) {
     if (u == 0) {
         throw ZeroArgumentGiven();
     }
@@ -106,14 +106,14 @@ uint64_t Sealib::RecursiveSubGraph::phiInv(uint64_t u) const {
     }
 }
 
-uint64_t Sealib::RecursiveSubGraph::psi(uint64_t a) const {
+uint64_t Sealib::RecursiveSubGraph::psi(uint64_t a) {
     if (a == 0) {
         throw ZeroArgumentGiven();
     }
     return select_a(a);
 }
 
-uint64_t Sealib::RecursiveSubGraph::psiInv(uint64_t a) const {
+uint64_t Sealib::RecursiveSubGraph::psiInv(uint64_t a) {
     if (a == 0) {
         throw ZeroArgumentGiven();
     }

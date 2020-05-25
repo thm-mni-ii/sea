@@ -1,8 +1,22 @@
 #include <gtest/gtest.h>
 #include "../src/rankselect/simplerankselect.h"
 #include <sealib/dictionary/rankselect.h>
+#include <sealib/dictionary/suxrankselect.hpp>
 
 using namespace Sealib;  // NOLINT
+
+TEST(SuxRankSelectText, suxRankSelect) {
+    Bitset<uint64_t > bs{1};
+    bs[0] = 1;
+
+    SuxRankSelect rs(bs);
+    ASSERT_EQ(1, rs.select(1));
+    ASSERT_EQ(1, rs.rank(1));
+    ASSERT_EQ(INVALID, rs.select(0));
+    ASSERT_EQ(INVALID, rs.rank(0));
+    ASSERT_EQ(INVALID, rs.select(2));
+    ASSERT_EQ(INVALID, rs.rank(2));
+}
 
 TEST(RankSelectTest, rankSelect) {
     std::shared_ptr<Bitset<uint8_t>> bits_(new Bitset<uint8_t>(1));

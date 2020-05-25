@@ -6,7 +6,7 @@ using Sealib::Bitset;
 template<typename BlockType, typename AllocatorType>
 Bitset<BlockType, AllocatorType>::Bitset(uint64_t bits_) :
     bits(bits_),
-    mbits(bits % bitsPerBlock == 0 ? bits / bitsPerBlock : bits / bitsPerBlock + 1) {}
+    mbits( bits / bitsPerBlock + 1) {}
 
 template<typename BlockType, typename AllocatorType>
 Bitset<BlockType, AllocatorType>::Bitset(std::vector<bool> &&bitvector) :

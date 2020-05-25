@@ -12,7 +12,7 @@ using Sealib::GraphCreator;
 using std::shared_ptr;
 
 TEST(SubGraphStackTest, pushPop) {
-    typedef Sealib::Bitset<uint8_t> bitset_t;
+    typedef Sealib::Bitset<uint64_t> bitset_t;
 
     uint64_t order = 7;
     auto **adj_mtrx = reinterpret_cast<uint64_t **>(malloc(sizeof(uint64_t) * order * order));
@@ -31,8 +31,8 @@ TEST(SubGraphStackTest, pushPop) {
 
     for (uint64_t i = 0; i < 4; i++) {
         bitset_t a(stack.gMax(i));
-        for (uint64_t j = 0; j < a.blocks(); j++) {
-            a.setBlock(j, (uint8_t) -1);
+        for (uint64_t j = 0; j < a.size(); j++) {
+            a[j] = 1;
         }
         for (uint64_t j = 0; j < a.size(); j++) {
             if (j % 4 == 0) {
@@ -55,7 +55,7 @@ TEST(SubGraphStackTest, pushPop) {
 }
 
 TEST(SubGraphStackTest, orderDegree) {
-    typedef Sealib::Bitset<uint8_t> bitset_t;
+    typedef Sealib::Bitset<uint64_t> bitset_t;
 
     uint64_t order = 9;
     auto **adj_mtrx = reinterpret_cast<uint64_t **>(malloc(sizeof(uint64_t) * order * order));
@@ -89,8 +89,8 @@ TEST(SubGraphStackTest, orderDegree) {
 
     for (uint64_t i = 0; i < 4; i++) {
         bitset_t a(stack.gMax(i));
-        for (uint64_t j = 0; j < a.blocks(); j++) {
-            a.setBlock(j, (uint8_t) -1);
+        for (uint64_t j = 0; j < a.size(); j++) {
+            a[j] = 1;
         }
         for (uint64_t j = 0; j < a.size(); j++) {
             if (j % 4 == 0) {

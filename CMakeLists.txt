@@ -9,15 +9,16 @@ set(COVERAGE OFF CACHE BOOL "Coverage")
 set(LIBRARY_OUTPUT_PATH lib)                                    # generated library files
 set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated binary files
 set(CMAKE_INCLUDE_PATH include/)
+set(CMAKE_EXTERN_PATH extern/)
 
 set(CMAKE_INCLUDE_CURRENT_DIR OFF)
-set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wconversion -Wdeprecated")
+set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wdeprecated")
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(WARNING_FLAGS "${WARNING_FLAGS} -Werror -Wdocumentation")
 endif()
-set(BUILD_FLAGS "-std=c++11 -O3 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
-set(TEST_FLAGS "-std=c++11 -g -O0 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
+set(BUILD_FLAGS "-std=c++17 -O3 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
+set(TEST_FLAGS "-std=c++17 -g -O0 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
 
 # --------------------------------------------------- #
 #                   Dependencies
@@ -46,9 +47,14 @@ MESSAGE(STATUS "GTest build_dir: ${GOOGLETEST_BIN}")
 
 include_directories(SYSTEM ${GOOGLETEST_ROOT}/googletest/)
 include_directories(SYSTEM ${GOOGLETEST_ROOT}/googletest/include)
-add_library(gtest STATIC IMPORTED)
+add_library(gtest STATIC IMPORTED include/sealib/dictionary/suxrankselect.hpp)
 add_dependencies(gtest GTEST_PROJECT)
 set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemock/gtest/libgtest.a")
+
+# --------------------------------------------------- #
+#                   external libraries
+# --------------------------------------------------- #
+add_subdirectory(extern)
 
 # --------------------------------------------------- #
 #                   build library
@@ -57,7 +63,7 @@ include_directories(${CMAKE_INCLUDE_PATH})
 file(GLOB LIB_SOURCES "src/*.cpp" "src/*/*.cpp")
 
 add_library(sealib SHARED ${LIB_SOURCES})
-
+target_link_libraries(sealib PUBLIC sux)
 # --------------------------------------------------- #
 #                   build tests
 # --------------------------------------------------- #

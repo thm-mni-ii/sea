@@ -3,7 +3,7 @@
 
 #include <sealib/graph/undirectedgraph.h>
 #include <sealib/collection/bitset.h>
-#include <sealib/dictionary/rankselect.h>
+#include <sealib/dictionary/suxrankselect.hpp>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -28,6 +28,10 @@ class SubGraphStack {
     friend class SubGraph;
     friend class RecursiveSubGraph;
     friend class BaseSubGraph;
+    typedef Sealib::Bitset<uint64_t> bitset_t;
+    typedef Sealib::SuxRankSelect rankselect_t;
+    typedef Sealib::SubGraphStack stack_t;
+    
  private:
     static constexpr uint8_t rSize = 7;
     static std::vector<uint64_t> refs;
@@ -35,10 +39,10 @@ class SubGraphStack {
     uint64_t currentRef;
     uint64_t tuned;
 
-    RankSelect *tunedPhi0;
-    RankSelect *tunedPsi0;
-    RankSelect *tunedPhi;
-    RankSelect *tunedPsi;
+    rankselect_t *tunedPhi0;
+    rankselect_t *tunedPsi0;
+    rankselect_t *tunedPhi;
+    rankselect_t *tunedPsi;
 
     void tunephi0(uint64_t i);
     void tunepsi0(uint64_t i);
@@ -54,10 +58,10 @@ class SubGraphStack {
      * @param v Bitsequence of length n_l
      * @param a Bitsequence of length 2m_l
      */
-    void push(const Sealib::Bitset<uint8_t> &v,
-              const Sealib::Bitset<uint8_t> &a);
-    void push(Sealib::Bitset<uint8_t> &&v,
-              Sealib::Bitset<uint8_t> &&a);
+    void push(const bitset_t &v,
+              const bitset_t &a);
+    void push(bitset_t &&v,
+              bitset_t &&a);
 
     /**
      * Pushes a new subgraph G_l+1 on G_l.
@@ -68,8 +72,8 @@ class SubGraphStack {
      * Each vertice that still has an outgoing arc will be set in the bitset v.
      * @param a Bitsequence of length 2m_l
      */
-    void push(const Sealib::Bitset<uint8_t> &a);
-    void push(Bitset<uint8_t> &&a);
+    void push(const bitset_t &a);
+    void push(bitset_t &&a);
 
     /**
      * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).
