@@ -188,7 +188,7 @@ class Rank9Select : public Rank9 {
     static const uint64_t inventory_mask = ones_per_inventory - 1;
 
     std::vector<uint64_t> inventory, subinventory;
-    uint64_t inventory_size;
+    uint64_t inventory_size{};
 
     void init() {
         const uint64_t num_words = (this->m_bitset.size() + 63) / 64;
@@ -238,13 +238,14 @@ class Rank9Select : public Rank9 {
                                      (inventory[index] / 64) / 8;
                         block_left = (inventory[index] / 64) / 8;
 
-                        if (span >= 512)
+                        if (span >= 512) {
                             state = 0;
-                        else if (span >= 256)
+                        } else if (span >= 256) {
                             state = 1;
-                        else if (span >= 128)
+                        } else if (span >= 128) {
                             state = 2;
-                        else if (span >= 16) {
+
+                        } else if (span >= 16) {
                             assert(((block_span + 8) & -8LL) + 8 <= span * 4);
 
                             uint64_t k;
@@ -324,12 +325,15 @@ class Rank9Select : public Rank9 {
      * @param bitset a Sealib::Bitset of 64-bit words.
      */
 
-    Rank9Select(Sealib::Bitset<uint64_t> &bitset)
-        : Rank9(bitset), inventory(), subinventory() {
+    explicit Rank9Select(const Sealib::Bitset<uint64_t> &bitset)
+        : Rank9(bitset), inventory(), subinventory(), inventory_size(0) {
         init();
     }
-    Rank9Select(Sealib::Bitset<uint64_t> &&bitset)
-        : Rank9(std::move(bitset)), inventory(), subinventory() {
+    explicit Rank9Select(Sealib::Bitset<uint64_t> &&bitset)
+        : Rank9(std::move(bitset)),
+          inventory(),
+          subinventory(),
+          inventory_size(0) {
         init();
     }
 

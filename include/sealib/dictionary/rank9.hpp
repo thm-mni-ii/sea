@@ -1,5 +1,5 @@
-#ifndef SEALIB_DICTIONARY_RANK_HPP_
-#define SEALIB_DICTIONARY_RANK_HPP_
+#ifndef SEALIB_DICTIONARY_RANK9_HPP_
+#define SEALIB_DICTIONARY_RANK9_HPP_
 
 #include <sealib/collection/bitset.h>
 
@@ -63,11 +63,11 @@ class Rank9 {
      *
      * @param bitset a Sealib::Bitset of 64-bit words.
      */
-    Rank9(const Sealib::Bitset<uint64_t>& bitset)
-        : num_ones(0), _max_rank(0), m_bitset(bitset), counts() {
+    explicit Rank9(Sealib::Bitset<uint64_t>  bitset)
+        : num_ones(0), _max_rank(0), m_bitset(std::move(bitset)), counts() {
         init();
     }
-    Rank9(Sealib::Bitset<uint64_t>&& bitset)
+    explicit Rank9(Sealib::Bitset<uint64_t>&& bitset)
         : num_ones(0), _max_rank(0), m_bitset(bitset), counts() {
         init();
     }
@@ -94,9 +94,10 @@ class Rank9 {
     /** @return the size in bits of the underlying bit vector. */
     size_t size() const { return m_bitset.size(); }
 
-    /** @return the number of bits set to 1 in the bitset, aka max rank value. */
+    /** @return the number of bits set to 1 in the bitset, aka max rank value.
+     */
     size_t max_rank() const { return _max_rank; }
 };
 }  // namespace Sealib
 
-#endif  // SEALIB_DICTIONARY_RANK_HPP_
+#endif  // SEALIB_DICTIONARY_RANK9_HPP_
