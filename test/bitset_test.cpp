@@ -8,7 +8,8 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedLong) {
 
     Bitset<> bs;
     ASSERT_EQ(bs.size(), 0);
-    ASSERT_EQ(bs.blocks(), 0);
+    // always one buffer block
+    ASSERT_EQ(bs.blocks(), 1);
 
     bs = Bitset<block>(1);
     ASSERT_EQ(bs.size(), 1);
@@ -16,7 +17,8 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedLong) {
 
     bs = Bitset<block>(64);
     ASSERT_EQ(bs.size(), 64);
-    ASSERT_EQ(bs.blocks(), 1);
+    // always one buffer block
+    ASSERT_EQ(bs.blocks(), 2);
 
     bs = Bitset<block>(65);
     ASSERT_EQ(bs.size(), 65);
@@ -77,7 +79,8 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedInt) {
 
     Bitset<block> bs;
     ASSERT_EQ(bs.size(), 0);
-    ASSERT_EQ(bs.blocks(), 0);
+    // buffer block
+    ASSERT_EQ(bs.blocks(), 1);
 
     bs = Bitset<block>(1);
     ASSERT_EQ(bs.size(), 1);
@@ -85,7 +88,8 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedInt) {
 
     bs = Bitset<block>(64);
     ASSERT_EQ(bs.size(), 64);
-    ASSERT_EQ(bs.blocks(), 2);
+    // always one buffer block
+    ASSERT_EQ(bs.blocks(), 3);
 
     bs = Bitset<block>(65);
     ASSERT_EQ(bs.size(), 65);
@@ -145,7 +149,8 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedShort) {
 
     Bitset<block> bs;
     ASSERT_EQ(bs.size(), 0);
-    ASSERT_EQ(bs.blocks(), 0);
+    // buffer block
+    ASSERT_EQ(bs.blocks(), 1);
 
     bs = Bitset<block>(1);
     ASSERT_EQ(bs.size(), 1);
@@ -153,7 +158,8 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedShort) {
 
     bs = Bitset<block>(64);
     ASSERT_EQ(bs.size(), 64);
-    ASSERT_EQ(bs.blocks(), 4);
+    // always one buffer block
+    ASSERT_EQ(bs.blocks(), 5);
 
     bs = Bitset<block>(65);
     ASSERT_EQ(bs.size(), 65);
@@ -213,7 +219,8 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedChar) {
 
     Bitset<block> bs;
     ASSERT_EQ(bs.size(), 0);
-    ASSERT_EQ(bs.blocks(), 0);
+    // buffer block
+    ASSERT_EQ(bs.blocks(), 1);
 
     bs = Bitset<block>(1);
     ASSERT_EQ(bs.size(), 1);
@@ -221,7 +228,8 @@ TEST(BitsetTest, BitsetFunctionality_UnsignedChar) {
 
     bs = Bitset<block>(64);
     ASSERT_EQ(bs.size(), 64);
-    ASSERT_EQ(bs.blocks(), 8);
+    // always one buffer block
+    ASSERT_EQ(bs.blocks(), 9);
 
     bs = Bitset<block>(65);
     ASSERT_EQ(bs.size(), 65);

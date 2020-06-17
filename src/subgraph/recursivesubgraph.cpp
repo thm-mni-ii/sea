@@ -38,8 +38,8 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
         }
         degRSum += degR;
     }
-    pSelect = new SuxRankSelect(std::move(p));
-    qSelect = new SuxRankSelect(std::move(q));
+    pSelect = new rankselect_t (std::move(p));
+    qSelect = new rankselect_t (std::move(q));
 }
 
 Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
@@ -73,8 +73,8 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
         }
         degRSum += degR;
     }
-    pSelect = new SuxRankSelect(std::move(p));
-    qSelect = new SuxRankSelect(std::move(q));
+    pSelect = new rankselect_t (std::move(p));
+    qSelect = new rankselect_t (std::move(q));
 }
 
 uint64_t Sealib::RecursiveSubGraph::head(uint64_t u, uint64_t k) {

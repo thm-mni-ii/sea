@@ -602,8 +602,7 @@ $RECYCLE.BIN/
 .idea/**/libraries
 
 # CMake
-cmake-build-debug/
-cmake-build-release/
+cmake-build-*/
 
 # Mongo Explorer plugin:
 .idea/**/mongoSettings.xml

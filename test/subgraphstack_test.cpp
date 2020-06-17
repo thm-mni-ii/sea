@@ -12,7 +12,7 @@ using Sealib::GraphCreator;
 using std::shared_ptr;
 
 TEST(SubGraphStackTest, pushPop) {
-    typedef Sealib::Bitset<uint64_t> bitset_t;
+    typedef Sealib::Bitset<uint8_t> bitset_t;
 
     uint64_t order = 7;
     auto **adj_mtrx = reinterpret_cast<uint64_t **>(malloc(sizeof(uint64_t) * order * order));
@@ -55,7 +55,7 @@ TEST(SubGraphStackTest, pushPop) {
 }
 
 TEST(SubGraphStackTest, orderDegree) {
-    typedef Sealib::Bitset<uint64_t> bitset_t;
+    typedef Sealib::Bitset<uint8_t> bitset_t;
 
     uint64_t order = 9;
     auto **adj_mtrx = reinterpret_cast<uint64_t **>(malloc(sizeof(uint64_t) * order * order));

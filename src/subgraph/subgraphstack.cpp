@@ -214,7 +214,7 @@ void Sealib::SubGraphStack::tunephi0(uint64_t i) {
         phi0bs[phi(i, u) - 1] = 1;
     }
     if (tunedPhi0) delete tunedPhi0;
-    tunedPhi0 = new SuxRankSelect(std::move(phi0bs));
+    tunedPhi0 = new rankselect_t (std::move(phi0bs));
 }
 
 void Sealib::SubGraphStack::tunepsi0(uint64_t i) {
@@ -223,7 +223,7 @@ void Sealib::SubGraphStack::tunepsi0(uint64_t i) {
         psi0bs[psi(i, u) - 1] = 1;
     }
     if (tunedPsi0) delete tunedPsi0;
-    tunedPsi0 = new SuxRankSelect(std::move(psi0bs));
+    tunedPsi0 = new rankselect_t(std::move(psi0bs));
 }
 
 void Sealib::SubGraphStack::tunephi(uint64_t i) {
@@ -232,7 +232,7 @@ void Sealib::SubGraphStack::tunephi(uint64_t i) {
         phibs[phi(i, i - 1, u) - 1] = 1;
     }
     if (tunedPhi) delete tunedPhi;
-    tunedPhi = new SuxRankSelect(std::move(phibs));
+    tunedPhi = new rankselect_t(std::move(phibs));
 }
 
 void Sealib::SubGraphStack::tunepsi(uint64_t i) {
@@ -241,5 +241,5 @@ void Sealib::SubGraphStack::tunepsi(uint64_t i) {
         psibs[psi(i, i - 1, u) - 1] = 1;
     }
     if (tunedPsi) delete tunedPsi;
-    tunedPsi = new SuxRankSelect(std::move(psibs));
+    tunedPsi = new rankselect_t(std::move(psibs));
 }

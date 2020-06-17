@@ -3,7 +3,7 @@
 
 #include <sealib/graph/undirectedgraph.h>
 #include <sealib/collection/bitset.h>
-#include <sealib/dictionary/suxrankselect.hpp>
+#include <sealib/dictionary/rankselect.h>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -28,8 +28,8 @@ class SubGraphStack {
     friend class SubGraph;
     friend class RecursiveSubGraph;
     friend class BaseSubGraph;
-    typedef Sealib::Bitset<uint64_t> bitset_t;
-    typedef Sealib::SuxRankSelect rankselect_t;
+    typedef Sealib::Bitset<uint8_t> bitset_t;
+    typedef Sealib::RankSelect rankselect_t;
     typedef Sealib::SubGraphStack stack_t;
     
  private:
