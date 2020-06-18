@@ -11,7 +11,7 @@ set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated bina
 set(CMAKE_INCLUDE_PATH include/)
 
 set(CMAKE_INCLUDE_CURRENT_DIR OFF)
-set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wconversion -Wdeprecated")
+set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wdeprecated")
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         set(WARNING_FLAGS "${WARNING_FLAGS} -Werror -Wdocumentation")
