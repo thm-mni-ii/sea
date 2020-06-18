@@ -324,12 +324,7 @@ class Rank9Select : public Rank9 {
      *
      * @param bitset a Sealib::Bitset of 64-bit words.
      */
-
-    explicit Rank9Select(const Sealib::Bitset<uint64_t> &bitset)
-        : Rank9(bitset), inventory(), subinventory(), inventory_size(0) {
-        init();
-    }
-    explicit Rank9Select(Sealib::Bitset<uint64_t> &&bitset)
+    explicit Rank9Select(Sealib::Bitset<uint64_t> bitset)
         : Rank9(std::move(bitset)),
           inventory(),
           subinventory(),

@@ -67,14 +67,10 @@ class Rank9 {
         : num_ones(0), _max_rank(0), m_bitset(std::move(bitset)), counts() {
         init();
     }
-    explicit Rank9(Sealib::Bitset<uint64_t>&& bitset)
-        : num_ones(0), _max_rank(0), m_bitset(bitset), counts() {
-        init();
-    }
 
     /** Returns the number of ones before the given posistion.
      *
-     * @param pos A position from 0 to size() (included).
+     * @param k A position from 0 to size() (included).
      * @return the number of ones from the start of the bit vector up to the
      * given position (excluded).
      */
