@@ -208,6 +208,10 @@ class Bitset final : Sequence<bool, uint64_t> {
      * @param size - size of the bitset after resizing
      */
     void resize(uint64_t size);
+
+    auto data() {
+        return mbits.data();
+    }
 };
 
 template <typename Block, typename Allocator>

@@ -1,7 +1,9 @@
 #include <sealib/_types.h>
 #include <sealib/graph/graphcreator.h>
+
 #include <cstdio>
 #include <cstring>
+
 #include "./test_algorithms.h"
 #include "./test_visual.h"
 

@@ -11,13 +11,13 @@ set(EXECUTABLE_OUTPUT_PATH bin)                                 # generated bina
 set(CMAKE_INCLUDE_PATH include/)
 
 set(CMAKE_INCLUDE_CURRENT_DIR OFF)
-set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wconversion -Wdeprecated")
+set(WARNING_FLAGS "-Wall -Wextra -Wpedantic -Wdeprecated")
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER_ID}")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(WARNING_FLAGS "${WARNING_FLAGS} -Werror -Wdocumentation")
+        set(WARNING_FLAGS "${WARNING_FLAGS} -Werror -Wdocumentation")
 endif()
-set(BUILD_FLAGS "-std=c++11 -O3 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
-set(TEST_FLAGS "-std=c++11 -g -O0 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
+set(BUILD_FLAGS "-std=c++17 -O3 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
+set(TEST_FLAGS "-std=c++17 -g -O0 -fno-builtin -fno-rtti -ffast-math ${WARNING_FLAGS}")
 
 # --------------------------------------------------- #
 #                   Dependencies
@@ -33,7 +33,7 @@ ExternalProject_Add(GTEST_PROJECT
         GIT_REPOSITORY https://github.com/google/googletest.git
         GIT_TAG dea0216d0c6bc5e63cf5f6c8651cd268668032ec
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/third-party/gtest
-        CMAKE_ARGS -DINSTALL_GTEST=OFF -DCMAKE_CXX_FLAGS=-std=c++11 -fpermissive -stdlib=libc++
+        CMAKE_ARGS -DINSTALL_GTEST=OFF -DCMAKE_CXX_FLAGS=-std=c++17 -fpermissive -stdlib=libc++
         INSTALL_COMMAND ""
         BUILD_COMMAND "${MAKE}" --build .)
 

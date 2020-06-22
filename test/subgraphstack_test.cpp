@@ -31,8 +31,8 @@ TEST(SubGraphStackTest, pushPop) {
 
     for (uint64_t i = 0; i < 4; i++) {
         bitset_t a(stack.gMax(i));
-        for (uint64_t j = 0; j < a.blocks(); j++) {
-            a.setBlock(j, (uint8_t) -1);
+        for (uint64_t j = 0; j < a.size(); j++) {
+            a[j] = 1;
         }
         for (uint64_t j = 0; j < a.size(); j++) {
             if (j % 4 == 0) {
@@ -89,8 +89,8 @@ TEST(SubGraphStackTest, orderDegree) {
 
     for (uint64_t i = 0; i < 4; i++) {
         bitset_t a(stack.gMax(i));
-        for (uint64_t j = 0; j < a.blocks(); j++) {
-            a.setBlock(j, (uint8_t) -1);
+        for (uint64_t j = 0; j < a.size(); j++) {
+            a[j] = 1;
         }
         for (uint64_t j = 0; j < a.size(); j++) {
             if (j % 4 == 0) {

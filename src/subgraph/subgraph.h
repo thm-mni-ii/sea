@@ -56,19 +56,19 @@ class SubGraph {
     SubGraph(SubGraph &&) = default;
     SubGraph & operator=(SubGraph &&) = default;
 
-    inline uint64_t select_q(uint64_t i) const {
+    inline uint64_t select_q(uint64_t i) {
         return qSelect->select(i);
     }
 
-    inline uint64_t select_p(uint64_t i) const {
+    inline uint64_t select_p(uint64_t i) {
         return pSelect->select(i);
     }
 
-    inline uint64_t rank_q(uint64_t i) const {
+    inline uint64_t rank_q(uint64_t i) {
         return qSelect->rank(i);
     }
 
-    inline uint64_t rank_p(uint64_t i) const {
+    inline uint64_t rank_p(uint64_t i) {
         return pSelect->rank(i);
     }
 
@@ -78,15 +78,15 @@ class SubGraph {
         delete qSelect;
     }
 
-    inline uint64_t getSidx() const {
+    inline uint64_t getSidx() {
         return sidx;
     }
 
-    inline uint64_t getRidx() const {
+    inline uint64_t getRidx() {
         return ridx;
     }
 
-    uint64_t degree(uint64_t u) const {
+    uint64_t degree(uint64_t u) {
         if (u == 0) {
             throw ZeroArgumentGiven();
         }
@@ -102,25 +102,25 @@ class SubGraph {
         }
     }
 
-    virtual uint64_t head(uint64_t u, uint64_t k) const = 0;
+    virtual uint64_t head(uint64_t u, uint64_t k) = 0;
 
-    inline uint64_t head(std::tuple<uint64_t, uint64_t> uk) const {
+    inline uint64_t head(std::tuple<uint64_t, uint64_t> uk) {
         return head(std::get<0>(uk), std::get<1>(uk));
     }
 
     virtual std::tuple<uint64_t, uint64_t>
-    mate(uint64_t u, uint64_t k) const = 0;
+    mate(uint64_t u, uint64_t k) = 0;
 
     inline std::tuple<uint64_t, uint64_t>
-    mate(std::tuple<uint64_t, uint64_t> uk) const {
+    mate(std::tuple<uint64_t, uint64_t> uk) {
         return mate(std::get<0>(uk), std::get<1>(uk));
     }
 
-    inline uint64_t order() const {
+    inline uint64_t order() {
         return qSelect->size();
     }
 
-    uint64_t g(uint64_t j, uint64_t k) const {
+    uint64_t g(uint64_t j, uint64_t k) {
         if (j == 0 || k == 0) {
             throw ZeroArgumentGiven();
         }
@@ -143,11 +143,11 @@ class SubGraph {
         return pSelect->size();
     }
 
-    inline uint64_t g(std::tuple<uint64_t, uint64_t> jk) const {
+    inline uint64_t g(std::tuple<uint64_t, uint64_t> jk) {
         return g(std::get<0>(jk), std::get<1>(jk));
     }
 
-    std::tuple<uint64_t, uint64_t> gInv(uint64_t r) const {
+    std::tuple<uint64_t, uint64_t> gInv(uint64_t r) {
         if (r == 0) {
             throw ZeroArgumentGiven();
         }
@@ -165,13 +165,13 @@ class SubGraph {
         return std::tuple<uint64_t, uint64_t>(a, r - b);
     }
 
-    virtual uint64_t phi(uint64_t u) const = 0;
+    virtual uint64_t phi(uint64_t u) = 0;
 
-    virtual uint64_t psi(uint64_t a) const = 0;
+    virtual uint64_t psi(uint64_t a) = 0;
 
-    virtual uint64_t phiInv(uint64_t u) const = 0;
+    virtual uint64_t phiInv(uint64_t u) = 0;
 
-    virtual uint64_t psiInv(uint64_t a) const = 0;
+    virtual uint64_t psiInv(uint64_t a) = 0;
 };
 }  // namespace Sealib
 #endif  // SRC_SUBGRAPH_SUBGRAPH_H_

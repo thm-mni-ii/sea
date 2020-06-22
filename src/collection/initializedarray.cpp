@@ -1,5 +1,7 @@
 #include <sealib/collection/initializedarray.h>
 
+#include <stdexcept>
+
 using Sealib::InitializedArray;
 
 struct NotChained : public std::exception {
