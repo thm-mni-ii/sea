@@ -14,7 +14,7 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
                                              const bitset_t &a) :
     SubGraph(sidx_, ridx_, stack_),
     vSelect(initializeVSelect(v)), aSelect(initializeASelect(a)) {
-    SubGraph *r = stack->clientList[stack_t::refs[ridx]];
+    SubGraph *r = stack->client_vector[stack_t::refs[ridx]];
 
     bitset_t p(rank_a(aSelect.size()));
     bitset_t q(rank_v(vSelect.size()));
@@ -49,7 +49,7 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
                                              bitset_t &&a) :
     SubGraph(sidx_, ridx_, stack_),
     vSelect(initializeVSelect(v)), aSelect(initializeASelect(a)) {
-    SubGraph *r = stack->clientList[stack_t::refs[ridx]];
+    SubGraph *r = stack->client_vector[stack_t::refs[ridx]];
 
     bitset_t p(rank_a(aSelect.size()));
     bitset_t q(rank_v(vSelect.size()));
@@ -78,13 +78,13 @@ Sealib::RecursiveSubGraph::RecursiveSubGraph(stack_t *stack_,
 }
 
 uint64_t Sealib::RecursiveSubGraph::head(uint64_t u, uint64_t k) {
-    SubGraph *r = stack->clientList[stack_t::refs[ridx]];
+    SubGraph *r = stack->client_vector[stack_t::refs[ridx]];
     return phiInv(r->head(r->gInv(psi(g(u, k)))));
 }
 
 std::tuple<uint64_t, uint64_t>
 Sealib::RecursiveSubGraph::mate(uint64_t u, uint64_t k) {
-    SubGraph *r = stack->clientList[stack_t::refs[ridx]];
+    SubGraph *r = stack->client_vector[stack_t::refs[ridx]];
     return gInv(psiInv(r->g(r->mate(r->gInv(psi(g(u, k)))))));
 }
 
@@ -128,7 +128,7 @@ Sealib::SubGraph::bitset_t Sealib::RecursiveSubGraph::initializeVSelect(const bi
     if (stack_t::refs[ridx] == sidx - 1) {
         return v;
     } else {
-        auto *gL = reinterpret_cast<RecursiveSubGraph *>(stack->clientList[sidx - 1]);
+        auto *gL = reinterpret_cast<RecursiveSubGraph *>(stack->client_vector[sidx - 1]);
         bitset_t vR(gL->vSelect.size());
 
         for (uint64_t i = 0; i < v.size(); i++) {
@@ -144,7 +144,7 @@ Sealib::SubGraph::bitset_t Sealib::RecursiveSubGraph::initializeASelect(const bi
     if (stack_t::refs[ridx] == sidx - 1) {
         return a;
     } else {
-        auto *gL = reinterpret_cast<RecursiveSubGraph *>(stack->clientList[sidx - 1]);
+        auto *gL = reinterpret_cast<RecursiveSubGraph *>(stack->client_vector[sidx - 1]);
         bitset_t aR(gL->aSelect.size());
 
         for (uint64_t i = 0; i < a.size(); i++) {
