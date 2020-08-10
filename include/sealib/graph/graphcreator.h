@@ -154,6 +154,28 @@ class GraphCreator {
      * @author Vytautas Hermann
      */
     static UndirectedGraph treeWidthGraph(uint64_t order, uint64_t maxTreeWidth, double p);
+
+    /**
+     * Creates a random undirected graph
+     * @param order number of vertices
+     * @param p edge propability
+     * @param seed of the rng used
+     * @return UndirectedGraph ptr
+     * @author Johannes meintrup
+     */
+    static std::unique_ptr<UndirectedGraph> randomUndirected(uint64_t order, double p,
+                                                      uint64_t seed = 0);
+
+    /**
+     * Creates a random undirected graph
+     * @param order number of vertices
+     * @param degree degree of each vertex, if possible each vertex has the same degree
+     * @param seed of the rng used
+     * @return UndirectedGraph ptr
+     * @author Johannes meintrup
+     */
+    static std::unique_ptr<UndirectedGraph> randomUndirectedWithExactEdges(
+        uint64_t order, uint64_t degree, uint64_t seed);
 };
 }  // namespace Sealib
 #endif  // SEALIB_GRAPH_GRAPHCREATOR_H_

@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(sea)
+
+SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_FLAGS -pthread)
 set(PROJECT_SOURCE_DIR .)
 
@@ -46,7 +48,7 @@ MESSAGE(STATUS "GTest build_dir: ${GOOGLETEST_BIN}")
 
 include_directories(SYSTEM ${GOOGLETEST_ROOT}/googletest/)
 include_directories(SYSTEM ${GOOGLETEST_ROOT}/googletest/include)
-add_library(gtest STATIC IMPORTED)
+add_library(gtest STATIC IMPORTED benchmark/main.cpp)
 add_dependencies(gtest GTEST_PROJECT)
 set_property(TARGET gtest PROPERTY IMPORTED_LOCATION "${GOOGLETEST_BIN}/googlemock/gtest/libgtest.a")
 
@@ -89,3 +91,12 @@ target_link_libraries(tests gtest)
 
 set_target_properties(sealib main PROPERTIES COMPILE_FLAGS ${BUILD_FLAGS})
 set_target_properties(tests PROPERTIES COMPILE_FLAGS ${TEST_FLAGS})
+
+# --------------------------------------------------- #
+#                   build benchmark
+# --------------------------------------------------- #
+file(GLOB BENCHMARK "benchmark/*.[ch]pp")                                   # all test files
+add_executable(benchmark ${LIB_SOURCES} ${BENCHMARK} benchmark/io.hpp)
+
+find_package(Threads)
+set_target_properties(benchmark PROPERTIES LINK_FLAGS "${CMAKE_THREAD_LIBS_INIT}")
