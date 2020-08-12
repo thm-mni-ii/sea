@@ -30,7 +30,7 @@ std::unique_ptr<Sealib::UndirectedGraph> read(std::filesystem::path path) {
     for(auto i = 0; i < order; i++) {
         uint64_t degree;
         file.read ((char*) &degree, sizeof(uint64_t));
-        Sealib::ExtendedNode node;
+        Sealib::ExtendedNode &node = g->getNode(i);
         node.getAdj().resize(degree);
         file.read((char*) node.getAdj().data(), sizeof(std::pair<uint64_t, uint64_t>) * degree);
     }
