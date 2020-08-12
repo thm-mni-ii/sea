@@ -2,10 +2,10 @@
 #define SEALIB_COLLECTION_SUBGRAPHSTACK_H_
 
 #include <sealib/collection/bitset.h>
-#include <sealib/dictionary/rankselect.h>
 #include <sealib/graph/undirectedgraph.h>
 
 #include <memory>
+#include <sealib/dictionary/rank9select.hpp>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -29,8 +29,8 @@ class SubGraphStack {
     friend class SubGraph;
     friend class RecursiveSubGraph;
     friend class BaseSubGraph;
-    typedef Sealib::Bitset<uint8_t> bitset_t;
-    typedef Sealib::RankSelect rankselect_t;
+    typedef Sealib::Bitset<uint64_t> bitset_t;
+    typedef Sealib::Rank9Select rankselect_t;
     typedef Sealib::SubGraphStack stack_t;
 
  private:

@@ -339,8 +339,11 @@ class Rank9Select : public Rank9 {
      * @return the position of the one with given rank;
      * panics if rank is out of bounds, i.e. larger than max rank
      */
-    size_t select(const uint64_t rank) {
-        assert(rank < this->_max_rank);
+    size_t select(uint64_t rank) {
+        if (rank == 0 || rank > _max_rank) {
+            return INVALID;
+        }
+        rank--;
         const uint64_t inventory_index_left = rank >> log2_ones_per_inventory;
         assert(inventory_index_left <= inventory_size);
 
@@ -427,7 +430,7 @@ class Rank9Select : public Rank9 {
         assert(offset_in_block <= 7);
         assert(rank_in_word < 64);
         return word * UINT64_C(64) +
-               select64(this->m_bitset.data()[word], rank_in_word);
+               select64(this->m_bitset.data()[word], rank_in_word) + 1;
     }
 };
 }  // namespace Sealib

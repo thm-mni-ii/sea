@@ -75,7 +75,9 @@ class Rank9 {
      * given position (excluded).
      */
     uint64_t rank(const size_t k) {
-        assert(k <= m_bitset.size());
+        if (k == 0 || k > m_bitset.size()) {
+            return INVALID;
+        }
         const auto bits = m_bitset.data();
         const uint64_t word = k / 64;
         const uint64_t block = word / 4 & ~1;
@@ -93,6 +95,10 @@ class Rank9 {
     /** @return the number of bits set to 1 in the bitset, aka max rank value.
      */
     size_t max_rank() const { return _max_rank; }
+
+    const Sealib::Bitset<uint64_t > & getBitset() {
+        return m_bitset;
+    }
 };
 }  // namespace Sealib
 

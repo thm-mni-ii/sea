@@ -19,7 +19,7 @@ typedef struct HashPair {
     }
 } hash_pair_t;
 
-class SubGraphStack {
+class SimpleSubGraphStack {
     typedef Sealib::Bitset<uint8_t> bitset_t;
     typedef std::unordered_map<uint64_t, uint64_t> map_t;
 
@@ -30,7 +30,7 @@ class SubGraphStack {
     std::vector<map_t> to_original_vector;
 
  public:
-    explicit SubGraphStack(std::shared_ptr<UndirectedGraph> g_);
+    explicit SimpleSubGraphStack(std::shared_ptr<UndirectedGraph> g_);
 
     void push(const bitset_t &v) {
         uint64_t order = 0;
