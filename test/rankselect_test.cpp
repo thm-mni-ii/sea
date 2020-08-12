@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <sealib/dictionary/rankselect.h>
 
+#include <bitset>
 #include <sealib/dictionary/rank9.hpp>
 #include <sealib/dictionary/rank9select.hpp>
 
@@ -27,32 +28,59 @@ TEST(RankSelectTest, rankSelect) {
             for (uint32_t e = 0; e < 8; e++) {
                 std::shared_ptr<Bitset<uint8_t>> bits(
                     new Bitset<uint8_t>(16 + e));
-                bits->setBlock(0, c1);
-                bits->setBlock(1, c2);
-                for (uint32_t i = 0; i < e; i++) {
-                    (*bits)[16 + i] = 1;
+
+                Bitset<uint64_t > r9bits(16+e);
+
+                auto bc1 = std::bitset<8>(c1);
+                auto bc2 = std::bitset<8>(c2);
+                for(auto i = 0; i < 8; i++) {
+                    bits->insert(i, bc1[i]);
+                    bits->insert(i+8, bc2[i]);
+                    r9bits.insert(i, bc1[i]);
+                    r9bits.insert(i+8, bc2[i]);
+                }
+                for (auto i = 0; i < e; i++) {
+                    bits->insert(16 + i, true);
+                    r9bits.insert(16 + i, true);
                 }
 
                 SimpleRankSelect simpleRankSelect(bits);
                 RankSelect rankSelect(*bits);
+                Rank9Select rank9Select(r9bits);
                 for (uint32_t i = 0; i <= bits->size(); i++) {
                     ASSERT_EQ(rankSelect.select(i), simpleRankSelect.select(i));
                     ASSERT_EQ(rankSelect.rank(i), simpleRankSelect.rank(i));
+                    ASSERT_EQ(rank9Select.select(i), simpleRankSelect.select(i));
+                    ASSERT_EQ(rank9Select.rank(i), simpleRankSelect.rank(i));
                 }
             }
             for (uint32_t e = 0; e < 8; e++) {
                 std::shared_ptr<Bitset<uint8_t>> bits(
                     new Bitset<uint8_t>(16 + e));
-                bits->setBlock(0, c1);
-                bits->setBlock(1, c2);
-                for (uint32_t i = 0; i < e; i++) {
-                    (*bits)[16 + i] = 0;
+
+                Bitset<uint64_t > r9bits(16+e);
+
+                auto bc1 = std::bitset<8>(c1);
+                auto bc2 = std::bitset<8>(c2);
+                for(auto i = 0; i < 8; i++) {
+                    bits->insert(i, bc1[i]);
+                    bits->insert(i+8, bc2[i]);
+                    r9bits.insert(i, bc1[i]);
+                    r9bits.insert(i+8, bc2[i]);
                 }
+                for (auto i = 0; i < e; i++) {
+                    bits->insert(16 + i, true);
+                    r9bits.insert(16 + i, true);
+                }
+
                 SimpleRankSelect simpleRankSelect(bits);
                 RankSelect rankSelect(*bits);
+                Rank9Select rank9Select(r9bits);
                 for (uint32_t i = 0; i <= bits->size(); i++) {
                     ASSERT_EQ(rankSelect.select(i), simpleRankSelect.select(i));
                     ASSERT_EQ(rankSelect.rank(i), simpleRankSelect.rank(i));
+                    ASSERT_EQ(rank9Select.select(i), simpleRankSelect.select(i));
+                    ASSERT_EQ(rank9Select.rank(i), simpleRankSelect.rank(i));
                 }
             }
         } while (++c2);

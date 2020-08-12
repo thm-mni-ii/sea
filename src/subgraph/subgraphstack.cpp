@@ -180,8 +180,7 @@ void Sealib::SubGraphStack::push_vertex_induced(const bitset_t &v) {
         auto vertex = std::get<0>(tmp);
         auto k = std::get<1>(tmp);
 
-        auto h = head(vertex, k) - 1;
-        if(v.get(vertex - 1) && v.get(h)) { // both endpoints exist
+        if(v.get(vertex - 1) && v.get(head(vertex, k) - 1)) { // both endpoints exist
             a.insert(i, true);
         } else {
             a.insert(i, false);

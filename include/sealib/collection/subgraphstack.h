@@ -2,6 +2,7 @@
 #define SEALIB_COLLECTION_SUBGRAPHSTACK_H_
 
 #include <sealib/collection/bitset.h>
+#include <sealib/dictionary/rankselect.h>
 #include <sealib/graph/undirectedgraph.h>
 
 #include <memory>

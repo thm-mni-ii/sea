@@ -1,7 +1,7 @@
 #ifndef SRC_SUBGRAPH_SUBGRAPH_H_
 #define SRC_SUBGRAPH_SUBGRAPH_H_
 #include <sealib/collection/bitset.h>
-#include <sealib/dictionary/rank9select.hpp>
+#include <sealib/dictionary/rankselect.h>
 #include <sealib/collection/subgraphstack.h>
 #include <stdexcept>
 #include <string>

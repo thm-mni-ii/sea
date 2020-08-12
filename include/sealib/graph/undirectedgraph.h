@@ -5,6 +5,7 @@
 #include <sealib/graph/node.h>
 #include <vector>
 #include <tuple>
+#include <assert.h>
 
 namespace Sealib {
 /**
@@ -56,6 +57,8 @@ class UndirectedGraph : public Graph {
     * @return the k-th neighbor of u
     */
     uint64_t head(uint64_t u, uint64_t k) const override {
+        assert(u < nodes.size());
+        assert(k < nodes[u].getAdj().size());
         return nodes[u].getAdj()[k].first;
     }
 

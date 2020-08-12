@@ -12,9 +12,9 @@ struct Measurement {
     uint64_t duration, memory;
 };
 
-template<class Stack>
+template<class Stack, class BS>
 Measurement measureSubgraphStack(std::shared_ptr<Sealib::UndirectedGraph> graph) {
-    typedef Sealib::Bitset<uint64_t> bitset_t;
+    typedef BS bitset_t;
 
     Stack stack(graph);
     std::chrono::high_resolution_clock clock;
@@ -29,6 +29,48 @@ Measurement measureSubgraphStack(std::shared_ptr<Sealib::UndirectedGraph> graph)
             }
         }
         stack.push_vertex_induced(a);
+    }
+
+    auto after_t = clock.now();
+    auto after_m = s_alloc_metrics.current();
+
+    Measurement m;
+    m.memory = after_m - before_m;
+    m.duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(after_t-before_t).count();
+    return m;
+}
+/**
+
+ * @param argc
+ * @param argv
+ * @return
+ */
+template<class Stack, class BS>
+Measurement measureSubgraphStackEdges(std::shared_ptr<Sealib::UndirectedGraph> graph) {
+    typedef BS bitset_t;
+
+    Stack stack(graph);
+    std::chrono::high_resolution_clock clock;
+    auto before_t = clock.now();
+    auto before_m = s_alloc_metrics.current();
+
+    for (uint64_t i = 0; i < 4; i++) {
+        bitset_t a(stack.gMax(i));
+        for (uint64_t j = 0; j < a.size(); j++) {
+            a[j] = 1;
+        }
+        for (uint64_t j = 0; j < a.size(); j++) {
+            if (j % 4 == 0) {
+                std::tuple<uint64_t, uint64_t> gInv = stack.gInv(j + 1);
+                std::tuple<uint64_t, uint64_t> mate
+                    = stack.mate(std::get<0>(gInv), std::get<1>(gInv));
+                uint64_t mateArc = stack.g(std::get<0>(mate), std::get<1>(mate));
+                a[j] = 0;
+                a[mateArc - 1] = 0;
+            }
+        }
+        stack.push(a);
     }
 
     auto after_t = clock.now();
@@ -102,8 +144,9 @@ int main(int argc, char * argv[]) {
         std::filesystem::path path(tmp);
 
         std::shared_ptr<Sealib::UndirectedGraph> graph = read(path);
-        auto results = measureSubgraphStack<Sealib::SubGraphStack>(graph);
-        auto simple_results = measureSubgraphStack<Sealib::SimpleSubGraphStack>(graph);
+        std::cout << "Graph with " << graph->getOrder() << " vertices" << std::endl;
+        auto results = measureSubgraphStackEdges<Sealib::SubGraphStack, Sealib::Bitset<uint64_t>>(graph);
+        auto simple_results = measureSubgraphStack<Sealib::SimpleSubGraphStack, Sealib::Bitset<uint64_t>>(graph);
         std::cout << "SubGraphStack" << std::endl
                   << "Time: " << results.duration << " ms"
                   << " Memory: " << results.memory << std::endl;

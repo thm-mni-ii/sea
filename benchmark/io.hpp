@@ -22,8 +22,8 @@ void write(std::shared_ptr<Sealib::UndirectedGraph> graph, std::filesystem::path
 
 std::unique_ptr<Sealib::UndirectedGraph> read(std::filesystem::path path) {
     std::ifstream file;
+    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     file.open(path, std::ios::in | std::ios::binary);
-
     uint64_t order;
     file.read ((char*) &order, sizeof(uint64_t));
     auto g = std::make_unique<Sealib::UndirectedGraph>(order);
