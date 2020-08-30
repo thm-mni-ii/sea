@@ -102,7 +102,7 @@ using Sealib::CompactArray;
 using SealibVisual::TikzElement;
 using SealibVisual::TikzPicture;
 std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
-    CompactArray *c, size_t size, std::string name, std::string positionOpts) {
+    CompactArray *c, size_t size, const std::string& name, const std::string& positionOpts) {
     std::vector<std::string> u;
     for (uint64_t a = 0; a < size; a++) {
         u.push_back(std::to_string(c->get(a)));
@@ -111,7 +111,7 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
     std::shared_ptr<TikzNode> label(new TikzNode("", "below=0.1cm of C", name));
 
     std::stringstream opts;
-    if (positionOpts != "") opts << positionOpts << ",";
+    if (!positionOpts.empty()) opts << positionOpts << ",";
     opts << "array/.style={"
             "matrix of nodes,"
             "ampersand replacement=\\&,"
@@ -138,7 +138,7 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
 using SealibVisual::TikzStack;
 std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
     std::vector<uint64_t> &v, std::string name, bool vertical,
-    std::string positionOpts) {
+    const std::string& positionOpts) {
     std::vector<std::string> s;
     for (uint64_t a : v) {
         s.push_back(std::to_string(a));
@@ -155,7 +155,7 @@ std::shared_ptr<TikzPicture> TikzGenerator::generateTikzElement(
         std::make_shared<TikzNode>("", "below=0.1cm of S", name);
 
     std::stringstream arrayStyle;
-    if (positionOpts != "") arrayStyle << positionOpts << ",";
+    if (!positionOpts.empty()) arrayStyle << positionOpts << ",";
     arrayStyle
         << "array/.style={"
            "matrix of nodes,"

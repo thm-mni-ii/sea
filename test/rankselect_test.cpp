@@ -11,7 +11,7 @@ using namespace Sealib;  // NOLINT
 
 TEST(RankSelectTest, rankSelect) {
     std::shared_ptr<Bitset<uint8_t>> bits_(new Bitset<uint8_t>(1));
-    (*bits_)[0] = 1;
+    (*bits_)[0] = true;
 
     RankSelect rs(*bits_);
     ASSERT_EQ(1, rs.select(1));
@@ -33,13 +33,13 @@ TEST(RankSelectTest, rankSelect) {
 
                 auto bc1 = std::bitset<8>(c1);
                 auto bc2 = std::bitset<8>(c2);
-                for(auto i = 0; i < 8; i++) {
+                for (auto i = 0; i < 8; i++) {
                     bits->insert(i, bc1[i]);
                     bits->insert(i+8, bc2[i]);
                     r9bits.insert(i, bc1[i]);
                     r9bits.insert(i+8, bc2[i]);
                 }
-                for (auto i = 0; i < e; i++) {
+                for (size_t i = 0; i < e; i++) {
                     bits->insert(16 + i, true);
                     r9bits.insert(16 + i, true);
                 }
@@ -62,13 +62,13 @@ TEST(RankSelectTest, rankSelect) {
 
                 auto bc1 = std::bitset<8>(c1);
                 auto bc2 = std::bitset<8>(c2);
-                for(auto i = 0; i < 8; i++) {
+                for (size_t i = 0; i < 8; i++) {
                     bits->insert(i, bc1[i]);
                     bits->insert(i+8, bc2[i]);
                     r9bits.insert(i, bc1[i]);
                     r9bits.insert(i+8, bc2[i]);
                 }
-                for (auto i = 0; i < e; i++) {
+                for (size_t i = 0; i < e; i++) {
                     bits->insert(16 + i, true);
                     r9bits.insert(16 + i, true);
                 }
@@ -89,7 +89,7 @@ TEST(RankSelectTest, rankSelect) {
 
 TEST(Rank9SelectTest, rank9select) {
     Bitset<uint64_t> bits_(1);
-    bits_[0] = 1;
+    bits_[0] = true;
 
     Rank9Select rs(bits_);
     ASSERT_EQ(1, rs.select(1));

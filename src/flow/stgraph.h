@@ -17,7 +17,7 @@ class STGraph : public Graph {
     /**
      * @param graph is the graph stgraph works on
      */
-    explicit STGraph(Graph const &graph, Bitset<> s, Bitset<> t) {
+    explicit STGraph(Graph const &graph, const Bitset<>& s, const Bitset<>& t) {
         uint64_t s_degree = 0;
         std::vector<std::tuple<uint64_t, uint64_t>> s_edges;
         std::vector<SimpleNode> nodes(graph.getOrder() + 1);

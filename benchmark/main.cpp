@@ -1,9 +1,9 @@
 #include <sealib/graph/graphcreator.h>
 #include "trackingallocator.hpp"
 #include "cmdoptions.hpp"
+#include "filesystem.hpp"
 #include "io.hpp"
 #include <iostream>
-#include <filesystem>
 #include <sealib/collection/subgraphstack.h>
 #include <sealib/collection/simplesubgraphstack.hpp>
 
@@ -14,12 +14,11 @@ struct Measurement {
 
 template <class Stack>
 Measurement measureSubgraphStack(
-    std::shared_ptr<Sealib::UndirectedGraph> graph) {
+    const std::shared_ptr<Sealib::UndirectedGraph>& graph) {
     typedef Sealib::Bitset<uint64_t> bitset_t;
 
     Stack stack(graph);
-    std::chrono::high_resolution_clock clock;
-    auto before_t = clock.now();
+    auto before_t = std::chrono::high_resolution_clock::now();
     auto before_m = s_alloc_metrics.current();
 
     for (uint64_t i = 0; i < 5; i++) {
@@ -30,10 +29,10 @@ Measurement measureSubgraphStack(
         stack.push_vertex_induced(a);
     }
 
-    auto after_t = clock.now();
+    auto after_t = std::chrono::high_resolution_clock::now();
     auto after_m = s_alloc_metrics.current();
 
-    Measurement m;
+    Measurement m{};
     m.memory = after_m - before_m;
     m.duration = std::chrono::duration_cast<std::chrono::milliseconds>(after_t -
                                                                        before_t)
@@ -42,21 +41,6 @@ Measurement measureSubgraphStack(
 }
 
 int main(int argc, char* argv[]) {
-    /*auto before = s_alloc_metrics.current();
-    std::cout << "Allocated before graph: " << before << " bytes" << std::endl;
-    std::shared_ptr<Sealib::UndirectedGraph> g =
-        std::move(Sealib::GraphCreator::randomUndirected(100, 0.1));
-
-    write(g, "dump.dat");
-
-    auto h = read("dump.dat");
-
-    auto after = s_alloc_metrics.current();
-    std::cout << "Allocated for graph: " << after - before << " bytes" <<
-    std::endl; std::cout << "Total Current Allocated: " << after << " bytes" <<
-    std::endl; std::cout << "Total Overall Allocated: " <<
-    s_alloc_metrics.total_allocated << " bytes" << std::endl;*/
-
     if (opt_exists(argv, argv + argc, "-g")) {
         // Graph generation mode
         auto tmp = get_opt(argv, argv + argc, "-n");

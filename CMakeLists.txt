@@ -89,14 +89,15 @@ set_target_properties(main PROPERTIES LINK_FLAGS "${CMAKE_THREAD_LIBS_INIT}")
 set_target_properties(tests PROPERTIES LINK_FLAGS "${TEST_LINK_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
 target_link_libraries(tests gtest)
 
-set_target_properties(sealib main PROPERTIES COMPILE_FLAGS ${BUILD_FLAGS})
 set_target_properties(tests PROPERTIES COMPILE_FLAGS ${TEST_FLAGS})
 
 # --------------------------------------------------- #
 #                   build benchmark
 # --------------------------------------------------- #
 file(GLOB BENCHMARK "benchmark/*.[ch]pp")                                   # all test files
-add_executable(benchmark ${LIB_SOURCES} ${BENCHMARK} benchmark/io.hpp)
+add_executable(benchmark ${LIB_SOURCES} ${BENCHMARK})
 
 find_package(Threads)
 set_target_properties(benchmark PROPERTIES LINK_FLAGS "${CMAKE_THREAD_LIBS_INIT}")
+
+set_target_properties(sealib main benchmark PROPERTIES COMPILE_FLAGS ${BUILD_FLAGS})

@@ -2,9 +2,10 @@
 #define SEALIB_COLLECTION_SIMPLESUBGRAPHSTACK_HPP_
 #include <sealib/graph/undirectedgraph.h>
 
-#include <unordered_map>
 #include <memory>
+#include <unordered_map>
 #include <unordered_set>
+#include <utility>
 
 #include "bitset.h"
 
@@ -29,8 +30,8 @@ class SimpleSubGraphStack {
     std::vector<map_t> to_original_vector;
 
  public:
-    SimpleSubGraphStack(const std::shared_ptr<UndirectedGraph> &graph)
-        : og_graph(graph) {}
+    explicit SimpleSubGraphStack(std::shared_ptr<UndirectedGraph> graph)
+        : og_graph(std::move(graph)) {}
 
     void push(const bitset_t &v) {
         uint64_t order = 0;
@@ -61,7 +62,8 @@ class SimpleSubGraphStack {
                 if (added.find(std::make_pair(nb.first, value)) ==
                         added.end() &&
                     added.find(std::make_pair(value, nb.first)) ==
-                        added.end() && from_original.find(nb.first) != from_original.end()) {
+                        added.end() &&
+                    from_original.find(nb.first) != from_original.end()) {
                     auto &first_node = graph.getNode(key);
                     auto &second_node =
                         graph.getNode(from_original.at(nb.first));
@@ -81,31 +83,29 @@ class SimpleSubGraphStack {
         to_original_vector.push_back(to_original);
     }
 
-    void push_vertex_induced(const bitset_t &v) {
-        push(v);
-    }
+    void push_vertex_induced(const bitset_t &v) { push(v); }
 
     void pop() {
         client_vector.pop_back();
         from_original_vector.pop_back();
         to_original_vector.pop_back();
-    };
+    }
 
-    uint64_t order(uint64_t i) const { 
-        if(i == 0) {
+    uint64_t order(uint64_t i) const {
+        if (i == 0) {
             return og_graph->getOrder();
         } else {
-            return client_vector[i-1].getOrder();
+            return client_vector[i - 1].getOrder();
         }
     }
 
     inline uint64_t order() const { return order(client_vector.size()); }
 
     uint64_t degree(uint64_t i, uint64_t u) const {
-        if(i == 0) {
+        if (i == 0) {
             return og_graph->deg(u);
         } else {
-            return client_vector[i-1].deg(u);
+            return client_vector[i - 1].deg(u);
         }
     }
 
@@ -114,22 +114,22 @@ class SimpleSubGraphStack {
     }
 
     uint64_t head(uint64_t i, uint64_t u, uint64_t k) const {
-        if(i == 0) {
+        if (i == 0) {
             return og_graph->head(u, k);
         } else {
-            return client_vector[i-1].head(u, k);
+            return client_vector[i - 1].head(u, k);
         }
-    };
+    }
 
     inline uint64_t head(uint64_t u, uint64_t k) const {
         return head(client_vector.size(), u, k);
     }
 
     uint64_t mate(uint64_t i, uint64_t u, uint64_t k) const {
-        if(i == 0) {
+        if (i == 0) {
             return og_graph->mate(u, k);
         } else {
-            return client_vector[i-1].mate(u, k);
+            return client_vector[i - 1].mate(u, k);
         }
     }
 
@@ -137,5 +137,5 @@ class SimpleSubGraphStack {
         return mate(client_vector.size(), u, k);
     }
 };
-}
+}  // namespace Sealib
 #endif  // SEALIB_COLLECTION_SIMPLESUBGRAPHSTACK_HPP_

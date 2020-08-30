@@ -36,12 +36,12 @@ class TikzGenerator {
 
     // Needs tikz libraries: matrix, positioning
     static std::shared_ptr<TikzPicture> generateTikzElement(
-        Sealib::CompactArray *, size_t, std::string name = "",
-        std::string positionOpts = "");
+        Sealib::CompactArray *, size_t, const std::string& name = "",
+        const std::string& positionOpts = "");
 
     static std::shared_ptr<TikzPicture> generateTikzElement(
         std::vector<uint64_t> &, std::string name = "",
-        bool vertical = false, std::string positionOpts = "");
+        bool vertical = false, const std::string& positionOpts = "");
 };
 }  // namespace SealibVisual
 #endif  // SEALIBVISUAL_TIKZGENERATOR_H_

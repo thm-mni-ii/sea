@@ -2,6 +2,7 @@
 #define SEALIBVISUAL_TIKZARRAY_H_
 
 #include <string>
+#include <utility>
 #include <vector>
 #include "./tikzelement.h"
 
@@ -19,12 +20,12 @@ class TikzArray : public TikzElement {
      * @param _showIndices Should the indices be displayed?
      */
     explicit TikzArray(
-        const std::vector<std::string> &_content, std::string _name = "array",
+        std::vector<std::string> _content, std::string _name = "array",
         std::string _options = "matrix of nodes, ampersand replacement=\\&",
         bool _showIndices = false)
-        : content(_content),
-          name(_name),
-          options(_options),
+        : content(std::move(_content)),
+          name(std::move(_name)),
+          options(std::move(_options)),
           showIndices(_showIndices) {}
     TikzArray() = default;
     TikzArray(const TikzArray &) = default;

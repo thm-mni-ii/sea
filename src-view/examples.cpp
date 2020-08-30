@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <utility>
 #include "sealib/graph/graphcreator.h"
 #include "sealibvisual/tikzgenerator.h"
 #include "sealibvisual/tikzgraph.h"
@@ -22,8 +23,8 @@ VisualBFS::VisualBFS(Graph const &graph, CompactArray color,
     : g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
       c(std::move(color)),
-      doc(filename, "matrix,graphdrawing,positioning", "layered,force", true,
-          mode),
+      doc(std::move(filename), "matrix,graphdrawing,positioning", "layered,force", true,
+          std::move(mode)),
       pic(new TikzPicture(
           "spring electrical layout, sibling distance=15mm, node "
           "distance=20mm, node sep=1cm, arrows={->}, line "
@@ -86,7 +87,7 @@ VisualDFS::VisualDFS(Graph const &graph, CompactArray *color,
       g(graph),
       tg(TikzGenerator::generateTikzElement(g)),
       c(color),
-      doc(filename, "matrix,graphdrawing,positioning", "trees", true, mode),
+      doc(std::move(filename), "matrix,graphdrawing,positioning", "trees", true, std::move(mode)),
       pic(new TikzPicture("tree layout, sibling distance=15mm, node "
                           "distance=20mm, node sep=1cm, arrows={->}, line "
                           "width=1pt, color=black")) {
@@ -135,8 +136,8 @@ VisualEdgeMarker::VisualEdgeMarker(UndirectedGraph const &graph,
                                    std::string filename, std::string mode,
                                    bool flagSilent)
     : EdgeMarker(graph),
-      doc(filename, "matrix,graphdrawing,positioning,quotes", "layered,force",
-          true, mode),
+      doc(std::move(filename), "matrix,graphdrawing,positioning,quotes", "layered,force",
+          true, std::move(mode)),
       pic(new TikzPicture(
           "spring electrical layout, sibling distance=15mm, node "
           "distance=17mm, node sep=1cm, arrows={->}, line "
@@ -209,7 +210,7 @@ void VisualEdgeMarker::setMark(uint64_t u, uint64_t k, uint8_t mark) {
 
 // --- VISUAL CUT-VERTEX ITERATOR ---
 
-VisualCutVertex::VisualCutVertex(std::shared_ptr<VisualEdgeMarker> edges)
+VisualCutVertex::VisualCutVertex(const std::shared_ptr<VisualEdgeMarker>& edges)
     : CutVertexIterator(edges), e(edges) {
     emit();
 }
@@ -232,7 +233,7 @@ uint64_t VisualCutVertex::next() {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 
-VisualBCC::VisualBCC(std::shared_ptr<VisualEdgeMarker> edges)
+VisualBCC::VisualBCC(const std::shared_ptr<VisualEdgeMarker>& edges)
     : BCCIterator(edges), e(edges) {
     emit();
 }

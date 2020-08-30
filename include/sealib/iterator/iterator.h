@@ -20,10 +20,10 @@ struct UserCall {
 
     constexpr UserCall() : type(nop), u(0), k(0) {}
 
-    bool operator==(UserCall p) const {
+    bool operator==(const UserCall &p) const {
         return type == p.type && u == p.u && k == p.k;
     }
-    bool operator!=(UserCall p) const { return !(*this == p); }
+    bool operator!=(const UserCall &p) const { return !(*this == p); }
 
     uint8_t type;
     uint64_t u, k;

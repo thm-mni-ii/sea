@@ -7,14 +7,14 @@ struct AllocationMetrics
     size_t total_deallocated = 0;
 
     void* allocate(size_t s) {
-        size_t * ret = (size_t*) malloc(sizeof(size_t) + s);
+        auto * ret = (size_t*) malloc(sizeof(size_t) + s);
         *ret = s;
         total_allocated+=s;
         return (void*) &ret[1];
     }
 
     void deallocate(void* ptr) {
-        size_t * s_ptr = (size_t*) ptr;
+        auto * s_ptr = (size_t*) ptr;
         s_ptr--;
         size_t s = *s_ptr;
         total_deallocated+=s;
@@ -35,8 +35,7 @@ void operator delete  (void* ptr) noexcept {
     s_alloc_metrics.deallocate(ptr);
 }
 
-void operator delete[](void*, std::size_t) noexcept {
-    void* ptr;
+void operator delete[](void* ptr, std::size_t) noexcept {
     s_alloc_metrics.deallocate(ptr);
 }
 
