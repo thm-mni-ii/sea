@@ -410,11 +410,11 @@ class Rank9Select : public Rank9 {
             assert(rank_in_block < 512);
 
         } else if (span < 256) {
-            return ((uint16_t *)s)[rank % ones_per_inventory] + inventory_left;
+            return ((uint16_t *)s)[rank % ones_per_inventory] + inventory_left + 1;
         } else if (span < 512) {
-            return ((uint32_t *)s)[rank % ones_per_inventory] + inventory_left;
+            return ((uint32_t *)s)[rank % ones_per_inventory] + inventory_left + 1;
         } else {
-            return s[rank % ones_per_inventory];
+            return s[rank % ones_per_inventory] + 1;
         }
 
         const uint64_t rank_in_block_step_9 = rank_in_block * ONES_STEP_9;

@@ -12,9 +12,10 @@ struct Measurement {
     uint64_t duration, memory;
 };
 
-template<class Stack, class BS>
-Measurement measureSubgraphStack(std::shared_ptr<Sealib::UndirectedGraph> graph) {
-    typedef BS bitset_t;
+template <class Stack>
+Measurement measureSubgraphStack(
+    std::shared_ptr<Sealib::UndirectedGraph> graph) {
+    typedef Sealib::Bitset<uint64_t> bitset_t;
 
     Stack stack(graph);
     std::chrono::high_resolution_clock clock;
@@ -24,9 +25,7 @@ Measurement measureSubgraphStack(std::shared_ptr<Sealib::UndirectedGraph> graph)
     for (uint64_t i = 0; i < 5; i++) {
         bitset_t a(stack.order(i));
         for (uint64_t j = 0; j < a.size(); j++) {
-            if (j % 4 != 0) {
-                a[j] = 1;
-            }
+            a[j] = j % 4 != 0;
         }
         stack.push_vertex_induced(a);
     }
@@ -36,55 +35,13 @@ Measurement measureSubgraphStack(std::shared_ptr<Sealib::UndirectedGraph> graph)
 
     Measurement m;
     m.memory = after_m - before_m;
-    m.duration =
-        std::chrono::duration_cast<std::chrono::milliseconds>(after_t-before_t).count();
-    return m;
-}
-/**
-
- * @param argc
- * @param argv
- * @return
- */
-template<class Stack, class BS>
-Measurement measureSubgraphStackEdges(std::shared_ptr<Sealib::UndirectedGraph> graph) {
-    typedef BS bitset_t;
-
-    Stack stack(graph);
-    std::chrono::high_resolution_clock clock;
-    auto before_t = clock.now();
-    auto before_m = s_alloc_metrics.current();
-
-    for (uint64_t i = 0; i < 4; i++) {
-        bitset_t a(stack.gMax(i));
-        for (uint64_t j = 0; j < a.size(); j++) {
-            a[j] = 1;
-        }
-        for (uint64_t j = 0; j < a.size(); j++) {
-            if (j % 4 == 0) {
-                std::tuple<uint64_t, uint64_t> gInv = stack.gInv(j + 1);
-                std::tuple<uint64_t, uint64_t> mate
-                    = stack.mate(std::get<0>(gInv), std::get<1>(gInv));
-                uint64_t mateArc = stack.g(std::get<0>(mate), std::get<1>(mate));
-                a[j] = 0;
-                a[mateArc - 1] = 0;
-            }
-        }
-        stack.push(a);
-    }
-
-    auto after_t = clock.now();
-    auto after_m = s_alloc_metrics.current();
-
-    Measurement m;
-    m.memory = after_m - before_m;
-    m.duration =
-        std::chrono::duration_cast<std::chrono::milliseconds>(after_t-before_t).count();
+    m.duration = std::chrono::duration_cast<std::chrono::milliseconds>(after_t -
+                                                                       before_t)
+                     .count();
     return m;
 }
 
-
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
     /*auto before = s_alloc_metrics.current();
     std::cout << "Allocated before graph: " << before << " bytes" << std::endl;
     std::shared_ptr<Sealib::UndirectedGraph> g =
@@ -95,15 +52,15 @@ int main(int argc, char * argv[]) {
     auto h = read("dump.dat");
 
     auto after = s_alloc_metrics.current();
-    std::cout << "Allocated for graph: " << after - before << " bytes" << std::endl;
-    std::cout << "Total Current Allocated: " << after << " bytes" << std::endl;
-    std::cout << "Total Overall Allocated: " << s_alloc_metrics.total_allocated << " bytes" << std::endl;*/
+    std::cout << "Allocated for graph: " << after - before << " bytes" <<
+    std::endl; std::cout << "Total Current Allocated: " << after << " bytes" <<
+    std::endl; std::cout << "Total Overall Allocated: " <<
+    s_alloc_metrics.total_allocated << " bytes" << std::endl;*/
 
-    if(opt_exists(argv, argv + argc, "-g"))
-    {
+    if (opt_exists(argv, argv + argc, "-g")) {
         // Graph generation mode
         auto tmp = get_opt(argv, argv + argc, "-n");
-        if(tmp == nullptr) {
+        if (tmp == nullptr) {
             print_help(argv[0]);
             return 1;
         }
@@ -111,10 +68,11 @@ int main(int argc, char * argv[]) {
 
         tmp = get_opt(argv, argv + argc, "-s");
         uint64_t s;
-        if(tmp == nullptr) {
+        if (tmp == nullptr) {
             s = 0;
+        } else {
+            s = std::stoul(tmp);
         }
-        s = std::stoul(tmp);
         tmp = get_opt(argv, argv + argc, "-p");
         if(tmp == nullptr) {
             print_help(argv[0]);
@@ -145,8 +103,9 @@ int main(int argc, char * argv[]) {
 
         std::shared_ptr<Sealib::UndirectedGraph> graph = read(path);
         std::cout << "Graph with " << graph->getOrder() << " vertices" << std::endl;
-        auto results = measureSubgraphStackEdges<Sealib::SubGraphStack, Sealib::Bitset<uint64_t>>(graph);
-        auto simple_results = measureSubgraphStack<Sealib::SimpleSubGraphStack, Sealib::Bitset<uint64_t>>(graph);
+        auto results = measureSubgraphStack<Sealib::SubGraphStack>(graph);
+        auto simple_results =
+            measureSubgraphStack<Sealib::SimpleSubGraphStack>(graph);
         std::cout << "SubGraphStack" << std::endl
                   << "Time: " << results.duration << " ms"
                   << " Memory: " << results.memory << std::endl;
