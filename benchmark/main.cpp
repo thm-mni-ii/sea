@@ -88,11 +88,11 @@ int main(int argc, char* argv[]) {
         std::shared_ptr<Sealib::UndirectedGraph> graph = read(path);
         std::cout << "Graph with " << graph->getOrder() << " vertices" << std::endl;
         auto results = measureSubgraphStack<Sealib::SubGraphStack>(graph);
-        auto simple_results =
-            measureSubgraphStack<Sealib::SimpleSubGraphStack>(graph);
         std::cout << "SubGraphStack" << std::endl
                   << "Time: " << results.duration << " ms"
                   << " Memory: " << results.memory << std::endl;
+        auto simple_results =
+            measureSubgraphStack<Sealib::SimpleSubGraphStack>(graph);
         std::cout << "SimpleSubGraphStack" << std::endl
                   << "Time: " << simple_results.duration << " ms"
                   << " Memory: " << simple_results.memory << std::endl;
