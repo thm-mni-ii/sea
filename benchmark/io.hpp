@@ -2,9 +2,8 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
-#include "filesystem.hpp"
 
-void write(const std::shared_ptr<Sealib::UndirectedGraph>& graph, const std::filesystem::path& path) {
+void write(const std::shared_ptr<Sealib::UndirectedGraph>& graph, const std::string& path) {
     std::ofstream file;
     file.open(path, std::ios::out | std::ios::binary);
 
@@ -20,7 +19,7 @@ void write(const std::shared_ptr<Sealib::UndirectedGraph>& graph, const std::fil
     file.close();
 }
 
-std::unique_ptr<Sealib::UndirectedGraph> read(const std::filesystem::path& path) {
+std::unique_ptr<Sealib::UndirectedGraph> read(const std::string& path) {
     std::ifstream file;
     file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     file.open(path, std::ios::in | std::ios::binary);

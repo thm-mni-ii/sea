@@ -1,7 +1,7 @@
 #include <sealib/graph/graphcreator.h>
 #include "trackingallocator.hpp"
 #include "cmdoptions.hpp"
-#include "filesystem.hpp"
+#include <chrono>
 #include "io.hpp"
 #include <iostream>
 #include <sealib/collection/subgraphstack.h>
@@ -69,13 +69,13 @@ int main(int argc, char* argv[]) {
             print_help(argv[0]);
             return 1;
         }
-        std::filesystem::path path(tmp);
+        std::string path(tmp);
 
         std::cout << "Generating graph with n: "
                   << n << " p: " << p << " s: " << s << std::endl;
         std::shared_ptr<Sealib::UndirectedGraph> g =
             Sealib::GraphCreator::randomUndirected(n, p, s);
-        std::cout << "Done! Writing to file " << std::filesystem::absolute(path) << " " << std::endl;
+        std::cout << "Done! Writing to file " << path << " " << std::endl;
         write(g, path);
     } else {
         auto tmp = get_opt(argv, argv + argc, "-f");
@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
             print_help(argv[0]);
             return 1;
         }
-        std::filesystem::path path(tmp);
+        std::string path(tmp);
 
         std::shared_ptr<Sealib::UndirectedGraph> graph = read(path);
         std::cout << "Graph with " << graph->getOrder() << " vertices" << std::endl;
