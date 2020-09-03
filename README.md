@@ -191,7 +191,7 @@ We publish most of our research on [arXiv.org](https://tinyurl.com/ybxbb77z).
 * Space-Efficient Basic Graph Algorithms [STACS 2015](http://wwwmayr.in.tum.de/konferenzen/STACS2015/): 288-301 | [Full Version](http://drops.dagstuhl.de/opus/volltexte/2015/4921/)
 
 ## License
-Licensed under the GNU General Public License version 3. For detailed license information look inside the [LICENSE](LICENSE) file.
+Licensed under the MIT licence. For detailed license information look inside the [LICENSE](LICENSE) file.
 
 ## Acknowledgments
 Funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – [379157101](http://gepris.dfg.de/gepris/projekt/379157101?language=en).
