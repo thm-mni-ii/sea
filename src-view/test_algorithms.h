@@ -18,7 +18,7 @@ class AlgorithmComparison {
      * @param from minimum order of which a graph is generated
      * @param to maximum order of which a graph is generated
      */
-    static int launch(std::string program, std::string file1, std::string file2,
+    static int launch(std::string program, const std::string& file1, const std::string& file2,
                       uint64_t from = 1e5, uint64_t to = 1e6);
 
     /**
@@ -42,7 +42,7 @@ class AlgorithmComparison {
      * @param fg function generating a graph from a given order
      */
     template <class F1, class F2, class G>
-    static void measureSpace(F1 f1, F2 f2, std::string file1, std::string file2,
+    static void measureSpace(F1 f1, F2 f2, const std::string& file1, const std::string& file2,
                              G fg, uint64_t from = 1e5, uint64_t to = 1e6);
 
     template <class F, class G>

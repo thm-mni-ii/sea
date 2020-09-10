@@ -27,15 +27,15 @@ class TikzDocument {
      * the PDF; "beamer": (lua)latex code to include in a beamer presentation)
      */
     explicit TikzDocument(std::string _filename,
-                          std::string _tikzLibraries = "",
-                          std::string _gdLibraries = "", bool _lualatex = false,
-                          std::string _mode = "standalone")
-        : filename(_filename),
+                          std::string  _tikzLibraries = "",
+                          std::string  _gdLibraries = "", bool _lualatex = false,
+                          std::string  _mode = "standalone")
+        : filename(std::move(_filename)),
           file(_filename),
-          tikzLibraries(_tikzLibraries),
-          gdLibraries(_gdLibraries),
+          tikzLibraries(std::move(_tikzLibraries)),
+          gdLibraries(std::move(_gdLibraries)),
           lualatex(_lualatex),
-          mode(_mode) {
+          mode(std::move(_mode)) {
         initialize();
     }
     /**

@@ -1,5 +1,6 @@
 #include <sealib/graph/graphcreator.h>
 #include <stdlib.h>
+
 #include <algorithm>
 #include <cassert>
 #include <deque>
@@ -85,6 +86,122 @@ std::unique_ptr<Sealib::UndirectedGraph> Sealib::GraphCreator::randomBipartite(
                 node2.addAdjacency({n1, n1idx});
             }
         }
+    }
+
+    return graph;
+}
+
+std::unique_ptr<Sealib::UndirectedGraph> Sealib::GraphCreator::randomUndirected(
+    uint64_t order, double p, uint64_t seed) {
+    std::unique_ptr<Sealib::UndirectedGraph> graph(
+        new Sealib::UndirectedGraph(order));
+
+    std::mt19937_64 _rng(seed);
+    std::uniform_real_distribution<double> unif(0.0, 1.0);
+
+    size_t max = order * order;
+    int width = 70;
+    std::cout << "[";
+    for (int i = 0; i < width; i++) {
+        std::cout << " ";
+    }
+    std::cout << "] " << 0 << " %\r";
+    std::cout.flush();
+
+    size_t current = 0;
+    for (uint64_t n1 = 0; n1 < order; n1++) {
+        for (uint64_t n2 = n1 + 1; n2 < order; n2++) {
+            if (unif(_rng) < p) {
+                ExtendedNode &node1 = graph->getNode(n1);
+                ExtendedNode &node2 = graph->getNode(n2);
+
+                uint64_t n1idx = node1.getDegree();
+                uint64_t n2idx = node2.getDegree();
+                node1.addAdjacency({n2, n2idx});
+                node2.addAdjacency({n1, n1idx});
+            }
+            current++;
+        }
+        std::cout << "[";
+        float progress = static_cast<float>(current) / max;
+        int pos =
+            static_cast<int>(std::floor(static_cast<float>(width) * progress));
+        for (int i = 0; i < width; ++i) {
+            if (i < pos) {
+                std::cout << "=";
+            } else if (i == pos) {
+                std::cout << ">";
+            } else {
+                std::cout << " ";
+            }
+        }
+        std::cout << "] " << int(progress * 100.0) << " %\r";
+        std::cout.flush();
+    }
+
+    return graph;
+}
+
+std::unique_ptr<Sealib::UndirectedGraph>
+Sealib::GraphCreator::randomUndirectedWithExactEdges(uint64_t order,
+                                                     uint64_t degree,
+                                                     uint64_t seed) {
+    std::unique_ptr<Sealib::UndirectedGraph> graph(
+        new Sealib::UndirectedGraph(order));
+
+    std::mt19937_64 _rng(seed);
+
+    std::vector<size_t> candidates(order);
+    std::iota(candidates.begin(), candidates.end(), 0);
+    std::shuffle(candidates.begin(), candidates.end(), _rng);
+
+    size_t max = order * order;
+    int width = 70;
+    std::cout << "[";
+    for (int i = 0; i < width; i++) {
+        std::cout << " ";
+    }
+    std::cout << "] " << 0 << " %\r";
+    std::cout.flush();
+
+    size_t current = 0;
+    for (uint64_t n1 = 0; n1 < order; n1++) {
+        size_t idx = 0;
+        while (graph->getNode(n1).getDegree() < degree &&
+               candidates.size() > idx) {
+            uint64_t n2 = candidates[idx];
+            if (n1 != n2 && graph->getNode(n2).getDegree() < degree) {
+                ExtendedNode &node1 = graph->getNode(n1);
+                ExtendedNode &node2 = graph->getNode(n2);
+                uint64_t n1idx = node1.getDegree();
+                uint64_t n2idx = node2.getDegree();
+                node1.addAdjacency({n2, n2idx});
+                node2.addAdjacency({n1, n1idx});
+                idx++;
+            } else {
+                std::swap(candidates[idx], candidates[candidates.size() - 1]);
+                candidates.pop_back();
+            }
+        }
+        if (candidates.empty()) {
+            break;
+        } else {
+            std::shuffle(candidates.begin(), candidates.end(), _rng);
+        }
+        std::cout << "[";
+        float progress = static_cast<float>(current) / max;
+        int pos =
+            static_cast<int>(std::floor(static_cast<float>(width) * progress));
+        for (int i = 0; i < width; ++i) {
+            if (i < pos)
+                std::cout << "=";
+            else if (i == pos)
+                std::cout << ">";
+            else
+                std::cout << " ";
+        }
+        std::cout << "] " << int(progress * 100.0) << " %\r";
+        std::cout.flush();
     }
 
     return graph;
@@ -357,7 +474,8 @@ CompactGraph GraphCreator::generateGilbertGraph(uint64_t order, double p,
     return CompactGraph(generateRawGilbertGraph(order, p, gen));
 }
 
-UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order, uint64_t maxTreeWidth, double p) {
+UndirectedGraph GraphCreator::treeWidthGraph(uint64_t order,
+                                             uint64_t maxTreeWidth, double p) {
     std::vector<ExtendedNode> nodes(order);
     UndirectedGraph g = UndirectedGraph(nodes);
     unsigned int seed;

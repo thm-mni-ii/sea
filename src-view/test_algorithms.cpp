@@ -1,30 +1,30 @@
-#include <sys/time.h>
 #include <sys/resource.h>
+#include <sys/time.h>
 #ifndef RUSAGE_SELF
-    #define RUSAGE_SELF 0
+#define RUSAGE_SELF 0
 #endif
 #ifndef RUSAGE_CHILDREN
-    #define RUSAGE_CHILDREN -1
+#define RUSAGE_CHILDREN -1
 #endif
 #ifndef RUSAGE_BOTH
-    #define RUSAGE_BOTH -2
+#define RUSAGE_BOTH -2
 #endif
 #ifndef RUSAGE_THREAD
-    #define RUSAGE_THREAD -2
+#define RUSAGE_THREAD -2
 #endif
-#include "./test_algorithms.h"
-
 #include <cstdio>
 #include <random>
 #include <sstream>
 #include <string>
 #include <thread>
+
 #include "../src/bfs/simplebfs.h"
 #include "../src/collection/simplesequence.h"
 #include "../src/dfs/simplereversedfs.h"
 #include "../src/graph/simplevirtualgraph.h"
 #include "../src/marker/simplecutvertexiterator.h"
 #include "../src/planar/simpleouterplanarchecker.h"
+#include "./test_algorithms.h"
 #include "sealib/_types.h"
 #include "sealib/collection/blockbitset.h"
 #include "sealib/dictionary/choicedictionary.h"
@@ -43,7 +43,7 @@ template <class F1, class F2, class G>
 void AlgorithmComparison::measureTime(F1 f1, F2 f2, std::string file1,
                                       std::string file2, G fg, uint64_t from,
                                       uint64_t to) {
-    RuntimeTest t1, t2;
+    RuntimeTest t1{}, t2{};
     for (uint64_t run = 0; run < 5; run++) {
         std::vector<uint64_t> order;
         std::vector<std::future<double>> r1, r2;
@@ -84,7 +84,8 @@ void AlgorithmComparison::measureTime(F1 f1, F2 f2, std::string file1,
 
 template <class F, class G>
 void AlgorithmComparison::measureFunction(F f, G g, std::promise<double> r) {
-    struct rusage u1, u2;
+    struct rusage u1 {
+    }, u2{};
     getrusage(RUSAGE_THREAD, &u1);
     f(g);
     getrusage(RUSAGE_THREAD, &u2);
@@ -94,9 +95,10 @@ void AlgorithmComparison::measureFunction(F f, G g, std::promise<double> r) {
 }
 
 template <class F1, class F2, class G>
-void AlgorithmComparison::measureSpace(F1 f1, F2 f2, std::string file1, std::string file2,
-                         G fg, uint64_t from, uint64_t to) {
-    RuntimeTest t1, t2;
+void AlgorithmComparison::measureSpace(F1 f1, F2 f2, const std::string& file1,
+                                       const std::string& file2, G fg,
+                                       uint64_t from, uint64_t to) {
+    RuntimeTest t1{}, t2{};
     for (uint64_t run = 0; run < 5; run++) {
         std::vector<uint64_t> order;
         std::vector<std::future<double>> r1, r2;
@@ -273,8 +275,8 @@ void AlgorithmComparison::evalFunction(F f, G g, std::promise<double> r) {
                  "/dev/null", "mem-vgra-eff-pAdj-" S ".csv",                  \
                  [](uint64_t n) { return (G); }, from, to);
 
-int AlgorithmComparison::launch(std::string program, std::string file1,
-                                std::string file2, uint64_t from, uint64_t to) {
+int AlgorithmComparison::launch(std::string program, const std::string& file1,
+                                const std::string& file2, uint64_t from, uint64_t to) {
     int r = 0;
     switch (program[0]) {
         case 'd':

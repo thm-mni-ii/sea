@@ -1,5 +1,5 @@
 language: cpp
-dist: xenial
+dist: focal
 
 compiler:
   - clang
@@ -27,7 +27,7 @@ script:
   - cpplint --quiet include/sealib/*.* include/sealib/*/*.*
   - cpplint --quiet src-view/*.*
   - cpplint --quiet test/*.*
-  - cppcheck --std=c++11 --enable=performance,portability --error-exitcode=1 --quiet -Iinclude src/ src-view/
+  - cppcheck --enable=performance,portability --error-exitcode=1 --quiet -Iinclude src/ src-view/
   - cmake -DCOVERAGE=1 .
   - 'if test $TRAVIS_PULL_REQUEST = false || test "$TRAVIS_PULL_REQUEST_SLUG" = thm-mni-ii/sea; then build-wrapper-linux-x86-64 --out-dir bw-output make -j$(nproc); else make -j$(nproc); fi'
   - ./bin/tests

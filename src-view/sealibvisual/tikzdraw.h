@@ -2,6 +2,7 @@
 #define SEALIBVISUAL_TIKZDRAW_H_
 
 #include <string>
+#include <utility>
 #include <vector>
 #include "./tikzelement.h"
 
@@ -17,14 +18,14 @@ class TikzDraw : public TikzElement {
     std::string options;
 
  public:
-    explicit TikzDraw(const std::vector<std::string> &_points,
-                      const std::vector<std::string> &_edges,
+    explicit TikzDraw(std::vector<std::string> _points,
+                      std::vector<std::string> _edges,
                       std::string _options = "")
-        : points(_points), edges(_edges), options(_options) {}
+        : points(std::move(_points)), edges(std::move(_edges)), options(std::move(_options)) {}
 
     std::ostream &out(std::ostream &os) const override;
 
-    const std::string &getOptions() const;
+    [[nodiscard]] const std::string &getOptions() const;
     std::vector<std::string> &getPoints();
     std::vector<std::string> &getEdges();
 };

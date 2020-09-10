@@ -39,7 +39,7 @@ class LinearTimeInplaceDFSRunner {
         this->m_startVertex = t_startVertex;
         this->m_initialStartVertex = t_startVertex;
         auto p = n + 2;
-        while (A[p] != t_startVertex && p <= N) {
+        while (p <= N && A[p] != t_startVertex) {
             p = p + 1;
         }
         this->startPos = p;

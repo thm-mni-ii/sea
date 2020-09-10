@@ -6,6 +6,7 @@
 #include <sealib/graph/undirectedgraph.h>
 
 #include <memory>
+#include <sealib/dictionary/rank9select.hpp>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -29,14 +30,14 @@ class SubGraphStack {
     friend class SubGraph;
     friend class RecursiveSubGraph;
     friend class BaseSubGraph;
-    typedef Sealib::Bitset<uint8_t> bitset_t;
-    typedef Sealib::RankSelect rankselect_t;
+    typedef Sealib::Bitset<uint64_t> bitset_t;
+    typedef Sealib::Rank9Select rankselect_t;
     typedef Sealib::SubGraphStack stack_t;
 
  private:
     static constexpr uint8_t rSize = 7;
     static std::vector<uint64_t> refs;
-    std::vector<SubGraph *> clientList;
+    std::vector<SubGraph *> client_vector;
     uint64_t currentRef;
     uint64_t tuned;
 
@@ -74,6 +75,9 @@ class SubGraphStack {
     void push(const bitset_t &a);
     void push(bitset_t &&a);
 
+    void push_vertex_induced(const bitset_t &v);
+    void push_vertex_induced(bitset_t &&v);
+
     /**
      * Replaces the client list (G_0,...,G_l) with (G_0,...,G_l-1).
      * Asserts that the client list is not empty.
@@ -85,7 +89,7 @@ class SubGraphStack {
      */
     uint64_t order(uint64_t i) const;
 
-    inline uint64_t order() const { return order(clientList.size() - 1); }
+    inline uint64_t order() const { return order(client_vector.size() - 1); }
 
     /**
      * @return - the degree of vertex u in G_i
@@ -96,7 +100,7 @@ class SubGraphStack {
      * @return - the degree of vertex u for G_l = the top graph on the stack
      */
     inline uint64_t degree(uint64_t u) const {
-        return degree(clientList.size() - 1, u);
+        return degree(client_vector.size() - 1, u);
     }
 
     /**
@@ -109,7 +113,7 @@ class SubGraphStack {
      * stack
      */
     inline uint64_t head(uint64_t u, uint64_t k) const {
-        return head(clientList.size() - 1, u, k);
+        return head(client_vector.size() - 1, u, k);
     }
 
     /**
@@ -124,7 +128,7 @@ class SubGraphStack {
      * G_l = the top graph on the stack
      */
     inline std::tuple<uint64_t, uint64_t> mate(uint64_t u, uint64_t k) const {
-        return mate(clientList.size() - 1, u, k);
+        return mate(client_vector.size() - 1, u, k);
     }
 
     /**
@@ -133,7 +137,7 @@ class SubGraphStack {
     uint64_t g(uint64_t i, uint64_t u, uint64_t k) const;
 
     inline uint64_t g(uint64_t u, uint64_t k) const {
-        return g(clientList.size() - 1, u, k);
+        return g(client_vector.size() - 1, u, k);
     }
 
     /**
@@ -141,19 +145,19 @@ class SubGraphStack {
      */
     uint64_t gMax(uint64_t i) const;
 
-    inline uint64_t gMax() const { return gMax(clientList.size() - 1); }
+    inline uint64_t gMax() const { return gMax(client_vector.size() - 1); }
 
     /**
-     * @return the (node, arc) pair beint32_ting to the r'th arc in G_i
+     * @return the (node, arc) pair belonging to the r'th arc in G_i
      */
     std::tuple<uint64_t, uint64_t> gInv(uint64_t i, uint64_t r) const;
 
     /**
-     * @return the (node, arc) pair beint32_ting to the r'th arc in G_l = the
+     * @return the (node, arc) pair belonging to the r'th arc in G_l = the
      * top graph on the stack
      */
     inline std::tuple<uint64_t, uint64_t> gInv(uint64_t r) const {
-        return gInv(clientList.size() - 1, r);
+        return gInv(client_vector.size() - 1, r);
     }
 
     /**
@@ -171,7 +175,7 @@ class SubGraphStack {
      * isomorph node in G_j
      */
     inline uint64_t phi(uint64_t j, uint64_t u) const {
-        return phi(clientList.size() - 1, j, u);
+        return phi(client_vector.size() - 1, j, u);
     }
 
     /**
@@ -179,7 +183,7 @@ class SubGraphStack {
      * isomorph arc in G_j
      */
     inline uint64_t psi(uint64_t j, uint64_t a) const {
-        return psi(clientList.size() - 1, j, a);
+        return psi(client_vector.size() - 1, j, a);
     }
 
     /**
@@ -187,7 +191,7 @@ class SubGraphStack {
      * isomorph node in G_0
      */
     inline uint64_t phi(uint64_t u) const {
-        return phi(clientList.size() - 1, 0, u);
+        return phi(client_vector.size() - 1, 0, u);
     }
 
     /**
@@ -195,21 +199,21 @@ class SubGraphStack {
      * isomorph arc in G_0
      */
     inline uint64_t psi(uint64_t a) const {
-        return psi(clientList.size() - 1, 0, a);
+        return psi(client_vector.size() - 1, 0, a);
     }
 
     /**
      * @return  translation of the u'th node in G_0 to G_l = the top graph
      */
     inline uint64_t phiInv(uint64_t u) const {
-        return phi(0, clientList.size() - 1, u);
+        return phi(0, client_vector.size() - 1, u);
     }
 
     /**
      * @return translation of the a'th arc in G_0 to G_l = the top graph
      */
     inline uint64_t psiInv(uint64_t a) const {
-        return psi(0, clientList.size() - 1, a);
+        return psi(0, client_vector.size() - 1, a);
     }
 
     /**
@@ -218,7 +222,7 @@ class SubGraphStack {
      * This is done by creating rankSelect structures for the direct translation
      * between G_0 and G_l and G_l and G_l - 1
      */
-    inline void toptune() { tune(clientList.size() - 1); }
+    inline void toptune() { tune(client_vector.size() - 1); }
 
     /**
      * Speeds up the calls of phi, psi, g, gInv, head, mate, order and degree
@@ -235,7 +239,7 @@ class SubGraphStack {
     /**
      * @return the number of graphs currently on the stack
      */
-    inline uint64_t size() const { return clientList.size(); }
+    inline uint64_t size() const { return client_vector.size(); }
 
     virtual ~SubGraphStack();
 };

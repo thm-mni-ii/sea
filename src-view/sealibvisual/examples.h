@@ -106,7 +106,7 @@ class VisualEdgeMarker : public Sealib::EdgeMarker {
 
 class VisualCutVertex : public Sealib::CutVertexIterator {
  public:
-    VisualCutVertex(std::shared_ptr<VisualEdgeMarker> e);
+    VisualCutVertex(const std::shared_ptr<VisualEdgeMarker>& e);
 
     uint64_t next() override;
 
@@ -118,7 +118,7 @@ class VisualCutVertex : public Sealib::CutVertexIterator {
 
 class VisualBCC : public Sealib::BCCIterator {
    public:
-      VisualBCC(std::shared_ptr<VisualEdgeMarker> e);
+      VisualBCC(const std::shared_ptr<VisualEdgeMarker>& e);
 
       std::pair<uint64_t,uint64_t> next() override;
 

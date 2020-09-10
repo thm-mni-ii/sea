@@ -29,7 +29,7 @@ class RuntimeTest {
      * @param order Order of the input graph
      * @param size Number of edges of the input graph
      */
-    void runTest(std::function<void(void)> testfunction, uint64_t order,
+    void runTest(const std::function<void(void)>& testfunction, uint64_t order,
                  uint64_t size);
 
     /**
@@ -50,14 +50,14 @@ class RuntimeTest {
      * Saves the test results to a CSV file.
      * @params filepath path to the output file (will be truncated)
      */
-    void saveCSV(std::string filepath,
-                 std::string title = "order,size,runtime");
+    void saveCSV(const std::string& filepath,
+                 const std::string& title = "order,size,runtime");
 };
 
-void RuntimeTest::runTest(std::function<void(void)> testfunction,
+void RuntimeTest::runTest(const std::function<void(void)>& testfunction,
                           uint64_t order, uint64_t size) {
-    struct tms t1, t2;
-    parameters.push_back(std::tuple<uint64_t, uint64_t>{order, size});
+    struct tms t1{}, t2{};
+    parameters.emplace_back(order, size);
     std::cout << "Running test: " << parameters.size() << " n: " << order
               << " m: " << size << std::endl;
 
@@ -78,7 +78,7 @@ void RuntimeTest::addLine(uint64_t order, uint64_t size, uint64_t result) {
 void RuntimeTest::addLine(uint64_t order, uint64_t size, double result) {
     std::cout << "Adding result: " << parameters.size() << " n: " << order
               << " m: " << size << std::endl;
-    parameters.push_back(std::tuple<uint64_t, uint64_t>{order, size});
+    parameters.emplace_back(order, size);
     runtimes.push_back(result);
 }
 
@@ -91,7 +91,7 @@ void RuntimeTest::printResults() {
     }
 }
 
-void RuntimeTest::saveCSV(std::string filepath, std::string title) {
+void RuntimeTest::saveCSV(const std::string& filepath, const std::string& title) {
     std::ofstream output;
     output.open(filepath,
                 std::ofstream::in | std::ofstream::out | std::ofstream::trunc);

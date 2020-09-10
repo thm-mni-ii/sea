@@ -96,3 +96,39 @@ TEST(GraphCreatorTest, treewidth) {
     UndirectedGraph g = GraphCreator::treeWidthGraph(n, k, 1.0);
     EXPECT_EQ(g.getOrder(), n);
 }
+
+TEST(GraphCreatorTest, randomUndirectedWithExactEdges) {
+    size_t order = 10;
+    size_t degree = 3;
+    size_t seed = 0;
+
+    auto g = GraphCreator::randomUndirectedWithExactEdges(order, degree, seed);
+
+    EXPECT_EQ(g->getOrder(), 10);
+    g->getNode(0).getDegree();
+
+    for (size_t i = 0; i < order; i++) {
+        EXPECT_EQ(g->getNode(i).getDegree(), degree);
+    }
+}
+
+TEST(GraphCreatorTest, randomBipartite) {
+    size_t order1 = 5;
+    size_t order2 = 5;
+    double p = 1.0;
+    size_t seed = 0;
+
+    auto g = GraphCreator::randomBipartite(order1, order2, p , seed);
+
+    EXPECT_EQ(g->getOrder(), order1 + order2);
+}
+
+TEST(GraphCreatorTest, randomUndirected) {
+    size_t order = 10;
+    double p = 1.0;
+    size_t seed = 0;
+
+    auto g = GraphCreator::randomUndirected(order, p , seed);
+
+    EXPECT_EQ(g->getOrder(), order);
+}

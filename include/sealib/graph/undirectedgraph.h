@@ -5,6 +5,7 @@
 #include <sealib/graph/node.h>
 #include <vector>
 #include <tuple>
+#include <assert.h>
 
 namespace Sealib {
 /**
@@ -55,12 +56,18 @@ class UndirectedGraph : public Graph {
     * @param k index in the adjacency vector of node u
     * @return the k-th neighbor of u
     */
-    uint64_t head(uint64_t u, uint64_t k) const override { return nodes[u].getAdj()[k].first; }
+    uint64_t head(uint64_t u, uint64_t k) const override {
+        assert(u < nodes.size());
+        assert(k < nodes[u].getAdj().size());
+        return nodes[u].getAdj()[k].first;
+    }
 
     /**
     * @return order of the graph, i.e, the total number of vertices.
     */
-    uint64_t getOrder() const override { return static_cast<uint64_t>(nodes.size()); }
+    uint64_t getOrder() const override {
+        return static_cast<uint64_t>(nodes.size());
+    }
 
     /**
      * Get the cross index of the given edge.

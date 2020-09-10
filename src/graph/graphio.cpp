@@ -44,7 +44,7 @@
 namespace Sealib {
 
 void GraphExporter::exportGML(Graph const &g, bool directed,
-                              std::string filename) {
+                              const std::string& filename) {
     std::ofstream out(filename);
     out << "graph [\ndirected " << directed << "\n";
     for (uint64_t u = 0; u < g.getOrder(); u++) {
@@ -79,7 +79,7 @@ void addAdj<UndirectedGraph>(UndirectedGraph *g, uint64_t u, uint64_t v) {
 }
 
 template <class G, class N>
-static G importGMLBase(std::string filename) {
+static G importGMLBase(const std::string& filename) {
     bool directed;
     uint trash = 0;
     uint brackets = 0;
@@ -89,7 +89,7 @@ static G importGMLBase(std::string filename) {
     std::string tok;
     std::ifstream in(filename);
     std::getline(in, line);
-    std::istringstream *ls = new std::istringstream(line);
+    auto *ls = new std::istringstream(line);
 
     READ("graph");
     READ("[");
@@ -139,11 +139,11 @@ static G importGMLBase(std::string filename) {
 
 template <>
 UndirectedGraph GraphImporter::importGML<UndirectedGraph>(
-    std::string filename) {
+    const std::string& filename) {
     return importGMLBase<UndirectedGraph, ExtendedNode>(filename);
 }
 template <>
-DirectedGraph GraphImporter::importGML<DirectedGraph>(std::string filename) {
+DirectedGraph GraphImporter::importGML<DirectedGraph>(const std::string& filename) {
     return importGMLBase<DirectedGraph, SimpleNode>(filename);
 }
 
