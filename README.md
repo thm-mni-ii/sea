@@ -44,43 +44,27 @@ We now show these two points on an example.
 Assume we need to compute an Eulerian tour in an outerplanar graph.
 Without going into detail, we use the Hierholzer algorithm where
 one key step of the algorithm is the creation of
- recursive graph instances.
+ recursive graph instances. There are many other graph algorithms that need
+ to create recursive subgraphs, such as computing tree decompositions.
 The first step to make the algorithm space-efficient is to handle the recursive
 graph instances with a subgraph stack.
 We have implemented a folklore algorithm and a space-efficient version of it and
 run tests to measure the running time and the space requirements of both algorithms.
 
 The next image shows the space requirements of the creation of subgraph instances
-using a space-efficient subgraph stack (blue line) and a naive subgraph stack, which
+using a space-efficient subgraph stack (blue line) and a simple subgraph stack, which
 creates subgraphs instances by copying vertices and edges of the original graph that
-remain in the subgraph. We run the test on a machine with 4gb of RAM and a small swap memory.
-Note that the naive subgraph stack did not run on large instances because
-it crashed after running out of memory, while the space-efficient subgraph stack
-could still run.
+remain in the subgraph together with a mapping between the new vertex numbering and the
+original vertex numbering, for easy translation. 
+The system the tests have been run on has an Intel Core i7-3770T CPU @ 2.50GHz with 16 GB 
+of RAM and 32 GB swap. Note that the simple subgraph stack exhibits a large runtime penalty as soon
+as cache faults become a large problem because of having to use the swap space.
 
 <div align="center">
 
 ![](docs/img/sgspace.png)
 
 </div>
-
-Next we show the runtime results of the computation of Eulerian tours mentioned above.
-The green line shows the runtime of just the creation of the recursive graph instances
-without even running Hierholzer algorithm on them.
-The red line shows the runtime of a naive Hierholzer algorithm that uses a space-efficient subgraph stack,
-i.e., a space-efficient version to create subgraphs.
-The blue line shows the runtime of a space-efficient Hierholzer algorithm that uses
-a space-efficient subgraphs stack.
-
-<div align="center">
-
-![](docs/img/hruntime.png)
-
-</div>
-
-Note that space-efficient algorithms neither guarantee better time performance in general
-nor does over optimization of memory requirements leads to better running times.
-As often in life, a reasonable mix does the trick.
 
 ## Algorithms and Data Structures
 This section gives you a brief overview over the implemented algorithms and data structures. For a detailed documentation click on an algorithm.
