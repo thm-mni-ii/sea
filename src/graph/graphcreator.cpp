@@ -170,7 +170,7 @@ Sealib::GraphCreator::randomUndirectedWithExactEdges(uint64_t order,
         while (graph->getNode(n1).getDegree() < degree &&
                candidates.size() > idx) {
             uint64_t n2 = candidates[idx];
-            if (graph->getNode(n2).getDegree() < degree) {
+            if (n1 != n2 && graph->getNode(n2).getDegree() < degree) {
                 ExtendedNode &node1 = graph->getNode(n1);
                 ExtendedNode &node2 = graph->getNode(n2);
                 uint64_t n1idx = node1.getDegree();
