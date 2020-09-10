@@ -193,7 +193,7 @@ TEST(SubGraphStackTest, vertexInduced) {
         bitset_t a(stack.order());
         size_t new_order = 0;
         for (uint64_t j = 0; j < a.size(); j++) {
-            if( j % 4 != 0) {
+            if (j % 4 != 0) {
                 a[j] = true;
                 new_order++;
             } else {
